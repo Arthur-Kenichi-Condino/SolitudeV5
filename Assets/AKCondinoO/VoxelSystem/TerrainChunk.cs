@@ -81,9 +81,10 @@ void BG(object state){Thread.CurrentThread.IsBackground=false;try{
 Voxel[]polygonCell=new Voxel[8];
         while(!Stop){foregroundDataSet.WaitOne();if(Stop)goto _Stop;
 Array.Clear(voxels,0,voxels.Length);TempVer.Clear();TempTriangles.Clear();
-if(LOG&&LOG_LEVEL<=2)Debug.Log("do job ["+cnkRgn1);
+if(LOG&&LOG_LEVEL<=2)Debug.Log("do job ["+cnkRgn1);var watch=System.Diagnostics.Stopwatch.StartNew();
 ushort vertexCount=0;
 Vector2Int posOffset=Vector2Int.zero;
+Vector2Int preOffset=Vector2Int.zero;
 Vector3Int vCoord1;
 for(vCoord1=new Vector3Int();vCoord1.y<Height;vCoord1.y++){
 for(vCoord1.x=0             ;vCoord1.x<Width ;vCoord1.x++){
@@ -105,14 +106,17 @@ corner++;vCoord2=vCoord1;             vCoord2.y+=1;vCoord2.z+=1;SetVoxel();
         }else if(vCoord2.y>=Height){
             polygonCell[corner]=Voxel.Air;
         }else{
-Vector2Int cnkRgn2=cnkRgn1;
+Vector2Int cnkRgn2=cnkRgn1;Vector2Int cCoord2=cCoord1;
             if(vCoord2.x<0||vCoord2.x>=Width||
                vCoord2.z<0||vCoord2.z>=Depth){ 
-ValidateCoord(ref cnkRgn2,ref vCoord2);
-            }
+ValidateCoord(ref cnkRgn2,ref vCoord2);cCoord2=ChunkManager.RgnToCoord(cnkRgn2);
+            }var vxlIdx2=GetIdx(vCoord2.x,vCoord2.y,vCoord2.z);
+int idx=index(preOffset+(cCoord2-cCoord1));if(idx==0){if(voxels[vxlIdx2].IsCreated){polygonCell[corner]=voxels[vxlIdx2];return;}}
 Vector3 noiseInput=vCoord2;noiseInput.x+=cnkRgn2.x;
                            noiseInput.z+=cnkRgn2.y;
-ChunkManager.biome.v(noiseInput,ref polygonCell[corner]);
+ChunkManager.biome.v(noiseInput,ref polygonCell[corner]);if(polygonCell[corner].Normal==Vector3.zero){
+}
+if(idx==0){voxels[vxlIdx2]=polygonCell[corner];}
         }
     }
 int edgeIndex;
@@ -120,7 +124,7 @@ int edgeIndex;
     Determine the index into the edge table which
     tells us which vertices are inside of the surface
 */
-                            edgeIndex =  0;
+                                    edgeIndex =  0;
 if(-polygonCell[0].Density<IsoLevel)edgeIndex|=  1;
 if(-polygonCell[1].Density<IsoLevel)edgeIndex|=  2;
 if(-polygonCell[2].Density<IsoLevel)edgeIndex|=  4;
@@ -174,7 +178,19 @@ TempVer.Add(new Vertex(verPos[2],-Vector3.down));
 vertexCount+=3;
 }
 }
+if(LOG&&LOG_LEVEL<=2)Debug.Log("job done "+watch.ElapsedMilliseconds+" ms ["+cnkRgn1);
 hasBuildData=true;backgroundDataSet.Set();}
+        int index(Vector2Int offset){
+            if(offset.x== 0&&offset.y== 0)return 0;
+            if(offset.x==-1&&offset.y== 0)return 1;
+            if(offset.x== 1&&offset.y== 0)return 2;
+            if(offset.x== 0&&offset.y==-1)return 3;
+            if(offset.x==-1&&offset.y==-1)return 4;
+            if(offset.x== 1&&offset.y==-1)return 5;
+            if(offset.x== 0&&offset.y== 1)return 6;
+            if(offset.x==-1&&offset.y== 1)return 7;
+            if(offset.x== 1&&offset.y== 1)return 8;
+        return -1;}
         _Stop:{
             TempVer.Dispose();TempTriangles.Dispose();
 if(LOG&&LOG_LEVEL<=2)Debug.Log("end");

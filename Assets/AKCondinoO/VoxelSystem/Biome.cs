@@ -6,7 +6,7 @@ namespace AKCondinoO.Voxels{public class Biome{
     public virtual void v(Vector3 noiseInput,ref Voxel v){
 if(noiseInput.y<1){v=Voxel.Bedrock;return;}
 
-if(noiseInput.x>=.5&&noiseInput.z>=.5){v=Voxel.Bedrock;return;}
+if(noiseInput.x>=.5&&noiseInput.z>=.5){v=new Voxel(51,Vector3.zero,MaterialId.Rock);return;}
 
         v=Voxel.Air;
     }
