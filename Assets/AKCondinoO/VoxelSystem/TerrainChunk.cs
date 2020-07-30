@@ -82,6 +82,8 @@ Voxel[]polygonCell=new Voxel[8];
         while(!Stop){foregroundDataSet.WaitOne();if(Stop)goto _Stop;
 Array.Clear(voxels,0,voxels.Length);TempVer.Clear();TempTriangles.Clear();
 if(LOG&&LOG_LEVEL<=2)Debug.Log("do job ["+cnkRgn1);var watch=System.Diagnostics.Stopwatch.StartNew();
+Voxel[][][]voxelsBuffer1=new Voxel[3][][]{new Voxel[1][]{new Voxel[4],},new Voxel[Depth][],new Voxel[FlattenOffset][],};for(int i=0;i<voxelsBuffer1[2].Length;++i){voxelsBuffer1[2][i]=new Voxel[4];if(i<voxelsBuffer1[1].Length){voxelsBuffer1[1][i]=new Voxel[4];}}
+Vector3[][][]verticesBuffer=new Vector3[3][][]{new Vector3[1][]{new Vector3[4],},new Vector3[Depth][],new Vector3[FlattenOffset][],};for(int i=0;i<verticesBuffer[2].Length;++i){verticesBuffer[2][i]=new Vector3[4];if(i<verticesBuffer[1].Length){verticesBuffer[1][i]=new Vector3[4];}}
 ushort vertexCount=0;
 Vector2Int posOffset=Vector2Int.zero;
 Vector2Int preOffset=Vector2Int.zero;
@@ -92,14 +94,26 @@ for(vCoord1.z=0             ;vCoord1.z<Depth ;vCoord1.z++){
 Polygonise();
 }}}
 void Polygonise(){
-int corner=0;Vector3Int vCoord2=vCoord1;                        SetVoxel();
-corner++;vCoord2=vCoord1;vCoord2.x+=1;                          SetVoxel();
+int corner=0;Vector3Int vCoord2=vCoord1;                        if(vCoord1.z>0)polygonCell[corner]=voxelsBuffer1[0][0][0];else if(vCoord1.x>0)polygonCell[corner]=voxelsBuffer1[1][vCoord1.z][0];else if(vCoord1.y>0)polygonCell[corner]=voxelsBuffer1[2][vCoord1.z+vCoord1.x*Width][0];else SetVoxel();
+corner++;vCoord2=vCoord1;vCoord2.x+=1;                          if(vCoord1.z>0)polygonCell[corner]=voxelsBuffer1[0][0][1];                                                                       else if(vCoord1.y>0)polygonCell[corner]=voxelsBuffer1[2][vCoord1.z+vCoord1.x*Width][1];else SetVoxel();
 corner++;vCoord2=vCoord1;vCoord2.x+=1;vCoord2.y+=1;             SetVoxel();
 corner++;vCoord2=vCoord1;             vCoord2.y+=1;             SetVoxel();
 corner++;vCoord2=vCoord1;                          vCoord2.z+=1;SetVoxel();
 corner++;vCoord2=vCoord1;vCoord2.x+=1;             vCoord2.z+=1;SetVoxel();
 corner++;vCoord2=vCoord1;vCoord2.x+=1;vCoord2.y+=1;vCoord2.z+=1;SetVoxel();
 corner++;vCoord2=vCoord1;             vCoord2.y+=1;vCoord2.z+=1;SetVoxel();
+voxelsBuffer1[0][0][0]=polygonCell[4];
+voxelsBuffer1[0][0][1]=polygonCell[5];
+voxelsBuffer1[0][0][2]=polygonCell[6];
+voxelsBuffer1[0][0][3]=polygonCell[7];
+voxelsBuffer1[1][vCoord1.z][0]=polygonCell[1];
+voxelsBuffer1[1][vCoord1.z][1]=polygonCell[2];
+voxelsBuffer1[1][vCoord1.z][2]=polygonCell[5];
+voxelsBuffer1[1][vCoord1.z][3]=polygonCell[6];
+voxelsBuffer1[2][vCoord1.z+vCoord1.x*Width][0]=polygonCell[3];
+voxelsBuffer1[2][vCoord1.z+vCoord1.x*Width][1]=polygonCell[2];
+voxelsBuffer1[2][vCoord1.z+vCoord1.x*Width][2]=polygonCell[7];
+voxelsBuffer1[2][vCoord1.z+vCoord1.x*Width][3]=polygonCell[6];
     void SetVoxel(){
         if(vCoord2.y<0){
             polygonCell[corner]=Voxel.Bedrock;
@@ -137,6 +151,16 @@ if(Tables.EdgeTable[edgeIndex]==0){/*  Cube is entirely in/out of the surface  *
     return;
 }
    Vector3[] vertices=new Vector3[12];
+//  Use buffered data if available
+vertices[ 0]=(vCoord1.z>0?verticesBuffer[0][0][0]:(vCoord1.y>0?verticesBuffer[2][vCoord1.z+vCoord1.x*Width][0]:Vector3.zero));
+vertices[ 1]=(vCoord1.z>0?verticesBuffer[0][0][1]:Vector3.zero);
+vertices[ 2]=(vCoord1.z>0?verticesBuffer[0][0][2]:Vector3.zero);
+vertices[ 3]=(vCoord1.z>0?verticesBuffer[0][0][3]:(vCoord1.x>0?verticesBuffer[1][vCoord1.z][0]:Vector3.zero));
+vertices[ 4]=(vCoord1.y>0?verticesBuffer[2][vCoord1.z+vCoord1.x*Width][1]:Vector3.zero);
+vertices[ 7]=(vCoord1.x>0?verticesBuffer[1][vCoord1.z][1]:Vector3.zero);
+vertices[ 8]=(vCoord1.x>0?verticesBuffer[1][vCoord1.z][2]:(vCoord1.y>0?verticesBuffer[2][vCoord1.z+vCoord1.x*Width][3]:Vector3.zero));
+vertices[ 9]=(vCoord1.y>0?verticesBuffer[2][vCoord1.z+vCoord1.x*Width][2]:Vector3.zero);
+vertices[11]=(vCoord1.x>0?verticesBuffer[1][vCoord1.z][3]:Vector3.zero);
 if(0!=(Tables.EdgeTable[edgeIndex]&   1)){vertexInterp(0,1,ref vertices[ 0]);}
 if(0!=(Tables.EdgeTable[edgeIndex]&   2)){vertexInterp(1,2,ref vertices[ 1]);}
 if(0!=(Tables.EdgeTable[edgeIndex]&   4)){vertexInterp(2,3,ref vertices[ 2]);}
@@ -151,6 +175,7 @@ if(0!=(Tables.EdgeTable[edgeIndex]&1024)){vertexInterp(2,6,ref vertices[10]);}
 if(0!=(Tables.EdgeTable[edgeIndex]&2048)){vertexInterp(3,7,ref vertices[11]);}
     void vertexInterp(int c0,int c1,ref Vector3 p){
 double[]density=new double[2]{-polygonCell[c0].Density,-polygonCell[c1].Density};Vector3[]vertex=new Vector3[2]{Corners[c0],Corners[c1]};
+if(p!=Vector3.zero){goto _Normal;}
 if(Math.Abs(IsoLevel-density[0])<double.Epsilon){p=vertex[0];goto _Normal;}
 if(Math.Abs(IsoLevel-density[1])<double.Epsilon){p=vertex[1];goto _Normal;}
 if(Math.Abs(density[0]-density[1])<double.Epsilon){p=vertex[0];goto _Normal;}
@@ -161,6 +186,19 @@ if(Math.Abs(density[0]-density[1])<double.Epsilon){p=vertex[0];goto _Normal;}
 _Normal:{
 }
     }
+//  Buffer the data
+verticesBuffer[0][0][0]=vertices[ 4]+Vector3.back;//  Adiciona um valor negativo porque o voxelCoord próximo vai usar esse valor mais o de sua posição (próprio voxelCoord novo)
+verticesBuffer[0][0][1]=vertices[ 5]+Vector3.back;
+verticesBuffer[0][0][2]=vertices[ 6]+Vector3.back;
+verticesBuffer[0][0][3]=vertices[ 7]+Vector3.back;
+verticesBuffer[1][vCoord1.z][0]=vertices[ 1]+Vector3.left;
+verticesBuffer[1][vCoord1.z][1]=vertices[ 5]+Vector3.left;
+verticesBuffer[1][vCoord1.z][2]=vertices[ 9]+Vector3.left;
+verticesBuffer[1][vCoord1.z][3]=vertices[10]+Vector3.left;
+verticesBuffer[2][vCoord1.z+vCoord1.x*Width][0]=vertices[ 2]+Vector3.down;
+verticesBuffer[2][vCoord1.z+vCoord1.x*Width][1]=vertices[ 6]+Vector3.down;
+verticesBuffer[2][vCoord1.z+vCoord1.x*Width][2]=vertices[10]+Vector3.down;
+verticesBuffer[2][vCoord1.z+vCoord1.x*Width][3]=vertices[11]+Vector3.down;
 /*  Create the triangle  */
 for(int i=0;Tables.TriangleTable[edgeIndex][i]!=-1;i+=3){
 TempTriangles.Add((ushort)(vertexCount+2));
