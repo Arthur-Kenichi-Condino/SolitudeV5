@@ -300,6 +300,7 @@
 /define:CSHARP_7_OR_LATER
 /define:CSHARP_7_3_OR_NEWER
 Assets\AKCondinoO\VoxelSystem\AtlasHelper.cs
+Assets\AKCondinoO\VoxelSystem\Biome.cs
 Assets\AKCondinoO\VoxelSystem\Chunk.cs
 Assets\AKCondinoO\VoxelSystem\ChunkManager.cs
 Assets\AKCondinoO\VoxelSystem\Tables.cs

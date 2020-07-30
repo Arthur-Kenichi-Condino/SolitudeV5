@@ -7,19 +7,100 @@ namespace AKCondinoO.Voxels{public class ChunkManager:MonoBehaviour{
 public bool LOG=false;public int LOG_LEVEL=1;
 public GameObject ChunkPrefab;
 [NonSerialized]public Vector2Int expropriationDistance=new Vector2Int(5,5);[NonSerialized]public readonly LinkedList<Chunk>ChunksPool=new LinkedList<Chunk>();
-[NonSerialized]public Vector2Int instantiationDistance=new Vector2Int(0,0);[NonSerialized]public readonly Dictionary<int,Chunk>Chunks=new Dictionary<int,Chunk>();
+[NonSerialized]public Vector2Int instantiationDistance=new Vector2Int(5,5);[NonSerialized]public readonly Dictionary<int,Chunk>Chunks=new Dictionary<int,Chunk>();
 protected virtual void Awake(){
 GCSettings.LatencyMode=GCLatencyMode.SustainedLowLatency;
     for(int i=(expropriationDistance.x*2+1)*(expropriationDistance.y*2+1)-1;i>=0;--i){
-        GameObject obj=Instantiate(ChunkPrefab);Chunk scr=obj.GetComponent<Chunk>();
-        ChunksPool.AddLast(scr);scr.ExpropriationNode=ChunksPool.Last;
+        GameObject obj=Instantiate(ChunkPrefab);Chunk scr=obj.GetComponent<Chunk>();ChunksPool.AddLast(scr);scr.ExpropriationNode=ChunksPool.Last;
     }
+}
+[NonSerialized]protected static Vector2Int aCoord;
+void Build(){
+for(Vector2Int coord=new Vector2Int(),cCoord1=new Vector2Int();coord.y<=instantiationDistance.y;coord.y++){for(cCoord1.y=-coord.y+aCoord.y;cCoord1.y<=coord.y+aCoord.y;cCoord1.y+=coord.y*2){
+for(coord.x=0                                                 ;coord.x<=instantiationDistance.x;coord.x++){for(cCoord1.x=-coord.x+aCoord.x;cCoord1.x<=coord.x+aCoord.x;cCoord1.x+=coord.x*2){
+if(LOG&&LOG_LEVEL<=1)Debug.Log("try build chunk:"+cCoord1);
+if(Math.Abs(cCoord1.x)>=Width||
+   Math.Abs(cCoord1.y)>=Depth){
+if(LOG&&LOG_LEVEL<=2)Debug.Log("do not build out of world chunk");
+goto _skip;
+}
+    int cnkIdx1=GetIdx(cCoord1.x,cCoord1.y);if(!Chunks.ContainsKey(cnkIdx1)){
+if(LOG&&LOG_LEVEL<=1)Debug.Log("build chunk:"+cnkIdx1+"[ChunksPool.Count:"+ChunksPool.Count);
+        Chunk scr=ChunksPool.First.Value;ChunksPool.RemoveFirst();scr.ExpropriationNode=(null);Chunks.Add(cnkIdx1,scr);scr.OnRebuildRequest(cCoord1,CoordToRgn(cCoord1),cnkIdx1);
+    }else{
+if(LOG&&LOG_LEVEL<=1)Debug.Log("chunk already built:"+cnkIdx1);
+    }
+_skip:{}
+if(coord.x==0){break;}}}
+if(coord.y==0){break;}}}
 }
 [NonSerialized]public static readonly Biome biome=new Biome();
 public static Vector2Int RgnToCoord(Vector2Int region){return new Vector2Int(region.x/Chunk.Width,region.y/Chunk.Depth);}public static Vector2Int CoordToRgn(Vector2Int coord){return new Vector2Int(coord.x*Chunk.Width,coord.y*Chunk.Depth);}
 public static int GetIdx(int cx,int cy){return cy+cx*(Width+1);}
 public const int Width=6250;
 public const int Depth=6250;
+
+
+
+
+protected virtual void OnEnable(){
+
+
+
+
+    Build();
+
+
+
+
+}
+//[NonSerialized]public Vector2Int expropriationDistance=new Vector2Int(5,5);[NonSerialized]public readonly LinkedList<Chunk>ChunksPool=new LinkedList<Chunk>();
+//[NonSerialized]public Vector2Int instantiationDistance=new Vector2Int(5,5);[NonSerialized]public readonly Dictionary<int,Chunk>Chunks=new Dictionary<int,Chunk>();
+//protected virtual void Awake(){
+//GCSettings.LatencyMode=GCLatencyMode.SustainedLowLatency;
+//    for(int i=(expropriationDistance.x*2+1)*(expropriationDistance.y*2+1)-1;i>=0;--i){
+//        GameObject obj=Instantiate(ChunkPrefab);Chunk scr=obj.GetComponent<Chunk>();
+//        ChunksPool.AddLast(scr);scr.ExpropriationNode=ChunksPool.Last;
+//    }
+//}
+//protected virtual void OnEnable(){
+
+
+
+
+//    Instantiation();
+
+
+
+
+//}
+//protected virtual void Update(){
+//}
+//[NonSerialized]protected static Vector2Int aCoord;
+//void Instantiation(){
+//for(Vector2Int coord=new Vector2Int(),cCoord1=new Vector2Int();coord.y<=instantiationDistance.y;coord.y++){for(cCoord1.y=-coord.y+aCoord.y;cCoord1.y<=coord.y+aCoord.y;cCoord1.y+=coord.y*2){
+//for(coord.x=0                                                 ;coord.x<=instantiationDistance.x;coord.x++){for(cCoord1.x=-coord.x+aCoord.x;cCoord1.x<=coord.x+aCoord.x;cCoord1.x+=coord.x*2){
+//if(LOG&&LOG_LEVEL<=1)Debug.Log("try build chunk:"+cCoord1);
+//if(Math.Abs(cCoord1.x)>=Width||
+//   Math.Abs(cCoord1.y)>=Depth){
+//if(LOG&&LOG_LEVEL<=2)Debug.Log("do not build out of world chunk");
+//goto _skip;
+//}
+//    int cnkIdx1=GetIdx(cCoord1.x,cCoord1.y);if(!Chunks.ContainsKey(cnkIdx1)){
+//if(LOG&&LOG_LEVEL<=1)Debug.Log("build chunk:"+cnkIdx1+";ChunksPool.Count:"+ChunksPool.Count);
+//        Chunk scr=ChunksPool.First.Value;ChunksPool.RemoveFirst();scr.ExpropriationNode=(null);Chunks.Add(cnkIdx1,scr);scr.OnRebuildRequest(cCoord1,CoordToRgn(cCoord1),cnkIdx1);
+//    }else{
+//if(LOG&&LOG_LEVEL<=1)Debug.Log("chunk already built:"+cnkIdx1);
+//    }
+//_skip:{}
+//if(coord.x==0){break;}}}
+//if(coord.y==0){break;}}}
+//}
+//[NonSerialized]public static readonly Biome biome=new Biome();
+//public static Vector2Int RgnToCoord(Vector2Int region){return new Vector2Int(region.x/Chunk.Width,region.y/Chunk.Depth);}public static Vector2Int CoordToRgn(Vector2Int coord){return new Vector2Int(coord.x*Chunk.Width,coord.y*Chunk.Depth);}
+//public static int GetIdx(int cx,int cy){return cy+cx*(Width+1);}
+//public const int Width=6250;
+//public const int Depth=6250;
 
 
 
