@@ -96,12 +96,12 @@ Polygonise();
 void Polygonise(){
 int corner=0;Vector3Int vCoord2=vCoord1;                        if(vCoord1.z>0)polygonCell[corner]=voxelsBuffer1[0][0][0];else if(vCoord1.x>0)polygonCell[corner]=voxelsBuffer1[1][vCoord1.z][0];else if(vCoord1.y>0)polygonCell[corner]=voxelsBuffer1[2][vCoord1.z+vCoord1.x*Width][0];else SetVoxel();
 corner++;vCoord2=vCoord1;vCoord2.x+=1;                          if(vCoord1.z>0)polygonCell[corner]=voxelsBuffer1[0][0][1];                                                                       else if(vCoord1.y>0)polygonCell[corner]=voxelsBuffer1[2][vCoord1.z+vCoord1.x*Width][1];else SetVoxel();
-corner++;vCoord2=vCoord1;vCoord2.x+=1;vCoord2.y+=1;             SetVoxel();
-corner++;vCoord2=vCoord1;             vCoord2.y+=1;             SetVoxel();
-corner++;vCoord2=vCoord1;                          vCoord2.z+=1;SetVoxel();
-corner++;vCoord2=vCoord1;vCoord2.x+=1;             vCoord2.z+=1;SetVoxel();
-corner++;vCoord2=vCoord1;vCoord2.x+=1;vCoord2.y+=1;vCoord2.z+=1;SetVoxel();
-corner++;vCoord2=vCoord1;             vCoord2.y+=1;vCoord2.z+=1;SetVoxel();
+corner++;vCoord2=vCoord1;vCoord2.x+=1;vCoord2.y+=1;             if(vCoord1.z>0)polygonCell[corner]=voxelsBuffer1[0][0][2];                                                                                                                                                              else SetVoxel();
+corner++;vCoord2=vCoord1;             vCoord2.y+=1;             if(vCoord1.z>0)polygonCell[corner]=voxelsBuffer1[0][0][3];else if(vCoord1.x>0)polygonCell[corner]=voxelsBuffer1[1][vCoord1.z][1];                                                                                       else SetVoxel();
+corner++;vCoord2=vCoord1;                          vCoord2.z+=1;                                                               if(vCoord1.x>0)polygonCell[corner]=voxelsBuffer1[1][vCoord1.z][2];else if(vCoord1.y>0)polygonCell[corner]=voxelsBuffer1[2][vCoord1.z+vCoord1.x*Width][2];else SetVoxel();
+corner++;vCoord2=vCoord1;vCoord2.x+=1;             vCoord2.z+=1;                                                                                                                                      if(vCoord1.y>0)polygonCell[corner]=voxelsBuffer1[2][vCoord1.z+vCoord1.x*Width][3];else SetVoxel();
+corner++;vCoord2=vCoord1;vCoord2.x+=1;vCoord2.y+=1;vCoord2.z+=1;                                                                                                                                                                                                                             SetVoxel();
+corner++;vCoord2=vCoord1;             vCoord2.y+=1;vCoord2.z+=1;                                                               if(vCoord1.x>0)polygonCell[corner]=voxelsBuffer1[1][vCoord1.z][3];                                                                                       else SetVoxel();
 voxelsBuffer1[0][0][0]=polygonCell[4];
 voxelsBuffer1[0][0][1]=polygonCell[5];
 voxelsBuffer1[0][0][2]=polygonCell[6];
@@ -121,16 +121,40 @@ voxelsBuffer1[2][vCoord1.z+vCoord1.x*Width][3]=polygonCell[6];
             polygonCell[corner]=Voxel.Air;
         }else{
 Vector2Int cnkRgn2=cnkRgn1;Vector2Int cCoord2=cCoord1;
-            if(vCoord2.x<0||vCoord2.x>=Width||
-               vCoord2.z<0||vCoord2.z>=Depth){ 
+if(vCoord2.x<0||vCoord2.x>=Width||
+   vCoord2.z<0||vCoord2.z>=Depth){ 
 ValidateCoord(ref cnkRgn2,ref vCoord2);cCoord2=ChunkManager.RgnToCoord(cnkRgn2);
-            }var vxlIdx2=GetIdx(vCoord2.x,vCoord2.y,vCoord2.z);
-int idx=index(preOffset+(cCoord2-cCoord1));if(idx==0){if(voxels[vxlIdx2].IsCreated){polygonCell[corner]=voxels[vxlIdx2];return;}}
+}var vxlIdx2=GetIdx(vCoord2.x,vCoord2.y,vCoord2.z);
+            int i=index(preOffset+(cCoord2-cCoord1));if(i==0&&voxels[vxlIdx2].IsCreated)
+            polygonCell[corner]=voxels[vxlIdx2];
+            else{
 Vector3 noiseInput=vCoord2;noiseInput.x+=cnkRgn2.x;
                            noiseInput.z+=cnkRgn2.y;
-ChunkManager.biome.v(noiseInput,ref polygonCell[corner]);if(polygonCell[corner].Normal==Vector3.zero){
+ChunkManager.biome.v(noiseInput,ref polygonCell[corner]);
+            }
+if(polygonCell[corner].Normal==Vector3.zero){
+int tmpIdx=0;Voxel[]tmp=new Voxel[6];Vector3Int vCoord3=vCoord2;vCoord3.x++;TmpVoxel();
+tmpIdx++;vCoord3=vCoord2;                                       vCoord3.x--;TmpVoxel();
+tmpIdx++;vCoord3=vCoord2;                                       vCoord3.y++;TmpVoxel();
+tmpIdx++;vCoord3=vCoord2;                                       vCoord3.y--;TmpVoxel();
+tmpIdx++;vCoord3=vCoord2;                                       vCoord3.z++;TmpVoxel();
+tmpIdx++;vCoord3=vCoord2;                                       vCoord3.z--;TmpVoxel();
+    void TmpVoxel(){
+        if(vCoord3.y<0){
+            tmp[tmpIdx]=Voxel.Bedrock;
+        }else if(vCoord3.y>=Height){
+            tmp[tmpIdx]=Voxel.Air;
+        }else{
+Vector2Int cnkRgn3=cnkRgn2;Vector2Int cCoord3=cCoord2;var vxlIdx3=vxlIdx2;
+if(vCoord3.x<0||vCoord3.x>=Width||
+   vCoord3.z<0||vCoord3.z>=Depth){ 
+ValidateCoord(ref cnkRgn3,ref vCoord3);cCoord3=ChunkManager.RgnToCoord(cnkRgn3);
+vxlIdx3=GetIdx(vCoord3.x,vCoord3.y,vCoord3.z);}
+        }
+    }
+            if(i==0)
+            voxels[vxlIdx2]=polygonCell[corner];
 }
-if(idx==0){voxels[vxlIdx2]=polygonCell[corner];}
         }
     }
 int edgeIndex;
