@@ -31,6 +31,7 @@ protected override void Update(){
 if(LOG&&LOG_LEVEL<=2)Debug.Log("did job now build");
             OnBuild();
         }
+if(DRAW_LEVEL<=-100)for(int i=0;i<TempVer.Length;i++){Debug.DrawRay(TempVer[i].pos,TempVer[i].normal,Color.green);}
         if(needsRebuild){
             needsRebuild=false;
             cCoord1=Coord;
@@ -125,7 +126,7 @@ if(vCoord2.x<0||vCoord2.x>=Width||
    vCoord2.z<0||vCoord2.z>=Depth){ 
 ValidateCoord(ref cnkRgn2,ref vCoord2);cCoord2=ChunkManager.RgnToCoord(cnkRgn2);
 }var vxlIdx2=GetIdx(vCoord2.x,vCoord2.y,vCoord2.z);
-            int i=index(preOffset+(cCoord2-cCoord1));if(i==0&&voxels[vxlIdx2].IsCreated)
+            int i2=index(preOffset+(cCoord2-cCoord1));if(i2==0&&voxels[vxlIdx2].IsCreated)
             polygonCell[corner]=voxels[vxlIdx2];
             else{
 Vector3 noiseInput=vCoord2;noiseInput.x+=cnkRgn2.x;
@@ -145,14 +146,29 @@ tmpIdx++;vCoord3=vCoord2;                                       vCoord3.z--;TmpV
         }else if(vCoord3.y>=Height){
             tmp[tmpIdx]=Voxel.Air;
         }else{
-Vector2Int cnkRgn3=cnkRgn2;Vector2Int cCoord3=cCoord2;var vxlIdx3=vxlIdx2;
+Vector2Int cnkRgn3=cnkRgn2;Vector2Int cCoord3=cCoord2;
 if(vCoord3.x<0||vCoord3.x>=Width||
    vCoord3.z<0||vCoord3.z>=Depth){ 
 ValidateCoord(ref cnkRgn3,ref vCoord3);cCoord3=ChunkManager.RgnToCoord(cnkRgn3);
-vxlIdx3=GetIdx(vCoord3.x,vCoord3.y,vCoord3.z);}
+}var vxlIdx3=GetIdx(vCoord3.x,vCoord3.y,vCoord3.z);
+            int i3=index(preOffset+(cCoord3-cCoord1));if(i3==0&&voxels[vxlIdx3].IsCreated)
+            tmp[tmpIdx]=voxels[vxlIdx3];
+            else{
+Vector3 noiseInput=vCoord3;noiseInput.x+=cnkRgn3.x;
+                           noiseInput.z+=cnkRgn3.y;
+ChunkManager.biome.v(noiseInput,ref tmp[tmpIdx]);
+            if(i3==0)
+            voxels[vxlIdx3]=tmp[tmpIdx];
+            }
         }
     }
-            if(i==0)
+polygonCell[corner].Normal.x=(float)(tmp[0].Density-tmp[1].Density);
+polygonCell[corner].Normal.y=(float)(tmp[2].Density-tmp[3].Density);
+polygonCell[corner].Normal.z=(float)(tmp[4].Density-tmp[5].Density);
+if(polygonCell[corner].Normal!=Vector3.zero){
+    polygonCell[corner].Normal.Normalize();
+}
+            if(i2==0)
             voxels[vxlIdx2]=polygonCell[corner];
 }
         }
@@ -175,6 +191,7 @@ if(Tables.EdgeTable[edgeIndex]==0){/*  Cube is entirely in/out of the surface  *
     return;
 }
    Vector3[] vertices=new Vector3[12];
+   Vector3[]  normals=new Vector3[12];
 //  Use buffered data if available
 vertices[ 0]=(vCoord1.z>0?verticesBuffer[0][0][0]:(vCoord1.y>0?verticesBuffer[2][vCoord1.z+vCoord1.x*Width][0]:Vector3.zero));
 vertices[ 1]=(vCoord1.z>0?verticesBuffer[0][0][1]:Vector3.zero);
@@ -185,19 +202,19 @@ vertices[ 7]=(vCoord1.x>0?verticesBuffer[1][vCoord1.z][1]:Vector3.zero);
 vertices[ 8]=(vCoord1.x>0?verticesBuffer[1][vCoord1.z][2]:(vCoord1.y>0?verticesBuffer[2][vCoord1.z+vCoord1.x*Width][3]:Vector3.zero));
 vertices[ 9]=(vCoord1.y>0?verticesBuffer[2][vCoord1.z+vCoord1.x*Width][2]:Vector3.zero);
 vertices[11]=(vCoord1.x>0?verticesBuffer[1][vCoord1.z][3]:Vector3.zero);
-if(0!=(Tables.EdgeTable[edgeIndex]&   1)){vertexInterp(0,1,ref vertices[ 0]);}
-if(0!=(Tables.EdgeTable[edgeIndex]&   2)){vertexInterp(1,2,ref vertices[ 1]);}
-if(0!=(Tables.EdgeTable[edgeIndex]&   4)){vertexInterp(2,3,ref vertices[ 2]);}
-if(0!=(Tables.EdgeTable[edgeIndex]&   8)){vertexInterp(3,0,ref vertices[ 3]);}
-if(0!=(Tables.EdgeTable[edgeIndex]&  16)){vertexInterp(4,5,ref vertices[ 4]);}
-if(0!=(Tables.EdgeTable[edgeIndex]&  32)){vertexInterp(5,6,ref vertices[ 5]);}
-if(0!=(Tables.EdgeTable[edgeIndex]&  64)){vertexInterp(6,7,ref vertices[ 6]);}
-if(0!=(Tables.EdgeTable[edgeIndex]& 128)){vertexInterp(7,4,ref vertices[ 7]);}
-if(0!=(Tables.EdgeTable[edgeIndex]& 256)){vertexInterp(0,4,ref vertices[ 8]);}
-if(0!=(Tables.EdgeTable[edgeIndex]& 512)){vertexInterp(1,5,ref vertices[ 9]);}
-if(0!=(Tables.EdgeTable[edgeIndex]&1024)){vertexInterp(2,6,ref vertices[10]);}
-if(0!=(Tables.EdgeTable[edgeIndex]&2048)){vertexInterp(3,7,ref vertices[11]);}
-    void vertexInterp(int c0,int c1,ref Vector3 p){
+if(0!=(Tables.EdgeTable[edgeIndex]&   1)){vertexInterp(0,1,ref vertices[ 0],ref normals[ 0]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&   2)){vertexInterp(1,2,ref vertices[ 1],ref normals[ 1]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&   4)){vertexInterp(2,3,ref vertices[ 2],ref normals[ 2]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&   8)){vertexInterp(3,0,ref vertices[ 3],ref normals[ 3]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&  16)){vertexInterp(4,5,ref vertices[ 4],ref normals[ 4]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&  32)){vertexInterp(5,6,ref vertices[ 5],ref normals[ 5]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&  64)){vertexInterp(6,7,ref vertices[ 6],ref normals[ 6]);}
+if(0!=(Tables.EdgeTable[edgeIndex]& 128)){vertexInterp(7,4,ref vertices[ 7],ref normals[ 7]);}
+if(0!=(Tables.EdgeTable[edgeIndex]& 256)){vertexInterp(0,4,ref vertices[ 8],ref normals[ 8]);}
+if(0!=(Tables.EdgeTable[edgeIndex]& 512)){vertexInterp(1,5,ref vertices[ 9],ref normals[ 9]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&1024)){vertexInterp(2,6,ref vertices[10],ref normals[10]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&2048)){vertexInterp(3,7,ref vertices[11],ref normals[11]);}
+    void vertexInterp(int c0,int c1,ref Vector3 p,ref Vector3 n){
 double[]density=new double[2]{-polygonCell[c0].Density,-polygonCell[c1].Density};Vector3[]vertex=new Vector3[2]{Corners[c0],Corners[c1]};
 if(p!=Vector3.zero){goto _Normal;}
 if(Math.Abs(IsoLevel-density[0])<double.Epsilon){p=vertex[0];goto _Normal;}
@@ -208,6 +225,13 @@ if(Math.Abs(density[0]-density[1])<double.Epsilon){p=vertex[0];goto _Normal;}
         p.y=(float)(vertex[0].y+marchingUnit*(vertex[1].y-vertex[0].y));
         p.z=(float)(vertex[0].z+marchingUnit*(vertex[1].z-vertex[0].z));
 _Normal:{
+float[]distance=new float[2];Vector3[]normal=new Vector3[2];
+        distance[0]=Vector3.Distance(vertex[0],vertex[1]);
+        distance[1]=Vector3.Distance(vertex[1],p);
+        n=Vector3.Lerp(
+            normal[1]=polygonCell[c1].Normal,
+            normal[0]=polygonCell[c0].Normal,distance[1]/distance[0]);
+        n=n!=Vector3.zero?n.normalized:Vector3.down;
 }
     }
 //  Buffer the data
@@ -234,9 +258,9 @@ Vector3 pos=vCoord1-TrianglePosAdj;pos.x+=posOffset.x;
 Vector3[]verPos=new Vector3[3]{pos+vertices[idx[0]=Tables.TriangleTable[edgeIndex][i  ]],
                                pos+vertices[idx[1]=Tables.TriangleTable[edgeIndex][i+1]],
                                pos+vertices[idx[2]=Tables.TriangleTable[edgeIndex][i+2]]};
-TempVer.Add(new Vertex(verPos[0],-Vector3.down));
-TempVer.Add(new Vertex(verPos[1],-Vector3.down));
-TempVer.Add(new Vertex(verPos[2],-Vector3.down));
+TempVer.Add(new Vertex(verPos[0],-normals[idx[0]]));
+TempVer.Add(new Vertex(verPos[1],-normals[idx[1]]));
+TempVer.Add(new Vertex(verPos[2],-normals[idx[2]]));
 vertexCount+=3;
 }
 }
@@ -256,6 +280,11 @@ hasBuildData=true;backgroundDataSet.Set();}
         _Stop:{
             TempVer.Dispose();TempTriangles.Dispose();
 if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
+        }
+#pragma warning disable CS8321 
+        void assert(bool condition,string msg=""){
+#pragma warning restore CS8321 
+            if(!condition){try{throw new Exception(string.IsNullOrEmpty(msg)?"assert failed":msg);}catch{throw;}finally{if(TempVer.IsCreated)TempVer.Dispose();if(TempTriangles.IsCreated)TempTriangles.Dispose();}}
         }
     }
 }catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}}
