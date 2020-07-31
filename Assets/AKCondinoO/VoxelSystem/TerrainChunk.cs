@@ -74,15 +74,15 @@ public struct Vertex{
     new VertexAttributeDescriptor(VertexAttribute.Position ,VertexAttributeFormat.Float32,3),
     new VertexAttributeDescriptor(VertexAttribute.Normal   ,VertexAttributeFormat.Float32,3),
 };
-[NonSerialized]static readonly AutoResetEvent queue=new AutoResetEvent(true);
+[NonSerialized]static readonly object tasksBusyCount_Syn=new object();[NonSerialized]static int tasksBusyCount=0;[NonSerialized]static readonly AutoResetEvent queue=new AutoResetEvent(true);
 [NonSerialized]readonly Voxel[]voxels=new Voxel[VoxelsPerChunk];
 [NonSerialized]Vector2Int cCoord1;
 [NonSerialized]Vector2Int cnkRgn1;
-void BG(object state){Thread.CurrentThread.IsBackground=false;try{
+void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is NativeList<Vertex>TempVer&&parameters[3]is NativeList<ushort>TempTriangles){
 Voxel[]polygonCell=new Voxel[8];
         while(!Stop){foregroundDataSet.WaitOne();if(Stop)goto _Stop;
-queue.WaitOne();
+lock(tasksBusyCount_Syn){tasksBusyCount++;}queue.WaitOne(tasksBusyCount*5000);
 Array.Clear(voxels,0,voxels.Length);TempVer.Clear();TempTriangles.Clear();
 if(LOG&&LOG_LEVEL<=2)Debug.Log("do job ["+cnkRgn1);var watch=System.Diagnostics.Stopwatch.StartNew();
 Voxel[][][]voxelsBuffer1=new Voxel[3][][]{new Voxel[1][]{new Voxel[4],},new Voxel[Depth][],new Voxel[FlattenOffset][],};for(int i=0;i<voxelsBuffer1[2].Length;++i){voxelsBuffer1[2][i]=new Voxel[4];if(i<voxelsBuffer1[1].Length){voxelsBuffer1[1][i]=new Voxel[4];}}
@@ -267,7 +267,7 @@ vertexCount+=3;
 }
 }
 if(LOG&&LOG_LEVEL<=2)Debug.Log("job done "+watch.ElapsedMilliseconds+" ms ["+cnkRgn1);
-queue.Set();
+lock(tasksBusyCount_Syn){tasksBusyCount--;}queue.Set();
 hasBuildData=true;backgroundDataSet.Set();}
         int index(Vector2Int offset){
             if(offset.x== 0&&offset.y== 0)return 0;

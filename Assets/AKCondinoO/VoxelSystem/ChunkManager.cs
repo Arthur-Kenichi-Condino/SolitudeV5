@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 namespace AKCondinoO.Voxels{public class ChunkManager:MonoBehaviour{ 
@@ -9,8 +10,20 @@ public GameObject ChunkPrefab;
 [NonSerialized]public Vector2Int expropriationDistance=new Vector2Int(5,5);[NonSerialized]public readonly LinkedList<Chunk>ChunksPool=new LinkedList<Chunk>();
 [NonSerialized]public Vector2Int instantiationDistance=new Vector2Int(5,5);[NonSerialized]public readonly Dictionary<int,Chunk>Chunks=new Dictionary<int,Chunk>();
 protected virtual void Awake(){
+var maxChunks=(expropriationDistance.x*2+1)*(expropriationDistance.y*2+1);
+if(LOG&&LOG_LEVEL<=100)Debug.Log("The number of processors on this computer is "+Environment.ProcessorCount);
+ThreadPool.GetAvailableThreads(out int worker ,out int io         );if(LOG&&LOG_LEVEL<=100)Debug.Log("Thread pool threads available at startup: Worker threads: "+worker+" Asynchronous I/O threads: "+io);
+ThreadPool.GetMaxThreads(out int workerThreads,out int portThreads);if(LOG&&LOG_LEVEL<=100)Debug.Log("Maximum worker threads: "+workerThreads+" Maximum completion port threads: "+portThreads);
+ThreadPool.GetMinThreads(out int minWorker    ,out int minIOC     );if(LOG&&LOG_LEVEL<=100)Debug.Log("minimum number of worker threads: "+minWorker+" minimum asynchronous I/O: "+minIOC);
+if(minWorker<maxChunks){
+if(ThreadPool.SetMinThreads(maxChunks+minWorker,minIOC)){
+if(LOG&&LOG_LEVEL<=100)Debug.Log("changed minimum number of worker threads to:"+(maxChunks+minWorker));
+}else{
+if(LOG&&LOG_LEVEL<=100)Debug.Log("SetMinThreads failed");
+}
+}
 GCSettings.LatencyMode=GCLatencyMode.SustainedLowLatency;
-    for(int i=(expropriationDistance.x*2+1)*(expropriationDistance.y*2+1)-1;i>=0;--i){
+    for(int i=maxChunks-1;i>=0;--i){
         GameObject obj=Instantiate(ChunkPrefab);Chunk scr=obj.GetComponent<Chunk>();ChunksPool.AddLast(scr);scr.ExpropriationNode=ChunksPool.Last;
     }
 }
