@@ -15,9 +15,9 @@ if(LOG&&LOG_LEVEL<=100)Debug.Log("The number of processors on this computer is "
 ThreadPool.GetAvailableThreads(out int worker ,out int io         );if(LOG&&LOG_LEVEL<=100)Debug.Log("Thread pool threads available at startup: Worker threads: "+worker+" Asynchronous I/O threads: "+io);
 ThreadPool.GetMaxThreads(out int workerThreads,out int portThreads);if(LOG&&LOG_LEVEL<=100)Debug.Log("Maximum worker threads: "+workerThreads+" Maximum completion port threads: "+portThreads);
 ThreadPool.GetMinThreads(out int minWorker    ,out int minIOC     );if(LOG&&LOG_LEVEL<=100)Debug.Log("minimum number of worker threads: "+minWorker+" minimum asynchronous I/O: "+minIOC);
-if(minWorker<maxChunks){
-if(ThreadPool.SetMinThreads(maxChunks+minWorker,minIOC)){
-if(LOG&&LOG_LEVEL<=100)Debug.Log("changed minimum number of worker threads to:"+(maxChunks+minWorker));
+var idealMin=(maxChunks+Environment.ProcessorCount);if(minWorker!=idealMin){
+if(ThreadPool.SetMinThreads(idealMin,minIOC)){
+if(LOG&&LOG_LEVEL<=100)Debug.Log("changed minimum number of worker threads to:"+(idealMin));
 }else{
 if(LOG&&LOG_LEVEL<=100)Debug.Log("SetMinThreads failed");
 }
