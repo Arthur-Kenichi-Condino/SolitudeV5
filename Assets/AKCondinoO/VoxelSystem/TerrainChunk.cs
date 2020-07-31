@@ -65,14 +65,20 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("TempVer.Length:"+TempVer.Length+";TempTriangles.
 public struct Vertex{
     public Vector3 pos;
     public Vector3 normal;
-       public Vertex(Vector3 p,Vector3 n){
+    public Color color;
+    public Vector2 texCoord0;
+       public Vertex(Vector3 p,Vector3 n,Vector2 uv0){
         pos=p;
         normal=n;
+        color=new Color(1f,0f,0f,0f);
+        texCoord0=uv0;
        }
 }
 [NonSerialized]static readonly VertexAttributeDescriptor[]layout=new[]{
     new VertexAttributeDescriptor(VertexAttribute.Position ,VertexAttributeFormat.Float32,3),
     new VertexAttributeDescriptor(VertexAttribute.Normal   ,VertexAttributeFormat.Float32,3),
+    new VertexAttributeDescriptor(VertexAttribute.Color    ,VertexAttributeFormat.Float32,4),
+    new VertexAttributeDescriptor(VertexAttribute.TexCoord0,VertexAttributeFormat.Float32,2),
 };
 [NonSerialized]static readonly object tasksBusyCount_Syn=new object();[NonSerialized]static int tasksBusyCount=0;[NonSerialized]static readonly AutoResetEvent queue=new AutoResetEvent(true);
 [NonSerialized]readonly Voxel[]voxels=new Voxel[VoxelsPerChunk];
@@ -192,6 +198,7 @@ if(-polygonCell[7].Density<IsoLevel)edgeIndex|=128;
 if(Tables.EdgeTable[edgeIndex]==0){/*  Cube is entirely in/out of the surface  */
     return;
 }
+MaterialId[]materials=new MaterialId[12];
    Vector3[] vertices=new Vector3[12];
    Vector3[]  normals=new Vector3[12];
 //  Use buffered data if available
@@ -204,19 +211,19 @@ vertices[ 7]=(vCoord1.x>0?verticesBuffer[1][vCoord1.z][1]:Vector3.zero);
 vertices[ 8]=(vCoord1.x>0?verticesBuffer[1][vCoord1.z][2]:(vCoord1.y>0?verticesBuffer[2][vCoord1.z+vCoord1.x*Width][3]:Vector3.zero));
 vertices[ 9]=(vCoord1.y>0?verticesBuffer[2][vCoord1.z+vCoord1.x*Width][2]:Vector3.zero);
 vertices[11]=(vCoord1.x>0?verticesBuffer[1][vCoord1.z][3]:Vector3.zero);
-if(0!=(Tables.EdgeTable[edgeIndex]&   1)){vertexInterp(0,1,ref vertices[ 0],ref normals[ 0]);}
-if(0!=(Tables.EdgeTable[edgeIndex]&   2)){vertexInterp(1,2,ref vertices[ 1],ref normals[ 1]);}
-if(0!=(Tables.EdgeTable[edgeIndex]&   4)){vertexInterp(2,3,ref vertices[ 2],ref normals[ 2]);}
-if(0!=(Tables.EdgeTable[edgeIndex]&   8)){vertexInterp(3,0,ref vertices[ 3],ref normals[ 3]);}
-if(0!=(Tables.EdgeTable[edgeIndex]&  16)){vertexInterp(4,5,ref vertices[ 4],ref normals[ 4]);}
-if(0!=(Tables.EdgeTable[edgeIndex]&  32)){vertexInterp(5,6,ref vertices[ 5],ref normals[ 5]);}
-if(0!=(Tables.EdgeTable[edgeIndex]&  64)){vertexInterp(6,7,ref vertices[ 6],ref normals[ 6]);}
-if(0!=(Tables.EdgeTable[edgeIndex]& 128)){vertexInterp(7,4,ref vertices[ 7],ref normals[ 7]);}
-if(0!=(Tables.EdgeTable[edgeIndex]& 256)){vertexInterp(0,4,ref vertices[ 8],ref normals[ 8]);}
-if(0!=(Tables.EdgeTable[edgeIndex]& 512)){vertexInterp(1,5,ref vertices[ 9],ref normals[ 9]);}
-if(0!=(Tables.EdgeTable[edgeIndex]&1024)){vertexInterp(2,6,ref vertices[10],ref normals[10]);}
-if(0!=(Tables.EdgeTable[edgeIndex]&2048)){vertexInterp(3,7,ref vertices[11],ref normals[11]);}
-    void vertexInterp(int c0,int c1,ref Vector3 p,ref Vector3 n){
+if(0!=(Tables.EdgeTable[edgeIndex]&   1)){vertexInterp(0,1,ref vertices[ 0],ref normals[ 0],ref materials[ 0]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&   2)){vertexInterp(1,2,ref vertices[ 1],ref normals[ 1],ref materials[ 1]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&   4)){vertexInterp(2,3,ref vertices[ 2],ref normals[ 2],ref materials[ 2]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&   8)){vertexInterp(3,0,ref vertices[ 3],ref normals[ 3],ref materials[ 3]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&  16)){vertexInterp(4,5,ref vertices[ 4],ref normals[ 4],ref materials[ 4]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&  32)){vertexInterp(5,6,ref vertices[ 5],ref normals[ 5],ref materials[ 5]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&  64)){vertexInterp(6,7,ref vertices[ 6],ref normals[ 6],ref materials[ 6]);}
+if(0!=(Tables.EdgeTable[edgeIndex]& 128)){vertexInterp(7,4,ref vertices[ 7],ref normals[ 7],ref materials[ 7]);}
+if(0!=(Tables.EdgeTable[edgeIndex]& 256)){vertexInterp(0,4,ref vertices[ 8],ref normals[ 8],ref materials[ 8]);}
+if(0!=(Tables.EdgeTable[edgeIndex]& 512)){vertexInterp(1,5,ref vertices[ 9],ref normals[ 9],ref materials[ 9]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&1024)){vertexInterp(2,6,ref vertices[10],ref normals[10],ref materials[10]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&2048)){vertexInterp(3,7,ref vertices[11],ref normals[11],ref materials[11]);}
+    void vertexInterp(int c0,int c1,ref Vector3 p,ref Vector3 n,ref MaterialId m){
 double[]density=new double[2]{-polygonCell[c0].Density,-polygonCell[c1].Density};Vector3[]vertex=new Vector3[2]{Corners[c0],Corners[c1]};
 if(p!=Vector3.zero){goto _Normal;}
 if(Math.Abs(IsoLevel-density[0])<double.Epsilon){p=vertex[0];goto _Normal;}
@@ -235,6 +242,8 @@ float[]distance=new float[2];Vector3[]normal=new Vector3[2];
             normal[0]=polygonCell[c0].Normal,distance[1]/distance[0]);
         n=n!=Vector3.zero?n.normalized:Vector3.down;
 }
+MaterialId[]material=new MaterialId[2]{polygonCell[c0].Material,polygonCell[c1].Material};
+        m=material[0];if(density[1]<density[0]){m=material[1];}else if(density[1]==density[0]&&(int)material[1]>(int)material[0]){m=material[1];}
     }
 //  Buffer the data
 verticesBuffer[0][0][0]=vertices[ 4]+Vector3.back;//  Adiciona um valor negativo porque o voxelCoord próximo vai usar esse valor mais o de sua posição (próprio voxelCoord novo)
@@ -260,9 +269,13 @@ Vector3 pos=vCoord1-TrianglePosAdj;pos.x+=posOffset.x;
 Vector3[]verPos=new Vector3[3]{pos+vertices[idx[0]=Tables.TriangleTable[edgeIndex][i  ]],
                                pos+vertices[idx[1]=Tables.TriangleTable[edgeIndex][i+1]],
                                pos+vertices[idx[2]=Tables.TriangleTable[edgeIndex][i+2]]};
-TempVer.Add(new Vertex(verPos[0],-normals[idx[0]]));
-TempVer.Add(new Vertex(verPos[1],-normals[idx[1]]));
-TempVer.Add(new Vertex(verPos[2],-normals[idx[2]]));
+MaterialId material=                                         materials[idx[0]];
+           material=(MaterialId)Mathf.Max((int)material,(int)materials[idx[1]]);
+           material=(MaterialId)Mathf.Max((int)material,(int)materials[idx[2]]);
+   Vector2 materialUV=AtlasHelper.GetUV(material);
+TempVer.Add(new Vertex(verPos[0],-normals[idx[0]],materialUV));
+TempVer.Add(new Vertex(verPos[1],-normals[idx[1]],materialUV));
+TempVer.Add(new Vertex(verPos[2],-normals[idx[2]],materialUV));
 vertexCount+=3;
 }
 }

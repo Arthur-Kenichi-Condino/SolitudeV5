@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LOG: 1
   LOG_LEVEL: 1
-  DEBUG_START: 0
+  DRAW_LEVEL: 1
 --- !u!33 &-9060336033833968481
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -75,7 +75,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eea523665fc087a4c8aa8872a76f67d7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
