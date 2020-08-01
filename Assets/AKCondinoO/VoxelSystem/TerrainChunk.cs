@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime;
 using System.Threading;
 using System.Threading.Tasks;
@@ -67,11 +68,13 @@ public struct Vertex{
     public Vector3 normal;
     public Color color;
     public Vector2 texCoord0;
+    public Vector2 texCoord1;
        public Vertex(Vector3 p,Vector3 n,Vector2 uv0){
         pos=p;
         normal=n;
         color=new Color(1f,0f,0f,0f);
         texCoord0=uv0;
+        texCoord1=new Vector2(-1f,-1f);
        }
 }
 [NonSerialized]static readonly VertexAttributeDescriptor[]layout=new[]{
@@ -79,6 +82,7 @@ public struct Vertex{
     new VertexAttributeDescriptor(VertexAttribute.Normal   ,VertexAttributeFormat.Float32,3),
     new VertexAttributeDescriptor(VertexAttribute.Color    ,VertexAttributeFormat.Float32,4),
     new VertexAttributeDescriptor(VertexAttribute.TexCoord0,VertexAttributeFormat.Float32,2),
+    new VertexAttributeDescriptor(VertexAttribute.TexCoord1,VertexAttributeFormat.Float32,2),
 };
 [NonSerialized]static readonly object tasksBusyCount_Syn=new object();[NonSerialized]static int tasksBusyCount=0;[NonSerialized]static readonly AutoResetEvent queue=new AutoResetEvent(true);
 [NonSerialized]readonly Voxel[]voxels=new Voxel[VoxelsPerChunk];
@@ -89,7 +93,7 @@ void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThre
 Voxel[]polygonCell=new Voxel[8];
         while(!Stop){foregroundDataSet.WaitOne();if(Stop)goto _Stop;
 lock(tasksBusyCount_Syn){tasksBusyCount++;}queue.WaitOne(tasksBusyCount*5000);
-Array.Clear(voxels,0,voxels.Length);TempVer.Clear();TempTriangles.Clear();
+Array.Clear(voxels,0,voxels.Length);TempVer.Clear();TempTriangles.Clear();Dictionary<Vector3,List<Vector2>>UVsByVertex=new Dictionary<Vector3,List<Vector2>>();
 if(LOG&&LOG_LEVEL<=2)Debug.Log("do job ["+cnkRgn1);var watch=System.Diagnostics.Stopwatch.StartNew();
 Voxel[][][]voxelsBuffer1=new Voxel[3][][]{new Voxel[1][]{new Voxel[4],},new Voxel[Depth][],new Voxel[FlattenOffset][],};for(int i=0;i<voxelsBuffer1[2].Length;++i){voxelsBuffer1[2][i]=new Voxel[4];if(i<voxelsBuffer1[1].Length){voxelsBuffer1[1][i]=new Voxel[4];}}
 Vector3[][][]verticesBuffer=new Vector3[3][][]{new Vector3[1][]{new Vector3[4],},new Vector3[Depth][],new Vector3[FlattenOffset][],};for(int i=0;i<verticesBuffer[2].Length;++i){verticesBuffer[2][i]=new Vector3[4];if(i<verticesBuffer[1].Length){verticesBuffer[1][i]=new Vector3[4];}}
@@ -273,12 +277,32 @@ MaterialId material=                                         materials[idx[0]];
            material=(MaterialId)Mathf.Max((int)material,(int)materials[idx[1]]);
            material=(MaterialId)Mathf.Max((int)material,(int)materials[idx[2]]);
    Vector2 materialUV=AtlasHelper.GetUV(material);
-TempVer.Add(new Vertex(verPos[0],-normals[idx[0]],materialUV));
-TempVer.Add(new Vertex(verPos[1],-normals[idx[1]],materialUV));
-TempVer.Add(new Vertex(verPos[2],-normals[idx[2]],materialUV));
+TempVer.Add(new Vertex(verPos[0],-normals[idx[0]],materialUV));if(!UVsByVertex.ContainsKey(verPos[0])){UVsByVertex.Add(verPos[0],new List<Vector2>());}UVsByVertex[verPos[0]].Add(materialUV);
+TempVer.Add(new Vertex(verPos[1],-normals[idx[1]],materialUV));if(!UVsByVertex.ContainsKey(verPos[1])){UVsByVertex.Add(verPos[1],new List<Vector2>());}UVsByVertex[verPos[1]].Add(materialUV);
+TempVer.Add(new Vertex(verPos[2],-normals[idx[2]],materialUV));if(!UVsByVertex.ContainsKey(verPos[2])){UVsByVertex.Add(verPos[2],new List<Vector2>());}UVsByVertex[verPos[2]].Add(materialUV);
 vertexCount+=3;
 }
 }
+for(int i=0;i<TempVer.Length/3;i++){int[]idx=new int[3]{i*3,i*3+1,i*3+2};Vector3[]verPos=new Vector3[3];
+for(int j=0;j<3;j++){
+var MaterialIdGroupsOrdered=UVsByVertex[verPos[j]=TempVer[idx[j]].pos].ToArray().Select(uv=>{return AtlasHelper.GetMaterial(uv);}).GroupBy(value=>value).OrderByDescending(group=>group.Key).OrderByDescending(group=>group.Count());var weights=new Dictionary<int,int>(4);int total=0;Vector2 uv0=TempVer[idx[j]].texCoord0;
+foreach(var MaterialIdgroup in MaterialIdGroupsOrdered){bool add;Vector2 uv=AtlasHelper.GetUV(MaterialIdgroup.First());
+    if(uv0==uv){
+        total+=weights[0]=MaterialIdgroup.Count();
+    }else if((add=TempVer[idx[j]].texCoord1==_emptyUV)||TempVer[idx[j]].texCoord1==uv){
+        if(add){var v1=TempVer[idx[0]];v1.texCoord1=uv;TempVer[idx[0]]=v1;
+                    v1=TempVer[idx[1]];v1.texCoord1=uv;TempVer[idx[1]]=v1;
+                    v1=TempVer[idx[2]];v1.texCoord1=uv;TempVer[idx[2]]=v1;
+        }
+        total+=weights[1]=MaterialIdgroup.Count();
+    }
+}
+if(weights.Count>1){var v2=TempVer[idx[j]];
+ Color col=v2.color;col.r=(weights[0]/(float)total);
+                    col.g=(weights[1]/(float)total);
+           v2.color=col;TempVer[idx[j]]=v2;
+}
+}}
 if(LOG&&LOG_LEVEL<=2)Debug.Log("job done "+watch.ElapsedMilliseconds+" ms ["+cnkRgn1);
 lock(tasksBusyCount_Syn){tasksBusyCount--;}queue.Set();
 hasBuildData=true;backgroundDataSet.Set();}
@@ -303,7 +327,7 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
             if(!condition){try{throw new Exception(string.IsNullOrEmpty(msg)?"assert failed":msg);}catch{throw;}finally{if(TempVer.IsCreated)TempVer.Dispose();if(TempTriangles.IsCreated)TempTriangles.Dispose();}}
         }
     }
-}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}}
+}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);try{if(TempVer.IsCreated)TempVer.Dispose();}finally{}try{if(TempTriangles.IsCreated)TempTriangles.Dispose();}finally{}}}
 public struct Voxel{
        public Voxel(double d,Vector3 n,MaterialId m){
         Density=d;Normal=n;Material=m;IsCreated=true;
@@ -323,7 +347,7 @@ new Vector3( .5f, .5f, .5f),
 new Vector3(-.5f, .5f, .5f),
 });
 public static Vector3 TrianglePosAdj{get;}=new Vector3((Width/2.0f)-0.5f,(Height/2.0f)-0.5f,(Depth/2.0f)-0.5f);//  Ajuste para que o mesh do chunk fique centralizado, com pivot em 0,0,0
-public const double IsoLevel=-50.0d;
+public const double IsoLevel=-50.0d;Vector2 _emptyUV{get;}=new Vector2(-1,-1);
 
 
 

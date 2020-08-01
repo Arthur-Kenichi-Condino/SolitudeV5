@@ -1,6 +1,6 @@
 ﻿Shader"Custom/TerrainAtlasShader"{
 Properties{
-_Color("Color",Color)=(1,1,1,1) _MainTex("Albedo (RGB)",2D)="white"{} _Glossiness("Smoothness",Range(0,1))=0.5 _Metallic("Metallic",Range(0,1))=0.0
+_Color("Color",Color)=(1,1,1,1) _MainTex("Albedo (RGB)",2D)="white"{} _MainTex1("Albedo (RGB) 1",2D)="white"{} _Glossiness("Smoothness",Range(0,1))=0.5 _Metallic("Metallic",Range(0,1))=0.0
 _TilesResolution("Atlas Tiles Resolution",float)=3 _Scale("Scale",float)=1 _Sharpness("Triplanar Blend Sharpness",float)=1
 }
 SubShader{Tags{"Queue"="AlphaTest" "RenderType"="Transparent" "IgnoreProjector"="True"}
@@ -34,13 +34,14 @@ CGPROGRAM
 #pragma target 3.0
 //  Add fog and make it work
 #pragma multi_compile_fog
-fixed4 _Color;sampler2D _MainTex;half _Glossiness;half _Metallic;
+fixed4 _Color;sampler2D _MainTex;sampler2D _MainTex1;half _Glossiness;half _Metallic;
 float _TilesResolution;float _Scale;float _Sharpness;
-struct Input {
+struct Input{
     float3 worldPos:POSITION;
     float3 worldNormal:NORMAL;
     float4 color:COLOR;
     float2 uv_MainTex:TEXCOORD0;
+    float2 uv2_MainTex1:TEXCOORD1;
 };
 //  Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -76,6 +77,13 @@ zAxis=input.color.r*tex2D(_MainTex,(frac(zUV)*offsetUVSize+offsetUV));
 fixed4 xAxis1=0;
 fixed4 yAxis1=0;
 fixed4 zAxis1=0;
+if(input.uv2_MainTex1.x>=0){
+float2 offsetUV1=input.uv2_MainTex1;
+       offsetUV1=float2(clamp(offsetUV1.x,0,1),clamp(offsetUV1.y,0,1));
+xAxis1=input.color.g*tex2D(_MainTex1,(frac(xUV)*offsetUVSize+offsetUV1));
+yAxis1=input.color.g*tex2D(_MainTex1,(frac(yUV)*offsetUVSize+offsetUV1));
+zAxis1=input.color.g*tex2D(_MainTex1,(frac(zUV)*offsetUVSize+offsetUV1));
+}
 //  Finally, blend together all three samples based on the blend mask.
 fixed4 c=(xAxis+xAxis1)*blendWeights.x+(yAxis+yAxis1)*blendWeights.y+(zAxis+zAxis1)*blendWeights.z;
 //  Albedo comes from a texture tinted by color

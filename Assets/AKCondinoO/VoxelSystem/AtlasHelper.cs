@@ -21,6 +21,9 @@ case(MaterialId.Dirt      ):{return _UVs[(int)MaterialId.Dirt   ];}
 case(MaterialId.Bedrock   ):{return _UVs[(int)MaterialId.Bedrock];}
 default                    :{return _UVs[(int)MaterialId.Air    ];}
 }}
+public static MaterialId GetMaterial(Vector2 uv){
+return(MaterialId)Array.IndexOf(_UVs,uv);
+}
 public static Vector2[]_UVs;
 }
 /// <summary>

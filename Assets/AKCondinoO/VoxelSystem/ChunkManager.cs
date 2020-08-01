@@ -8,7 +8,7 @@ namespace AKCondinoO.Voxels{public class ChunkManager:MonoBehaviour{
 public bool LOG=false;public int LOG_LEVEL=1;
 public GameObject ChunkPrefab;
 [NonSerialized]public Vector2Int expropriationDistance=new Vector2Int(5,5);[NonSerialized]public readonly LinkedList<Chunk>ChunksPool=new LinkedList<Chunk>();
-[NonSerialized]public Vector2Int instantiationDistance=new Vector2Int(0,0);[NonSerialized]public readonly Dictionary<int,Chunk>Chunks=new Dictionary<int,Chunk>();
+[NonSerialized]public Vector2Int instantiationDistance=new Vector2Int(1,1);[NonSerialized]public readonly Dictionary<int,Chunk>Chunks=new Dictionary<int,Chunk>();
 protected virtual void Awake(){
 AtlasHelper.GetAtlasData(ChunkPrefab.GetComponent<MeshRenderer>().sharedMaterial);
 var maxChunks=(expropriationDistance.x*2+1)*(expropriationDistance.y*2+1);
