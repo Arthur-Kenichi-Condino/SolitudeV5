@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using static AKCondinoO.Voxels.TerrainChunk;
 namespace AKCondinoO.Voxels{public class Biome{
     public virtual void v(Vector3 noiseInput,ref Voxel v){

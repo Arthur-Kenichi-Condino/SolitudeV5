@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 namespace AKCondinoO.Voxels{public class Chunk:MonoBehaviour{
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
