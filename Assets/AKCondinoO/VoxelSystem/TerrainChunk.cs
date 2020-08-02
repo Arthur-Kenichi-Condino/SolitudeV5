@@ -92,13 +92,13 @@ void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThre
 Voxel[]polygonCell=new Voxel[8];
         while(!Stop){foregroundDataSet.WaitOne();if(Stop)goto _Stop;
 lock(tasksBusyCount_Syn){tasksBusyCount++;}queue.WaitOne(tasksBusyCount*5000);
-Array.Clear(voxels,0,voxels.Length);TempVer.Clear();TempTriangles.Clear();Dictionary<Vector3,List<Vector2>>UVsByVertex=new Dictionary<Vector3,List<Vector2>>();
+Array.Clear(voxels,0,voxels.Length);TempVer.Clear();TempTriangles.Clear();var neighbors=new Dictionary<int,Voxel>[8];for(int i=0;i<8;i++){neighbors[i]=new Dictionary<int,Voxel>();}Dictionary<Vector3,List<Vector2>>UVsByVertex=new Dictionary<Vector3,List<Vector2>>();
 if(LOG&&LOG_LEVEL<=2)Debug.Log("do job ["+cnkRgn1);var watch=System.Diagnostics.Stopwatch.StartNew();
 Voxel[][][]voxelsBuffer1=new Voxel[3][][]{new Voxel[1][]{new Voxel[4],},new Voxel[Depth][],new Voxel[FlattenOffset][],};for(int i=0;i<voxelsBuffer1[2].Length;++i){voxelsBuffer1[2][i]=new Voxel[4];if(i<voxelsBuffer1[1].Length){voxelsBuffer1[1][i]=new Voxel[4];}}
 Vector3[][][]verticesBuffer=new Vector3[3][][]{new Vector3[1][]{new Vector3[4],},new Vector3[Depth][],new Vector3[FlattenOffset][],};for(int i=0;i<verticesBuffer[2].Length;++i){verticesBuffer[2][i]=new Vector3[4];if(i<verticesBuffer[1].Length){verticesBuffer[1][i]=new Vector3[4];}}
 ushort vertexCount=0;
 Vector2Int posOffset=Vector2Int.zero;
-Vector2Int corOffset=Vector2Int.zero;
+Vector2Int crdOffset=Vector2Int.zero;
 Vector3Int vCoord1;
 for(vCoord1=new Vector3Int();vCoord1.y<Height;vCoord1.y++){
 for(vCoord1.x=0             ;vCoord1.x<Width ;vCoord1.x++){
@@ -137,7 +137,7 @@ if(vCoord2.x<0||vCoord2.x>=Width||
    vCoord2.z<0||vCoord2.z>=Depth){ 
 ValidateCoord(ref cnkRgn2,ref vCoord2);cCoord2=ChunkManager.RgnToCoord(cnkRgn2);
 }var vxlIdx2=GetIdx(vCoord2.x,vCoord2.y,vCoord2.z);
-            int i2=index(corOffset+(cCoord2-cCoord1));if(i2==0&&voxels[vxlIdx2].IsCreated)
+            int i2=index(cCoord2-cCoord1);if(i2==0&&voxels[vxlIdx2].IsCreated)
             polygonCell[corner]=voxels[vxlIdx2];
             else{
 Vector3 noiseInput=vCoord2;noiseInput.x+=cnkRgn2.x;
@@ -162,7 +162,7 @@ if(vCoord3.x<0||vCoord3.x>=Width||
    vCoord3.z<0||vCoord3.z>=Depth){ 
 ValidateCoord(ref cnkRgn3,ref vCoord3);cCoord3=ChunkManager.RgnToCoord(cnkRgn3);
 }var vxlIdx3=GetIdx(vCoord3.x,vCoord3.y,vCoord3.z);
-            int i3=index(corOffset+(cCoord3-cCoord1));if(i3==0&&voxels[vxlIdx3].IsCreated)
+            int i3=index(cCoord3-cCoord1);if(i3==0&&voxels[vxlIdx3].IsCreated)
             tmp[tmpIdx]=voxels[vxlIdx3];
             else{
 Vector3 noiseInput=vCoord3;noiseInput.x+=cnkRgn3.x;
@@ -184,6 +184,7 @@ if(polygonCell[corner].Normal!=Vector3.zero){
 }
         }
     }
+#region MarchingCubes
 int edgeIndex;
 /*
     Determine the index into the edge table which
@@ -281,18 +282,48 @@ TempVer.Add(new Vertex(verPos[1],-normals[idx[1]],materialUV));if(!UVsByVertex.C
 TempVer.Add(new Vertex(verPos[2],-normals[idx[2]],materialUV));if(!UVsByVertex.ContainsKey(verPos[2])){UVsByVertex.Add(verPos[2],new List<Vector2>());}UVsByVertex[verPos[2]].Add(materialUV);
 vertexCount+=3;
 }
+#endregion
 }
-for(corOffset.y=0,
+for(crdOffset.y=0,
     posOffset.y=0,
     vCoord1.y=0;vCoord1.y<Height;vCoord1.y++){
 for(vCoord1.z=0;vCoord1.z<Depth ;vCoord1.z++){
-corOffset.x=1;
+crdOffset.x=1;
 posOffset.x=Width;
     vCoord1.x=0;
-corOffset.x=-1;
+PseudoPolygonise();
+crdOffset.x=-1;
 posOffset.x=-Width;
     vCoord1.x=Width-1;
+PseudoPolygonise();
 }}
+void PseudoPolygonise(){
+int corner=0;Vector3Int vCoord2=vCoord1;                        SetVoxel();
+corner++;vCoord2=vCoord1;vCoord2.x+=1;                          SetVoxel();
+corner++;vCoord2=vCoord1;vCoord2.x+=1;vCoord2.y+=1;             SetVoxel();
+corner++;vCoord2=vCoord1;             vCoord2.y+=1;             SetVoxel();
+corner++;vCoord2=vCoord1;                          vCoord2.z+=1;SetVoxel();
+corner++;vCoord2=vCoord1;vCoord2.x+=1;             vCoord2.z+=1;SetVoxel();
+corner++;vCoord2=vCoord1;vCoord2.x+=1;vCoord2.y+=1;vCoord2.z+=1;SetVoxel();
+corner++;vCoord2=vCoord1;             vCoord2.y+=1;vCoord2.z+=1;SetVoxel();
+    void SetVoxel(){
+        if(vCoord2.y<0){
+            polygonCell[corner]=Voxel.Bedrock;
+        }else if(vCoord2.y>=Height){
+            polygonCell[corner]=Voxel.Air;
+        }else{
+Vector2Int cnkRgn2=cnkRgn1+posOffset;Vector2Int cCoord2=cCoord1+crdOffset;
+if(vCoord2.x<0||vCoord2.x>=Width||
+   vCoord2.z<0||vCoord2.z>=Depth){ 
+ValidateCoord(ref cnkRgn2,ref vCoord2);cCoord2=ChunkManager.RgnToCoord(cnkRgn2);
+}var vxlIdx2=GetIdx(vCoord2.x,vCoord2.y,vCoord2.z);
+            int i2=index(cCoord2-cCoord1);if(i2==0&&voxels[vxlIdx2].IsCreated)
+            polygonCell[corner]=voxels[vxlIdx2];
+            else{
+            }
+        }
+    }
+}
 for(int i=0;i<TempVer.Length/3;i++){int[]idx=new int[3]{i*3,i*3+1,i*3+2};Vector3[]verPos=new Vector3[3];
 for(int j=0;j<3;j++){
 var MaterialIdGroupsOrdered=UVsByVertex[verPos[j]=TempVer[idx[j]].pos].ToArray().Select(uv=>{return AtlasHelper.GetMaterial(uv);}).GroupBy(value=>value).OrderByDescending(group=>group.Key).OrderByDescending(group=>group.Count());var weights=new Dictionary<int,int>(4);int total=0;Vector2 uv0=TempVer[idx[j]].texCoord0;
