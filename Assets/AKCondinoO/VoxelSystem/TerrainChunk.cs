@@ -320,9 +320,41 @@ ValidateCoord(ref cnkRgn2,ref vCoord2);cCoord2=ChunkManager.RgnToCoord(cnkRgn2);
             int i2=index(cCoord2-cCoord1);if(i2==0&&voxels[vxlIdx2].IsCreated)
             polygonCell[corner]=voxels[vxlIdx2];
             else{
+Vector3 noiseInput=vCoord2;noiseInput.x+=cnkRgn2.x;
+                           noiseInput.z+=cnkRgn2.y;
+ChunkManager.biome.v(noiseInput,ref polygonCell[corner]);
             }
         }
     }
+int edgeIndex;
+/*
+    Determine the index into the edge table which
+    tells us which vertices are inside of the surface
+*/
+                                    edgeIndex =  0;
+if(-polygonCell[0].Density<IsoLevel)edgeIndex|=  1;
+if(-polygonCell[1].Density<IsoLevel)edgeIndex|=  2;
+if(-polygonCell[2].Density<IsoLevel)edgeIndex|=  4;
+if(-polygonCell[3].Density<IsoLevel)edgeIndex|=  8;
+if(-polygonCell[4].Density<IsoLevel)edgeIndex|= 16;
+if(-polygonCell[5].Density<IsoLevel)edgeIndex|= 32;
+if(-polygonCell[6].Density<IsoLevel)edgeIndex|= 64;
+if(-polygonCell[7].Density<IsoLevel)edgeIndex|=128;
+if(Tables.EdgeTable[edgeIndex]==0){/*  Cube is entirely in/out of the surface  */
+    return;
+}
+if(0!=(Tables.EdgeTable[edgeIndex]&   1)){vertexInterp(0,1,ref vertices[ 0],ref materials[ 0]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&   2)){vertexInterp(1,2,ref vertices[ 1],ref materials[ 1]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&   4)){vertexInterp(2,3,ref vertices[ 2],ref materials[ 2]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&   8)){vertexInterp(3,0,ref vertices[ 3],ref materials[ 3]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&  16)){vertexInterp(4,5,ref vertices[ 4],ref materials[ 4]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&  32)){vertexInterp(5,6,ref vertices[ 5],ref materials[ 5]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&  64)){vertexInterp(6,7,ref vertices[ 6],ref materials[ 6]);}
+if(0!=(Tables.EdgeTable[edgeIndex]& 128)){vertexInterp(7,4,ref vertices[ 7],ref materials[ 7]);}
+if(0!=(Tables.EdgeTable[edgeIndex]& 256)){vertexInterp(0,4,ref vertices[ 8],ref materials[ 8]);}
+if(0!=(Tables.EdgeTable[edgeIndex]& 512)){vertexInterp(1,5,ref vertices[ 9],ref materials[ 9]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&1024)){vertexInterp(2,6,ref vertices[10],ref materials[10]);}
+if(0!=(Tables.EdgeTable[edgeIndex]&2048)){vertexInterp(3,7,ref vertices[11],ref materials[11]);}
 }
 for(int i=0;i<TempVer.Length/3;i++){int[]idx=new int[3]{i*3,i*3+1,i*3+2};Vector3[]verPos=new Vector3[3];
 for(int j=0;j<3;j++){
