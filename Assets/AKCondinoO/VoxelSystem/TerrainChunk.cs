@@ -343,6 +343,8 @@ if(-polygonCell[7].Density<IsoLevel)edgeIndex|=128;
 if(Tables.EdgeTable[edgeIndex]==0){/*  Cube is entirely in/out of the surface  */
     return;
 }
+MaterialId[]materials=new MaterialId[12];
+   Vector3[] vertices=new Vector3[12];
 if(0!=(Tables.EdgeTable[edgeIndex]&   1)){vertexInterp(0,1,ref vertices[ 0],ref materials[ 0]);}
 if(0!=(Tables.EdgeTable[edgeIndex]&   2)){vertexInterp(1,2,ref vertices[ 1],ref materials[ 1]);}
 if(0!=(Tables.EdgeTable[edgeIndex]&   4)){vertexInterp(2,3,ref vertices[ 2],ref materials[ 2]);}
@@ -355,6 +357,36 @@ if(0!=(Tables.EdgeTable[edgeIndex]& 256)){vertexInterp(0,4,ref vertices[ 8],ref 
 if(0!=(Tables.EdgeTable[edgeIndex]& 512)){vertexInterp(1,5,ref vertices[ 9],ref materials[ 9]);}
 if(0!=(Tables.EdgeTable[edgeIndex]&1024)){vertexInterp(2,6,ref vertices[10],ref materials[10]);}
 if(0!=(Tables.EdgeTable[edgeIndex]&2048)){vertexInterp(3,7,ref vertices[11],ref materials[11]);}
+    void vertexInterp(int c0,int c1,ref Vector3 p,ref MaterialId m){
+double[]density=new double[2]{-polygonCell[c0].Density,-polygonCell[c1].Density};Vector3[]vertex=new Vector3[2]{Corners[c0],Corners[c1]};
+if(Math.Abs(IsoLevel-density[0])<double.Epsilon){p=vertex[0];goto _Material;}
+if(Math.Abs(IsoLevel-density[1])<double.Epsilon){p=vertex[1];goto _Material;}
+if(Math.Abs(density[0]-density[1])<double.Epsilon){p=vertex[0];goto _Material;}
+        double marchingUnit=(IsoLevel-density[0])/(density[1]-density[0]);
+        p.x=(float)(vertex[0].x+marchingUnit*(vertex[1].x-vertex[0].x));
+        p.y=(float)(vertex[0].y+marchingUnit*(vertex[1].y-vertex[0].y));
+        p.z=(float)(vertex[0].z+marchingUnit*(vertex[1].z-vertex[0].z));
+_Material:{
+MaterialId[]material=new MaterialId[2]{polygonCell[c0].Material,polygonCell[c1].Material};
+        m=material[0];if(density[1]<density[0]){m=material[1];}else if(density[1]==density[0]&&(int)material[1]>(int)material[0]){m=material[1];}
+}
+    }
+/*  Create the triangle  */
+for(int i=0;Tables.TriangleTable[edgeIndex][i]!=-1;i+=3){
+int[]idx=new int[3];
+Vector3 pos=vCoord1-TrianglePosAdj;pos.x+=posOffset.x;
+                                   pos.z+=posOffset.y;
+Vector3[]verPos=new Vector3[3]{pos+vertices[idx[0]=Tables.TriangleTable[edgeIndex][i  ]],
+                               pos+vertices[idx[1]=Tables.TriangleTable[edgeIndex][i+1]],
+                               pos+vertices[idx[2]=Tables.TriangleTable[edgeIndex][i+2]]};
+MaterialId material=                                         materials[idx[0]];
+           material=(MaterialId)Mathf.Max((int)material,(int)materials[idx[1]]);
+           material=(MaterialId)Mathf.Max((int)material,(int)materials[idx[2]]);
+   Vector2 materialUV=AtlasHelper.GetUV(material);
+if(!UVsByVertex.ContainsKey(verPos[0])){UVsByVertex.Add(verPos[0],new List<Vector2>());}UVsByVertex[verPos[0]].Add(materialUV);
+if(!UVsByVertex.ContainsKey(verPos[1])){UVsByVertex.Add(verPos[1],new List<Vector2>());}UVsByVertex[verPos[1]].Add(materialUV);
+if(!UVsByVertex.ContainsKey(verPos[2])){UVsByVertex.Add(verPos[2],new List<Vector2>());}UVsByVertex[verPos[2]].Add(materialUV);
+}
 }
 for(int i=0;i<TempVer.Length/3;i++){int[]idx=new int[3]{i*3,i*3+1,i*3+2};Vector3[]verPos=new Vector3[3];
 for(int j=0;j<3;j++){
