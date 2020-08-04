@@ -297,6 +297,19 @@ posOffset.x=-Width;
     vCoord1.x=Width-1;
 PseudoPolygonise();
 }}
+for(crdOffset.x=0,
+    posOffset.x=0,
+    vCoord1.y=0;vCoord1.y<Height;vCoord1.y++){
+for(vCoord1.x=0;vCoord1.x<Width ;vCoord1.x++){
+crdOffset.y=1;
+posOffset.y=Depth;
+    vCoord1.z=0;
+PseudoPolygonise();
+crdOffset.y=-1;
+posOffset.y=-Depth;
+    vCoord1.z=Depth-1;
+PseudoPolygonise();
+}}
 void PseudoPolygonise(){
 int corner=0;Vector3Int vCoord2=vCoord1;                        SetVoxel();
 corner++;vCoord2=vCoord1;vCoord2.x+=1;                          SetVoxel();

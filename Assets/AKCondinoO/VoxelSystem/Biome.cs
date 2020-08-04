@@ -6,7 +6,7 @@ if(noiseInput.y<1){v=Voxel.Bedrock;return;}
 
 if(noiseInput.x>=10.5&&noiseInput.z>=10.5){v=new Voxel(51,Vector3.zero,MaterialId.Rock);return;}
 
-if(noiseInput.y<128){if(noiseInput.x==1)v=new Voxel(51,Vector3.zero,MaterialId.Rock);else v=new Voxel(51,Vector3.zero,MaterialId.Dirt);return;}
+if(noiseInput.y<128){if(noiseInput.z==Chunk.Depth-2)v=new Voxel(51,Vector3.zero,MaterialId.Rock);else v=new Voxel(51,Vector3.zero,MaterialId.Dirt);return;}
 
 v=Voxel.Air;}
 
