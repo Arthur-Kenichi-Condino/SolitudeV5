@@ -38,7 +38,7 @@ Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,},TaskCreati
 
 
 
-    Build();
+    //Build();
 
 
 
@@ -52,6 +52,15 @@ protected virtual void OnDisable(){
 Stop=true;try{task.Wait();}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}
 }
 protected virtual void Update(){
+
+
+
+
+        if(DEBUG_EDIT){DEBUG_EDIT=false;foregroundDataSet.Set();Build();}
+
+
+
+
 }
 [NonSerialized]protected static Vector2Int aCoord;
 void Build(){
@@ -73,9 +82,17 @@ _skip:{}
 if(coord.x==0){break;}}}
 if(coord.y==0){break;}}}
 }
+[NonSerialized]public static readonly object load_Syn=new object();
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL){
         while(!Stop){foregroundDataSet.WaitOne();if(Stop)goto _Stop;
+            lock(load_Syn){
+
+
+        Thread.Sleep(5000);
+
+
+            }
 
 
 
@@ -98,7 +115,7 @@ public const int Depth=6250;
 
 
         
-//        public bool DEBUG_EDIT=false;
+        public bool DEBUG_EDIT=false;
 
 
 
