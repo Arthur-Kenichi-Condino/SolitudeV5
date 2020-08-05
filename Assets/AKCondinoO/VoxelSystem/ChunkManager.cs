@@ -62,7 +62,7 @@ protected virtual void Update(){
 
 
 
-        if(DEBUG_EDIT){Edit(Vector3.zero);}
+        if(DEBUG_EDIT){Edit(Vector3.zero,Vector3Int.one);}
 
 
 
@@ -88,8 +88,17 @@ _skip:{}
 if(coord.x==0){break;}}}
 if(coord.y==0){break;}}}
 }
-public void Edit(Vector3 center){
+public void Edit(Vector3 center,Vector3Int size){
     if(backgroundDataSet.WaitOne(0)){
+Vector2Int cCoord1=PosToCoord(center);
+Vector3Int vCoord1=Chunk.PosToCoord(center);
+if(LOG&&LOG_LEVEL<=2)Debug.Log("edit at:"+center+"; cCoord1:"+cCoord1+"; vCoord1:"+vCoord1);
+var offset=new Vector3Int();
+for(offset.x=-size.x;offset.x<=size.x;offset.x++){
+for(offset.z=-size.z;offset.z<=size.z;offset.z++){
+for(offset.y=-size.y;offset.y<=size.y;offset.y++){
+Vector3Int vCoord2=vCoord1+offset;
+}}}
         DEBUG_EDIT=false;
             backgroundDataSet.Reset();foregroundDataSet.Set();Build();
     }
@@ -126,6 +135,15 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
 }catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}}
 [NonSerialized]public static readonly Biome biome=new Biome();
 public static Vector2Int RgnToCoord(Vector2Int region){return new Vector2Int(region.x/Chunk.Width,region.y/Chunk.Depth);}public static Vector2Int CoordToRgn(Vector2Int coord){return new Vector2Int(coord.x*Chunk.Width,coord.y*Chunk.Depth);}
+public static Vector2Int PosToCoord(Vector3 pos){
+pos.x/=(float)Chunk.Width;
+pos.z/=(float)Chunk.Depth;
+return new Vector2Int((pos.x>0)?(pos.x-(int)pos.x==0.5f?Mathf.FloorToInt(pos.x):Mathf.RoundToInt(pos.x)):(int)Math.Round(pos.x,MidpointRounding.AwayFromZero),
+                      (pos.z>0)?(pos.z-(int)pos.z==0.5f?Mathf.FloorToInt(pos.z):Mathf.RoundToInt(pos.z)):(int)Math.Round(pos.z,MidpointRounding.AwayFromZero));
+}
+public static Vector2Int PosToRgn(Vector3 pos){Vector2Int coord=PosToCoord(pos);
+return new Vector2Int(coord.x*Width,coord.y*Depth);
+}
 public static int GetIdx(int cx,int cy){return cy+cx*(Width+1);}
 public const int Width=6250;
 public const int Depth=6250;

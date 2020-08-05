@@ -27,10 +27,16 @@ public static void ValidateCoordAxis(ref int axis,ref int coord,int axisLength){
 }else if(coord>=axisLength){axis+=axisLength*Mathf.FloorToInt(Math.Abs(coord)/(float)axisLength);coord=(coord%axisLength);}
 }
 #endregion
-
-
-
-
+public static Vector3Int PosToCoord(Vector3 pos){
+Vector2Int rgn=ChunkManager.PosToRgn(pos);
+pos.x=(pos.x>0)?(pos.x-(int)pos.x==0.5f?Mathf.FloorToInt(pos.x):Mathf.RoundToInt(pos.x)):(int)Math.Round(pos.x,MidpointRounding.AwayFromZero);
+pos.y=(pos.y>0)?(pos.y-(int)pos.y==0.5f?Mathf.FloorToInt(pos.y):Mathf.RoundToInt(pos.y)):(int)Math.Round(pos.y,MidpointRounding.AwayFromZero);
+pos.z=(pos.z>0)?(pos.z-(int)pos.z==0.5f?Mathf.FloorToInt(pos.z):Mathf.RoundToInt(pos.z)):(int)Math.Round(pos.z,MidpointRounding.AwayFromZero);
+Vector3Int coord=new Vector3Int((int)pos.x-rgn.x,(int)pos.y,(int)pos.z-rgn.y);
+coord.x+=Mathf.FloorToInt(Width/2.0f );coord.x=Mathf.Clamp(coord.x,0,Width-1 );
+coord.y+=Mathf.FloorToInt(Height/2.0f);coord.y=Mathf.Clamp(coord.y,0,Height-1);
+coord.z+=Mathf.FloorToInt(Depth/2.0f );coord.z=Mathf.Clamp(coord.z,0,Depth-1 );
+return coord;}
 //public LinkedListNode<Chunk>ExpropriationNode=null;
 //protected virtual void OnEnable(){}
 //protected virtual void OnDisable(){}
