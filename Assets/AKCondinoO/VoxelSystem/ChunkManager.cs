@@ -107,12 +107,15 @@ if(vCoord2.x<0||vCoord2.x>=Chunk.Width||
    vCoord2.z<0||vCoord2.z>=Chunk.Depth){
 Chunk.ValidateCoord(ref cnkRgn2,ref vCoord2);cCoord2=RgnToCoord(cnkRgn2);
 }
-var cnkIdx2=GetIdx(cCoord2.x,cCoord2.y);
-if(Chunks.ContainsKey(cnkIdx2)){if((!(Chunks[cnkIdx2]is TerrainChunk cnk))||cnk.needsRebuild||!cnk.backgroundDataSet.WaitOne(0)){goto _Cancel;}}
+var cnkIdx2=GetIdx(cCoord2.x,cCoord2.y);if(Chunks.ContainsKey(cnkIdx2)){if((!(Chunks[cnkIdx2]is TerrainChunk cnk))||cnk.needsRebuild||!cnk.backgroundDataSet.WaitOne(0)){Cancel();goto _End;}}
+    if(!edtVxlsByCnkIdx.ContainsKey(cnkIdx2)){edtVxlsByCnkIdx.Add(cnkIdx2,new List<(Vector3Int vCoord,double density,MaterialId material)>());}
 }}}
         DEBUG_EDIT=false;
             backgroundDataSet.Reset();foregroundDataSet.Set();Build();
-_Cancel:{}
+_End:{}
+    }
+    void Cancel(){
+        Debug.LogWarning("cancel");
     }
 }
 [NonSerialized]public static readonly object load_Syn=new object();
