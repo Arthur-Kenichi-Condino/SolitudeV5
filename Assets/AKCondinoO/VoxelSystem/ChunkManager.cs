@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -9,6 +10,9 @@ using UnityEngine.Scripting;
 using static MemoryManagement;
 namespace AKCondinoO.Voxels{public class ChunkManager:MonoBehaviour{ 
 public bool LOG=false;public int LOG_LEVEL=1;
+[NonSerialized]public static readonly string saveFolder=Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).Replace("\\","/").ToString()+"/Solitude/";
+                      [NonSerialized]string[]saveSubfolder=new string[1];
+public static string CurrWorldName{private set;get;}
 public GameObject ChunkPrefab;
 [NonSerialized]public Vector2Int expropriationDistance=new Vector2Int(5,5);[NonSerialized]public readonly LinkedList<Chunk>ChunksPool=new LinkedList<Chunk>();
 [NonSerialized]public Vector2Int instantiationDistance=new Vector2Int(1,1);[NonSerialized]public readonly Dictionary<int,Chunk>Chunks=new Dictionary<int,Chunk>();
@@ -27,13 +31,15 @@ if(LOG&&LOG_LEVEL<=100)Debug.Log("changed minimum number of worker threads to:"+
 if(LOG&&LOG_LEVEL<=100)Debug.Log("SetMinThreads failed");
 }
 }
+CurrWorldName="Terra Nova";
+saveSubfolder[0]=saveFolder+CurrWorldName+"/Chunks/"+"c{0}.edits";
     for(int i=maxChunks-1;i>=0;--i){
         GameObject obj=Instantiate(ChunkPrefab);Chunk scr=obj.GetComponent<Chunk>();ChunksPool.AddLast(scr);scr.ExpropriationNode=ChunksPool.Last;
     }
 }
 [NonSerialized]Task task;[NonSerialized]readonly AutoResetEvent foregroundDataSet=new AutoResetEvent(false);[NonSerialized]readonly ManualResetEvent backgroundDataSet=new ManualResetEvent(true);
 protected virtual void OnEnable(){
-Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,},TaskCreationOptions.LongRunning);
+Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,saveSubfolder},TaskCreationOptions.LongRunning);
 
 
 
@@ -56,7 +62,7 @@ protected virtual void Update(){
 
 
 
-        if(DEBUG_EDIT){DEBUG_EDIT=false;foregroundDataSet.Set();Build();}
+        if(DEBUG_EDIT){Edit(Vector3.zero);}
 
 
 
@@ -82,13 +88,24 @@ _skip:{}
 if(coord.x==0){break;}}}
 if(coord.y==0){break;}}}
 }
+public void Edit(Vector3 center){
+    if(backgroundDataSet.WaitOne(0)){
+        DEBUG_EDIT=false;
+            backgroundDataSet.Reset();foregroundDataSet.Set();Build();
+    }
+}
 [NonSerialized]public static readonly object load_Syn=new object();
+[NonSerialized]readonly Dictionary<int,List<(Vector3Int vCoord,double density,MaterialId material)>>edtVxlsByCnkIdx=new Dictionary<int,List<(Vector3Int vCoord,double density,MaterialId material)>>();
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
-    if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL){
+    if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is string[]saveSubfolder){
+DataContractSerializer saveContract=new DataContractSerializer(typeof(List<(Vector3Int vCoord,double density,MaterialId material)>));
         while(!Stop){foregroundDataSet.WaitOne();if(Stop)goto _Stop;
             lock(load_Syn){
 
-
+        
+int saveTries=60;
+bool saved=false;
+//var fileName=String.Format(saveSubfolder[0],0);
         Thread.Sleep(5000);
 
 
@@ -99,7 +116,8 @@ void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThre
 
 
 
-        }
+edtVxlsByCnkIdx.Clear();
+backgroundDataSet.Set();}
         _Stop:{
             CallGC();
 if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
