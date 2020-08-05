@@ -91,6 +91,7 @@ if(coord.y==0){break;}}}
 public void Edit(Vector3 center,Vector3Int size){
     if(backgroundDataSet.WaitOne(0)){
 Vector2Int cCoord1=PosToCoord(center);
+Vector2Int cnkRgn1=CoordToRgn(cCoord1);
 Vector3Int vCoord1=Chunk.PosToCoord(center);
 if(LOG&&LOG_LEVEL<=2)Debug.Log("edit at:"+center+"; cCoord1:"+cCoord1+"; vCoord1:"+vCoord1);
 var offset=new Vector3Int();
@@ -98,9 +99,20 @@ for(offset.x=-size.x;offset.x<=size.x;offset.x++){
 for(offset.z=-size.z;offset.z<=size.z;offset.z++){
 for(offset.y=-size.y;offset.y<=size.y;offset.y++){
 Vector3Int vCoord2=vCoord1+offset;
+if(vCoord2.y<0||vCoord2.y>=Chunk.Height){
+continue;
+}
+Vector2Int cnkRgn2=cnkRgn1;Vector2Int cCoord2=cCoord1;
+if(vCoord2.x<0||vCoord2.x>=Chunk.Width||
+   vCoord2.z<0||vCoord2.z>=Chunk.Depth){
+Chunk.ValidateCoord(ref cnkRgn2,ref vCoord2);cCoord2=RgnToCoord(cnkRgn2);
+}
+var cnkIdx2=GetIdx(cCoord2.x,cCoord2.y);
+if(Chunks.ContainsKey(cnkIdx2)){if((!(Chunks[cnkIdx2]is TerrainChunk cnk))||cnk.needsRebuild||!cnk.backgroundDataSet.WaitOne(0)){goto _Cancel;}}
 }}}
         DEBUG_EDIT=false;
             backgroundDataSet.Reset();foregroundDataSet.Set();Build();
+_Cancel:{}
     }
 }
 [NonSerialized]public static readonly object load_Syn=new object();

@@ -7,7 +7,7 @@ public LinkedListNode<Chunk>ExpropriationNode=null;
 protected virtual void OnEnable(){}
 protected virtual void OnDisable(){}
 protected virtual void Update(){}
-public Vector2Int Coord{private set;get;}public Vector2Int Rgn{private set;get;}public int Idx{private set;get;}[NonSerialized]protected bool needsRebuild;
+public Vector2Int Coord{private set;get;}public Vector2Int Rgn{private set;get;}public int Idx{private set;get;}[NonSerialized]public bool needsRebuild;
 public void OnRebuildRequest(Vector2Int coord,Vector2Int rgn,int idx){
     Coord=coord;Rgn=rgn;Idx=idx;needsRebuild=true;transform.position=new Vector3(Rgn.x,0,Rgn.y);name=transform.position.ToString();
 }

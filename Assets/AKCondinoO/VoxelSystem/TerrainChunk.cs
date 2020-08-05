@@ -9,7 +9,7 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 namespace AKCondinoO.Voxels{public class TerrainChunk:Chunk{
-[NonSerialized]Task task;[NonSerialized]readonly AutoResetEvent foregroundDataSet=new AutoResetEvent(false);[NonSerialized]readonly ManualResetEvent backgroundDataSet=new ManualResetEvent(true);
+[NonSerialized]Task task;[NonSerialized]readonly AutoResetEvent foregroundDataSet=new AutoResetEvent(false);[NonSerialized]public readonly ManualResetEvent backgroundDataSet=new ManualResetEvent(true);
 protected override void OnEnable(){
     if(mesh==null){
         mesh=gameObject.GetComponent<MeshFilter>().mesh;mesh.bounds=new Bounds(Vector3.zero,new Vector3(Width,Height,Depth));renderer=gameObject.GetComponent<MeshRenderer>();
@@ -290,26 +290,26 @@ for(crdOffset.y=0,
     posOffset.y=0,
     vCoord1.y=0;vCoord1.y<Height;vCoord1.y++){
 for(vCoord1.z=0;vCoord1.z<Depth ;vCoord1.z++){
+    vCoord1.x=0;
 crdOffset.x=1;
 posOffset.x=Width;
-    vCoord1.x=0;
 PseudoPolygonise();
+    vCoord1.x=Width-1;
 crdOffset.x=-1;
 posOffset.x=-Width;
-    vCoord1.x=Width-1;
 PseudoPolygonise();
 }}
 for(crdOffset.x=0,
     posOffset.x=0,
     vCoord1.y=0;vCoord1.y<Height;vCoord1.y++){
 for(vCoord1.x=0;vCoord1.x<Width ;vCoord1.x++){
+    vCoord1.z=0;
 crdOffset.y=1;
 posOffset.y=Depth;
-    vCoord1.z=0;
 PseudoPolygonise();
+    vCoord1.z=Depth-1;
 crdOffset.y=-1;
 posOffset.y=-Depth;
-    vCoord1.z=Depth-1;
 PseudoPolygonise();
 }}
 void PseudoPolygonise(){
