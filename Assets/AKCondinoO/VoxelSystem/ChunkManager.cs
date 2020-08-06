@@ -121,8 +121,8 @@ if(vCoord2.x<0||vCoord2.x>=Chunk.Width||
 Chunk.ValidateCoord(ref cnkRgn2,ref vCoord2);cCoord2=RgnToCoord(cnkRgn2);
 }
 var cnkIdx2=GetIdx(cCoord2.x,cCoord2.y);if(Chunks.ContainsKey(cnkIdx2)){if((!(Chunks[cnkIdx2]is TerrainChunk cnk))||cnk.needsRebuild||!cnk.backgroundDataSet.WaitOne(0)){Cancel();goto _End;}}
-    if(!edtVxlsByCnkIdx.ContainsKey(cnkIdx2)){edtVxlsByCnkIdx.Add(cnkIdx2,new List<(Vector3Int vCoord,double density,MaterialId material)>());}
-    edtVxlsByCnkIdx[cnkIdx2].Add((vCoord2,0,MaterialId.Air));
+    if(!edtVxlsByCnkIdx.ContainsKey(cnkIdx2)){edtVxlsByCnkIdx.Add(cnkIdx2,new Dictionary<Vector3Int,(double density,MaterialId material)>());}
+    edtVxlsByCnkIdx[cnkIdx2].Add(vCoord2,(0,MaterialId.Air));
 }}}
             backgroundDataSet.Reset();foregroundDataSet.Set();Build();
 _End:{}
@@ -140,10 +140,10 @@ edtVxlsByCnkIdx.Clear();
     }
 }
 [NonSerialized]public static readonly object load_Syn=new object();
-[NonSerialized]readonly Dictionary<int,List<(Vector3Int vCoord,double density,MaterialId material)>>edtVxlsByCnkIdx=new Dictionary<int,List<(Vector3Int vCoord,double density,MaterialId material)>>();
+[NonSerialized]readonly Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId material)>>edtVxlsByCnkIdx=new Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId material)>>();
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is System.Random random&&parameters[3]is string[]saveSubfolder){
-DataContractSerializer saveContract=new DataContractSerializer(typeof(List<(Vector3Int vCoord,double density,MaterialId material)>));
+DataContractSerializer saveContract=new DataContractSerializer(typeof(Dictionary<Vector3Int,(double density,MaterialId material)>));
         while(!Stop){foregroundDataSet.WaitOne();if(Stop)goto _Stop;
             lock(load_Syn){
 
@@ -157,6 +157,13 @@ try{
 
 //throw new Exception();
 using(file=new FileStream(fileName,FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None)){
+   if(file.Length>0){
+if(LOG&&LOG_LEVEL<=1)Debug.Log("file has data, load it to merge with new save data:fileName:"+fileName);
+
+
+   }
+      file.SetLength(0);
+      file.Flush(true);
 }
 
 
