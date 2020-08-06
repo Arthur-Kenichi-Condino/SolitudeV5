@@ -147,8 +147,8 @@ DataContractSerializer saveContract=new DataContractSerializer(typeof(Dictionary
         while(!Stop){foregroundDataSet.WaitOne();if(Stop)goto _Stop;
             lock(load_Syn){
 
-foreach(var edtsCnkIdxPair in edtVxlsByCnkIdx){
-var fileName=string.Format(saveSubfolder[0],edtsCnkIdxPair.Key);
+foreach(var cnkIdxEdtsPair in edtVxlsByCnkIdx){
+var fileName=string.Format(saveSubfolder[0],cnkIdxEdtsPair.Key);
 if(LOG&&LOG_LEVEL<=1)Debug.Log("save edits at: "+fileName);
 int saveTries=60;bool saved=false;while(!saved){
 FileStream file=null;
@@ -159,12 +159,22 @@ try{
 using(file=new FileStream(fileName,FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None)){
    if(file.Length>0){
 if(LOG&&LOG_LEVEL<=1)Debug.Log("file has data, load it to merge with new save data:fileName:"+fileName);
+if(saveContract.ReadObject(file)is Dictionary<Vector3Int,(double density,MaterialId material)>fileData){
+foreach(var voxelData in fileData){
+if(!cnkIdxEdtsPair.Value.ContainsKey(voxelData.Key)){
+    cnkIdxEdtsPair.Value.Add(voxelData.Key,voxelData.Value);
+}
+}
+}
 
 
    }
       file.SetLength(0);
       file.Flush(true);
+saveContract.WriteObject(file,cnkIdxEdtsPair.Value);
 }
+saved=true;
+if(LOG&&LOG_LEVEL<=1)Debug.Log("successfully saved edits at:"+fileName);
 
 
 }catch(IOException e){Debug.LogWarning("file access failed:try save again after delay:fileName:"+fileName+"\n"+e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);
