@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -17,9 +18,10 @@ public GameObject ChunkPrefab;
 [NonSerialized]public Vector2Int expropriationDistance=new Vector2Int(5,5);[NonSerialized]public readonly LinkedList<Chunk>ChunksPool=new LinkedList<Chunk>();
 [NonSerialized]public Vector2Int instantiationDistance=new Vector2Int(1,1);[NonSerialized]public readonly Dictionary<int,Chunk>Chunks=new Dictionary<int,Chunk>();
 protected virtual void Awake(){
+var maxChunks=(expropriationDistance.x*2+1)*(expropriationDistance.y*2+1);
+try{
 MainThread=Thread.CurrentThread;GarbageCollector.GCMode=GarbageCollector.Mode.Enabled;StartCoroutine(Unload());
 AtlasHelper.GetAtlasData(ChunkPrefab.GetComponent<MeshRenderer>().sharedMaterial);
-var maxChunks=(expropriationDistance.x*2+1)*(expropriationDistance.y*2+1);
 if(LOG&&LOG_LEVEL<=100)Debug.Log("The number of processors on this computer is "+Environment.ProcessorCount);
 ThreadPool.GetAvailableThreads(out int worker ,out int io         );if(LOG&&LOG_LEVEL<=100)Debug.Log("Thread pool threads available at startup: Worker threads: "+worker+" Asynchronous I/O threads: "+io);
 ThreadPool.GetMaxThreads(out int workerThreads,out int portThreads);if(LOG&&LOG_LEVEL<=100)Debug.Log("Maximum worker threads: "+workerThreads+" Maximum completion port threads: "+portThreads);
@@ -32,14 +34,25 @@ if(LOG&&LOG_LEVEL<=100)Debug.Log("SetMinThreads failed");
 }
 }
 CurrWorldName="Terra Nova";
-saveSubfolder[0]=saveFolder+CurrWorldName+"/Chunks/"+"c{0}.edits";
+Directory.CreateDirectory(saveSubfolder[0]=saveFolder+CurrWorldName+"/Chunks/");saveSubfolder[0]+="c{0}.edits";
+}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);
+#if UNITY_STANDALONE
+//  Quit the application
+Application.Quit();
+#endif
+#if UNITY_EDITOR
+//  Stop playing the scene
+UnityEditor.EditorApplication.isPlaying=false;
+#endif
+return;
+}
     for(int i=maxChunks-1;i>=0;--i){
         GameObject obj=Instantiate(ChunkPrefab);Chunk scr=obj.GetComponent<Chunk>();ChunksPool.AddLast(scr);scr.ExpropriationNode=ChunksPool.Last;
     }
 }
 [NonSerialized]Task task;[NonSerialized]readonly AutoResetEvent foregroundDataSet=new AutoResetEvent(false);[NonSerialized]readonly ManualResetEvent backgroundDataSet=new ManualResetEvent(true);
 protected virtual void OnEnable(){
-Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,saveSubfolder},TaskCreationOptions.LongRunning);
+Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,new System.Random(),saveSubfolder},TaskCreationOptions.LongRunning);
 
 
 
@@ -109,28 +122,65 @@ Chunk.ValidateCoord(ref cnkRgn2,ref vCoord2);cCoord2=RgnToCoord(cnkRgn2);
 }
 var cnkIdx2=GetIdx(cCoord2.x,cCoord2.y);if(Chunks.ContainsKey(cnkIdx2)){if((!(Chunks[cnkIdx2]is TerrainChunk cnk))||cnk.needsRebuild||!cnk.backgroundDataSet.WaitOne(0)){Cancel();goto _End;}}
     if(!edtVxlsByCnkIdx.ContainsKey(cnkIdx2)){edtVxlsByCnkIdx.Add(cnkIdx2,new List<(Vector3Int vCoord,double density,MaterialId material)>());}
+    edtVxlsByCnkIdx[cnkIdx2].Add((vCoord2,0,MaterialId.Air));
 }}}
-        DEBUG_EDIT=false;
             backgroundDataSet.Reset();foregroundDataSet.Set();Build();
 _End:{}
+
+        
+        DEBUG_EDIT=false;
+
+
     }
     void Cancel(){
+edtVxlsByCnkIdx.Clear();
+
         Debug.LogWarning("cancel");
+
     }
 }
 [NonSerialized]public static readonly object load_Syn=new object();
 [NonSerialized]readonly Dictionary<int,List<(Vector3Int vCoord,double density,MaterialId material)>>edtVxlsByCnkIdx=new Dictionary<int,List<(Vector3Int vCoord,double density,MaterialId material)>>();
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
-    if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is string[]saveSubfolder){
+    if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is System.Random random&&parameters[3]is string[]saveSubfolder){
 DataContractSerializer saveContract=new DataContractSerializer(typeof(List<(Vector3Int vCoord,double density,MaterialId material)>));
         while(!Stop){foregroundDataSet.WaitOne();if(Stop)goto _Stop;
             lock(load_Syn){
 
+foreach(var edtsCnkIdxPair in edtVxlsByCnkIdx){
+var fileName=string.Format(saveSubfolder[0],edtsCnkIdxPair.Key);
+if(LOG&&LOG_LEVEL<=1)Debug.Log("save edits at: "+fileName);
+int saveTries=60;bool saved=false;while(!saved){
+FileStream file=null;
+try{
+
+
+//throw new Exception();
+using(file=new FileStream(fileName,FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None)){
+}
+
+
+}catch(IOException e){Debug.LogWarning("file access failed:try save again after delay:fileName:"+fileName+"\n"+e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);
+}catch(Exception e1){Debug.LogError("unknown error:rename file to be marked as broken:fileName:"+fileName+"\n"+e1?.Message+"\n"+e1?.StackTrace+"\n"+e1?.Source);
+    try{
+    new FileInfo(fileName).Rename(Path.GetFileName(fileName),FileInfoExtensions.FileExistsBehavior.RenameOld,".{0}.{1}","broken",null);
+    }catch(Exception e2){Debug.LogError(e2?.Message+"\n"+e2?.StackTrace+"\n"+e2?.Source);}
+}finally{
+dispose();
+}
+void dispose(){
+try{
+if(file!=null)
+   file.Dispose();
+}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}
+}
+if(!saved){if(--saveTries<=0){if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("failed to save at: "+fileName);break;}else{
+Thread.Yield();Thread.Sleep(random.Next(100,501));
+}}}
+}
+
+
         
-int saveTries=60;
-bool saved=false;
-//var fileName=String.Format(saveSubfolder[0],0);
-        Thread.Sleep(5000);
 
 
             }
