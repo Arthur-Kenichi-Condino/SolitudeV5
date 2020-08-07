@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\AKCondinoO\FileInfoExtensions.cs" />
+    <Compile Include="Assets\AKCondinoO\Main.cs" />
     <Compile Include="Assets\AKCondinoO\VoxelSystem\AtlasHelper.cs" />
     <Compile Include="Assets\AKCondinoO\VoxelSystem\Biome.cs" />
     <Compile Include="Assets\AKCondinoO\VoxelSystem\Chunk.cs" />

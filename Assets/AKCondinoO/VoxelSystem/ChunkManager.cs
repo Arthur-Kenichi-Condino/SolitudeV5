@@ -12,7 +12,7 @@ using static MemoryManagement;
 namespace AKCondinoO.Voxels{public class ChunkManager:MonoBehaviour{ 
 public bool LOG=false;public int LOG_LEVEL=1;
 [NonSerialized]public static readonly string saveFolder=Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).Replace("\\","/").ToString()+"/Solitude/";
-                      [NonSerialized]string[]saveSubfolder=new string[1];
+        [NonSerialized]public static string[]saveSubfolder=new string[1];
 public static string CurrWorldName{private set;get;}
 public GameObject ChunkPrefab;
 [NonSerialized]public Vector2Int expropriationDistance=new Vector2Int(5,5);[NonSerialized]public readonly LinkedList<Chunk>ChunksPool=new LinkedList<Chunk>();
@@ -57,7 +57,7 @@ Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,new System.R
 
 
 
-    //Build();
+    Build();//Build();
 
 
 
@@ -71,6 +71,13 @@ protected virtual void OnDisable(){
 Stop=true;try{task.Wait();}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}
 }
 protected virtual void Update(){
+    if(backgroundDataSet.WaitOne(0)){
+        if(editedDirty.Count>0){for(int i=0;i<editedDirty.Count;i++){
+            if(Chunks.ContainsKey(editedDirty[i])){
+                Chunks[editedDirty[i]].needsRebuild=true;
+            }
+        }editedDirty.Clear();}
+    }
 
 
 
@@ -124,7 +131,7 @@ var cnkIdx2=GetIdx(cCoord2.x,cCoord2.y);if(Chunks.ContainsKey(cnkIdx2)){if((!(Ch
     if(!edtVxlsByCnkIdx.ContainsKey(cnkIdx2)){edtVxlsByCnkIdx.Add(cnkIdx2,new Dictionary<Vector3Int,(double density,MaterialId material)>());}
     edtVxlsByCnkIdx[cnkIdx2].Add(vCoord2,(0,MaterialId.Air));
 }}}
-            backgroundDataSet.Reset();foregroundDataSet.Set();Build();
+            backgroundDataSet.Reset();foregroundDataSet.Set();
 _End:{}
 
         
@@ -140,24 +147,20 @@ edtVxlsByCnkIdx.Clear();
     }
 }
 [NonSerialized]public static readonly object load_Syn=new object();
-[NonSerialized]readonly Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId material)>>edtVxlsByCnkIdx=new Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId material)>>();
+[NonSerialized]readonly Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId material)>>edtVxlsByCnkIdx=new Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId material)>>();[NonSerialized]readonly List<int>editedDirty=new List<int>();
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is System.Random random&&parameters[3]is string[]saveSubfolder){
 DataContractSerializer saveContract=new DataContractSerializer(typeof(Dictionary<Vector3Int,(double density,MaterialId material)>));
         while(!Stop){foregroundDataSet.WaitOne();if(Stop)goto _Stop;
             lock(load_Syn){
-
 foreach(var cnkIdxEdtsPair in edtVxlsByCnkIdx){
 var fileName=string.Format(saveSubfolder[0],cnkIdxEdtsPair.Key);
 if(LOG&&LOG_LEVEL<=1)Debug.Log("save edits at: "+fileName);
 int saveTries=60;bool saved=false;while(!saved){
 FileStream file=null;
 try{
-
-
-//throw new Exception();
 using(file=new FileStream(fileName,FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None)){
-   if(file.Length>0){
+if(file.Length>0){
 if(LOG&&LOG_LEVEL<=1)Debug.Log("file has data, load it to merge with new save data:fileName:"+fileName);
 if(saveContract.ReadObject(file)is Dictionary<Vector3Int,(double density,MaterialId material)>fileData){
 foreach(var voxelData in fileData){
@@ -165,18 +168,14 @@ if(!cnkIdxEdtsPair.Value.ContainsKey(voxelData.Key)){
     cnkIdxEdtsPair.Value.Add(voxelData.Key,voxelData.Value);
 }
 }
-}
-
-
-   }
-      file.SetLength(0);
-      file.Flush(true);
+}}
+file.SetLength(0);
+file.Flush(true);
 saveContract.WriteObject(file,cnkIdxEdtsPair.Value);
 }
+editedDirty.Add(cnkIdxEdtsPair.Key);
 saved=true;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("successfully saved edits at:"+fileName);
-
-
 }catch(IOException e){Debug.LogWarning("file access failed:try save again after delay:fileName:"+fileName+"\n"+e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);
 }catch(Exception e1){Debug.LogError("unknown error:rename file to be marked as broken:fileName:"+fileName+"\n"+e1?.Message+"\n"+e1?.StackTrace+"\n"+e1?.Source);
     try{

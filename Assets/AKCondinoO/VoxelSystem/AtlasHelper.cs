@@ -2,7 +2,7 @@
 using UnityEngine;
 public static class AtlasHelper{
 public static void GetAtlasData(Material material){
-float _U,_V;var texture=material.GetTexture("_MainTex");var w=texture.width;var h=texture.height;var tilesResolution=material.GetFloat("_TilesResolution"); 
+float _U,_V;var texture=material.GetTexture("_MainTex");material.SetTexture("_MainTex1",texture);var w=texture.width;var h=texture.height;var tilesResolution=material.GetFloat("_TilesResolution"); 
 var TileWidth=(w/tilesResolution);
 var TileHeight=(h/tilesResolution);
 _U=(TileWidth/w);//  X

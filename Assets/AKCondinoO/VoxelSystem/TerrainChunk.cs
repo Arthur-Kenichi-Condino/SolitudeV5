@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Unity.Collections;
@@ -14,7 +16,7 @@ protected override void OnEnable(){
     if(mesh==null){
         mesh=gameObject.GetComponent<MeshFilter>().mesh;mesh.bounds=new Bounds(Vector3.zero,new Vector3(Width,Height,Depth));renderer=gameObject.GetComponent<MeshRenderer>();
     }
-Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,TempVer=new NativeList<Vertex>(Allocator.Persistent),TempTriangles=new NativeList<ushort>(Allocator.Persistent),},TaskCreationOptions.LongRunning);
+Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,TempVer=new NativeList<Vertex>(Allocator.Persistent),TempTriangles=new NativeList<ushort>(Allocator.Persistent),new System.Random(),ChunkManager.saveSubfolder,},TaskCreationOptions.LongRunning);
 }
 bool Stop{
     get{bool tmp;lock(Stop_Syn){tmp=Stop_v;      }return tmp;}
@@ -88,14 +90,58 @@ public struct Vertex{
 [NonSerialized]Vector2Int cCoord1;
 [NonSerialized]Vector2Int cnkRgn1;
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
-    if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is NativeList<Vertex>TempVer&&parameters[3]is NativeList<ushort>TempTriangles){
+    if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is NativeList<Vertex>TempVer&&parameters[3]is NativeList<ushort>TempTriangles&&parameters[4]is System.Random random&&parameters[5]is string[]saveSubfolder){
+DataContractSerializer saveContract=new DataContractSerializer(typeof(Dictionary<Vector3Int,(double density,MaterialId material)>));
 Voxel[]polygonCell=new Voxel[8];
         while(!Stop){foregroundDataSet.WaitOne();if(Stop)goto _Stop;
 lock(tasksBusyCount_Syn){tasksBusyCount++;}queue.WaitOne(tasksBusyCount*5000);
 if(LOG&&LOG_LEVEL<=2)Debug.Log("do job ["+cnkRgn1);var watch=System.Diagnostics.Stopwatch.StartNew();
 Array.Clear(voxels,0,voxels.Length);TempVer.Clear();TempTriangles.Clear();var neighbors=new Dictionary<int,Voxel>[8];for(int i=0;i<8;i++){neighbors[i]=new Dictionary<int,Voxel>();}Dictionary<Vector3,List<Vector2>>UVsByVertex=new Dictionary<Vector3,List<Vector2>>();
-lock(ChunkManager.load_Syn){
+            lock(ChunkManager.load_Syn){
+var fileName=string.Format(saveSubfolder[0],ChunkManager.GetIdx(cCoord1.x,cCoord1.y));
+
+        //Debug.LogWarning(fileName);
+        
+if(File.Exists(fileName)){
+int loadTries=30;bool loaded=false;while(!loaded){
+FileStream file=null;
+try{
+
+        
+using(file=new FileStream(fileName,FileMode.Open,FileAccess.Read,FileShare.Read)){
+if(file.Length>0){
+if(LOG&&LOG_LEVEL<=1)Debug.Log("file has data, loading it before building the mesh:fileName:"+fileName);
+if(saveContract.ReadObject(file)is Dictionary<Vector3Int,(double density,MaterialId material)>fileData){
+
+foreach(var voxelData in fileData){
+voxels[GetIdx(voxelData.Key.x,voxelData.Key.y,voxelData.Key.z)]=new Voxel(voxelData.Value.density,Vector3.zero,voxelData.Value.material);
 }
+
+}}
+}
+loaded=true;
+if(LOG&&LOG_LEVEL<=1)Debug.Log("successfully loaded edits from:"+fileName);
+        //Debug.LogWarning(loadTries);
+
+
+}catch(IOException e){Debug.LogWarning("file access failed:try load again after delay:fileName:"+fileName+"\n"+e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);
+}catch(Exception e1){Debug.LogError("unknown error:ignore the file that may be broken:fileName:"+fileName+"\n"+e1?.Message+"\n"+e1?.StackTrace+"\n"+e1?.Source);
+break;
+}finally{
+dispose();
+}
+void dispose(){
+try{
+if(file!=null)
+   file.Dispose();
+}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}
+}
+if(!loaded){if(--loadTries<=0||Main.Stop){if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("failed to load from: "+fileName);break;}else{
+Thread.Yield();Thread.Sleep(random.Next(500,1001));
+}}}
+}
+
+            }
 Voxel[][][]voxelsBuffer1=new Voxel[3][][]{new Voxel[1][]{new Voxel[4],},new Voxel[Depth][],new Voxel[FlattenOffset][],};for(int i=0;i<voxelsBuffer1[2].Length;++i){voxelsBuffer1[2][i]=new Voxel[4];if(i<voxelsBuffer1[1].Length){voxelsBuffer1[1][i]=new Voxel[4];}}
 Vector3[][][]verticesBuffer=new Vector3[3][][]{new Vector3[1][]{new Vector3[4],},new Vector3[Depth][],new Vector3[FlattenOffset][],};for(int i=0;i<verticesBuffer[2].Length;++i){verticesBuffer[2][i]=new Vector3[4];if(i<verticesBuffer[1].Length){verticesBuffer[1][i]=new Vector3[4];}}
 ushort vertexCount=0;
