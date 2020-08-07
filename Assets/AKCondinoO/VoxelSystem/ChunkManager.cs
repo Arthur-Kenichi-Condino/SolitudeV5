@@ -82,7 +82,7 @@ protected virtual void Update(){
 
 
 
-        if(DEBUG_EDIT){Edit(Vector3.zero,Vector3Int.one);}
+        if(DEBUG_EDIT){Edit(Vector3.zero,new Vector3Int(8,1,1));}
 
 
 

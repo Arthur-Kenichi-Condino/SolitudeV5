@@ -100,7 +100,9 @@ Array.Clear(voxels,0,voxels.Length);TempVer.Clear();TempTriangles.Clear();var ne
             lock(ChunkManager.load_Syn){
 var fileName=string.Format(saveSubfolder[0],ChunkManager.GetIdx(cCoord1.x,cCoord1.y));
 
+
         //Debug.LogWarning(fileName);
+
         
 if(File.Exists(fileName)){
 int loadTries=30;bool loaded=false;while(!loaded){
@@ -140,6 +142,55 @@ if(!loaded){if(--loadTries<=0||Main.Stop){if(LOG&&LOG_LEVEL<=100)Debug.LogWarnin
 Thread.Yield();Thread.Sleep(random.Next(500,1001));
 }}}
 }
+
+for(int x=-1;x<=1;x++){
+for(int z=-1;z<=1;z++){
+if(x==0&&z==0)continue;
+
+Vector2Int nCoord1=cCoord1;nCoord1.x+=x;nCoord1.y+=z;int ngbIdx1=ChunkManager.GetIdx(nCoord1.x,nCoord1.y);int i1=index(nCoord1-cCoord1)-1;
+fileName=string.Format(saveSubfolder[0],ngbIdx1);
+
+
+
+if(File.Exists(fileName)){
+int loadTries=30;bool loaded=false;while(!loaded){
+FileStream file=null;
+try{
+
+        
+using(file=new FileStream(fileName,FileMode.Open,FileAccess.Read,FileShare.Read)){
+if(file.Length>0){
+if(LOG&&LOG_LEVEL<=1)Debug.Log("file has data, loading it before building the mesh:fileName:"+fileName);
+if(saveContract.ReadObject(file)is Dictionary<Vector3Int,(double density,MaterialId material)>fileData){
+        
+foreach(var voxelData in fileData){
+neighbors[i1][GetIdx(voxelData.Key.x,voxelData.Key.y,voxelData.Key.z)]=new Voxel(voxelData.Value.density,Vector3.zero,voxelData.Value.material);
+}
+
+}}
+}
+loaded=true;
+if(LOG&&LOG_LEVEL<=1)Debug.Log("successfully loaded edits from:"+fileName);
+
+
+}catch(IOException e){Debug.LogWarning("file access failed:try load again after delay:fileName:"+fileName+"\n"+e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);
+}catch(Exception e1){Debug.LogError("unknown error:ignore the file that may be broken:fileName:"+fileName+"\n"+e1?.Message+"\n"+e1?.StackTrace+"\n"+e1?.Source);
+break;
+}finally{
+dispose();
+}
+void dispose(){
+try{
+if(file!=null)
+   file.Dispose();
+}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}
+}
+if(!loaded){if(--loadTries<=0||Main.Stop){if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("failed to load from: "+fileName);break;}else{
+Thread.Yield();Thread.Sleep(random.Next(500,1001));
+}}}
+}
+
+}}
 
             }
 Voxel[][][]voxelsBuffer1=new Voxel[3][][]{new Voxel[1][]{new Voxel[4],},new Voxel[Depth][],new Voxel[FlattenOffset][],};for(int i=0;i<voxelsBuffer1[2].Length;++i){voxelsBuffer1[2][i]=new Voxel[4];if(i<voxelsBuffer1[1].Length){voxelsBuffer1[1][i]=new Voxel[4];}}
@@ -187,6 +238,8 @@ ValidateCoord(ref cnkRgn2,ref vCoord2);cCoord2=ChunkManager.RgnToCoord(cnkRgn2);
 }var vxlIdx2=GetIdx(vCoord2.x,vCoord2.y,vCoord2.z);
             int i2=index(cCoord2-cCoord1);if(i2==0&&voxels[vxlIdx2].IsCreated)
             polygonCell[corner]=voxels[vxlIdx2];
+            else if(i2>0&&neighbors[i2-1].ContainsKey(vxlIdx2))
+            polygonCell[corner]=neighbors[i2-1][vxlIdx2];
             else{
 Vector3 noiseInput=vCoord2;noiseInput.x+=cnkRgn2.x;
                            noiseInput.z+=cnkRgn2.y;
@@ -212,12 +265,16 @@ ValidateCoord(ref cnkRgn3,ref vCoord3);cCoord3=ChunkManager.RgnToCoord(cnkRgn3);
 }var vxlIdx3=GetIdx(vCoord3.x,vCoord3.y,vCoord3.z);
             int i3=index(cCoord3-cCoord1);if(i3==0&&voxels[vxlIdx3].IsCreated)
             tmp[tmpIdx]=voxels[vxlIdx3];
+            else if(i3>0&&neighbors[i3-1].ContainsKey(vxlIdx3))
+            tmp[tmpIdx]=neighbors[i3-1][vxlIdx3];
             else{
 Vector3 noiseInput=vCoord3;noiseInput.x+=cnkRgn3.x;
                            noiseInput.z+=cnkRgn3.y;
 ChunkManager.biome.v(noiseInput,ref tmp[tmpIdx]);
             if(i3==0)
             voxels[vxlIdx3]=tmp[tmpIdx];
+            else if(i3>0)
+            neighbors[i3-1][vxlIdx3]=tmp[tmpIdx];
             }
         }
     }
@@ -229,6 +286,8 @@ if(polygonCell[corner].Normal!=Vector3.zero){
 }
             if(i2==0)
             voxels[vxlIdx2]=polygonCell[corner];
+            else if(i2>0)
+            neighbors[i2-1][vxlIdx2]=polygonCell[corner];
 }
         }
     }
