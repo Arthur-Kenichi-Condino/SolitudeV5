@@ -74,7 +74,17 @@ protected virtual void Update(){
     if(backgroundDataSet.WaitOne(0)){
         if(editedDirty.Count>0){for(int i=0;i<editedDirty.Count;i++){
             if(Chunks.ContainsKey(editedDirty[i])){
-                Chunks[editedDirty[i]].needsRebuild=true;
+                Chunk cnk;(cnk=Chunks[editedDirty[i]]).needsRebuild=true;
+for(int x=-1;x<=1;x++){
+for(int z=-1;z<=1;z++){
+
+
+Vector2Int nCoord1=cnk.Coord;nCoord1.x+=x;nCoord1.y+=z;int ngbIdx1=GetIdx(nCoord1.x,nCoord1.y);
+                if(Chunks.ContainsKey(ngbIdx1)){
+                    Chunks[ngbIdx1].needsRebuild=true;
+                }
+
+}}
             }
         }editedDirty.Clear();}
     }
