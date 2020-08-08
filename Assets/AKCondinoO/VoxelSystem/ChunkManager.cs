@@ -34,6 +34,7 @@ if(LOG&&LOG_LEVEL<=100)Debug.Log("SetMinThreads failed");
 }
 }
 CurrWorldName="Terra Nova";
+biome.LOG=LOG;biome.LOG_LEVEL=LOG_LEVEL;biome.Seed=0;
 Directory.CreateDirectory(saveSubfolder[0]=saveFolder+CurrWorldName+"/Chunks/");saveSubfolder[0]+="c{0}.edits";
 }catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);
 #if UNITY_STANDALONE

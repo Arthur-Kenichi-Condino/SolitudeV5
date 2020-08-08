@@ -1,6 +1,6 @@
 /target:library
 /nowarn:0169
-/out:Temp/Assembly-CSharp-firstpass.dll
+/out:Temp/Assembly-CSharp.dll
 /debug:portable
 /optimize-
 /nostdlib+
@@ -67,6 +67,7 @@
 /reference:"A:/Program Files/2019.3.0f3/Editor/Data/Managed/UnityEngine/UnityEngine.WindModule.dll"
 /reference:"A:/Program Files/2019.3.0f3/Editor/Data/Managed/UnityEngine/UnityEngine.XRModule.dll"
 /reference:"A:/Program Files/2019.3.0f3/Editor/Data/Managed/UnityEditor.dll"
+/reference:Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll
 /reference:Library/ScriptAssemblies/Unity.Timeline.Editor.dll
 /reference:Library/ScriptAssemblies/Unity.Burst.dll
 /reference:Library/ScriptAssemblies/Unity.VSCode.Editor.dll
@@ -299,37 +300,12 @@
 /define:ENABLE_LEGACY_INPUT_MANAGER
 /define:CSHARP_7_OR_LATER
 /define:CSHARP_7_3_OR_NEWER
-Assets\Plugins\LibNoise.Unity\Generator\Billow.cs
-Assets\Plugins\LibNoise.Unity\Generator\Checker.cs
-Assets\Plugins\LibNoise.Unity\Generator\Const.cs
-Assets\Plugins\LibNoise.Unity\Generator\Cylinders.cs
-Assets\Plugins\LibNoise.Unity\Generator\Perlin.cs
-Assets\Plugins\LibNoise.Unity\Generator\RidgedMultifractal.cs
-Assets\Plugins\LibNoise.Unity\Generator\Spheres.cs
-Assets\Plugins\LibNoise.Unity\Generator\Voronoi.cs
-Assets\Plugins\LibNoise.Unity\GradientPresets.cs
-Assets\Plugins\LibNoise.Unity\ModuleBase.cs
-Assets\Plugins\LibNoise.Unity\Noise2D.cs
-Assets\Plugins\LibNoise.Unity\Operator\Abs.cs
-Assets\Plugins\LibNoise.Unity\Operator\Add.cs
-Assets\Plugins\LibNoise.Unity\Operator\Blend.cs
-Assets\Plugins\LibNoise.Unity\Operator\Cache.cs
-Assets\Plugins\LibNoise.Unity\Operator\Clamp.cs
-Assets\Plugins\LibNoise.Unity\Operator\Curve.cs
-Assets\Plugins\LibNoise.Unity\Operator\Displace.cs
-Assets\Plugins\LibNoise.Unity\Operator\Exponent.cs
-Assets\Plugins\LibNoise.Unity\Operator\Invert.cs
-Assets\Plugins\LibNoise.Unity\Operator\Max.cs
-Assets\Plugins\LibNoise.Unity\Operator\Min.cs
-Assets\Plugins\LibNoise.Unity\Operator\Multiply.cs
-Assets\Plugins\LibNoise.Unity\Operator\Power.cs
-Assets\Plugins\LibNoise.Unity\Operator\Rotate.cs
-Assets\Plugins\LibNoise.Unity\Operator\Scale.cs
-Assets\Plugins\LibNoise.Unity\Operator\ScaleBias.cs
-Assets\Plugins\LibNoise.Unity\Operator\Select.cs
-Assets\Plugins\LibNoise.Unity\Operator\Subtract.cs
-Assets\Plugins\LibNoise.Unity\Operator\Terrace.cs
-Assets\Plugins\LibNoise.Unity\Operator\Translate.cs
-Assets\Plugins\LibNoise.Unity\Operator\Turbulence.cs
-Assets\Plugins\LibNoise.Unity\Properties\AssemblyInfo.cs
-Assets\Plugins\LibNoise.Unity\Utils.cs
+Assets\AKCondinoO\FileInfoExtensions.cs
+Assets\AKCondinoO\Main.cs
+Assets\AKCondinoO\VoxelSystem\AtlasHelper.cs
+Assets\AKCondinoO\VoxelSystem\Biome.cs
+Assets\AKCondinoO\VoxelSystem\Chunk.cs
+Assets\AKCondinoO\VoxelSystem\ChunkManager.cs
+Assets\AKCondinoO\VoxelSystem\Tables.cs
+Assets\AKCondinoO\VoxelSystem\TerrainChunk.cs
+Assets\AKCondinoO\VoxelSystem\TerrainChunkManager.cs

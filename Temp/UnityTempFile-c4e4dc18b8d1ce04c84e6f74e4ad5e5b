@@ -67,6 +67,7 @@
 /reference:"A:/Program Files/2019.3.0f3/Editor/Data/Managed/UnityEngine/UnityEngine.WindModule.dll"
 /reference:"A:/Program Files/2019.3.0f3/Editor/Data/Managed/UnityEngine/UnityEngine.XRModule.dll"
 /reference:"A:/Program Files/2019.3.0f3/Editor/Data/Managed/UnityEditor.dll"
+/reference:Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll
 /reference:Library/ScriptAssemblies/Unity.Timeline.Editor.dll
 /reference:Library/ScriptAssemblies/Unity.Burst.dll
 /reference:Library/ScriptAssemblies/Unity.VSCode.Editor.dll
@@ -300,7 +301,7 @@
 /define:CSHARP_7_OR_LATER
 /define:CSHARP_7_3_OR_NEWER
 Assets\AKCondinoO\FileInfoExtensions.cs
-Assets\AKCondinoO\Start.cs
+Assets\AKCondinoO\Main.cs
 Assets\AKCondinoO\VoxelSystem\AtlasHelper.cs
 Assets\AKCondinoO\VoxelSystem\Biome.cs
 Assets\AKCondinoO\VoxelSystem\Chunk.cs

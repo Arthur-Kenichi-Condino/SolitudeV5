@@ -194,7 +194,8 @@ Thread.Yield();Thread.Sleep(random.Next(500,1001));
 }}
 
             }
-Voxel[][][]voxelsBuffer1=new Voxel[3][][]{new Voxel[1][]{new Voxel[4],},new Voxel[Depth][],new Voxel[FlattenOffset][],};for(int i=0;i<voxelsBuffer1[2].Length;++i){voxelsBuffer1[2][i]=new Voxel[4];if(i<voxelsBuffer1[1].Length){voxelsBuffer1[1][i]=new Voxel[4];}}
+double[][]noiseCache1=new double[9][];
+Voxel[][][]voxelsBuffer1=new Voxel[3][][]{new Voxel[1][]{new Voxel[4],},new Voxel[Depth][],new Voxel[FlattenOffset][],};for(int i=0;i<voxelsBuffer1[2].Length;++i){voxelsBuffer1[2][i]=new Voxel[4];if(i<voxelsBuffer1[1].Length){voxelsBuffer1[1][i]=new Voxel[4];}}Voxel[][]voxelsBuffer2=new Voxel[3][]{new Voxel[1],new Voxel[Depth],new Voxel[FlattenOffset],};
 Vector3[][][]verticesBuffer=new Vector3[3][][]{new Vector3[1][]{new Vector3[4],},new Vector3[Depth][],new Vector3[FlattenOffset][],};for(int i=0;i<verticesBuffer[2].Length;++i){verticesBuffer[2][i]=new Vector3[4];if(i<verticesBuffer[1].Length){verticesBuffer[1][i]=new Vector3[4];}}
 ushort vertexCount=0;
 Vector2Int posOffset=Vector2Int.zero;
@@ -244,15 +245,15 @@ ValidateCoord(ref cnkRgn2,ref vCoord2);cCoord2=ChunkManager.RgnToCoord(cnkRgn2);
             else{
 Vector3 noiseInput=vCoord2;noiseInput.x+=cnkRgn2.x;
                            noiseInput.z+=cnkRgn2.y;
-ChunkManager.biome.v(noiseInput,ref polygonCell[corner]);
+ChunkManager.biome.v(noiseInput,ref polygonCell[corner],ref noiseCache1[i2],vCoord2.z+vCoord2.x*Width);
             }
 if(polygonCell[corner].Normal==Vector3.zero){
 int tmpIdx=0;Voxel[]tmp=new Voxel[6];Vector3Int vCoord3=vCoord2;vCoord3.x++;TmpVoxel();
-tmpIdx++;vCoord3=vCoord2;                                       vCoord3.x--;TmpVoxel();
+tmpIdx++;vCoord3=vCoord2;                                       vCoord3.x--;if(vCoord2.z>1&&vCoord2.x>1&&vCoord2.y>1&&voxelsBuffer2[1][vCoord2.z].IsCreated)tmp[tmpIdx]=voxelsBuffer2[1][vCoord2.z];else TmpVoxel();
 tmpIdx++;vCoord3=vCoord2;                                       vCoord3.y++;TmpVoxel();
-tmpIdx++;vCoord3=vCoord2;                                       vCoord3.y--;TmpVoxel();
+tmpIdx++;vCoord3=vCoord2;                                       vCoord3.y--;if(vCoord2.z>1&&vCoord2.x>1&&vCoord2.y>1&&voxelsBuffer2[2][vCoord2.z+vCoord2.x*Width].IsCreated)tmp[tmpIdx]=voxelsBuffer2[2][vCoord2.z+vCoord2.x*Width];else TmpVoxel();
 tmpIdx++;vCoord3=vCoord2;                                       vCoord3.z++;TmpVoxel();
-tmpIdx++;vCoord3=vCoord2;                                       vCoord3.z--;TmpVoxel();
+tmpIdx++;vCoord3=vCoord2;                                       vCoord3.z--;if(vCoord2.z>1&&vCoord2.x>1&&vCoord2.y>1&&voxelsBuffer2[0][0].IsCreated)tmp[tmpIdx]=voxelsBuffer2[0][0];else TmpVoxel();
     void TmpVoxel(){
         if(vCoord3.y<0){
             tmp[tmpIdx]=Voxel.Bedrock;
@@ -271,7 +272,7 @@ ValidateCoord(ref cnkRgn3,ref vCoord3);cCoord3=ChunkManager.RgnToCoord(cnkRgn3);
             else{
 Vector3 noiseInput=vCoord3;noiseInput.x+=cnkRgn3.x;
                            noiseInput.z+=cnkRgn3.y;
-ChunkManager.biome.v(noiseInput,ref tmp[tmpIdx]);
+ChunkManager.biome.v(noiseInput,ref tmp[tmpIdx],ref noiseCache1[i3],vCoord3.z+vCoord3.x*Width);
             if(i3==0)
             voxels[vxlIdx3]=tmp[tmpIdx];
             else if(i3>0)
@@ -290,6 +291,9 @@ if(polygonCell[corner].Normal!=Vector3.zero){
             else if(i2>0)
             neighbors[i2-1][vxlIdx2]=polygonCell[corner];
 }
+voxelsBuffer2[0][0]=polygonCell[corner];
+voxelsBuffer2[1][vCoord2.z]=polygonCell[corner];
+voxelsBuffer2[2][vCoord2.z+vCoord2.x*Width]=polygonCell[corner];
         }
     }
 #region MarchingCubes
@@ -440,10 +444,12 @@ ValidateCoord(ref cnkRgn2,ref vCoord2);cCoord2=ChunkManager.RgnToCoord(cnkRgn2);
 }var vxlIdx2=GetIdx(vCoord2.x,vCoord2.y,vCoord2.z);
             int i2=index(cCoord2-cCoord1);if(i2==0&&voxels[vxlIdx2].IsCreated)
             polygonCell[corner]=voxels[vxlIdx2];
+            else if(i2>0&&neighbors[i2-1].ContainsKey(vxlIdx2))
+            polygonCell[corner]=neighbors[i2-1][vxlIdx2];
             else{
 Vector3 noiseInput=vCoord2;noiseInput.x+=cnkRgn2.x;
                            noiseInput.z+=cnkRgn2.y;
-ChunkManager.biome.v(noiseInput,ref polygonCell[corner]);
+ChunkManager.biome.v(noiseInput,ref polygonCell[corner],ref noiseCache1[i2],vCoord2.z+vCoord2.x*Width);
             }
         }
     }
