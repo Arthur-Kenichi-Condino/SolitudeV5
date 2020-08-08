@@ -47,7 +47,7 @@ UnityEditor.EditorApplication.isPlaying=false;
 return;
 }
     for(int i=maxChunks-1;i>=0;--i){
-        GameObject obj=Instantiate(ChunkPrefab);Chunk scr=obj.GetComponent<Chunk>();ChunksPool.AddLast(scr);scr.ExpropriationNode=ChunksPool.Last;
+        GameObject obj=Instantiate(ChunkPrefab);Chunk scr=obj.GetComponent<Chunk>();ChunksPool.AddLast(scr);scr.ExpropriationNode=ChunksPool.Last;if(scr is TerrainChunk cnk){load_Syn.Add(cnk.load_Syn);}
     }
 }
 [NonSerialized]Task task;[NonSerialized]readonly AutoResetEvent foregroundDataSet=new AutoResetEvent(false);[NonSerialized]readonly ManualResetEvent backgroundDataSet=new ManualResetEvent(true);
@@ -118,7 +118,7 @@ _skip:{}
 if(coord.x==0){break;}}}
 if(coord.y==0){break;}}}
 }
-public void Edit(Vector3 center,Vector3Int size){
+public void Edit(Vector3 center,Vector3Int size,double density=0){
     if(backgroundDataSet.WaitOne(0)){
 Vector2Int cCoord1=PosToCoord(center);
 Vector2Int cnkRgn1=CoordToRgn(cCoord1);
@@ -139,7 +139,7 @@ Chunk.ValidateCoord(ref cnkRgn2,ref vCoord2);cCoord2=RgnToCoord(cnkRgn2);
 }
 var cnkIdx2=GetIdx(cCoord2.x,cCoord2.y);if(Chunks.ContainsKey(cnkIdx2)){if((!(Chunks[cnkIdx2]is TerrainChunk cnk))||cnk.needsRebuild||!cnk.backgroundDataSet.WaitOne(0)){Cancel();goto _End;}}
     if(!edtVxlsByCnkIdx.ContainsKey(cnkIdx2)){edtVxlsByCnkIdx.Add(cnkIdx2,new Dictionary<Vector3Int,(double density,MaterialId material)>());}
-    edtVxlsByCnkIdx[cnkIdx2].Add(vCoord2,(0,MaterialId.Air));
+    edtVxlsByCnkIdx[cnkIdx2].Add(vCoord2,(10,MaterialId.Air));
 }}}
             backgroundDataSet.Reset();foregroundDataSet.Set();
 _End:{}
@@ -156,13 +156,14 @@ edtVxlsByCnkIdx.Clear();
 
     }
 }
-[NonSerialized]public static readonly object load_Syn=new object();
+//[NonSerialized]public static readonly object load_Syn=new object();
+[NonSerialized]readonly List<object>load_Syn=new List<object>();
 [NonSerialized]readonly Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId material)>>edtVxlsByCnkIdx=new Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId material)>>();[NonSerialized]readonly List<int>editedDirty=new List<int>();
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is System.Random random&&parameters[3]is string[]saveSubfolder){
 DataContractSerializer saveContract=new DataContractSerializer(typeof(Dictionary<Vector3Int,(double density,MaterialId material)>));
         while(!Stop){foregroundDataSet.WaitOne();if(Stop)goto _Stop;
-            lock(load_Syn){
+            foreach(var syn in load_Syn)Monitor.Enter(syn);try{
 foreach(var cnkIdxEdtsPair in edtVxlsByCnkIdx){
 var fileName=string.Format(saveSubfolder[0],cnkIdxEdtsPair.Key);
 if(LOG&&LOG_LEVEL<=1)Debug.Log("save edits at: "+fileName);
@@ -209,7 +210,7 @@ Thread.Yield();Thread.Sleep(random.Next(100,501));
         
 
 
-            }
+            }catch{throw;}finally{foreach(var syn in load_Syn)Monitor.Exit(syn);}
 
 
 

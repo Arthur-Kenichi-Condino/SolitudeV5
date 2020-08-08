@@ -86,6 +86,7 @@ public struct Vertex{
     new VertexAttributeDescriptor(VertexAttribute.TexCoord1,VertexAttributeFormat.Float32,2),
 };
 [NonSerialized]static readonly object tasksBusyCount_Syn=new object();[NonSerialized]static int tasksBusyCount=0;[NonSerialized]static readonly AutoResetEvent queue=new AutoResetEvent(true);
+[NonSerialized]public readonly object load_Syn=new object();
 [NonSerialized]readonly Voxel[]voxels=new Voxel[VoxelsPerChunk];
 [NonSerialized]Vector2Int cCoord1;
 [NonSerialized]Vector2Int cnkRgn1;
@@ -97,7 +98,7 @@ Voxel[]polygonCell=new Voxel[8];
 lock(tasksBusyCount_Syn){tasksBusyCount++;}queue.WaitOne(tasksBusyCount*5000);
 if(LOG&&LOG_LEVEL<=2)Debug.Log("do job ["+cnkRgn1);var watch=System.Diagnostics.Stopwatch.StartNew();
 Array.Clear(voxels,0,voxels.Length);TempVer.Clear();TempTriangles.Clear();var neighbors=new Dictionary<int,Voxel>[8];for(int i=0;i<8;i++){neighbors[i]=new Dictionary<int,Voxel>();}Dictionary<Vector3,List<Vector2>>UVsByVertex=new Dictionary<Vector3,List<Vector2>>();
-            lock(ChunkManager.load_Syn){
+            lock(load_Syn){
 var fileName=string.Format(saveSubfolder[0],ChunkManager.GetIdx(cCoord1.x,cCoord1.y));
 
 
@@ -547,9 +548,9 @@ hasBuildData=true;backgroundDataSet.Set();}
 if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
         }
 #pragma warning disable CS8321 
-        void assert(bool condition,string msg=""){
+        void assert(bool condition,string msg="",bool stop=true){
 #pragma warning restore CS8321 
-            if(!condition){try{throw new Exception(string.IsNullOrEmpty(msg)?"assert failed":msg);}catch{throw;}finally{if(TempVer.IsCreated)TempVer.Dispose();if(TempTriangles.IsCreated)TempTriangles.Dispose();}}
+            if(!condition){try{throw new Exception(string.IsNullOrEmpty(msg)?"assert failed":msg);}catch{if(stop)throw;}finally{if(TempVer.IsCreated)TempVer.Dispose();if(TempTriangles.IsCreated)TempTriangles.Dispose();}}
         }
     }
 }catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);try{if(TempVer.IsCreated)TempVer.Dispose();}finally{}try{if(TempTriangles.IsCreated)TempTriangles.Dispose();}finally{}}}
@@ -572,7 +573,7 @@ new Vector3( .5f, .5f, .5f),
 new Vector3(-.5f, .5f, .5f),
 });
 public static Vector3 TrianglePosAdj{get;}=new Vector3((Width/2.0f)-0.5f,(Height/2.0f)-0.5f,(Depth/2.0f)-0.5f);//  Ajuste para que o mesh do chunk fique centralizado, com pivot em 0,0,0
-public const double IsoLevel=-50.0d;Vector2 _emptyUV{get;}=new Vector2(-1,-1);
+[NonSerialized]public const double IsoLevel=-50.0d;Vector2 _emptyUV{get;}=new Vector2(-1,-1);
 
 
 
