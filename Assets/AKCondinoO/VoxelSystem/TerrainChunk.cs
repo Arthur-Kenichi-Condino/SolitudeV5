@@ -8,13 +8,14 @@ using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.Rendering;
 namespace AKCondinoO.Voxels{public class TerrainChunk:Chunk{
 [NonSerialized]Task task;[NonSerialized]readonly AutoResetEvent foregroundDataSet=new AutoResetEvent(false);[NonSerialized]public readonly ManualResetEvent backgroundDataSet=new ManualResetEvent(true);
 protected override void OnEnable(){
     if(mesh==null){
-        mesh=gameObject.GetComponent<MeshFilter>().mesh;mesh.bounds=new Bounds(Vector3.zero,new Vector3(Width,Height,Depth));renderer=gameObject.GetComponent<MeshRenderer>();
+        mesh=new Mesh(){bounds=new Bounds(Vector3.zero,new Vector3(Width,Height,Depth))};gameObject.GetComponent<MeshFilter>().sharedMesh=mesh;renderer=gameObject.GetComponent<MeshRenderer>();collider=gameObject.GetComponent<MeshCollider>();collider.sharedMesh=mesh;
     }
 Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,TempVer=new NativeList<Vertex>(Allocator.Persistent),TempTriangles=new NativeList<ushort>(Allocator.Persistent),new System.Random(),ChunkManager.saveSubfolder,},TaskCreationOptions.LongRunning);
 }
@@ -27,12 +28,20 @@ Stop=true;try{task.Wait();}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.
 }
 [NonSerialized]bool hasBuildData;
 protected override void Update(){
+    if(baking){
+        if(bakingHandle.IsCompleted){
+bakingHandle.Complete();baking=false;
+if(LOG&&LOG_LEVEL<=2)Debug.Log("mesh baked");
+    collider.sharedMesh=mesh;
+        }else return;
+    }
     if(backgroundDataSet.WaitOne(0)){
         if(hasBuildData){
             hasBuildData=false;
 if(LOG&&LOG_LEVEL<=2)Debug.Log("did job now build");
             OnBuild();
         }
+    if(baking)return;
 if(DRAW_LEVEL<=-100)for(int i=0;i<TempVer.Length;i++){Debug.DrawRay(TempVer[i].pos,TempVer[i].normal,Color.green);}
         if(needsRebuild){
             needsRebuild=false;
@@ -44,7 +53,7 @@ if(DRAW_LEVEL<=-100)for(int i=0;i<TempVer.Length;i++){Debug.DrawRay(TempVer[i].p
 }
 [NonSerialized]NativeList<Vertex>TempVer;
 [NonSerialized]NativeList<ushort>TempTriangles;
-[NonSerialized]public new MeshRenderer renderer=null;[NonSerialized]Mesh mesh=null;
+[NonSerialized]public new MeshRenderer renderer=null;[NonSerialized]Mesh mesh=null;[NonSerialized]public new MeshCollider collider=null;
 void OnBuild(){
 if(LOG&&LOG_LEVEL<=2)Debug.Log("TempVer.Length:"+TempVer.Length+";TempTriangles.Length:"+TempTriangles.Length);
     bool resize;var flags=MeshUpdateFlags.DontValidateIndices|MeshUpdateFlags.DontNotifyMeshUsers|MeshUpdateFlags.DontRecalculateBounds;
@@ -62,7 +71,9 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("TempVer.Length:"+TempVer.Length+";TempTriangles.
         mesh.subMeshCount=1;
     mesh.SetSubMesh(0,new SubMeshDescriptor(0,TempTriangles.Length),flags);
 #endregion 
+baking=true;bakingHandle=new BakerJob(){meshId=mesh.GetInstanceID(),}.Schedule();
 }
+[NonSerialized]bool baking;[NonSerialized]JobHandle bakingHandle;struct BakerJob:IJob{public int meshId;public void Execute(){Physics.BakeMesh(meshId,false);}}
 [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
 public struct Vertex{
     public Vector3 pos;
@@ -378,7 +389,7 @@ verticesBuffer[2][vCoord1.z+vCoord1.x*Width][3]=vertices[11]+Vector3.down;
 for(int i=0;Tables.TriangleTable[edgeIndex][i]!=-1;i+=3){
 TempTriangles.Add((ushort)(vertexCount+2));
 TempTriangles.Add((ushort)(vertexCount+1));
-TempTriangles.Add(         vertexCount  );
+TempTriangles.Add(         vertexCount   );
 int[]idx=new int[3];
 Vector3 pos=vCoord1-TrianglePosAdj;pos.x+=posOffset.x;
                                    pos.z+=posOffset.y;
@@ -389,9 +400,9 @@ MaterialId material=                                         materials[idx[0]];
            material=(MaterialId)Mathf.Max((int)material,(int)materials[idx[1]]);
            material=(MaterialId)Mathf.Max((int)material,(int)materials[idx[2]]);
    Vector2 materialUV=AtlasHelper.GetUV(material);
-TempVer.Add(new Vertex(verPos[0],-normals[idx[0]],materialUV));if(!UVsByVertex.ContainsKey(verPos[0])){UVsByVertex.Add(verPos[0],new List<Vector2>());}UVsByVertex[verPos[0]].Add(materialUV);
-TempVer.Add(new Vertex(verPos[1],-normals[idx[1]],materialUV));if(!UVsByVertex.ContainsKey(verPos[1])){UVsByVertex.Add(verPos[1],new List<Vector2>());}UVsByVertex[verPos[1]].Add(materialUV);
-TempVer.Add(new Vertex(verPos[2],-normals[idx[2]],materialUV));if(!UVsByVertex.ContainsKey(verPos[2])){UVsByVertex.Add(verPos[2],new List<Vector2>());}UVsByVertex[verPos[2]].Add(materialUV);
+TempVer.Add(new Vertex(verPos[0],normals[idx[0]],materialUV));if(!UVsByVertex.ContainsKey(verPos[0])){UVsByVertex.Add(verPos[0],new List<Vector2>());}UVsByVertex[verPos[0]].Add(materialUV);
+TempVer.Add(new Vertex(verPos[1],normals[idx[1]],materialUV));if(!UVsByVertex.ContainsKey(verPos[1])){UVsByVertex.Add(verPos[1],new List<Vector2>());}UVsByVertex[verPos[1]].Add(materialUV);
+TempVer.Add(new Vertex(verPos[2],normals[idx[2]],materialUV));if(!UVsByVertex.ContainsKey(verPos[2])){UVsByVertex.Add(verPos[2],new List<Vector2>());}UVsByVertex[verPos[2]].Add(materialUV);
 vertexCount+=3;
 }
 #endregion
