@@ -400,9 +400,9 @@ MaterialId material=                                         materials[idx[0]];
            material=(MaterialId)Mathf.Max((int)material,(int)materials[idx[1]]);
            material=(MaterialId)Mathf.Max((int)material,(int)materials[idx[2]]);
    Vector2 materialUV=AtlasHelper.GetUV(material);
-TempVer.Add(new Vertex(verPos[0],normals[idx[0]],materialUV));if(!UVsByVertex.ContainsKey(verPos[0])){UVsByVertex.Add(verPos[0],new List<Vector2>());}UVsByVertex[verPos[0]].Add(materialUV);
-TempVer.Add(new Vertex(verPos[1],normals[idx[1]],materialUV));if(!UVsByVertex.ContainsKey(verPos[1])){UVsByVertex.Add(verPos[1],new List<Vector2>());}UVsByVertex[verPos[1]].Add(materialUV);
-TempVer.Add(new Vertex(verPos[2],normals[idx[2]],materialUV));if(!UVsByVertex.ContainsKey(verPos[2])){UVsByVertex.Add(verPos[2],new List<Vector2>());}UVsByVertex[verPos[2]].Add(materialUV);
+TempVer.Add(new Vertex(verPos[0],-normals[idx[0]],materialUV));if(!UVsByVertex.ContainsKey(verPos[0])){UVsByVertex.Add(verPos[0],new List<Vector2>());}UVsByVertex[verPos[0]].Add(materialUV);
+TempVer.Add(new Vertex(verPos[1],-normals[idx[1]],materialUV));if(!UVsByVertex.ContainsKey(verPos[1])){UVsByVertex.Add(verPos[1],new List<Vector2>());}UVsByVertex[verPos[1]].Add(materialUV);
+TempVer.Add(new Vertex(verPos[2],-normals[idx[2]],materialUV));if(!UVsByVertex.ContainsKey(verPos[2])){UVsByVertex.Add(verPos[2],new List<Vector2>());}UVsByVertex[verPos[2]].Add(materialUV);
 vertexCount+=3;
 }
 #endregion

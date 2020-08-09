@@ -93,7 +93,7 @@ Vector2Int nCoord1=cnk.Coord;nCoord1.x+=x;nCoord1.y+=z;int ngbIdx1=GetIdx(nCoord
 
 
 
-        if(DEBUG_EDIT){Edit(Vector3.zero,new Vector3Int(8,1,1));}
+        if(DEBUG_EDIT){Edit(new Vector3(0,0,0),new Vector3Int(1,50,1));}
 
 
 

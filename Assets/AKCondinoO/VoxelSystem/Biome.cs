@@ -44,7 +44,7 @@ public virtual void v(Vector3 noiseInput,ref Voxel v,ref double[]noiseCache1,int
 if(noiseInput.y<1){v=Voxel.Bedrock;return;}
 noiseInput+=_deround;
 double noiseValue1=noiseCache1[noiseCache1Index]!=0?noiseCache1[noiseCache1Index]:(noiseCache1[noiseCache1Index]=Modules[IdxForHgt].GetValue(noiseInput.z,noiseInput.x,0));
-if(noiseInput.y<=noiseValue1){AddSmoothDensity(50,20,noiseInput,ref v,noiseValue1);GetMaterial(noiseInput,ref v);return;}
+if(noiseInput.y<=noiseValue1){double d;v=new Voxel(d=AddSmoothDensity(51,20,noiseInput,noiseValue1),Vector3.zero,GetMaterial(noiseInput,d));return;}
 
 
 //if(noiseInput.x>=10.5&&noiseInput.z>=10.5){v=new Voxel(51,Vector3.zero,MaterialId.Rock);return;}
@@ -56,17 +56,17 @@ v=Voxel.Air;}
 protected Vector3 _deround{get;}=new Vector3(.5f,.5f,.5f);
 public readonly System.Random[]Random=new System.Random[2];
 #endregion
-protected virtual void AddSmoothDensity(double bottomSharpValue,double smoothingHeightDelta,Vector3 noiseInput,ref Voxel v,double noiseValue1){
-   double dValue=bottomSharpValue;
+protected virtual double AddSmoothDensity(double bottomSharpValue,double smoothingHeightDelta,Vector3 noiseInput,double noiseValue1){
+double dValue=bottomSharpValue;
 double smoothingValue=Math.Abs(1.0-((noiseInput.y-(noiseValue1-smoothingHeightDelta))/smoothingHeightDelta));
-          dValue*=smoothingValue;
-       if(dValue<1)
-          dValue=1;
-       if(dValue>100)
-          dValue=100;
-v.Density=dValue;}
-protected virtual void GetMaterial(Vector3 noiseInput,ref Voxel v){
-v.Material=MaterialIdsPicking[0].Item1;}
+       dValue*=smoothingValue;
+    if(dValue<1)
+       dValue=1;
+    if(dValue>100)
+       dValue=100;
+return dValue;}
+protected virtual MaterialId GetMaterial(Vector3 noiseInput,double density){
+return MaterialIdsPicking[0].Item1;}
 
 
 
