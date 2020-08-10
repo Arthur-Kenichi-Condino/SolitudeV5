@@ -26,6 +26,10 @@ bool Stop{
 protected override void OnDisable(){
 Stop=true;try{task.Wait();}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}
 }
+protected override void OnDestroy(){if(Stop){
+if(LOG&&LOG_LEVEL<=2)Debug.Log("dispose");
+backgroundDataSet.Dispose();foregroundDataSet.Dispose();
+}}
 [NonSerialized]bool hasBuildData;
 protected override void Update(){
     if(baking){
@@ -96,7 +100,7 @@ public struct Vertex{
     new VertexAttributeDescriptor(VertexAttribute.TexCoord0,VertexAttributeFormat.Float32,2),
     new VertexAttributeDescriptor(VertexAttribute.TexCoord1,VertexAttributeFormat.Float32,2),
 };
-[NonSerialized]static readonly object tasksBusyCount_Syn=new object();[NonSerialized]static int tasksBusyCount=0;[NonSerialized]static readonly AutoResetEvent queue=new AutoResetEvent(true);
+[NonSerialized]public static readonly object tasksBusyCount_Syn=new object();[NonSerialized]public static int tasksBusyCount=0;[NonSerialized]public static readonly AutoResetEvent queue=new AutoResetEvent(true);
 [NonSerialized]public readonly object load_Syn=new object();
 [NonSerialized]readonly Voxel[]voxels=new Voxel[VoxelsPerChunk];
 [NonSerialized]Vector2Int cCoord1;
@@ -212,7 +216,7 @@ ushort vertexCount=0;
 Vector2Int posOffset=Vector2Int.zero;
 Vector2Int crdOffset=Vector2Int.zero;
 Vector3Int vCoord1;
-for(vCoord1=new Vector3Int();vCoord1.y<Height;vCoord1.y++){
+for(vCoord1=new Vector3Int();vCoord1.y<Height;vCoord1.y++){if(ChunkManager.averageFramerate<50){Thread.Yield();Thread.Sleep(1);}
 for(vCoord1.x=0             ;vCoord1.x<Width ;vCoord1.x++){
 for(vCoord1.z=0             ;vCoord1.z<Depth ;vCoord1.z++){
 Polygonise();
@@ -291,9 +295,15 @@ ChunkManager.biome.v(noiseInput,ref tmp[tmpIdx],ref noiseCache1[i3],vCoord3.z+vC
             }
         }
     }
-polygonCell[corner].Normal.x=(float)(tmp[0].Density-tmp[1].Density);
-polygonCell[corner].Normal.y=(float)(tmp[2].Density-tmp[3].Density);
-polygonCell[corner].Normal.z=(float)(tmp[4].Density-tmp[5].Density);
+Vector3 normal1=new Vector3{
+x=(float)(tmp[0].Density-tmp[1].Density),
+y=(float)(tmp[2].Density-tmp[3].Density),
+z=(float)(tmp[4].Density-tmp[5].Density)};
+Vector3 normal2=new Vector3{
+x=(float)((tmp[0].Density>50?tmp[0].Density:0)-(tmp[1].Density>50?tmp[1].Density:0)),
+y=(float)((tmp[2].Density>50?tmp[2].Density:0)-(tmp[3].Density>50?tmp[3].Density:0)),
+z=(float)((tmp[4].Density>50?tmp[4].Density:0)-(tmp[5].Density>50?tmp[5].Density:0))};
+polygonCell[corner].Normal=(normal1+normal2)/2f;
 if(polygonCell[corner].Normal!=Vector3.zero){
     polygonCell[corner].Normal.Normalize();
 }

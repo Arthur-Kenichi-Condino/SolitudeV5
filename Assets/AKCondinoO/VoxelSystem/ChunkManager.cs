@@ -26,7 +26,7 @@ if(LOG&&LOG_LEVEL<=100)Debug.Log("The number of processors on this computer is "
 ThreadPool.GetAvailableThreads(out int worker ,out int io         );if(LOG&&LOG_LEVEL<=100)Debug.Log("Thread pool threads available at startup: Worker threads: "+worker+" Asynchronous I/O threads: "+io);
 ThreadPool.GetMaxThreads(out int workerThreads,out int portThreads);if(LOG&&LOG_LEVEL<=100)Debug.Log("Maximum worker threads: "+workerThreads+" Maximum completion port threads: "+portThreads);
 ThreadPool.GetMinThreads(out int minWorker    ,out int minIOC     );if(LOG&&LOG_LEVEL<=100)Debug.Log("minimum number of worker threads: "+minWorker+" minimum asynchronous I/O: "+minIOC);
-var idealMin=(maxChunks+1+Environment.ProcessorCount);if(minWorker!=idealMin){
+var idealMin=(maxChunks+2+Environment.ProcessorCount);if(minWorker!=idealMin){
 if(ThreadPool.SetMinThreads(idealMin,minIOC)){
 if(LOG&&LOG_LEVEL<=100)Debug.Log("changed minimum number of worker threads to:"+(idealMin));
 }else{
@@ -51,9 +51,10 @@ return;
         GameObject obj=Instantiate(ChunkPrefab);Chunk scr=obj.GetComponent<Chunk>();ChunksPool.AddLast(scr);scr.ExpropriationNode=ChunksPool.Last;if(scr is TerrainChunk cnk){load_Syn.Add(cnk.load_Syn);}
     }
 }
-[NonSerialized]Task task;[NonSerialized]readonly AutoResetEvent foregroundDataSet=new AutoResetEvent(false);[NonSerialized]readonly ManualResetEvent backgroundDataSet=new ManualResetEvent(true);
+[NonSerialized]Task task1,task2;[NonSerialized]readonly AutoResetEvent foregroundDataSet1=new AutoResetEvent(false);ManualResetEvent foregroundDataSet2=new ManualResetEvent(true);[NonSerialized]readonly ManualResetEvent backgroundDataSet1=new ManualResetEvent(true);
 protected virtual void OnEnable(){
-Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,new System.Random(),saveSubfolder},TaskCreationOptions.LongRunning);
+Stop=false;task1=Task.Factory.StartNew(BG1,new object[]{LOG,LOG_LEVEL,new System.Random(),saveSubfolder},TaskCreationOptions.LongRunning);
+           task2=Task.Factory.StartNew(BG2,new object[]{LOG,LOG_LEVEL,}                                 ,TaskCreationOptions.LongRunning);
 
 
 
@@ -66,13 +67,45 @@ Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,new System.R
 }
 bool Stop{
     get{bool tmp;lock(Stop_Syn){tmp=Stop_v;      }return tmp;}
-    set{         lock(Stop_Syn){    Stop_v=value;}if(value){foregroundDataSet.Set();}}
+    set{         lock(Stop_Syn){    Stop_v=value;}if(value){foregroundDataSet1.Set();foregroundDataSet2.Set();}}
 }[NonSerialized]readonly object Stop_Syn=new object();[NonSerialized]bool Stop_v;
 protected virtual void OnDisable(){
-Stop=true;try{task.Wait();}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}
+Stop=true;try{task1.Wait();}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}
+          try{task2.Wait();}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}
 }
+protected virtual void OnDestroy(){if(Stop){
+if(LOG&&LOG_LEVEL<=2)Debug.Log("dispose");
+backgroundDataSet1.Dispose();foregroundDataSet1.Dispose();
+                             foregroundDataSet2.Dispose();
+}}
+[NonSerialized]float frameTimeVariation;protected float millisecondsPerFrame;
+public static float FPS{
+    get{float tmp;lock(FPS_Syn)tmp=FPS_v;return tmp;}
+    set{          lock(FPS_Syn)FPS_v=value;         }
+}[NonSerialized]static readonly object FPS_Syn=new object();[NonSerialized]static float FPS_v;
+public static float averageFramerate{
+    get{float tmp;lock(averageFramerate_Syn){tmp=averageFramerate_v;  }return tmp;}
+    set{          lock(averageFramerate_Syn){averageFramerate_v=value;}           }
+}[NonSerialized]static readonly object averageFramerate_Syn=new object();[NonSerialized]static float averageFramerate_v=60;[NonSerialized]int frameCounter;[NonSerialized]float averageFramerateRefreshTimer;[SerializeField]float averageFramerateRefreshTime=1.0f;
 protected virtual void Update(){
-    if(backgroundDataSet.WaitOne(0)){
+#region FPS
+frameTimeVariation+=(Time.deltaTime-frameTimeVariation);millisecondsPerFrame=frameTimeVariation*1000.0f;FPS=1.0f/frameTimeVariation;
+
+
+
+
+frameCounter++;averageFramerateRefreshTimer+=Time.deltaTime;
+if(averageFramerateRefreshTimer>=averageFramerateRefreshTime){
+averageFramerate=frameCounter/averageFramerateRefreshTimer;
+frameCounter=0;averageFramerateRefreshTimer=0.0f;
+}
+
+
+        //Debug.LogWarning(FPS+"; "+averageFramerate);
+
+
+#endregion
+    if(backgroundDataSet1.WaitOne(0)){
         if(editedDirty.Count>0){for(int i=0;i<editedDirty.Count;i++){
             if(Chunks.ContainsKey(editedDirty[i])){
                 Chunk cnk;(cnk=Chunks[editedDirty[i]]).needsRebuild=true;
@@ -93,7 +126,7 @@ Vector2Int nCoord1=cnk.Coord;nCoord1.x+=x;nCoord1.y+=z;int ngbIdx1=GetIdx(nCoord
 
 
 
-        if(DEBUG_EDIT){Edit(new Vector3(0,0,0),new Vector3Int(1,50,1));}
+        if(DEBUG_EDIT){Edit(new Vector3(0,0,0),new Vector3Int(8,50,1));}
 
 
 
@@ -120,7 +153,7 @@ if(coord.x==0){break;}}}
 if(coord.y==0){break;}}}
 }
 public void Edit(Vector3 center,Vector3Int size,double density=0){
-    if(backgroundDataSet.WaitOne(0)){
+    if(backgroundDataSet1.WaitOne(0)){
 Vector2Int cCoord1=PosToCoord(center);
 Vector2Int cnkRgn1=CoordToRgn(cCoord1);
 Vector3Int vCoord1=Chunk.PosToCoord(center);
@@ -142,7 +175,7 @@ var cnkIdx2=GetIdx(cCoord2.x,cCoord2.y);if(Chunks.ContainsKey(cnkIdx2)){if((!(Ch
     if(!edtVxlsByCnkIdx.ContainsKey(cnkIdx2)){edtVxlsByCnkIdx.Add(cnkIdx2,new Dictionary<Vector3Int,(double density,MaterialId material)>());}
     edtVxlsByCnkIdx[cnkIdx2].Add(vCoord2,(10,MaterialId.Air));
 }}}
-            backgroundDataSet.Reset();foregroundDataSet.Set();
+            backgroundDataSet1.Reset();foregroundDataSet1.Set();
 _End:{}
 
         
@@ -160,10 +193,10 @@ edtVxlsByCnkIdx.Clear();
 //[NonSerialized]public static readonly object load_Syn=new object();
 [NonSerialized]readonly List<object>load_Syn=new List<object>();
 [NonSerialized]readonly Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId material)>>edtVxlsByCnkIdx=new Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId material)>>();[NonSerialized]readonly List<int>editedDirty=new List<int>();
-void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
+void BG1(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is System.Random random&&parameters[3]is string[]saveSubfolder){
 DataContractSerializer saveContract=new DataContractSerializer(typeof(Dictionary<Vector3Int,(double density,MaterialId material)>));
-        while(!Stop){foregroundDataSet.WaitOne();if(Stop)goto _Stop;
+        while(!Stop){foregroundDataSet1.WaitOne();if(Stop)goto _Stop;
             foreach(var syn in load_Syn)Monitor.Enter(syn);try{
 foreach(var cnkIdxEdtsPair in edtVxlsByCnkIdx){
 var fileName=string.Format(saveSubfolder[0],cnkIdxEdtsPair.Key);
@@ -219,7 +252,7 @@ Thread.Yield();Thread.Sleep(random.Next(100,501));
 
 
 edtVxlsByCnkIdx.Clear();
-backgroundDataSet.Set();}
+backgroundDataSet1.Set();}
         _Stop:{
             CallGC();
 if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
@@ -249,6 +282,19 @@ public const int Depth=6250;
 
 
 
+void BG2(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
+    if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL){
+int delay=500;
+        while(!Stop){foregroundDataSet2.WaitOne();if(Stop)goto _Stop;
+int tmp;lock(TerrainChunk.tasksBusyCount_Syn){tmp=TerrainChunk.tasksBusyCount;}Thread.Sleep(1+tmp*delay);if(!TerrainChunk.queue.WaitOne(0)){if(averageFramerate>=50){TerrainChunk.queue.Set();delay=(int)(delay*.9f);}else{delay=(int)(delay/.9f);delay=Mathf.Clamp(delay,0,5000);}}else{TerrainChunk.queue.Set();}
+        }
+        _Stop:{
+        }
+
+        
+if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
+    }
+}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}}
 }}
 public static class MemoryManagement{
 public static Thread MainThread{get;set;}
