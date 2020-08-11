@@ -89,6 +89,7 @@
     <Compile Include="Assets\NVIDIA\Flex\Helpers\FlexClothDeformation.cs" />
     <Compile Include="Assets\AKCondinoO\VoxelSystem\TerrainChunkManager.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Helpers\FlexScene.cs" />
+    <Compile Include="Assets\AKCondinoO\MainCamera.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\NVIDIA\Flex\Resources\Shaders\FlexDrawFluid.shader" />
