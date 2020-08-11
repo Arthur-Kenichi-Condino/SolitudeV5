@@ -216,7 +216,7 @@ ushort vertexCount=0;
 Vector2Int posOffset=Vector2Int.zero;
 Vector2Int crdOffset=Vector2Int.zero;
 Vector3Int vCoord1;
-for(vCoord1=new Vector3Int();vCoord1.y<Height;vCoord1.y++){if(ChunkManager.averageFramerate<50){Thread.Yield();Thread.Sleep(1);}
+for(vCoord1=new Vector3Int();vCoord1.y<Height;vCoord1.y++){if(ChunkManager.averageFramerate<50||ChunkManager.FPS<50){Thread.Yield();Thread.Sleep(1);}
 for(vCoord1.x=0             ;vCoord1.x<Width ;vCoord1.x++){
 for(vCoord1.z=0             ;vCoord1.z<Depth ;vCoord1.z++){
 Polygonise();

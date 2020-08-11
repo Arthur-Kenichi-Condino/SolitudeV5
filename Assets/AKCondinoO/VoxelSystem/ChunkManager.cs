@@ -282,11 +282,11 @@ public const int Depth=6250;
 
 
 
-void BG2(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
+void BG2(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.Normal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL){
 int delay=500;
         while(!Stop){foregroundDataSet2.WaitOne();if(Stop)goto _Stop;
-int tmp;lock(TerrainChunk.tasksBusyCount_Syn){tmp=TerrainChunk.tasksBusyCount;}Thread.Sleep(1+tmp*delay);if(!TerrainChunk.queue.WaitOne(0)){if(averageFramerate>=50){TerrainChunk.queue.Set();delay=(int)(delay*.9f);}else{delay=(int)(delay/.9f);delay=Mathf.Clamp(delay,0,5000);}}else{TerrainChunk.queue.Set();}
+int tmp;lock(TerrainChunk.tasksBusyCount_Syn){tmp=TerrainChunk.tasksBusyCount;}Thread.Yield();Thread.Sleep(1+Mathf.Clamp(tmp*delay,0,30000));if(!TerrainChunk.queue.WaitOne(0)){if(averageFramerate>=50&&FPS>=50){TerrainChunk.queue.Set();delay=(int)(delay*.9f);}else{delay=(int)(delay*5f);}delay=Mathf.Clamp(delay,150,5000);if(LOG&&LOG_LEVEL<=2)Debug.Log("new delay value:"+delay);}else{TerrainChunk.queue.Set();}
         }
         _Stop:{
         }
