@@ -11,8 +11,7 @@ using UnityEngine.Scripting;
 using static MemoryManagement;
 namespace AKCondinoO.Voxels{public class ChunkManager:MonoBehaviour{ 
 public bool LOG=false;public int LOG_LEVEL=1;
-[NonSerialized]public static readonly string saveFolder=Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).Replace("\\","/").ToString()+"/Solitude/";
-        [NonSerialized]public static string[]saveSubfolder=new string[1];
+[NonSerialized]public static readonly string saveFolder=Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).Replace("\\","/").ToString()+"/Solitude/";[NonSerialized]public static string[]saveSubfolder=new string[1];
 public static string CurrWorldName{private set;get;}
 public GameObject ChunkPrefab;
 [NonSerialized]public Vector2Int expropriationDistance=new Vector2Int(5,5);[NonSerialized]public readonly LinkedList<Chunk>ChunksPool=new LinkedList<Chunk>();
@@ -59,7 +58,7 @@ Stop=false;task1=Task.Factory.StartNew(BG1,new object[]{LOG,LOG_LEVEL,new System
 
 
 
-    Build();//Build();
+    //Build();//Build();
 
 
 
@@ -87,7 +86,7 @@ public static float averageFramerate{
     get{float tmp;lock(averageFramerate_Syn){tmp=averageFramerate_v;  }return tmp;}
     set{          lock(averageFramerate_Syn){averageFramerate_v=value;}           }
 }[NonSerialized]static readonly object averageFramerate_Syn=new object();[NonSerialized]static float averageFramerate_v=60;[NonSerialized]int frameCounter;[NonSerialized]float averageFramerateRefreshTimer;[SerializeField]float averageFramerateRefreshTime=1.0f;
-protected virtual void Update(){
+bool firstLoop=true;protected virtual void Update(){
 #region FPS
 frameTimeVariation+=(Time.deltaTime-frameTimeVariation);millisecondsPerFrame=frameTimeVariation*1000.0f;FPS=1.0f/frameTimeVariation;
 
@@ -131,8 +130,22 @@ Vector2Int nCoord1=cnk.Coord;nCoord1.x+=x;nCoord1.y+=z;int ngbIdx1=GetIdx(nCoord
 
 
 
+if(firstLoop||actPos!=Camera.main.transform.position){
+if(LOG&&LOG_LEVEL<=-80)Debug.Log("actPos anterior:"+actPos+";actPos novo:"+Camera.main.transform.position);
+    actPos=Camera.main.transform.position;
+    if(firstLoop|aCoord!=(aCoord=PosToCoord(actPos))){
+if(LOG&&LOG_LEVEL<=1)Debug.Log("aCoord novo:"+aCoord+";aCoord_Pre:"+aCoord_Pre);
+Build();
+        aCoord_Pre=aCoord;
+    }
 }
-[NonSerialized]protected static Vector2Int aCoord;
+
+
+
+
+firstLoop=false;}
+[NonSerialized]protected static Vector3 actPos;
+[NonSerialized]protected static Vector2Int aCoord,aCoord_Pre;
 void Build(){
 for(Vector2Int coord=new Vector2Int(),cCoord1=new Vector2Int();coord.y<=instantiationDistance.y;coord.y++){for(cCoord1.y=-coord.y+aCoord.y;cCoord1.y<=coord.y+aCoord.y;cCoord1.y+=coord.y*2){
 for(coord.x=0                                                 ;coord.x<=instantiationDistance.x;coord.x++){for(cCoord1.x=-coord.x+aCoord.x;cCoord1.x<=coord.x+aCoord.x;cCoord1.x+=coord.x*2){

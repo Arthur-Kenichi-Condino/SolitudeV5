@@ -81,6 +81,7 @@
     <Compile Include="Assets\AKCondinoO\FileInfoExtensions.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Actors\FlexActor.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Actors\FlexSolidActor.cs" />
+    <Compile Include="Assets\AKCondinoO\MainCamera.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Actors\FlexClothActor.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Native\FlexUtils.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Actors\FlexArrayActor.cs" />
@@ -89,7 +90,8 @@
     <Compile Include="Assets\NVIDIA\Flex\Helpers\FlexClothDeformation.cs" />
     <Compile Include="Assets\AKCondinoO\VoxelSystem\TerrainChunkManager.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Helpers\FlexScene.cs" />
-    <Compile Include="Assets\AKCondinoO\MainCamera.cs" />
+    <Compile Include="Assets\AKCondinoO\SimObject.cs" />
+    <Compile Include="Assets\AKCondinoO\SimActor.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\NVIDIA\Flex\Resources\Shaders\FlexDrawFluid.shader" />
