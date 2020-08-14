@@ -14,7 +14,7 @@ public bool LOG=false;public int LOG_LEVEL=1;
 [NonSerialized]public static readonly string saveFolder=Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).Replace("\\","/").ToString()+"/Solitude/";[NonSerialized]public static string[]saveSubfolder=new string[1];
 public static string CurrWorldName{private set;get;}
 public GameObject ChunkPrefab;
-[NonSerialized]public Vector2Int expropriationDistance=new Vector2Int(5,5);[NonSerialized]public readonly LinkedList<Chunk>ChunksPool=new LinkedList<Chunk>();
+[NonSerialized]public Vector2Int expropriationDistance=new Vector2Int(1,1);[NonSerialized]public readonly LinkedList<Chunk>ChunksPool=new LinkedList<Chunk>();
 [NonSerialized]public Vector2Int instantiationDistance=new Vector2Int(1,1);[NonSerialized]public readonly Dictionary<int,Chunk>Chunks=new Dictionary<int,Chunk>();
 protected virtual void Awake(){
 var maxChunks=(expropriationDistance.x*2+1)*(expropriationDistance.y*2+1);
@@ -135,8 +135,7 @@ if(LOG&&LOG_LEVEL<=-80)Debug.Log("actPos anterior:"+actPos+";actPos novo:"+Camer
     actPos=Camera.main.transform.position;
     if(firstLoop|aCoord!=(aCoord=PosToCoord(actPos))){
 if(LOG&&LOG_LEVEL<=1)Debug.Log("aCoord novo:"+aCoord+";aCoord_Pre:"+aCoord_Pre);
-Build();
-        aCoord_Pre=aCoord;
+Build();aCoord_Pre=aCoord;
     }
 }
 
@@ -147,6 +146,33 @@ firstLoop=false;}
 [NonSerialized]protected static Vector3 actPos;
 [NonSerialized]protected static Vector2Int aCoord,aCoord_Pre;
 void Build(){
+for(Vector2Int coord=new Vector2Int(),cCoord1=new Vector2Int();coord.y<=expropriationDistance.y;coord.y++){for(cCoord1.y=-coord.y+aCoord_Pre.y;cCoord1.y<=coord.y+aCoord_Pre.y;cCoord1.y+=coord.y*2){
+for(coord.x=0                                                 ;coord.x<=expropriationDistance.x;coord.x++){for(cCoord1.x=-coord.x+aCoord_Pre.x;cCoord1.x<=coord.x+aCoord_Pre.x;cCoord1.x+=coord.x*2){
+if(LOG&&LOG_LEVEL<=1)Debug.Log("try expropriate chunk:"+cCoord1);        
+if(Math.Abs(cCoord1.x)>=Width||
+   Math.Abs(cCoord1.y)>=Depth){
+if(LOG&&LOG_LEVEL<=2)Debug.Log("do not try to expropriate out of world chunk");
+goto _skip;
+}
+if(Mathf.Abs(cCoord1.x-aCoord.x)>instantiationDistance.x||
+   Mathf.Abs(cCoord1.y-aCoord.y)>instantiationDistance.y){
+
+
+        //if(scr.ExpropriationNode!=null){ChunksPool.Remove(scr.ExpropriationNode);scr.ExpropriationNode=(null);}
+    int cnkIdx1=GetIdx(cCoord1.x,cCoord1.y);if(Chunks.ContainsKey(cnkIdx1)){
+if(LOG&&LOG_LEVEL<=1)Debug.Log("expropriate chunk:"+cnkIdx1);
+        Chunk scr=Chunks[cnkIdx1];Chunks.Remove(cnkIdx1);ChunksPool.AddLast(scr);scr.ExpropriationNode=ChunksPool.Last;
+    }else{
+if(LOG&&LOG_LEVEL<=1)Debug.Log("chunk index already expropriated:"+cnkIdx1);
+    }
+
+
+
+
+}
+_skip:{}
+if(coord.x==0){break;}}}
+if(coord.y==0){break;}}}
 for(Vector2Int coord=new Vector2Int(),cCoord1=new Vector2Int();coord.y<=instantiationDistance.y;coord.y++){for(cCoord1.y=-coord.y+aCoord.y;cCoord1.y<=coord.y+aCoord.y;cCoord1.y+=coord.y*2){
 for(coord.x=0                                                 ;coord.x<=instantiationDistance.x;coord.x++){for(cCoord1.x=-coord.x+aCoord.x;cCoord1.x<=coord.x+aCoord.x;cCoord1.x+=coord.x*2){
 if(LOG&&LOG_LEVEL<=1)Debug.Log("try build chunk:"+cCoord1);

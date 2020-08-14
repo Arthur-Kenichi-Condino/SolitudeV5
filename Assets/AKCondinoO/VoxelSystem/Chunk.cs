@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 namespace AKCondinoO.Voxels{public class Chunk:MonoBehaviour{
-public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
+public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;public bool DISABLE=false;
 public LinkedListNode<Chunk>ExpropriationNode=null;
 protected virtual void OnEnable(){}
 protected virtual void OnDisable(){}
