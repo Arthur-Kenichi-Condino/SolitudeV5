@@ -14,7 +14,7 @@ public bool LOG=false;public int LOG_LEVEL=1;
 [NonSerialized]public static readonly string saveFolder=Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).Replace("\\","/").ToString()+"/Solitude/";[NonSerialized]public static string[]saveSubfolder=new string[1];
 public static string CurrWorldName{private set;get;}
 public GameObject ChunkPrefab;
-[NonSerialized]public Vector2Int expropriationDistance=new Vector2Int(1,1);[NonSerialized]public readonly LinkedList<Chunk>ChunksPool=new LinkedList<Chunk>();
+[NonSerialized]public Vector2Int expropriationDistance=new Vector2Int(2,2);[NonSerialized]public readonly LinkedList<Chunk>ChunksPool=new LinkedList<Chunk>();
 [NonSerialized]public Vector2Int instantiationDistance=new Vector2Int(1,1);[NonSerialized]public readonly Dictionary<int,Chunk>Chunks=new Dictionary<int,Chunk>();
 protected virtual void Awake(){
 var maxChunks=(expropriationDistance.x*2+1)*(expropriationDistance.y*2+1);
@@ -161,9 +161,13 @@ if(Mathf.Abs(cCoord1.x-aCoord.x)>instantiationDistance.x||
         //if(scr.ExpropriationNode!=null){ChunksPool.Remove(scr.ExpropriationNode);scr.ExpropriationNode=(null);}
     int cnkIdx1=GetIdx(cCoord1.x,cCoord1.y);if(Chunks.ContainsKey(cnkIdx1)){
 if(LOG&&LOG_LEVEL<=1)Debug.Log("expropriate chunk:"+cnkIdx1);
-        Chunk scr=Chunks[cnkIdx1];Chunks.Remove(cnkIdx1);ChunksPool.AddLast(scr);scr.ExpropriationNode=ChunksPool.Last;
-    }else{
+        //Chunk scr=Chunks[cnkIdx1];Chunks.Remove(cnkIdx1);ChunksPool.AddLast(scr);scr.ExpropriationNode=ChunksPool.Last;
+        Chunk scr=Chunks[cnkIdx1];if(scr.ExpropriationNode==null){ChunksPool.AddLast(scr);scr.ExpropriationNode=ChunksPool.Last;
+        }else{
 if(LOG&&LOG_LEVEL<=1)Debug.Log("chunk index already expropriated:"+cnkIdx1);
+        }
+    }else{
+if(LOG&&LOG_LEVEL<=1)Debug.Log("no chunk to expropriate at:"+cnkIdx1);
     }
 
 
@@ -183,9 +187,12 @@ goto _skip;
 }
     int cnkIdx1=GetIdx(cCoord1.x,cCoord1.y);if(!Chunks.ContainsKey(cnkIdx1)){
 if(LOG&&LOG_LEVEL<=1)Debug.Log("build chunk:"+cnkIdx1+"[ChunksPool.Count:"+ChunksPool.Count);
-        Chunk scr=ChunksPool.First.Value;ChunksPool.RemoveFirst();scr.ExpropriationNode=(null);Chunks.Add(cnkIdx1,scr);scr.OnRebuildRequest(cCoord1,CoordToRgn(cCoord1),cnkIdx1);
+        //Chunk scr=ChunksPool.First.Value;ChunksPool.RemoveFirst();scr.ExpropriationNode=(null);Chunks.Add(cnkIdx1,scr);scr.OnRebuildRequest(cCoord1,CoordToRgn(cCoord1),cnkIdx1);
+        //Chunk scr=ChunksPool.First.Value;ChunksPool.RemoveFirst();if(scr.Initialized&&Chunks.ContainsKey(scr.Idx))Chunks.Remove(scr.Idx);scr.ExpropriationNode=(null);
+        Chunk scr=ChunksPool.First.Value;ChunksPool.RemoveFirst();scr.ExpropriationNode=(null);if(scr.Initialized&&Chunks.ContainsKey(scr.Idx))Chunks.Remove(scr.Idx);Chunks.Add(cnkIdx1,scr);scr.OnRebuildRequest(cCoord1,CoordToRgn(cCoord1),cnkIdx1);
     }else{
 if(LOG&&LOG_LEVEL<=1)Debug.Log("chunk already built:"+cnkIdx1);
+        Chunk scr=Chunks[cnkIdx1];if(scr.ExpropriationNode!=null){ChunksPool.Remove(scr.ExpropriationNode);scr.ExpropriationNode=(null);}
     }
 _skip:{}
 if(coord.x==0){break;}}}
