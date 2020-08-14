@@ -30,6 +30,7 @@ Modules.Add(new Const( 1));
 Modules.Add(new Const(-1));
 Modules.Add(new Const(.5));
 Modules.Add(new Const(128));
+if(LOG&&LOG_LEVEL<=2)Debug.Log("SetModules() at "+GetType()+" resulted in Count:"+Modules.Count);
 }
 protected(MaterialId,MaterialId)[]MaterialIdsPicking=new(MaterialId,MaterialId)[1]{
 (MaterialId.Rock,MaterialId.Dirt),
@@ -44,7 +45,7 @@ public virtual void v(Vector3 noiseInput,ref Voxel v,ref double[]noiseCache1,int
 if(noiseInput.y<1){v=Voxel.Bedrock;return;}
 noiseInput+=_deround;
 double noiseValue1=noiseCache1[noiseCache1Index]!=0?noiseCache1[noiseCache1Index]:(noiseCache1[noiseCache1Index]=Modules[IdxForHgt].GetValue(noiseInput.z,noiseInput.x,0));
-if(noiseInput.y<=noiseValue1){double d;v=new Voxel(d=AddSmoothDensity(51,20,noiseInput,noiseValue1),Vector3.zero,GetMaterial(noiseInput,d));return;}
+if(noiseInput.y<=noiseValue1){double d;v=new Voxel(d=AddSmoothDensity(50,20,noiseInput,noiseValue1),Vector3.zero,GetMaterial(noiseInput,d));return;}
 
 
 //if(noiseInput.x>=10.5&&noiseInput.z>=10.5){v=new Voxel(51,Vector3.zero,MaterialId.Rock);return;}

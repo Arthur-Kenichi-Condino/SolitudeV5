@@ -305,7 +305,7 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
         }
     }
 }catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}}
-[NonSerialized]public static readonly Biome biome=new Biome();
+[NonSerialized]public static readonly Biome biome=new Plains();
 public static Vector2Int RgnToCoord(Vector2Int region){return new Vector2Int(region.x/Chunk.Width,region.y/Chunk.Depth);}public static Vector2Int CoordToRgn(Vector2Int coord){return new Vector2Int(coord.x*Chunk.Width,coord.y*Chunk.Depth);}
 public static Vector2Int PosToCoord(Vector3 pos){
 pos.x/=(float)Chunk.Width;
