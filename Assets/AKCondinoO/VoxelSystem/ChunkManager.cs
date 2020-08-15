@@ -14,7 +14,7 @@ public bool LOG=false;public int LOG_LEVEL=1;
 [NonSerialized]public static readonly string saveFolder=Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).Replace("\\","/").ToString()+"/Solitude/";[NonSerialized]public static string[]saveSubfolder=new string[1];
 public static string CurrWorldName{private set;get;}
 public GameObject ChunkPrefab;
-[NonSerialized]public Vector2Int expropriationDistance=new Vector2Int(2,2);[NonSerialized]public readonly LinkedList<Chunk>ChunksPool=new LinkedList<Chunk>();
+[NonSerialized]public Vector2Int expropriationDistance=new Vector2Int(1,1);[NonSerialized]public readonly LinkedList<Chunk>ChunksPool=new LinkedList<Chunk>();
 [NonSerialized]public Vector2Int instantiationDistance=new Vector2Int(1,1);[NonSerialized]public readonly Dictionary<int,Chunk>Chunks=new Dictionary<int,Chunk>();
 protected virtual void Awake(){
 var maxChunks=(expropriationDistance.x*2+1)*(expropriationDistance.y*2+1);

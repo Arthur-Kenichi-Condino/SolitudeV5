@@ -22,11 +22,24 @@ AllStates.Add(field.Name,state);
 }
 protected override void Update(){
 foreach(var command in AllCommands){UpdateCommandState(command);}
+Enabled.MOUSE_ROTATION_DELTA_X[1]=Enabled.MOUSE_ROTATION_DELTA_X[0];Enabled.MOUSE_ROTATION_DELTA_X[0]=Commands.ROTATION_SENSITIVITY_X*Input.GetAxis("Mouse X");
+Enabled.MOUSE_ROTATION_DELTA_Y[1]=Enabled.MOUSE_ROTATION_DELTA_Y[0];Enabled.MOUSE_ROTATION_DELTA_Y[0]=Commands.ROTATION_SENSITIVITY_Y*Input.GetAxis("Mouse Y");
+#region FORWARD BACKWARD
     if(Enabled.FORWARD [0]){inputMoveSpeed.z+=InputMoveAcceleration.z;} 
     if(Enabled.BACKWARD[0]){inputMoveSpeed.z-=InputMoveAcceleration.z;}
         if(!Enabled.FORWARD[0]&&!Enabled.BACKWARD[0]){inputMoveSpeed.z=0;}
             if( inputMoveSpeed.z>InputMaxMoveSpeed.z){inputMoveSpeed.z= InputMaxMoveSpeed.z;}
             if(-inputMoveSpeed.z>InputMaxMoveSpeed.z){inputMoveSpeed.z=-InputMaxMoveSpeed.z;}
+#endregion
+#region RIGHT LEFT
+    if(Enabled.RIGHT   [0]){inputMoveSpeed.x+=InputMoveAcceleration.x;} 
+    if(Enabled.LEFT    [0]){inputMoveSpeed.x-=InputMoveAcceleration.x;}
+        if(!Enabled.RIGHT[0]&&!Enabled.LEFT[0]){inputMoveSpeed.x=0;}
+            if( inputMoveSpeed.x>InputMaxMoveSpeed.x){inputMoveSpeed.x= InputMaxMoveSpeed.x;}
+            if(-inputMoveSpeed.x>InputMaxMoveSpeed.x){inputMoveSpeed.x=-InputMaxMoveSpeed.x;}
+#endregion
+inputViewRotationEuler.x+=-Enabled.MOUSE_ROTATION_DELTA_Y[0]*InputViewRotationIncreaseSpeed;
+inputViewRotationEuler.y+= Enabled.MOUSE_ROTATION_DELTA_X[0]*InputViewRotationIncreaseSpeed;
                    base.Update();
 }
 [NonSerialized]string _name;[NonSerialized]object[]_command;[NonSerialized]bool[]_state;
@@ -54,10 +67,14 @@ public static readonly bool[]FORWARD ={false,false};
 public static readonly bool[]BACKWARD={false,false};
 public static readonly bool[]RIGHT   ={false,false};
 public static readonly bool[]LEFT    ={false,false};
+public static readonly float[]MOUSE_ROTATION_DELTA_X={0,0};
+public static readonly float[]MOUSE_ROTATION_DELTA_Y={0,0};
 }
 public static class Commands{
 public static object[]FORWARD ={KeyCode.W,"activeHeld"};
 public static object[]BACKWARD={KeyCode.S,"activeHeld"};
 public static object[]RIGHT   ={KeyCode.D,"activeHeld"};
 public static object[]LEFT    ={KeyCode.A,"activeHeld"};
+public static float ROTATION_SENSITIVITY_X=360.0f;
+public static float ROTATION_SENSITIVITY_Y=360.0f;
 }

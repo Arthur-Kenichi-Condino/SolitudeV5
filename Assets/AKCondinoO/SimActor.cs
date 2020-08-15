@@ -27,8 +27,35 @@ protected Vector3 tgtPos_Pre;
 protected Vector3Int tgtCoord;protected Vector3Int tgtRgn;protected int tgtIdx;protected Chunk tgtChunk;
 protected float goToTgtPosTimer;
 #endregion
+protected float rotationLerpVal,headRotationLerpVal;
+protected Quaternion rotationLerpA,headRotationLerpA;
+protected Quaternion rotationLerpB,headRotationLerpB;
+public float InputViewRotationIncreaseSpeed;
+protected Vector3 inputViewRotationEuler;
+#region Rotation
+protected Vector3 tgtRot    ,headTgtRot;
+protected Vector3 tgtRot_Pre,headTgtRot_Pre;
+protected float goToTgtRotTimer,headGoToTgtRotTimer;
+#endregion
 protected virtual void ProcessMovementInput(){
     if(rigidbody==null){
+#region ROTATION LERP
+        if(inputViewRotationEuler!=Vector3.zero){
+            inputViewRotationEuler=Vector3.zero;
+            tgtRot+=inputViewRotationEuler;
+        }
+        if(goToTgtRotTimer==0){
+            if(tgtRot!=tgtRot_Pre){
+if(LOG&&LOG_LEVEL<=-20)Debug.Log("input rotation detected:start rotating to tgtRot:"+tgtRot);
+                rotationLerpVal=0;
+                rotationLerpA=transform.rotation;
+                rotationLerpB=Quaternion.Euler(tgtRot);
+                tgtRot_Pre=tgtRot;
+                goToTgtRotTimer+=Time.deltaTime;
+            }
+        }
+#endregion
+#region POSITION LERP
         if(inputMoveSpeed!=Vector3.zero){
             tgtPos+=transform.rotation*inputMoveSpeed;
         }
@@ -59,6 +86,8 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
                 }
             }
         }
+#endregion
+    }else{
     }
 }
 #endregion
