@@ -51,8 +51,11 @@ MonoBehaviour:
   MoveLerpSpeed: 0.125
   InputMoveAcceleration: {x: 0.2, y: 0, z: 0.2}
   InputMaxMoveSpeed: {x: 0.2, y: 0, z: 0.2}
-  GetNewTgtPosCdTime: 0
+  GetNewTgtPosCdTime: 0.05
+  RotationLerpSpeed: 0.125
+  HeadRotationLerpSpeed: 0.125
   InputViewRotationIncreaseSpeed: 0.025
+  GetNewTgtRotCdTime: 0.05
 --- !u!20 &6990748707152753102
 Camera:
   m_ObjectHideFlags: 0

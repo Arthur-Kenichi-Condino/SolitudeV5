@@ -20,10 +20,25 @@ AllStates.Add(field.Name,state);
 }
 }
 }
+[NonSerialized]public bool Focus=true;
+private void OnApplicationFocus(bool focus){Focus=focus;}
+[NonSerialized]public bool Escape;
 protected override void Update(){
+Escape=Input.GetKey(KeyCode.Escape)||Input.GetKeyDown(KeyCode.Escape)||Input.GetKeyUp(KeyCode.Escape);
 foreach(var command in AllCommands){UpdateCommandState(command);}
+Enabled.PAUSE[0]=Enabled.PAUSE[0]||Escape||!Focus;
+if(Enabled.PAUSE[0]!=Enabled.PAUSE[1]){
+    if(Enabled.PAUSE[0]){
+Cursor.visible=true;
+Cursor.lockState=CursorLockMode.None;
+    }else{
+Cursor.visible=false;
+Cursor.lockState=CursorLockMode.Locked;
+    }
+}
 Enabled.MOUSE_ROTATION_DELTA_X[1]=Enabled.MOUSE_ROTATION_DELTA_X[0];Enabled.MOUSE_ROTATION_DELTA_X[0]=Commands.ROTATION_SENSITIVITY_X*Input.GetAxis("Mouse X");
 Enabled.MOUSE_ROTATION_DELTA_Y[1]=Enabled.MOUSE_ROTATION_DELTA_Y[0];Enabled.MOUSE_ROTATION_DELTA_Y[0]=Commands.ROTATION_SENSITIVITY_Y*Input.GetAxis("Mouse Y");
+if(!Enabled.PAUSE[0]){
 #region FORWARD BACKWARD
     if(Enabled.FORWARD [0]){inputMoveSpeed.z+=InputMoveAcceleration.z;} 
     if(Enabled.BACKWARD[0]){inputMoveSpeed.z-=InputMoveAcceleration.z;}
@@ -38,8 +53,11 @@ Enabled.MOUSE_ROTATION_DELTA_Y[1]=Enabled.MOUSE_ROTATION_DELTA_Y[0];Enabled.MOUS
             if( inputMoveSpeed.x>InputMaxMoveSpeed.x){inputMoveSpeed.x= InputMaxMoveSpeed.x;}
             if(-inputMoveSpeed.x>InputMaxMoveSpeed.x){inputMoveSpeed.x=-InputMaxMoveSpeed.x;}
 #endregion
+#region ROTATE
 inputViewRotationEuler.x+=-Enabled.MOUSE_ROTATION_DELTA_Y[0]*InputViewRotationIncreaseSpeed;
 inputViewRotationEuler.y+= Enabled.MOUSE_ROTATION_DELTA_X[0]*InputViewRotationIncreaseSpeed;
+#endregion
+}
                    base.Update();
 }
 [NonSerialized]string _name;[NonSerialized]object[]_command;[NonSerialized]bool[]_state;
@@ -63,6 +81,7 @@ return mode=="activeHeld"?(command is KeyCode?Input.GetKey    ((KeyCode)command)
 }
 }
 public static class Enabled{
+public static readonly bool[]PAUSE={true,true};
 public static readonly bool[]FORWARD ={false,false};
 public static readonly bool[]BACKWARD={false,false};
 public static readonly bool[]RIGHT   ={false,false};
@@ -71,6 +90,7 @@ public static readonly float[]MOUSE_ROTATION_DELTA_X={0,0};
 public static readonly float[]MOUSE_ROTATION_DELTA_Y={0,0};
 }
 public static class Commands{
+public static object[]PAUSE={KeyCode.Tab,"alternateDown"};
 public static object[]FORWARD ={KeyCode.W,"activeHeld"};
 public static object[]BACKWARD={KeyCode.S,"activeHeld"};
 public static object[]RIGHT   ={KeyCode.D,"activeHeld"};

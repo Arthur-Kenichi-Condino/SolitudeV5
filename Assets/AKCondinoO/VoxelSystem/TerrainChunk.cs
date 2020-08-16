@@ -37,6 +37,7 @@ protected override void Update(){
 bakingHandle.Complete();baking=false;
 if(LOG&&LOG_LEVEL<=2)Debug.Log("mesh baked");
     collider.sharedMesh=mesh;
+            Built=true;
         }else return;
     }
     if(backgroundDataSet.WaitOne(0)){
@@ -53,6 +54,7 @@ return;
 }
         if(needsRebuild){
             needsRebuild=false;
+            Built=false;
             cCoord1=Coord;
             cnkRgn1=Rgn;
             backgroundDataSet.Reset();foregroundDataSet.Set();

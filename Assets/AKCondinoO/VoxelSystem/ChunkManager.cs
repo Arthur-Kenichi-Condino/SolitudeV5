@@ -16,7 +16,9 @@ public static string CurrWorldName{private set;get;}
 public GameObject ChunkPrefab;
 [NonSerialized]public Vector2Int expropriationDistance=new Vector2Int(1,1);[NonSerialized]public readonly LinkedList<Chunk>ChunksPool=new LinkedList<Chunk>();
 [NonSerialized]public Vector2Int instantiationDistance=new Vector2Int(1,1);[NonSerialized]public readonly Dictionary<int,Chunk>Chunks=new Dictionary<int,Chunk>();
+public static ChunkManager main{get;private set;}
 protected virtual void Awake(){
+main=this;
 var maxChunks=(expropriationDistance.x*2+1)*(expropriationDistance.y*2+1);
 try{
 MainThread=Thread.CurrentThread;GarbageCollector.GCMode=GarbageCollector.Mode.Enabled;StartCoroutine(Unload());
