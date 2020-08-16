@@ -28,6 +28,13 @@ backgroundDataSet.Dispose();foregroundDataSet.Dispose();
     
 [NonSerialized]readonly LinkedList<RaycastHit>GoToQueue=new LinkedList<RaycastHit>();
 protected override void Update(){
+    if(backgroundDataSet.WaitOne(0)){
+
+
+
+    
+            backgroundDataSet.Reset();foregroundDataSet.Set();
+    }
 
 
 
@@ -42,10 +49,19 @@ protected override void Update(){
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL){
         while(!Stop){foregroundDataSet.WaitOne();if(Stop)goto _Stop;
-        }
+backgroundDataSet.Set();}
         _Stop:{
         }
 if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
     }
 }catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}}
+
+
+
+    
+#if UNITY_EDITOR
+protected override void OnDrawGizmos(){
+                   base.OnDrawGizmos();
+}
+#endif
 }

@@ -113,4 +113,9 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
     }
 }
 #endregion
+#if UNITY_EDITOR
+protected override void OnDrawGizmos(){
+                   base.OnDrawGizmos();
+}
+#endif
 }

@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ceb969506c532214597c6a89bee5ce98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LOG: 0
+  LOG: 1
   LOG_LEVEL: 1
   Lerp: 1
   MoveLerpSpeed: 0.125
@@ -56,6 +56,7 @@ MonoBehaviour:
   HeadRotationLerpSpeed: 0.125
   InputViewRotationIncreaseSpeed: 0
   GetNewTgtRotCdTime: 0.05
+  DEBUG_GOTO: 0
 --- !u!65 &4550411354643971414
 BoxCollider:
   m_ObjectHideFlags: 0
