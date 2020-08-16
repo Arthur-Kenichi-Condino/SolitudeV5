@@ -10,6 +10,9 @@ protected virtual void Awake(){
 rigidbody=GetComponent<Rigidbody>();
 pos=pos_Pre=transform.position;
 }
+protected virtual void OnEnable(){}
+protected virtual void OnDisable(){}
+protected virtual void OnDestroy(){}
 [NonSerialized]Vector3 pos;
 [NonSerialized]Vector3 pos_Pre;
 [NonSerialized]Vector2Int coord;[NonSerialized]int idx;[NonSerialized]Chunk chunk;

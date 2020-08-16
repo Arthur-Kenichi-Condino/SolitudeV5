@@ -52,7 +52,7 @@ return;
         GameObject obj=Instantiate(ChunkPrefab);Chunk scr=obj.GetComponent<Chunk>();ChunksPool.AddLast(scr);scr.ExpropriationNode=ChunksPool.Last;if(scr is TerrainChunk cnk){load_Syn.Add(cnk.load_Syn);}
     }
 }
-[NonSerialized]Task task1,task2;[NonSerialized]readonly AutoResetEvent foregroundDataSet1=new AutoResetEvent(false);ManualResetEvent foregroundDataSet2=new ManualResetEvent(true);[NonSerialized]readonly ManualResetEvent backgroundDataSet1=new ManualResetEvent(true);
+[NonSerialized]Task task1,task2;[NonSerialized]readonly AutoResetEvent foregroundDataSet1=new AutoResetEvent(false);[NonSerialized]readonly ManualResetEvent foregroundDataSet2=new ManualResetEvent(true);[NonSerialized]readonly ManualResetEvent backgroundDataSet1=new ManualResetEvent(true);
 protected virtual void OnEnable(){
 Stop=false;task1=Task.Factory.StartNew(BG1,new object[]{LOG,LOG_LEVEL,new System.Random(),saveSubfolder},TaskCreationOptions.LongRunning);
            task2=Task.Factory.StartNew(BG2,new object[]{LOG,LOG_LEVEL,}                                 ,TaskCreationOptions.LongRunning);
