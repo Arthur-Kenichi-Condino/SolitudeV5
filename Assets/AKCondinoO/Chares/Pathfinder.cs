@@ -34,12 +34,18 @@ backgroundDataSet3.Dispose();foregroundDataSet3.Dispose();
                    base.OnDestroy();
 }
 
-    
+
+public void GoTo(Ray tgtDir,float maxDis=1000){
+if(Physics.Raycast(tgtDir,out RaycastHit hit,maxDis)){
+    Debug.LogWarning(hit.point);
+}
+}    
 [NonSerialized]readonly LinkedList<RaycastHit>GoToQueue=new LinkedList<RaycastHit>();
 protected override void Update(){
 
 
-    if(DEBUG_GOTO){DEBUG_GOTO=false;}
+    if(DEBUG_GOTO){DEBUG_GOTO=false;GoTo(new Ray(new Vector3(1,10,-10),Vector3.down));//GoToQueue.AddLast(new RaycastHit());
+    }
 
 
     if(backgroundDataSet1.WaitOne(0)){
@@ -47,6 +53,7 @@ protected override void Update(){
 if(LOG&&LOG_LEVEL<=1)Debug.Log("dequeue");
 
 
+            GoToQueue.RemoveFirst();
 
     
             backgroundDataSet1.Reset();foregroundDataSet1.Set();
