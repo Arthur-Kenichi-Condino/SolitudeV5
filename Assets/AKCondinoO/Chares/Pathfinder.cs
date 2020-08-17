@@ -7,9 +7,10 @@ using UnityEngine;
 public class Pathfinder:SimActor{
 protected override void Awake(){
                    base.Awake();
-waitUntil=new WaitUntil(()=>backgroundDataSet2.WaitOne(0));
+waitUntil2=new WaitUntil(()=>backgroundDataSet2.WaitOne(0));
+waitUntil3=new WaitUntil(()=>backgroundDataSet3.WaitOne(0));
 }
-[NonSerialized]Coroutine cr;[NonSerialized]Task task;[NonSerialized]readonly AutoResetEvent foregroundDataSet1=new AutoResetEvent(false);[NonSerialized]readonly ManualResetEvent backgroundDataSet1=new ManualResetEvent(true);[NonSerialized]readonly AutoResetEvent foregroundDataSet2=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet2=new AutoResetEvent(false);
+[NonSerialized]Coroutine cr;[NonSerialized]Task task;[NonSerialized]readonly AutoResetEvent foregroundDataSet1=new AutoResetEvent(false);[NonSerialized]readonly ManualResetEvent backgroundDataSet1=new ManualResetEvent(true);[NonSerialized]readonly AutoResetEvent foregroundDataSet2=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet2=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent foregroundDataSet3=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet3=new AutoResetEvent(false);
 protected override void OnEnable(){
                    base.OnEnable();
 cr=StartCoroutine(CRDoRaycasts());
@@ -17,7 +18,7 @@ Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,},TaskCreati
 }
 bool Stop{
     get{bool tmp;lock(Stop_Syn){tmp=Stop_v;      }return tmp;}
-    set{         lock(Stop_Syn){    Stop_v=value;}if(value){foregroundDataSet1.Set();foregroundDataSet2.Set();}}
+    set{         lock(Stop_Syn){    Stop_v=value;}if(value){foregroundDataSet1.Set();foregroundDataSet2.Set();foregroundDataSet3.Set();}}
 }[NonSerialized]readonly object Stop_Syn=new object();[NonSerialized]bool Stop_v;
 protected override void OnDisable(){
 StopCoroutine(cr);
@@ -28,6 +29,7 @@ protected override void OnDestroy(){if(Stop){
 if(LOG&&LOG_LEVEL<=2)Debug.Log("dispose");
 backgroundDataSet1.Dispose();foregroundDataSet1.Dispose();
 backgroundDataSet2.Dispose();foregroundDataSet2.Dispose();
+backgroundDataSet3.Dispose();foregroundDataSet3.Dispose();
 }
                    base.OnDestroy();
 }
@@ -56,17 +58,25 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("dequeue");
 
                    base.Update();
 }
-[NonSerialized]WaitUntil waitUntil;
+[NonSerialized]WaitUntil waitUntil2;
+[NonSerialized]WaitUntil waitUntil3;
 IEnumerator CRDoRaycasts(){
 if(LOG&&LOG_LEVEL<=2)Debug.Log("begin");
 _loop:{}
-yield return waitUntil;
-if(LOG&&LOG_LEVEL<=1)Debug.Log("do raycasts");
+yield return waitUntil2;
+if(LOG&&LOG_LEVEL<=1)Debug.Log("do raycasts 2");
 
 
 
 
 foregroundDataSet2.Set();
+yield return waitUntil3;
+if(LOG&&LOG_LEVEL<=1)Debug.Log("do raycasts 3");
+
+
+
+
+foregroundDataSet3.Set();
 if(LOG&&LOG_LEVEL<=1)Debug.Log("loop");
 goto _loop;
 }
@@ -80,7 +90,9 @@ void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThre
         while(!Stop){foregroundDataSet1.WaitOne();if(Stop)goto _Stop;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("begin pathfind");
             backgroundDataSet2.Set();foregroundDataSet2.WaitOne();if(Stop)goto _Stop;
-if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results");
+if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 2");
+            backgroundDataSet3.Set();foregroundDataSet3.WaitOne();if(Stop)goto _Stop;
+if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3");
 backgroundDataSet1.Set();}
         _Stop:{
         }
