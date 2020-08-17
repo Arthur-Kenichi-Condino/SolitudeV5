@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using UnityEngine;
 public class SimActor:SimObject{
 protected override void Awake(){
+                   base.Awake();
 tgtPos=tgtPos_Pre=transform.position;
 tgtRot=tgtRot_Pre=transform.eulerAngles;
-                   base.Awake();
 }
 protected override void Update(){
 ProcessMovementInput();
