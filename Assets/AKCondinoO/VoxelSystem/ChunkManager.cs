@@ -318,7 +318,7 @@ return new Vector2Int((pos.x>0)?(pos.x-(int)pos.x==0.5f?Mathf.FloorToInt(pos.x):
 public static Vector2Int PosToRgn(Vector3 pos){Vector2Int coord=PosToCoord(pos);
 return new Vector2Int(coord.x*Width,coord.y*Depth);
 }
-public static int GetIdx(int cx,int cy){return cy+cx*(Width+1);}
+public static int GetIdx(int cx,int cy){return cy+cx*(Depth+1);}
 public const int Width=6250;
 public const int Depth=6250;
 

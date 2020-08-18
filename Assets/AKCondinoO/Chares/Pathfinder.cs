@@ -5,8 +5,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 public class Pathfinder:SimActor{
+[NonSerialized]Vector2Int AStarDistance=new Vector2Int(10,10);[NonSerialized]int AStarVerticalHits=10;[NonSerialized]Vector2Int gridResolution;[NonSerialized]Node[]Nodes;
 protected override void Awake(){
                    base.Awake();
+gridResolution=new Vector2Int(AStarDistance.x*2+1,AStarDistance.y*2+1);
+Nodes=new Node[gridResolution.x*gridResolution.y*AStarVerticalHits];
+if(LOG&&LOG_LEVEL<=2)Debug.Log("gridResolution:"+gridResolution+";Nodes:"+Nodes.Length);
 waitUntil2=new WaitUntil(()=>backgroundDataSet2.WaitOne(0));
 waitUntil3=new WaitUntil(()=>backgroundDataSet3.WaitOne(0));
 }
@@ -35,11 +39,16 @@ backgroundDataSet3.Dispose();foregroundDataSet3.Dispose();
 }
 
 
-public void GoTo(Ray tgtDir,float maxDis=1000){
+public LinkedListNode<RaycastHit>GoTo(Ray tgtDir,float maxDis=1000){
 if(Physics.Raycast(tgtDir,out RaycastHit hit,maxDis)){
+
+
     Debug.LogWarning(hit.point);
+return GoToQueue.AddLast(hit);
+
+
 }
-}    
+return null;}    
 [NonSerialized]readonly LinkedList<RaycastHit>GoToQueue=new LinkedList<RaycastHit>();
 protected override void Update(){
 
@@ -53,7 +62,9 @@ protected override void Update(){
 if(LOG&&LOG_LEVEL<=1)Debug.Log("dequeue");
 
 
-            GoToQueue.RemoveFirst();
+            target=GoToQueue.First.Value;GoToQueue.RemoveFirst();
+            startPos=transform.position;
+            boundsExtents=collider.bounds.extents;
 
     
             backgroundDataSet1.Reset();foregroundDataSet1.Set();
@@ -92,15 +103,32 @@ goto _loop;
     public bool DEBUG_GOTO;
 
     
+[NonSerialized]Vector3 NodeHalfSize;
+[NonSerialized]Vector3 NodeSize;
+[NonSerialized]RaycastHit target;[NonSerialized]Vector3 startPos;[NonSerialized]Vector3 boundsExtents;
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL){
         while(!Stop){foregroundDataSet1.WaitOne();if(Stop)goto _Stop;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("begin pathfind");
+            NodeHalfSize=boundsExtents;
+            NodeHalfSize.x+=.1f;
+            NodeHalfSize.z+=.1f;
+            NodeSize=NodeHalfSize*2;
+for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
+for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
+
+
+}}
+
+            
+
+
             backgroundDataSet2.Set();foregroundDataSet2.WaitOne();if(Stop)goto _Stop;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 2");
             backgroundDataSet3.Set();foregroundDataSet3.WaitOne();if(Stop)goto _Stop;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3");
 backgroundDataSet1.Set();}
+int GetNodeIndex(int x,int y,int z){return z*gridResolution.x+x*AStarVerticalHits+y;}
         _Stop:{
         }
 if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
@@ -115,4 +143,19 @@ protected override void OnDrawGizmos(){
                    base.OnDrawGizmos();
 }
 #endif
+[Serializable]public class Node:IHeapItem<Node>{
+public int HeapIndex{get;set;}
+public float F{get;private set;}//  heuristics
+public float G{get{return g;}set{g=value;F=g+h;}}float g;//  node dis to start
+public float H{get{return h;}set{h=value;F=g+h;}}float h;//  node dis to target
+public int CompareTo(Node toCompare){
+int comparison=F.CompareTo(toCompare.F);
+ if(comparison==0){
+    comparison=H.CompareTo(toCompare.H);
+ }
+return -comparison;}
+public Vector3 Position{get;set;}
+public override int GetHashCode(){return Position.GetHashCode();}public override bool Equals(object obj){if(ReferenceEquals(this,obj))return true;if(!(obj is Node node))return false;return(Position==node.Position);}
+public Node Parent;
+}
 }

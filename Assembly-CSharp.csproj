@@ -55,6 +55,7 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\AKCondinoO\Chares\CharControl.cs" />
     <Compile Include="Assets\AKCondinoO\VoxelSystem\ChunkManager.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Assets\FlexArrayAsset.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Assets\FlexContainer.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Assets\NVIDIA\Flex\Assets\FlexSourceAsset.cs" />
     <Compile Include="Assets\AKCondinoO\FileInfoExtensions.cs" />
     <Compile Include="Assets\AKCondinoO\SimActor.cs" />
+    <Compile Include="Assets\AKCondinoO\Chares\Pathfinder.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Actors\FlexActor.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Actors\FlexSolidActor.cs" />
     <Compile Include="Assets\AKCondinoO\MainCamera.cs" />
@@ -87,15 +89,14 @@
     <Compile Include="Assets\NVIDIA\Flex\Native\FlexUtils.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Actors\FlexArrayActor.cs" />
     <Compile Include="Assets\AKCondinoO\VoxelSystem\AtlasHelper.cs" />
+    <Compile Include="Assets\AKCondinoO\Chares\AI.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Helpers\FlexParticleController.cs" />
     <Compile Include="Assets\AKCondinoO\SimObject.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Helpers\FlexClothDeformation.cs" />
+    <Compile Include="Assets\AKCondinoO\VoxelSystem\Plains.cs" />
     <Compile Include="Assets\AKCondinoO\VoxelSystem\TerrainChunkManager.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Helpers\FlexScene.cs" />
-    <Compile Include="Assets\AKCondinoO\VoxelSystem\Plains.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\CharControl.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\Pathfinder.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\AI.cs" />
+    <Compile Include="Assets\AKCondinoO\Heap.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\NVIDIA\Flex\Resources\Shaders\FlexDrawFluid.shader" />
