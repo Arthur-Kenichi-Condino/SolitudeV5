@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 public class Pathfinder:SimActor{
-[NonSerialized]Vector2Int AStarDistance=new Vector2Int(10,10);[NonSerialized]int AStarVerticalHits=10;[NonSerialized]Vector2Int gridResolution;[NonSerialized]Node[]Nodes;
+[NonSerialized]Vector2Int AStarDistance=new Vector2Int(5,5);[NonSerialized]int AStarVerticalHits=3;[NonSerialized]Vector2Int gridResolution;[NonSerialized]Node[]Nodes;
 protected override void Awake(){
                    base.Awake();
 gridResolution=new Vector2Int(AStarDistance.x*2+1,AStarDistance.y*2+1);
@@ -18,7 +20,8 @@ waitUntil3=new WaitUntil(()=>backgroundDataSet3.WaitOne(0));
 protected override void OnEnable(){
                    base.OnEnable();
 cr=StartCoroutine(CRDoRaycasts());
-Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,},TaskCreationOptions.LongRunning);
+int raycasts=gridResolution.x*gridResolution.y;int resultsBufferSize=raycasts*AStarVerticalHits;
+Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,ToSetGridVerRaycasts=new NativeList<RaycastCommand>(raycasts,Allocator.Persistent),ToSetGridVerHitsResultsBuffer=new NativeArray<RaycastHit>(resultsBufferSize,Allocator.Persistent,NativeArrayOptions.UninitializedMemory),},TaskCreationOptions.LongRunning);
 }
 bool Stop{
     get{bool tmp;lock(Stop_Syn){tmp=Stop_v;      }return tmp;}
@@ -26,6 +29,7 @@ bool Stop{
 }[NonSerialized]readonly object Stop_Syn=new object();[NonSerialized]bool Stop_v;
 protected override void OnDisable(){
 StopCoroutine(cr);
+handle2.Complete();
 Stop=true;try{task.Wait();}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}
                    base.OnDisable();
 }
@@ -83,10 +87,16 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("begin");
 _loop:{}
 yield return waitUntil2;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("do raycasts 2");
+if(DRAW_LEVEL<=-100)foreach(var raycast in ToSetGridVerRaycasts){Debug.DrawRay(raycast.from,raycast.direction*raycast.distance,Color.white,1f);}
 
 
+//  Schedule the batch of raycasts
+handle2=RaycastCommand.ScheduleBatch(ToSetGridVerRaycasts,ToSetGridVerHitsResultsBuffer,1,default(JobHandle));
+//  Wait for the batch processing job to complete
+while(!handle2.IsCompleted)yield return null;handle2.Complete();
 
-
+    
+ToSetGridVerRaycasts.Clear();
 foregroundDataSet2.Set();
 yield return waitUntil3;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("do raycasts 3");
@@ -103,22 +113,26 @@ goto _loop;
     public bool DEBUG_GOTO;
 
     
+[NonSerialized]JobHandle handle2;[NonSerialized]NativeList<RaycastCommand>ToSetGridVerRaycasts;[NonSerialized]NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer;
 [NonSerialized]Vector3 NodeHalfSize;
 [NonSerialized]Vector3 NodeSize;
 [NonSerialized]RaycastHit target;[NonSerialized]Vector3 startPos;[NonSerialized]Vector3 boundsExtents;
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
-    if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL){
+    if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is NativeList<RaycastCommand>ToSetGridVerRaycasts&&parameters[3]is NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer){
         while(!Stop){foregroundDataSet1.WaitOne();if(Stop)goto _Stop;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("begin pathfind");
             NodeHalfSize=boundsExtents;
             NodeHalfSize.x+=.1f;
             NodeHalfSize.z+=.1f;
             NodeSize=NodeHalfSize*2;
+int i=0;float fromHeight=startPos.y+(AStarVerticalHits/2f)*NodeSize.y;
 for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
 for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
+Vector2 gridpos=gcoord;gridpos.x*=NodeSize.x;gridpos.y*=NodeSize.z;
+ToSetGridVerRaycasts.AddNoResize(new RaycastCommand(new Vector3(gridpos.x,fromHeight,gridpos.y),Vector3.down,1000,-5,AStarVerticalHits));
 
 
-}}
+i++;}}
 
             
 
@@ -130,10 +144,11 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3");
 backgroundDataSet1.Set();}
 int GetNodeIndex(int x,int y,int z){return z*gridResolution.x+x*AStarVerticalHits+y;}
         _Stop:{
+            ToSetGridVerRaycasts.Dispose();ToSetGridVerHitsResultsBuffer.Dispose();
         }
 if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
     }
-}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}}
+}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);try{if(ToSetGridVerRaycasts.IsCreated)ToSetGridVerRaycasts.Dispose();}finally{}try{if(ToSetGridVerHitsResultsBuffer.IsCreated)ToSetGridVerHitsResultsBuffer.Dispose();}finally{}}}
 
 
 
