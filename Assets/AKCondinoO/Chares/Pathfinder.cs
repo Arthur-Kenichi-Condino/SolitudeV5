@@ -31,6 +31,7 @@ protected override void OnDisable(){
 StopCoroutine(cr);
 handle2.Complete();
 Stop=true;try{task.Wait();}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}
+try{if(ToSetGridVerRaycasts.IsCreated)ToSetGridVerRaycasts.Dispose();}finally{}
                    base.OnDisable();
 }
 protected override void OnDestroy(){if(Stop){
@@ -144,11 +145,11 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3");
 backgroundDataSet1.Set();}
 int GetNodeIndex(int x,int y,int z){return z*gridResolution.x+x*AStarVerticalHits+y;}
         _Stop:{
-            ToSetGridVerRaycasts.Dispose();ToSetGridVerHitsResultsBuffer.Dispose();
+            ToSetGridVerHitsResultsBuffer.Dispose();
         }
 if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
     }
-}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);try{if(ToSetGridVerRaycasts.IsCreated)ToSetGridVerRaycasts.Dispose();}finally{}try{if(ToSetGridVerHitsResultsBuffer.IsCreated)ToSetGridVerHitsResultsBuffer.Dispose();}finally{}}}
+}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);try{if(ToSetGridVerHitsResultsBuffer.IsCreated)ToSetGridVerHitsResultsBuffer.Dispose();}finally{}}}
 
 
 
