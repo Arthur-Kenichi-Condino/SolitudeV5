@@ -97,12 +97,13 @@ handle2=RaycastCommand.ScheduleBatch(ToSetGridVerRaycasts,ToSetGridVerHitsResult
 //  Wait for the batch processing job to complete
 while(!handle2.IsCompleted)yield return null;handle2.Complete();
 
-ToSetGridVerHits.Clear();
-int i=0;RaycastHit[]hits=new RaycastHit[AStarVerticalHits];
-foreach(var raycast in ToSetGridVerRaycasts){
-for(int ridx=0;ridx<AStarVerticalHits;ridx++)hits[ridx]=ToSetGridVerHitsResultsBuffer[i+ridx];
-ToSetGridVerHits.Add(raycast,hits);
-i++;}
+//ToSetGridVerHits.Clear();
+Debug.LogWarning("ToSetGridVerHits.Count:"+ToSetGridVerHits.Count);
+//RaycastHit[]hits=new RaycastHit[AStarVerticalHits];
+for(int i=0;i<ToSetGridVerRaycasts.Length;i++){var raycast=ToSetGridVerRaycasts[i];for(int ridx=0;ridx<AStarVerticalHits;ridx++)ToSetGridVerHits[raycast][ridx]=ToSetGridVerHitsResultsBuffer[i+ridx];
+//ToSetGridVerHits[raycast]=hits;
+}
+Debug.LogWarning("ToSetGridVerHits.Count:"+ToSetGridVerHits.Count);
     
 foregroundDataSet2.Set();
 yield return waitUntil3;
@@ -132,31 +133,53 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("begin pathfind");
             NodeHalfSize.x+=.1f;
             NodeHalfSize.z+=.1f;
             NodeSize=NodeHalfSize*2;
-float fromHeight=startPos.y+(AStarVerticalHits/2f)*NodeSize.y;
+Array.Clear(Nodes,0,Nodes.Length);ToSetGridVerHits.Clear();
+int i=0;float fromHeight=startPos.y+(AStarVerticalHits/2f)*NodeSize.y;
 for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
 for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
 Vector2 gridpos=gcoord;gridpos.x*=NodeSize.x;gridpos.y*=NodeSize.z;
-ToSetGridVerRaycasts.AddNoResize(new RaycastCommand(new Vector3(gridpos.x,fromHeight,gridpos.y),Vector3.down,1000,-5,AStarVerticalHits));
-
+var cmd=new RaycastCommand(new Vector3(gridpos.x,fromHeight,gridpos.y),Vector3.down,1000,-5,AStarVerticalHits);ToSetGridVerRaycasts.AddNoResize(cmd);
+ToSetGridVerHits.Add(cmd,new RaycastHit[AStarVerticalHits]);
     
+
     //Debug.LogWarning(i+" "+gcoord);
-    Debug.LogWarning(GetNodeIndex(gcoord.y,0,gcoord.x));
+    Debug.LogWarning(i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x)+": "+ToSetGridVerRaycasts[i/AStarVerticalHits].from);
 
 
-}}
+i+=AStarVerticalHits;}}
 
             
+//ToSetGridVerHits.Clear();
+//int i=0;RaycastHit[]hits=new RaycastHit[AStarVerticalHits];
+//foreach(var raycast in ToSetGridVerRaycasts){
+//for(int ridx=0;ridx<AStarVerticalHits;ridx++)hits[ridx]=ToSetGridVerHitsResultsBuffer[i+ridx];
+//ToSetGridVerHits.Add(raycast,hits);
+//i++;}
 
 
             backgroundDataSet2.Set();foregroundDataSet2.WaitOne();if(Stop)goto _Stop;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 2");
 
 
-//int i=0;foreach(var result in ToSetGridVerHits){
+i=0;foreach(var result in ToSetGridVerHits){
 
-    //Debug.LogWarning(i);
+    Debug.LogWarning(i+": "+result.Key.from);
 
+RaycastHit[]hits=result.Value;for(int ridx=0;ridx<AStarVerticalHits;ridx++){
+i++;}
+}
+//for(int rayidx=0;rayidx<ToSetGridVerRaycasts.Length;rayidx++){
+//for(int ridx=0;ridx<AStarVerticalHits;ridx++){
 //i++;}
+
+//    Debug.LogWarning(i+": "+ToSetGridVerRaycasts[i/AStarVerticalHits].from);
+
+//}
+//i=0;foreach(var result in ToSetGridVerHits){for(int ridx=0;ridx<AStarVerticalHits;ridx++){
+
+//    Debug.LogWarning(i);
+
+//i++;}}
 
 
             backgroundDataSet3.Set();foregroundDataSet3.WaitOne();if(Stop)goto _Stop;
