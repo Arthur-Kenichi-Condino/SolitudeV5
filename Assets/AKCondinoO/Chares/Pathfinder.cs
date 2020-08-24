@@ -111,6 +111,11 @@ for(int i=0,j=0;j<ToSetGridVerRaycasts.Length;i+=AStarVerticalHits,j++){var rayc
 for(int ridx=0;ridx<AStarVerticalHits;ridx++){var result=ToSetGridVerHitsResultsBuffer[ridx+i];
 if(DRAW_LEVEL<=-100)Debug.DrawRay(result.point,result.normal,Color.green,1f);
 ToSetGridVerHits[raycast][ridx]=result;
+
+
+    //Debug.LogWarning(result.normal.magnitude);
+
+
 }
 
 }
@@ -207,7 +212,7 @@ i=0;j=0;foreach(var result in ToSetGridVerHits){
 
 
 for(int ridx=0;ridx<AStarVerticalHits;ridx++){int nodeIdx=i+ridx;var hit=result.Value[ridx];
-if(float.IsNaN(hit.normal.x)||float.IsNaN(hit.normal.y)||float.IsNaN(hit.normal.z)||hit.normal==Vector3.zero){
+if(float.IsNaN(hit.normal.x)||float.IsNaN(hit.normal.y)||float.IsNaN(hit.normal.z)||hit.normal==Vector3.zero||hit.normal.magnitude>1.00001f||hit.normal.magnitude<0.99999f){
 Nodes[nodeIdx].valid=false;
 }else{
 Nodes[nodeIdx].valid=true;
@@ -271,9 +276,9 @@ protected override void OnDrawGizmos(){
 if(DRAW_LEVEL<=-100){
 var oldcolor=Gizmos.color;
 if(Nodes!=null)foreach(var node in Nodes){
-//if(node!=null){
+if(node.valid){
 Gizmos.DrawCube(node.Position,NodeSize);
-//}
+}
 }
 Gizmos.color=oldcolor;
 }
