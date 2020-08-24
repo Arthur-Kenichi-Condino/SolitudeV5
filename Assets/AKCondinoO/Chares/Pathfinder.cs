@@ -159,6 +159,27 @@ goto _loop;
 [NonSerialized]RaycastHit target;[NonSerialized]Vector3 startPos;[NonSerialized]Vector3 boundsExtents;
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is NativeList<RaycastCommand>ToSetGridVerRaycasts&&parameters[3]is NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer){
+int i=0,j=0;
+for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
+for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
+
+
+    Debug.LogWarning(i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x));
+
+
+for(int gcoordverhit=0;gcoordverhit<AStarVerticalHits;gcoordverhit++){int nodeIdx=i+gcoordverhit;
+Nodes[nodeIdx].neighbours.Clear();
+
+
+    Debug.LogWarning(nodeIdx);
+    if(gcoord.x>0&&gcoord.y>0){
+    }
+
+
+}
+
+
+i+=AStarVerticalHits;j++;}}
 List<RaycastHit[]>toSetGridVerHitsResults=new List<RaycastHit[]>();
         while(!Stop){foregroundDataSet1.WaitOne();if(Stop)goto _Stop;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("begin pathfind");
@@ -167,7 +188,7 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("begin pathfind");
             NodeHalfSize.z+=.1f;
             NodeSize=NodeHalfSize*2;
 /*Array.Clear(Nodes,0,Nodes.Length);*/ToSetGridVerHits.Clear();//if(results.Count<)
-int i=0,j=0;float fromHeight=startPos.y+(AStarVerticalHits/2f)*NodeSize.y;
+i=0;j=0;float fromHeight=startPos.y+(AStarVerticalHits/2f)*NodeSize.y;
 for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
 for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
 Vector2 gridpos=gcoord;gridpos.x*=NodeSize.x;gridpos.y*=NodeSize.z;gridpos.x+=startPos.x;gridpos.y+=startPos.z;
@@ -209,6 +230,7 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 2");
 
 
 i=0;j=0;foreach(var result in ToSetGridVerHits){
+if(LOG&&LOG_LEVEL<=-100)Debug.Log(i+": "+result.Key.from);
 
 
 for(int ridx=0;ridx<AStarVerticalHits;ridx++){int nodeIdx=i+ridx;var hit=result.Value[ridx];
@@ -216,7 +238,7 @@ if(float.IsNaN(hit.normal.x)||float.IsNaN(hit.normal.y)||float.IsNaN(hit.normal.
 Nodes[nodeIdx].valid=false;
 }else{
 Nodes[nodeIdx].valid=true;
-Nodes[nodeIdx].Position=hit.point;
+Nodes[nodeIdx].Position=hit.point;Nodes[nodeIdx].Normal=hit.normal.normalized;
 }
 }
 
@@ -287,7 +309,7 @@ Gizmos.color=oldcolor;
 }
 #endif
 [Serializable]public class Node:IHeapItem<Node>{
-public bool valid{get;set;}
+public bool valid{get;set;}public readonly List<Node>neighbours=new List<Node>();
 public int HeapIndex{get;set;}
 public float F{get;private set;}//  heuristics
 public float G{get{return g;}set{g=value;F=g+h;}}float g;//  node dis to start
@@ -298,7 +320,7 @@ int comparison=F.CompareTo(toCompare.F);
     comparison=H.CompareTo(toCompare.H);
  }
 return -comparison;}
-public Vector3 Position{get;set;}
+public Vector3 Position{get;set;}public Vector3 Normal{get;set;}
 public override int GetHashCode(){return Position.GetHashCode();}public override bool Equals(object obj){if(ReferenceEquals(this,obj))return true;if(!(obj is Node node))return false;return(Position==node.Position);}
 public Node Parent;
 }
