@@ -206,8 +206,13 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 2");
 i=0;j=0;foreach(var result in ToSetGridVerHits){
 
 
-for(int ridx=0;ridx<AStarVerticalHits;ridx++){int nodeIdx=i+ridx;
-Nodes[nodeIdx].Position=result.Value[ridx].point;
+for(int ridx=0;ridx<AStarVerticalHits;ridx++){int nodeIdx=i+ridx;var hit=result.Value[ridx];
+if(float.IsNaN(hit.normal.x)||float.IsNaN(hit.normal.y)||float.IsNaN(hit.normal.z)||hit.normal==Vector3.zero){
+Nodes[nodeIdx].valid=false;
+}else{
+Nodes[nodeIdx].valid=true;
+Nodes[nodeIdx].Position=hit.point;
+}
 }
 
 
@@ -277,6 +282,7 @@ Gizmos.color=oldcolor;
 }
 #endif
 [Serializable]public class Node:IHeapItem<Node>{
+public bool valid{get;set;}
 public int HeapIndex{get;set;}
 public float F{get;private set;}//  heuristics
 public float G{get{return g;}set{g=value;F=g+h;}}float g;//  node dis to start
