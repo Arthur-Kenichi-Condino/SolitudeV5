@@ -145,7 +145,9 @@ foregroundDataSet2.Set();
     
 int vHits=0;
 do{
+yield return waitUntil3;
     Debug.LogWarning(vHits);
+foregroundDataSet3.Set();
 }while(++vHits<AStarVerticalHits);
 
 
@@ -204,10 +206,6 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("begin pathfind");
             NodeHalfSize.x+=.1f;
             NodeHalfSize.z+=.1f;
             NodeSize=NodeHalfSize*2;
-int vHits=0;
-do{
-    Debug.LogWarning(vHits);
-}while(++vHits<AStarVerticalHits);
 
 
 ///*Array.Clear(Nodes,0,Nodes.Length);*/ToSetGridVerHits.Clear();//if(results.Count<)
@@ -250,6 +248,13 @@ do{
 
             backgroundDataSet2.Set();foregroundDataSet2.WaitOne();if(Stop)goto _Stop;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 2");
+
+
+int vHits=0;
+do{
+    Debug.LogWarning(vHits);
+            backgroundDataSet3.Set();foregroundDataSet3.WaitOne();if(Stop)goto _Stop;
+}while(++vHits<AStarVerticalHits);
 
 
 //i=0;j=0;foreach(var result in ToSetGridVerHits){
