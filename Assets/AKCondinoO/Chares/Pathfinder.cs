@@ -309,7 +309,7 @@ Gizmos.color=oldcolor;
 }
 #endif
 [Serializable]public class Node:IHeapItem<Node>{
-public bool valid{get;set;}public readonly List<Node>neighbours=new List<Node>();
+public bool valid{get;set;}public int Idx{get;set;}public readonly List<(int,Node)>neighbours=new List<(int,Node)>();
 public int HeapIndex{get;set;}
 public float F{get;private set;}//  heuristics
 public float G{get{return g;}set{g=value;F=g+h;}}float g;//  node dis to start
