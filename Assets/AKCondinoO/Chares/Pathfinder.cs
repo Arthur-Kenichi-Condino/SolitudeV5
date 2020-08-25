@@ -89,15 +89,15 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("begin");
 _loop:{}
 yield return waitUntil2;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("do raycasts 2");
-if(DRAW_LEVEL<=-100)foreach(var raycast in ToSetGridVerRaycasts){Debug.DrawRay(raycast.from,raycast.direction*raycast.distance,Color.white,1f);}
-handle2=RaycastCommand.ScheduleBatch(ToSetGridVerRaycasts,ToSetGridVerHitsResultsBuffer,1,default(JobHandle));//  Schedule the batch of raycasts
-while(!handle2.IsCompleted)yield return null;handle2.Complete();//  Wait for the batch processing job to complete
+//if(DRAW_LEVEL<=-100)foreach(var raycast in ToSetGridVerRaycasts){Debug.DrawRay(raycast.from,raycast.direction*raycast.distance,Color.white,1f);}
+//handle2=RaycastCommand.ScheduleBatch(ToSetGridVerRaycasts,ToSetGridVerHitsResultsBuffer,1,default(JobHandle));//  Schedule the batch of raycasts
+//while(!handle2.IsCompleted)yield return null;handle2.Complete();//  Wait for the batch processing job to complete
 
 
 
 
-//ToSetGridVerHits.Clear();
-Debug.LogWarning("ToSetGridVerHits.Count:"+ToSetGridVerHits.Count);
+////ToSetGridVerHits.Clear();
+//Debug.LogWarning("ToSetGridVerHits.Count:"+ToSetGridVerHits.Count);
 //RaycastHit[]hits=new RaycastHit[AStarVerticalHits];
 
 
@@ -106,19 +106,19 @@ Debug.LogWarning("ToSetGridVerHits.Count:"+ToSetGridVerHits.Count);
     //}
 
 
-for(int i=0,j=0;j<ToSetGridVerRaycasts.Length;i+=AStarVerticalHits,j++){var raycast=ToSetGridVerRaycasts[j];
+//for(int i=0,j=0;j<ToSetGridVerRaycasts.Length;i+=AStarVerticalHits,j++){var raycast=ToSetGridVerRaycasts[j];
 
-for(int ridx=0;ridx<AStarVerticalHits;ridx++){var result=ToSetGridVerHitsResultsBuffer[ridx+i];
-if(DRAW_LEVEL<=-100)Debug.DrawRay(result.point,result.normal,Color.green,1f);
-ToSetGridVerHits[raycast][ridx]=result;
-
-
-    Debug.LogWarning(result.collider==null);
+//for(int ridx=0;ridx<AStarVerticalHits;ridx++){var result=ToSetGridVerHitsResultsBuffer[ridx+i];
+//if(DRAW_LEVEL<=-100)Debug.DrawRay(result.point,result.normal,Color.green,1f);
+//ToSetGridVerHits[raycast][ridx]=result;
 
 
-}
+//    Debug.LogWarning(result.collider==null);
 
-}
+
+//}
+
+//}
 
 
 //for(int i=0;i<ToSetGridVerRaycasts.Length;i++){var raycast=ToSetGridVerRaycasts[i];
@@ -132,7 +132,7 @@ ToSetGridVerHits[raycast][ridx]=result;
 
 //}
 //}
-Debug.LogWarning("ToSetGridVerHits.Count:"+ToSetGridVerHits.Count);
+//Debug.LogWarning("ToSetGridVerHits.Count:"+ToSetGridVerHits.Count);
     
 
 
@@ -193,18 +193,18 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("begin pathfind");
             NodeHalfSize.x+=.1f;
             NodeHalfSize.z+=.1f;
             NodeSize=NodeHalfSize*2;
-/*Array.Clear(Nodes,0,Nodes.Length);*/ToSetGridVerHits.Clear();//if(results.Count<)
-i=0;j=0;float fromHeight=startPos.y+(AStarVerticalHits/2f)*NodeSize.y;
-for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
-for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
-Vector2 gridpos=gcoord;gridpos.x*=NodeSize.x;gridpos.y*=NodeSize.z;gridpos.x+=startPos.x;gridpos.y+=startPos.z;
-var cmd=new RaycastCommand(new Vector3(gridpos.x,fromHeight,gridpos.y),Vector3.down,1000,-5,AStarVerticalHits);ToSetGridVerRaycasts.AddNoResize(cmd);
-if(j>=toSetGridVerHitsResults.Count)toSetGridVerHitsResults.Add(new RaycastHit[AStarVerticalHits]);
-ToSetGridVerHits[cmd]=toSetGridVerHitsResults[j];
-if(LOG&&LOG_LEVEL<=-100)Debug.Log(i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x)+": "+ToSetGridVerRaycasts[i/AStarVerticalHits].from);
+///*Array.Clear(Nodes,0,Nodes.Length);*/ToSetGridVerHits.Clear();//if(results.Count<)
+//i=0;j=0;float fromHeight=startPos.y+(AStarVerticalHits/2f)*NodeSize.y;
+//for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
+//for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
+//Vector2 gridpos=gcoord;gridpos.x*=NodeSize.x;gridpos.y*=NodeSize.z;gridpos.x+=startPos.x;gridpos.y+=startPos.z;
+//var cmd=new RaycastCommand(new Vector3(gridpos.x,fromHeight,gridpos.y),Vector3.down,1000,-5,AStarVerticalHits);ToSetGridVerRaycasts.AddNoResize(cmd);
+//if(j>=toSetGridVerHitsResults.Count)toSetGridVerHitsResults.Add(new RaycastHit[AStarVerticalHits]);
+//ToSetGridVerHits[cmd]=toSetGridVerHitsResults[j];
+//if(LOG&&LOG_LEVEL<=-100)Debug.Log(i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x)+": "+ToSetGridVerRaycasts[i/AStarVerticalHits].from);
 
 
-i+=AStarVerticalHits;j++;}}
+//i+=AStarVerticalHits;j++;}}
 //Array.Clear(Nodes,0,Nodes.Length);bool disChanged=false;if(disChanged=AStarDis_Pre!=AStarDistance){ToSetGridVerHits.Clear();AStarDis_Pre=AStarDistance;}
 //
 //for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
@@ -235,21 +235,21 @@ i+=AStarVerticalHits;j++;}}
 if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 2");
 
 
-i=0;j=0;foreach(var result in ToSetGridVerHits){
-if(LOG&&LOG_LEVEL<=-100)Debug.Log(i+": "+result.Key.from);
+//i=0;j=0;foreach(var result in ToSetGridVerHits){
+//if(LOG&&LOG_LEVEL<=-100)Debug.Log(i+": "+result.Key.from);
 
 
-for(int ridx=0;ridx<AStarVerticalHits;ridx++){int nodeIdx=i+ridx;var hit=result.Value[ridx];
-if(float.IsNaN(hit.normal.x)||float.IsNaN(hit.normal.y)||float.IsNaN(hit.normal.z)||hit.normal==Vector3.zero||hit.normal.magnitude>1.00001f||hit.normal.magnitude<0.99999f){
-Nodes[nodeIdx].valid=false;
-}else{
-Nodes[nodeIdx].valid=true;
-Nodes[nodeIdx].Position=hit.point;Nodes[nodeIdx].Normal=hit.normal.normalized;
-}
-}
+//for(int ridx=0;ridx<AStarVerticalHits;ridx++){int nodeIdx=i+ridx;var hit=result.Value[ridx];
+//if(float.IsNaN(hit.normal.x)||float.IsNaN(hit.normal.y)||float.IsNaN(hit.normal.z)||hit.normal==Vector3.zero||hit.normal.magnitude>1.00001f||hit.normal.magnitude<0.99999f){
+//Nodes[nodeIdx].valid=false;
+//}else{
+//Nodes[nodeIdx].valid=true;
+//Nodes[nodeIdx].Position=hit.point;Nodes[nodeIdx].Normal=hit.normal.normalized;
+//}
+//}
 
 
-i+=AStarVerticalHits;j++;}//for(i=0,j=0;j<ToSetGridVerHits.Count;i+=AStarVerticalHits,j++){
+//i+=AStarVerticalHits;j++;}//for(i=0,j=0;j<ToSetGridVerHits.Count;i+=AStarVerticalHits,j++){
 
 
 //for(int ridx=0;ridx<AStarVerticalHits;ridx++){
