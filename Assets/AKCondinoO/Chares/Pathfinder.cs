@@ -113,7 +113,7 @@ if(DRAW_LEVEL<=-100)Debug.DrawRay(result.point,result.normal,Color.green,1f);
 ToSetGridVerHits[raycast][ridx]=result;
 
 
-    //Debug.LogWarning(result.normal.magnitude);
+    Debug.LogWarning(result.collider==null);
 
 
 }
