@@ -84,13 +84,23 @@ ToSetGridVerRaycasts.Clear();
 
                    base.Update();
 }
-[NonSerialized]WaitUntil waitUntil2;
 [NonSerialized]WaitUntil waitUntil3;
+[NonSerialized]WaitUntil waitUntil2;
 [NonSerialized]WaitUntil waitUntil4;
 IEnumerator CRDoRaycasts(){
 if(LOG&&LOG_LEVEL<=2)Debug.Log("begin");
 _loop:{}
+
+    
+int vHits=0;
+do{
 yield return waitUntil2;
+    Debug.LogWarning(vHits);
+foregroundDataSet2.Set();
+}while(++vHits<AStarVerticalHits);
+
+    
+yield return waitUntil3;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("do raycasts 2");
 //if(DRAW_LEVEL<=-100)foreach(var raycast in ToSetGridVerRaycasts){Debug.DrawRay(raycast.from,raycast.direction*raycast.distance,Color.white,1f);}
 //handle2=RaycastCommand.ScheduleBatch(ToSetGridVerRaycasts,ToSetGridVerHitsResultsBuffer,1,default(JobHandle));//  Schedule the batch of raycasts
@@ -140,17 +150,7 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("do raycasts 2");
 
 
 
-foregroundDataSet2.Set();
-
-    
-int vHits=0;
-do{
-yield return waitUntil3;
-    Debug.LogWarning(vHits);
 foregroundDataSet3.Set();
-}while(++vHits<AStarVerticalHits);
-
-
 yield return waitUntil4;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("do raycasts 4");
 
@@ -246,15 +246,15 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("begin pathfind");
 //i++;}
 
 
-            backgroundDataSet2.Set();foregroundDataSet2.WaitOne();if(Stop)goto _Stop;
-if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 2");
-
-
 int vHits=0;
 do{
     Debug.LogWarning(vHits);
-            backgroundDataSet3.Set();foregroundDataSet3.WaitOne();if(Stop)goto _Stop;
+            backgroundDataSet2.Set();foregroundDataSet2.WaitOne();if(Stop)goto _Stop;
 }while(++vHits<AStarVerticalHits);
+
+
+            backgroundDataSet3.Set();foregroundDataSet3.WaitOne();if(Stop)goto _Stop;
+if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 2");
 
 
 //i=0;j=0;foreach(var result in ToSetGridVerHits){
