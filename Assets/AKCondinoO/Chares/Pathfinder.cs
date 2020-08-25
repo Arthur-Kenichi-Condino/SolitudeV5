@@ -12,8 +12,9 @@ protected override void Awake(){
                    base.Awake();
 waitUntil2=new WaitUntil(()=>backgroundDataSet2.WaitOne(0));
 waitUntil3=new WaitUntil(()=>backgroundDataSet3.WaitOne(0));
+waitUntil4=new WaitUntil(()=>backgroundDataSet4.WaitOne(0));
 }
-[NonSerialized]Coroutine cr;[NonSerialized]Task task;[NonSerialized]readonly AutoResetEvent foregroundDataSet1=new AutoResetEvent(false);[NonSerialized]readonly ManualResetEvent backgroundDataSet1=new ManualResetEvent(true);[NonSerialized]readonly AutoResetEvent foregroundDataSet2=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet2=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent foregroundDataSet3=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet3=new AutoResetEvent(false);
+[NonSerialized]Coroutine cr;[NonSerialized]Task task;[NonSerialized]readonly AutoResetEvent foregroundDataSet1=new AutoResetEvent(false);[NonSerialized]readonly ManualResetEvent backgroundDataSet1=new ManualResetEvent(true);[NonSerialized]readonly AutoResetEvent foregroundDataSet2=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet2=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent foregroundDataSet3=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet3=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent foregroundDataSet4=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet4=new AutoResetEvent(false);
 protected override void OnEnable(){
                    base.OnEnable();
 gridResolution=new Vector2Int(AStarDistance.x*2+1,AStarDistance.y*2+1);
@@ -25,7 +26,7 @@ Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,ToSetGridVer
 }
 bool Stop{
     get{bool tmp;lock(Stop_Syn){tmp=Stop_v;      }return tmp;}
-    set{         lock(Stop_Syn){    Stop_v=value;}if(value){foregroundDataSet1.Set();foregroundDataSet2.Set();foregroundDataSet3.Set();}}
+    set{         lock(Stop_Syn){    Stop_v=value;}if(value){foregroundDataSet1.Set();foregroundDataSet2.Set();foregroundDataSet3.Set();foregroundDataSet4.Set();}}
 }[NonSerialized]readonly object Stop_Syn=new object();[NonSerialized]bool Stop_v;
 protected override void OnDisable(){
 StopCoroutine(cr);
@@ -39,6 +40,7 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("dispose");
 backgroundDataSet1.Dispose();foregroundDataSet1.Dispose();
 backgroundDataSet2.Dispose();foregroundDataSet2.Dispose();
 backgroundDataSet3.Dispose();foregroundDataSet3.Dispose();
+backgroundDataSet4.Dispose();foregroundDataSet4.Dispose();
 }
                    base.OnDestroy();
 }
@@ -84,6 +86,7 @@ ToSetGridVerRaycasts.Clear();
 }
 [NonSerialized]WaitUntil waitUntil2;
 [NonSerialized]WaitUntil waitUntil3;
+[NonSerialized]WaitUntil waitUntil4;
 IEnumerator CRDoRaycasts(){
 if(LOG&&LOG_LEVEL<=2)Debug.Log("begin");
 _loop:{}
@@ -138,14 +141,22 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("do raycasts 2");
 
 
 foregroundDataSet2.Set();
-yield return waitUntil3;
-if(LOG&&LOG_LEVEL<=1)Debug.Log("do raycasts 3");
+
+    
+int vHits=0;
+do{
+    Debug.LogWarning(vHits);
+}while(++vHits<AStarVerticalHits);
+
+
+yield return waitUntil4;
+if(LOG&&LOG_LEVEL<=1)Debug.Log("do raycasts 4");
 
 
 
 
-foregroundDataSet3.Set();
-if(LOG&&LOG_LEVEL<=1)Debug.Log("loop");
+foregroundDataSet4.Set();
+if(LOG&&LOG_LEVEL<=1)Debug.Log("cr loop end");
 goto _loop;
 }
 
@@ -164,7 +175,7 @@ for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x
 for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
 
 
-    Debug.LogWarning(i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x));
+    //Debug.LogWarning(i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x));
 
 
 for(int gcoordverhit=0;gcoordverhit<AStarVerticalHits;gcoordverhit++){int nodeIdx=i+gcoordverhit;
@@ -173,7 +184,7 @@ Nodes[nodeIdx].neighbours.Clear();
 
 
 int idx;
-    Debug.LogWarning(nodeIdx);
+    //Debug.LogWarning(nodeIdx);
     if(gcoord.x+AStarDistance.x>0&&gcoord.y+AStarDistance.y>0){
 Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit,gcoord.x-1),Nodes[idx]));
         if(gcoordverhit>0){
@@ -193,6 +204,12 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("begin pathfind");
             NodeHalfSize.x+=.1f;
             NodeHalfSize.z+=.1f;
             NodeSize=NodeHalfSize*2;
+int vHits=0;
+do{
+    Debug.LogWarning(vHits);
+}while(++vHits<AStarVerticalHits);
+
+
 ///*Array.Clear(Nodes,0,Nodes.Length);*/ToSetGridVerHits.Clear();//if(results.Count<)
 //i=0;j=0;float fromHeight=startPos.y+(AStarVerticalHits/2f)*NodeSize.y;
 //for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
@@ -285,8 +302,8 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 2");
 //i++;}}
 
 
-            backgroundDataSet3.Set();foregroundDataSet3.WaitOne();if(Stop)goto _Stop;
-if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3");
+            backgroundDataSet4.Set();foregroundDataSet4.WaitOne();if(Stop)goto _Stop;
+if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 4");
 backgroundDataSet1.Set();}
 int GetNodeIndex(int cz,int vy,int cx){return (cx+AStarDistance.x)*gridResolution.y*AStarVerticalHits+(cz+AStarDistance.y)*AStarVerticalHits+vy;}
         _Stop:{
