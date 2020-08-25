@@ -168,11 +168,17 @@ for(gcoord.y=-AStarDistance.y                                          ;gcoord.y
 
 
 for(int gcoordverhit=0;gcoordverhit<AStarVerticalHits;gcoordverhit++){int nodeIdx=i+gcoordverhit;
+Nodes[nodeIdx].Idx=nodeIdx;
 Nodes[nodeIdx].neighbours.Clear();
 
 
+int idx;
     Debug.LogWarning(nodeIdx);
-    if(gcoord.x>0&&gcoord.y>0){
+    if(gcoord.x+AStarDistance.x>0&&gcoord.y+AStarDistance.y>0){
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit,gcoord.x-1),Nodes[idx]));
+        if(gcoordverhit>0){
+//Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit,gcoord.x-1),Nodes[idx]));
+        }
     }
 
 
@@ -297,9 +303,12 @@ protected override void OnDrawGizmos(){
     if(backgroundDataSet1.WaitOne(0)){
 if(DRAW_LEVEL<=-100){
 var oldcolor=Gizmos.color;
+Gizmos.color=new Color(1,1,1,.25f);
+//if(DRAW_LEVEL<=-110)foreach(var node in Nodes)foreach(var neighbour in node.neighbours)if(node.valid&&neighbour.node.valid)Debug.DrawLine(node.Position,neighbour.node.Position,Color.white,1f);
 if(Nodes!=null)foreach(var node in Nodes){
 if(node.valid){
 Gizmos.DrawCube(node.Position,NodeSize);
+if(DRAW_LEVEL<=-110)foreach(var neighbour in node.neighbours)if(neighbour.node.valid)Debug.DrawLine(node.Position,neighbour.node.Position,Color.white);
 }
 }
 Gizmos.color=oldcolor;
@@ -309,7 +318,7 @@ Gizmos.color=oldcolor;
 }
 #endif
 [Serializable]public class Node:IHeapItem<Node>{
-public bool valid{get;set;}public int Idx{get;set;}public readonly List<(int,Node)>neighbours=new List<(int,Node)>();
+public bool valid{get;set;}public int Idx{get;set;}public readonly List<(int idx,Node node)>neighbours=new List<(int,Node)>();
 public int HeapIndex{get;set;}
 public float F{get;private set;}//  heuristics
 public float G{get{return g;}set{g=value;F=g+h;}}float g;//  node dis to start
