@@ -95,11 +95,21 @@ int vHits=0;
 do{
 yield return waitUntil2;
     Debug.LogWarning(vHits);
+Debug.LogWarning("ToSetGridVerHits.Count:"+ToSetGridVerHits.Count);
+    Debug.LogWarning(default(RaycastHit).normal);
 
 
 if(DRAW_LEVEL<=-100)foreach(var raycast in ToSetGridVerRaycasts){Debug.DrawRay(raycast.from,raycast.direction*raycast.distance,Color.white,1f);}
 handle2=RaycastCommand.ScheduleBatch(ToSetGridVerRaycasts,ToSetGridVerHitsResultsBuffer,1,default(JobHandle));//  Schedule the batch of raycasts
 while(!handle2.IsCompleted)yield return null;handle2.Complete();//  Wait for the batch processing job to complete
+
+
+for(int i=0,j=0;j<ToSetGridVerRaycasts.Length;i+=AStarVerticalHits,j++){var raycast=ToSetGridVerRaycasts[j];var result=ToSetGridVerHitsResultsBuffer[j];
+if(DRAW_LEVEL<=-100)Debug.DrawRay(result.point,result.normal,Color.green,1f);
+if(result.collider!=null){
+ToSetGridVerHits[j][vHits]=result;}else{ 
+ToSetGridVerHits[j][vHits]=default(RaycastHit);}
+}
 
 
 ToSetGridVerRaycasts.Clear();
@@ -173,7 +183,7 @@ goto _loop;
     public bool DEBUG_GOTO;
 
     
-[NonSerialized]JobHandle handle2;[NonSerialized]NativeList<RaycastCommand>ToSetGridVerRaycasts;[NonSerialized]NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer;[NonSerialized]readonly Dictionary<RaycastCommand,RaycastHit[]>ToSetGridVerHits=new Dictionary<RaycastCommand,RaycastHit[]>();
+[NonSerialized]JobHandle handle2;[NonSerialized]NativeList<RaycastCommand>ToSetGridVerRaycasts;[NonSerialized]NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer;[NonSerialized]readonly Dictionary<int,RaycastHit[]>ToSetGridVerHits=new Dictionary<int,RaycastHit[]>();
 [NonSerialized]Vector3 NodeHalfSize;
 [NonSerialized]Vector3 NodeSize;
 [NonSerialized]RaycastHit target;[NonSerialized]Vector3 startPos;[NonSerialized]Vector3 boundsExtents;
@@ -265,7 +275,7 @@ for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x
 for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
 if(vHits>0){}
 Vector2 gridpos=gcoord;gridpos.x*=NodeSize.x;gridpos.y*=NodeSize.z;gridpos.x+=startPos.x;gridpos.y+=startPos.z;var cmd=new RaycastCommand(new Vector3(gridpos.x,fromHeight,gridpos.y),Vector3.down,1000,-5);ToSetGridVerRaycasts.AddNoResize(cmd);
-if(vHits==0)ToSetGridVerHits[cmd]=ToSetGridVerHitsResults[j];
+if(vHits==0)ToSetGridVerHits[j]=ToSetGridVerHitsResults[j];
 if(LOG&&LOG_LEVEL<=-100)Debug.Log(i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x)+": "+ToSetGridVerRaycasts[i/AStarVerticalHits].from);
 
 
