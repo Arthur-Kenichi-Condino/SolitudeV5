@@ -287,6 +287,18 @@ i+=AStarVerticalHits;j++;}}
 }while(++vHits<AStarVerticalHits);
 
 
+i=0;j=0;foreach(var result in ToSetGridVerHits){
+for(int ridx=0;ridx<AStarVerticalHits;ridx++){int nodeIdx=i+ridx;var hit=result.Value[ridx];
+if(hit.normal==Vector3.zero){
+Nodes[nodeIdx].valid=false;
+}else{
+Nodes[nodeIdx].valid=true;
+Nodes[nodeIdx].Position=hit.point;Nodes[nodeIdx].Normal=hit.normal.normalized;
+}
+}
+i+=AStarVerticalHits;j++;}
+
+
             backgroundDataSet3.Set();foregroundDataSet3.WaitOne();if(Stop)goto _Stop;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3");
 
