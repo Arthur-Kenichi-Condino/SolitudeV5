@@ -268,7 +268,7 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("begin pathfind");
 ToSetGridVerHits.Clear();var gridStartHeight=startPos.y+(AStarVerticalHits/2f)*NodeSize.y;var disableCommandHeight=-Mathf.Ceil(Chunk.Height/2f)-1;
 int vHits=0;
 do{
-    Debug.LogWarning(vHits);
+    Debug.LogWarning(vHits+" disableCommandHeight:"+disableCommandHeight);
 
 
 i=0;j=0;float fromHeight;
