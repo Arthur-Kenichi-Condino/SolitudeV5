@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AKCondinoO.Voxels;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -264,16 +265,25 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("begin pathfind");
 //i++;}
 
 
-ToSetGridVerHits.Clear();
+ToSetGridVerHits.Clear();var gridStartHeight=startPos.y+(AStarVerticalHits/2f)*NodeSize.y;var disableCommandHeight=-Mathf.Ceil(Chunk.Height/2f)-1;
 int vHits=0;
 do{
     Debug.LogWarning(vHits);
 
 
-i=0;j=0;float fromHeight=0;if(vHits==0){fromHeight=startPos.y+(AStarVerticalHits/2f)*NodeSize.y;}
+i=0;j=0;float fromHeight;
 for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
 for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
-if(vHits>0){}
+if(vHits>0){
+if(ToSetGridVerHits[j][vHits-1].normal!=Vector3.zero){
+    Debug.LogWarning("hit something");
+fromHeight=ToSetGridVerHits[j][vHits-1].point.y-.1f;
+}else{
+fromHeight=disableCommandHeight;
+}
+}else{
+fromHeight=gridStartHeight;
+}
 Vector2 gridpos=gcoord;gridpos.x*=NodeSize.x;gridpos.y*=NodeSize.z;gridpos.x+=startPos.x;gridpos.y+=startPos.z;var cmd=new RaycastCommand(new Vector3(gridpos.x,fromHeight,gridpos.y),Vector3.down,1000,-5);ToSetGridVerRaycasts.AddNoResize(cmd);
 if(vHits==0)ToSetGridVerHits[j]=ToSetGridVerHitsResults[j];
 if(LOG&&LOG_LEVEL<=-100)Debug.Log(i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x)+": "+ToSetGridVerRaycasts[i/AStarVerticalHits].from);
