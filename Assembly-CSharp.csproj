@@ -65,6 +65,7 @@
     <Compile Include="Assets\NVIDIA\Flex\Helpers\FlexBuffer.cs" />
     <Compile Include="Assets\AKCondinoO\VoxelSystem\Biome.cs" />
     <Compile Include="Assets\AKCondinoO\VoxelSystem\Chunk.cs" />
+    <Compile Include="Assets\AKCondinoO\Heap.cs" />
     <Compile Include="Assets\AKCondinoO\VoxelSystem\Tables.cs" />
     <Compile Include="Assets\AKCondinoO\VoxelSystem\TerrainChunk.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Helpers\FlexSoftSkinning.cs" />
@@ -96,7 +97,7 @@
     <Compile Include="Assets\AKCondinoO\VoxelSystem\Plains.cs" />
     <Compile Include="Assets\AKCondinoO\VoxelSystem\TerrainChunkManager.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Helpers\FlexScene.cs" />
-    <Compile Include="Assets\AKCondinoO\Heap.cs" />
+    <Compile Include="Assets\AKCondinoO\UI\Buttons.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\NVIDIA\Flex\Resources\Shaders\FlexDrawFluid.shader" />

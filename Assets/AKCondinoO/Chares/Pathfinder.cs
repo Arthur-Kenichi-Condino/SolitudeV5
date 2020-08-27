@@ -303,7 +303,7 @@ if(hit.normal==Vector3.zero){
 Nodes[nodeIdx].valid=false;
 }else{
 Nodes[nodeIdx].valid=true;
-Nodes[nodeIdx].Position=hit.point;Nodes[nodeIdx].Normal=hit.normal.normalized;
+Nodes[nodeIdx].Position=hit.point+Vector3.up*NodeHalfSize.y;Nodes[nodeIdx].Normal=hit.normal.normalized;
 }
 }
 i+=AStarVerticalHits;j++;}
