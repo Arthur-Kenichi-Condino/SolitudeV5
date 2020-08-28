@@ -8,7 +8,7 @@ using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 public class Pathfinder:SimActor{
-[NonSerialized]Vector2Int AStarDistance=new Vector2Int(5,5);[NonSerialized]int AStarVerticalHits=3;[NonSerialized]Vector2Int gridResolution;[NonSerialized]Node[]Nodes;
+[NonSerialized]Vector2Int AStarDistance=new Vector2Int(5,5);[NonSerialized]int AStarVerticalHits=3;[NonSerialized]Vector2Int gridResolution;[NonSerialized]Node[]Nodes;[NonSerialized]Node originNode;[NonSerialized]Node targetNode;
 protected override void Awake(){
                    base.Awake();
 waitUntil2=new WaitUntil(()=>backgroundDataSet2.WaitOne(0));
@@ -308,7 +308,8 @@ Nodes[nodeIdx].Position=hit.point+Vector3.up*NodeHalfSize.y;Nodes[nodeIdx].Norma
 }
 }
 i+=AStarVerticalHits;j++;}
-
+originNode=GetNodeAt(startPos);
+targetNode=GetNodeAt(target.point+Vector3.up*NodeHalfSize.y);
 
             backgroundDataSet3.Set();foregroundDataSet3.WaitOne();if(Stop)goto _Stop;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3");
@@ -382,10 +383,18 @@ protected override void OnDrawGizmos(){
     if(backgroundDataSet1.WaitOne(0)){
 if(DRAW_LEVEL<=-100){
 var oldcolor=Gizmos.color;
-Gizmos.color=new Color(1,1,1,.25f);
+var emptyColor=new Color(1,1,1,.25f);
+var originColor=new Color(0,0,1,.25f);
+var targetColor=new Color(0,0,1,.25f);
 //if(DRAW_LEVEL<=-110)foreach(var node in Nodes)foreach(var neighbour in node.neighbours)if(node.valid&&neighbour.node.valid)Debug.DrawLine(node.Position,neighbour.node.Position,Color.white,1f);
 if(Nodes!=null)foreach(var node in Nodes){
 if(node.valid){
+     if(node==originNode)
+Gizmos.color=originColor;
+else if(node==targetNode)
+Gizmos.color=targetColor;
+else
+Gizmos.color=emptyColor;
 Gizmos.DrawCube(node.Position,NodeSize);
 if(DRAW_LEVEL<=-110)foreach(var neighbour in node.neighbours)if(neighbour.node.valid)Debug.DrawLine(node.Position,neighbour.node.Position,Color.white);
 }
