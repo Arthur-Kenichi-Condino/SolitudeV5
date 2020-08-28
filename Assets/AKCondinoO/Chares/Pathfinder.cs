@@ -210,9 +210,10 @@ int idx;
     //Debug.LogWarning(nodeIdx);
     if(gcoord.x+AStarDistance.x>0&&gcoord.y+AStarDistance.y>0){
 Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit,gcoord.x-1),Nodes[idx]));
-        if(gcoordverhit>0){
-//Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit,gcoord.x-1),Nodes[idx]));
-        }
+        if(gcoordverhit>0)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit-1,gcoord.x-1),Nodes[idx]));
+        if(gcoordverhit<AStarVerticalHits-1)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit+1,gcoord.x-1),Nodes[idx]));
     }
 
 
