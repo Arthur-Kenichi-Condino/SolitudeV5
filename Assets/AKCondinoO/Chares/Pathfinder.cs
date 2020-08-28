@@ -18,6 +18,7 @@ waitUntil4=new WaitUntil(()=>backgroundDataSet4.WaitOne(0));
 [NonSerialized]Coroutine cr;[NonSerialized]Task task;[NonSerialized]readonly AutoResetEvent foregroundDataSet1=new AutoResetEvent(false);[NonSerialized]readonly ManualResetEvent backgroundDataSet1=new ManualResetEvent(true);[NonSerialized]readonly AutoResetEvent foregroundDataSet2=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet2=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent foregroundDataSet3=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet3=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent foregroundDataSet4=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet4=new AutoResetEvent(false);
 protected override void OnEnable(){
                    base.OnEnable();
+noCharLayer=~(1<<LayerMask.NameToLayer("Char"));
 gridResolution=new Vector2Int(AStarDistance.x*2+1,AStarDistance.y*2+1);
 Nodes=new Node[gridResolution.x*gridResolution.y*AStarVerticalHits];for(int i=0;i<Nodes.Length;i++)Nodes[i]=new Node();
 if(LOG&&LOG_LEVEL<=2)Debug.Log("gridResolution:"+gridResolution+";Nodes:"+Nodes.Length);
@@ -284,7 +285,7 @@ fromHeight=disableCommandHeight;
 }else{
 fromHeight=gridStartHeight;
 }
-Vector2 gridpos=gcoord;gridpos.x*=NodeSize.x;gridpos.y*=NodeSize.z;gridpos.x+=startPos.x;gridpos.y+=startPos.z;var cmd=new RaycastCommand(new Vector3(gridpos.x,fromHeight,gridpos.y),Vector3.down,1000,-5);ToSetGridVerRaycasts.AddNoResize(cmd);
+Vector2 gridpos=gcoord;gridpos.x*=NodeSize.x;gridpos.y*=NodeSize.z;gridpos.x+=startPos.x;gridpos.y+=startPos.z;var cmd=new RaycastCommand(new Vector3(gridpos.x,fromHeight,gridpos.y),Vector3.down,1000,noCharLayer);ToSetGridVerRaycasts.AddNoResize(cmd);
 if(vHits==0)ToSetGridVerHits[j]=ToSetGridVerHitsResults[j];
 if(LOG&&LOG_LEVEL<=-100)Debug.Log(i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x)+": "+ToSetGridVerRaycasts[i/AStarVerticalHits].from);
 
@@ -366,7 +367,7 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3");
             backgroundDataSet4.Set();foregroundDataSet4.WaitOne();if(Stop)goto _Stop;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 4");
 backgroundDataSet1.Set();}
-int GetNodeIndex(int cz,int vy,int cx){return (cx+AStarDistance.x)*gridResolution.y*AStarVerticalHits+(cz+AStarDistance.y)*AStarVerticalHits+vy;}
+int GetNodeIndex(int cz,int vy,int cx){return (cx+AStarDistance.x)*gridResolution.y*AStarVerticalHits+(cz+AStarDistance.y)*AStarVerticalHits+vy;}Node GetNodeAt(Vector3 position){Node result=null;float minDis=-1,dis;foreach(var node in Nodes){dis=Vector3.Distance(position,node.Position);if(minDis==-1||dis<minDis){result=node;minDis=dis;}}return result;}
         _Stop:{
         }
 if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
@@ -395,6 +396,7 @@ Gizmos.color=oldcolor;
                    base.OnDrawGizmos();
 }
 #endif
+[NonSerialized]int noCharLayer;
 [Serializable]public class Node:IHeapItem<Node>{
 public bool valid{get;set;}public int Idx{get;set;}public readonly List<(int idx,Node node)>neighbours=new List<(int,Node)>();
 public int HeapIndex{get;set;}

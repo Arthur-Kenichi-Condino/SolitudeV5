@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6855673258895166065}
   - component: {fileID: 4550411354643971414}
   - component: {fileID: 7591882664729756311}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CharControl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LOG: 1
   LOG_LEVEL: 1
-  DRAW_LEVEL: 1
+  DRAW_LEVEL: -110
   Lerp: 1
   MoveLerpSpeed: 0.125
   InputMoveAcceleration: {x: 0, y: 0, z: 0}
