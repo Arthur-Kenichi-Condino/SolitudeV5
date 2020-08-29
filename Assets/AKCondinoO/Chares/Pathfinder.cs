@@ -12,10 +12,16 @@ public class Pathfinder:SimActor{
 protected override void Awake(){
                    base.Awake();
 waitUntil2=new WaitUntil(()=>backgroundDataSet2.WaitOne(0));
-waitUntil3=new WaitUntil(()=>backgroundDataSet3.WaitOne(0));
+waitUntil3a=new WaitUntil(()=>backgroundDataSet3a.WaitOne(0));
+waitUntil3b=new WaitUntil(()=>backgroundDataSet3b.WaitOne(0));
+waitUntil3c=new WaitUntil(()=>backgroundDataSet3c.WaitOne(0));
 waitUntil4=new WaitUntil(()=>backgroundDataSet4.WaitOne(0));
 }
-[NonSerialized]Coroutine cr;[NonSerialized]Task task;[NonSerialized]readonly AutoResetEvent foregroundDataSet1=new AutoResetEvent(false);[NonSerialized]readonly ManualResetEvent backgroundDataSet1=new ManualResetEvent(true);[NonSerialized]readonly AutoResetEvent foregroundDataSet2=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet2=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent foregroundDataSet3=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet3=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent foregroundDataSet4=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet4=new AutoResetEvent(false);
+[NonSerialized]Coroutine cr;[NonSerialized]Task task;[NonSerialized]readonly AutoResetEvent foregroundDataSet1=new AutoResetEvent(false);[NonSerialized]readonly ManualResetEvent backgroundDataSet1=new ManualResetEvent(true);[NonSerialized]readonly AutoResetEvent foregroundDataSet2=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet2=new AutoResetEvent(false);
+[NonSerialized]readonly AutoResetEvent foregroundDataSet3a=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet3a=new AutoResetEvent(false);
+[NonSerialized]readonly AutoResetEvent foregroundDataSet3b=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet3b=new AutoResetEvent(false);
+[NonSerialized]readonly AutoResetEvent foregroundDataSet3c=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet3c=new AutoResetEvent(false);
+[NonSerialized]readonly AutoResetEvent foregroundDataSet4=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet4=new AutoResetEvent(false);
 protected override void OnEnable(){
                    base.OnEnable();
 noCharLayer=~(1<<LayerMask.NameToLayer("Char"));
@@ -28,7 +34,11 @@ Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,ToSetGridVer
 }
 bool Stop{
     get{bool tmp;lock(Stop_Syn){tmp=Stop_v;      }return tmp;}
-    set{         lock(Stop_Syn){    Stop_v=value;}if(value){foregroundDataSet1.Set();foregroundDataSet2.Set();foregroundDataSet3.Set();foregroundDataSet4.Set();}}
+    set{         lock(Stop_Syn){    Stop_v=value;}if(value){foregroundDataSet1.Set();foregroundDataSet2.Set();
+foregroundDataSet3a.Set();
+foregroundDataSet3b.Set();
+foregroundDataSet3c.Set();
+foregroundDataSet4.Set();}}
 }[NonSerialized]readonly object Stop_Syn=new object();[NonSerialized]bool Stop_v;
 protected override void OnDisable(){
 StopCoroutine(cr);
@@ -41,7 +51,9 @@ protected override void OnDestroy(){if(Stop){
 if(LOG&&LOG_LEVEL<=2)Debug.Log("dispose");
 backgroundDataSet1.Dispose();foregroundDataSet1.Dispose();
 backgroundDataSet2.Dispose();foregroundDataSet2.Dispose();
-backgroundDataSet3.Dispose();foregroundDataSet3.Dispose();
+backgroundDataSet3a.Dispose();foregroundDataSet3a.Dispose();
+backgroundDataSet3b.Dispose();foregroundDataSet3b.Dispose();
+backgroundDataSet3c.Dispose();foregroundDataSet3c.Dispose();
 backgroundDataSet4.Dispose();foregroundDataSet4.Dispose();
 }
                    base.OnDestroy();
@@ -76,7 +88,9 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("dequeue");
                    base.Update();
 }
 [NonSerialized]WaitUntil waitUntil2;
-[NonSerialized]WaitUntil waitUntil3;
+[NonSerialized]WaitUntil waitUntil3a;
+[NonSerialized]WaitUntil waitUntil3b;
+[NonSerialized]WaitUntil waitUntil3c;
 [NonSerialized]WaitUntil waitUntil4;
 IEnumerator CRDoRaycasts(){
 if(LOG&&LOG_LEVEL<=2)Debug.Log("begin");
@@ -85,7 +99,7 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("ToSetGridVerHits.Count before phase id '2':"+ToS
 int vHits=0;
 do{
 yield return waitUntil2;
-if(LOG&&LOG_LEVEL<=0)Debug.Log("current vertical hit test:"+vHits);
+if(LOG&&LOG_LEVEL<=1)Debug.Log("current vertical hit test:"+vHits);
 if(DRAW_LEVEL<=-100)foreach(var raycast in ToSetGridVerRaycasts){Debug.DrawRay(raycast.from,raycast.direction*raycast.distance,Color.white,1f);}
 handle2=RaycastCommand.ScheduleBatch(ToSetGridVerRaycasts,ToSetGridVerHitsResultsBuffer,1,default(JobHandle));//  Schedule the batch of raycasts
 while(!handle2.IsCompleted)yield return null;handle2.Complete();//  Wait for the batch processing job to complete
@@ -98,13 +112,27 @@ ToSetGridVerHits[j][vHits]=default(RaycastHit);}
 ToSetGridVerRaycasts.Clear();
 foregroundDataSet2.Set();
 }while(++vHits<AStarVerticalHits);    
-yield return waitUntil3;
-if(LOG&&LOG_LEVEL<=2)Debug.Log("do raycasts 3;ToSetGridVerHits.Count after phase id '2' should be the same as before:"+ToSetGridVerHits.Count);
+yield return waitUntil3a;
+if(LOG&&LOG_LEVEL<=2)Debug.Log("do raycasts 3a;ToSetGridVerHits.Count after phase id '2' when different from 0 should then stay constant:"+ToSetGridVerHits.Count);
 
 
 
 
-foregroundDataSet3.Set();
+foregroundDataSet3a.Set();
+yield return waitUntil3b;
+if(LOG&&LOG_LEVEL<=2)Debug.Log("do raycasts 3b");
+
+
+
+
+foregroundDataSet3b.Set();
+yield return waitUntil3c;
+if(LOG&&LOG_LEVEL<=2)Debug.Log("do raycasts 3c");
+
+
+
+
+foregroundDataSet3c.Set();
 yield return waitUntil4;
 if(LOG&&LOG_LEVEL<=2)Debug.Log("do raycasts 4");
 
@@ -210,7 +238,7 @@ ToSetGridVerHits.Clear();var gridStartHeight=startPos.y+(AStarVerticalHits/2f)*N
 if(LOG&&LOG_LEVEL<=1)Debug.Log("disableCommandHeight value:"+disableCommandHeight);
 int vHits=0;
 do{
-if(LOG&&LOG_LEVEL<=0)Debug.Log("current vertical hit test:"+vHits);
+if(LOG&&LOG_LEVEL<=1)Debug.Log("current vertical hit test:"+vHits);
 i=0;j=0;float fromHeight;
 for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
 for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
@@ -245,8 +273,12 @@ targetNode=GetNodeAt(target.point+Vector3.up*NodeHalfSize.y);
 
 
 
-            backgroundDataSet3.Set();foregroundDataSet3.WaitOne();if(Stop)goto _Stop;
-if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3");
+            backgroundDataSet3a.Set();foregroundDataSet3a.WaitOne();if(Stop)goto _Stop;
+if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3a");
+            backgroundDataSet3b.Set();foregroundDataSet3b.WaitOne();if(Stop)goto _Stop;
+if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3b");
+            backgroundDataSet3c.Set();foregroundDataSet3c.WaitOne();if(Stop)goto _Stop;
+if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3c");
 
 
 
