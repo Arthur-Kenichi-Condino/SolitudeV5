@@ -208,12 +208,51 @@ Nodes[nodeIdx].neighbours.Clear();
 
 int idx;
     //Debug.LogWarning(nodeIdx);
-    if(gcoord.x+AStarDistance.x>0&&gcoord.y+AStarDistance.y>0){
+    if(gcoordverhit>0)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y,gcoordverhit-1,gcoord.x),Nodes[idx]));
+    if(gcoordverhit<AStarVerticalHits-1)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y,gcoordverhit+1,gcoord.x),Nodes[idx]));
+    if(gcoord.x>-AStarDistance.x){
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y,gcoordverhit,gcoord.x-1),Nodes[idx]));
+        if(gcoordverhit>0)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y,gcoordverhit-1,gcoord.x-1),Nodes[idx]));
+        if(gcoordverhit<AStarVerticalHits-1)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y,gcoordverhit+1,gcoord.x-1),Nodes[idx]));
+    }
+    if(gcoord.y>-AStarDistance.y){
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit,gcoord.x),Nodes[idx]));
+        if(gcoordverhit>0)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit-1,gcoord.x),Nodes[idx]));
+        if(gcoordverhit<AStarVerticalHits-1)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit+1,gcoord.x),Nodes[idx]));
+    }
+    if(gcoord.x>-AStarDistance.x&&gcoord.y>-AStarDistance.y){
 Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit,gcoord.x-1),Nodes[idx]));
         if(gcoordverhit>0)
 Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit-1,gcoord.x-1),Nodes[idx]));
         if(gcoordverhit<AStarVerticalHits-1)
 Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit+1,gcoord.x-1),Nodes[idx]));
+    }
+    if(gcoord.x<AStarDistance.x){
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y,gcoordverhit,gcoord.x+1),Nodes[idx]));
+        if(gcoordverhit>0)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y,gcoordverhit-1,gcoord.x+1),Nodes[idx]));
+        if(gcoordverhit<AStarVerticalHits-1)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y,gcoordverhit+1,gcoord.x+1),Nodes[idx]));
+    }
+    if(gcoord.y<AStarDistance.y){
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y+1,gcoordverhit,gcoord.x),Nodes[idx]));
+        if(gcoordverhit>0)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y+1,gcoordverhit-1,gcoord.x),Nodes[idx]));
+        if(gcoordverhit<AStarVerticalHits-1)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y+1,gcoordverhit+1,gcoord.x),Nodes[idx]));
+    }
+    if(gcoord.x<AStarDistance.x&&gcoord.y<AStarDistance.y){
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y+1,gcoordverhit,gcoord.x+1),Nodes[idx]));
+        if(gcoordverhit>0)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y+1,gcoordverhit-1,gcoord.x+1),Nodes[idx]));
+        if(gcoordverhit<AStarVerticalHits-1)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y+1,gcoordverhit+1,gcoord.x+1),Nodes[idx]));
     }
 
 
