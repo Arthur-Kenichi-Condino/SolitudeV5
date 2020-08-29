@@ -274,6 +274,9 @@ Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit+1,gcoord
 
 
 i+=AStarVerticalHits;j++;}}
+for(int n=0;n<Nodes.Length;n++){var node=Nodes[n];for(int v=0;v<node.neighbours.Count;v++){var neighbour=node.neighbours[v].node;
+int indexOfMe=-1;for(int vv=0;vv<neighbour.neighbours.Count;vv++){if(neighbour.neighbours[vv].node==node)indexOfMe=vv;}node.indexOfMe.Add(indexOfMe);
+}}
         while(!Stop){foregroundDataSet1.WaitOne();if(Stop)goto _Stop;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("begin pathfind");
             NodeHalfSize=boundsExtents;
@@ -422,7 +425,7 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3");
             backgroundDataSet4.Set();foregroundDataSet4.WaitOne();if(Stop)goto _Stop;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 4");
 backgroundDataSet1.Set();}
-int GetNodeIndex(int cz,int vy,int cx){return (cx+AStarDistance.x)*gridResolution.y*AStarVerticalHits+(cz+AStarDistance.y)*AStarVerticalHits+vy;}Node GetNodeAt(Vector3 position){Node result=null;float minDis=-1,dis;foreach(var node in Nodes){dis=Vector3.Distance(position,node.Position);if(minDis==-1||dis<minDis){result=node;minDis=dis;}}return result;}
+int GetNodeIndex(int cz,int vy,int cx){return (cx+AStarDistance.x)*gridResolution.y*AStarVerticalHits+(cz+AStarDistance.y)*AStarVerticalHits+vy;}Node GetNodeAt(Vector3 position){Node result=null;float minDis=-1,dis;for(int n=0;n<Nodes.Length;n++){var node=Nodes[n];dis=Vector3.Distance(position,node.Position);if(minDis==-1||dis<minDis){result=node;minDis=dis;}}return result;}
         _Stop:{
         }
 if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
@@ -461,7 +464,7 @@ Gizmos.color=oldcolor;
 #endif
 [NonSerialized]int noCharLayer;
 [Serializable]public class Node:IHeapItem<Node>{
-public bool valid{get;set;}public int Idx{get;set;}public readonly List<(int idx,Node node)>neighbours=new List<(int,Node)>();
+public bool valid{get;set;}public int Idx{get;set;}public readonly List<(int idx,Node node)>neighbours=new List<(int,Node)>();public readonly List<int>indexOfMe=new List<int>();
 public int HeapIndex{get;set;}
 public float F{get;private set;}//  heuristics
 public float G{get{return g;}set{g=value;F=g+h;}}float g;//  node dis to start
