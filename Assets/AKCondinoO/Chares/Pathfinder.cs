@@ -46,16 +46,10 @@ backgroundDataSet4.Dispose();foregroundDataSet4.Dispose();
 }
                    base.OnDestroy();
 }
-
-
 public LinkedListNode<RaycastHit>GoTo(Ray tgtDir,float maxDis=1000){
 if(Physics.Raycast(tgtDir,out RaycastHit hit,maxDis)){
-
-
-    Debug.LogWarning(hit.point);
+if(LOG&&LOG_LEVEL<=2)Debug.Log("GoTo:"+hit.point);
 return GoToQueue.AddLast(hit);
-
-
 }
 return null;}    
 [NonSerialized]readonly LinkedList<RaycastHit>GoToQueue=new LinkedList<RaycastHit>();
@@ -79,10 +73,6 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("dequeue");
             backgroundDataSet1.Reset();foregroundDataSet1.Set();
         }
     }
-
-
-
-
                    base.Update();
 }
 [NonSerialized]WaitUntil waitUntil2;
@@ -91,93 +81,38 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("dequeue");
 IEnumerator CRDoRaycasts(){
 if(LOG&&LOG_LEVEL<=2)Debug.Log("begin");
 _loop:{}
-
-    
+if(LOG&&LOG_LEVEL<=2)Debug.Log("ToSetGridVerHits.Count before phase id '2':"+ToSetGridVerHits.Count);
 int vHits=0;
 do{
 yield return waitUntil2;
-    Debug.LogWarning(vHits);
-Debug.LogWarning("ToSetGridVerHits.Count:"+ToSetGridVerHits.Count);
-    Debug.LogWarning(default(RaycastHit).normal);
-
-
+if(LOG&&LOG_LEVEL<=0)Debug.Log("current vertical hit test:"+vHits);
 if(DRAW_LEVEL<=-100)foreach(var raycast in ToSetGridVerRaycasts){Debug.DrawRay(raycast.from,raycast.direction*raycast.distance,Color.white,1f);}
 handle2=RaycastCommand.ScheduleBatch(ToSetGridVerRaycasts,ToSetGridVerHitsResultsBuffer,1,default(JobHandle));//  Schedule the batch of raycasts
 while(!handle2.IsCompleted)yield return null;handle2.Complete();//  Wait for the batch processing job to complete
-
-
 for(int i=0,j=0;j<ToSetGridVerRaycasts.Length;i+=AStarVerticalHits,j++){var raycast=ToSetGridVerRaycasts[j];var result=ToSetGridVerHitsResultsBuffer[j];
 if(DRAW_LEVEL<=-100)Debug.DrawRay(result.point,result.normal,Color.green,1f);
 if(result.collider!=null){
 ToSetGridVerHits[j][vHits]=result;}else{ 
 ToSetGridVerHits[j][vHits]=default(RaycastHit);}
 }
-
-
 ToSetGridVerRaycasts.Clear();
 foregroundDataSet2.Set();
-}while(++vHits<AStarVerticalHits);
-
-    
+}while(++vHits<AStarVerticalHits);    
 yield return waitUntil3;
-if(LOG&&LOG_LEVEL<=1)Debug.Log("do raycasts 3");
-//if(DRAW_LEVEL<=-100)foreach(var raycast in ToSetGridVerRaycasts){Debug.DrawRay(raycast.from,raycast.direction*raycast.distance,Color.white,1f);}
-//handle2=RaycastCommand.ScheduleBatch(ToSetGridVerRaycasts,ToSetGridVerHitsResultsBuffer,1,default(JobHandle));//  Schedule the batch of raycasts
-//while(!handle2.IsCompleted)yield return null;handle2.Complete();//  Wait for the batch processing job to complete
+if(LOG&&LOG_LEVEL<=2)Debug.Log("do raycasts 3;ToSetGridVerHits.Count after phase id '2' should be the same as before:"+ToSetGridVerHits.Count);
 
-
-
-
-////ToSetGridVerHits.Clear();
-//Debug.LogWarning("ToSetGridVerHits.Count:"+ToSetGridVerHits.Count);
-//RaycastHit[]hits=new RaycastHit[AStarVerticalHits];
-
-
-    //foreach(var result in ToSetGridVerHitsResultsBuffer){
-    //Debug.DrawRay(result.point,result.normal,Color.green,5f);
-    //}
-
-
-//for(int i=0,j=0;j<ToSetGridVerRaycasts.Length;i+=AStarVerticalHits,j++){var raycast=ToSetGridVerRaycasts[j];
-
-//for(int ridx=0;ridx<AStarVerticalHits;ridx++){var result=ToSetGridVerHitsResultsBuffer[ridx+i];
-//if(DRAW_LEVEL<=-100)Debug.DrawRay(result.point,result.normal,Color.green,1f);
-//ToSetGridVerHits[raycast][ridx]=result;
-
-
-//    Debug.LogWarning(result.collider==null);
-
-
-//}
-
-//}
-
-
-//for(int i=0;i<ToSetGridVerRaycasts.Length;i++){var raycast=ToSetGridVerRaycasts[i];
-//for(int ridx=0;ridx<AStarVerticalHits;ridx++){ToSetGridVerHits[raycast][ridx]=ToSetGridVerHitsResultsBuffer[i+ridx];
-
-
-    
-//    Debug.DrawRay(ToSetGridVerHits[raycast][ridx].point,ToSetGridVerHits[raycast][ridx].normal,Color.green,5f);
-////ToSetGridVerHits[raycast]=hits;
-
-
-//}
-//}
-//Debug.LogWarning("ToSetGridVerHits.Count:"+ToSetGridVerHits.Count);
-    
 
 
 
 foregroundDataSet3.Set();
 yield return waitUntil4;
-if(LOG&&LOG_LEVEL<=1)Debug.Log("do raycasts 4");
+if(LOG&&LOG_LEVEL<=2)Debug.Log("do raycasts 4");
 
 
 
 
 foregroundDataSet4.Set();
-if(LOG&&LOG_LEVEL<=1)Debug.Log("cr loop end");
+if(LOG&&LOG_LEVEL<=2)Debug.Log("cr loop end");
 goto _loop;
 }
 
@@ -196,18 +131,10 @@ int i=0,j=0;
 for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
 for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
 if(j>=ToSetGridVerHitsResults.Count)ToSetGridVerHitsResults.Add(new RaycastHit[AStarVerticalHits]);
-
-
-    //Debug.LogWarning(i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x));
-
-
 for(int gcoordverhit=0;gcoordverhit<AStarVerticalHits;gcoordverhit++){int nodeIdx=i+gcoordverhit;
 Nodes[nodeIdx].Idx=nodeIdx;
 Nodes[nodeIdx].neighbours.Clear();
-
-
 int idx;
-    //Debug.LogWarning(nodeIdx);
     if(gcoordverhit>0)
 Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y,gcoordverhit-1,gcoord.x),Nodes[idx]));
     if(gcoordverhit<AStarVerticalHits-1)
@@ -268,73 +195,27 @@ Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit-1,gcoord
         if(gcoordverhit<AStarVerticalHits-1)
 Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit+1,gcoord.x+1),Nodes[idx]));
     }
-
-
 }
-
-
 i+=AStarVerticalHits;j++;}}
 for(int n=0;n<Nodes.Length;n++){var node=Nodes[n];for(int v=0;v<node.neighbours.Count;v++){var neighbour=node.neighbours[v].node;
 int indexOfMe=-1;for(int vv=0;vv<neighbour.neighbours.Count;vv++){if(neighbour.neighbours[vv].node==node)indexOfMe=vv;}node.indexOfMe.Add(indexOfMe);
 }}
         while(!Stop){foregroundDataSet1.WaitOne();if(Stop)goto _Stop;
-if(LOG&&LOG_LEVEL<=1)Debug.Log("begin pathfind");
+if(LOG&&LOG_LEVEL<=2)Debug.Log("begin pathfind");
             NodeHalfSize=boundsExtents;
             NodeHalfSize.x+=.1f;
             NodeHalfSize.z+=.1f;
             NodeSize=NodeHalfSize*2;
-
-
-///*Array.Clear(Nodes,0,Nodes.Length);*/ToSetGridVerHits.Clear();//if(results.Count<)
-//i=0;j=0;float fromHeight=startPos.y+(AStarVerticalHits/2f)*NodeSize.y;
-//for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
-//for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
-//Vector2 gridpos=gcoord;gridpos.x*=NodeSize.x;gridpos.y*=NodeSize.z;gridpos.x+=startPos.x;gridpos.y+=startPos.z;
-//var cmd=new RaycastCommand(new Vector3(gridpos.x,fromHeight,gridpos.y),Vector3.down,1000,-5,AStarVerticalHits);ToSetGridVerRaycasts.AddNoResize(cmd);
-//if(j>=toSetGridVerHitsResults.Count)toSetGridVerHitsResults.Add(new RaycastHit[AStarVerticalHits]);
-//ToSetGridVerHits[cmd]=toSetGridVerHitsResults[j];
-//if(LOG&&LOG_LEVEL<=-100)Debug.Log(i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x)+": "+ToSetGridVerRaycasts[i/AStarVerticalHits].from);
-
-
-//i+=AStarVerticalHits;j++;}}
-//Array.Clear(Nodes,0,Nodes.Length);bool disChanged=false;if(disChanged=AStarDis_Pre!=AStarDistance){ToSetGridVerHits.Clear();AStarDis_Pre=AStarDistance;}
-//
-//for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
-//for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
-//Vector2 gridpos=gcoord;gridpos.x*=NodeSize.x;gridpos.y*=NodeSize.z;
-//var cmd=new RaycastCommand(new Vector3(gridpos.x,fromHeight,gridpos.y),Vector3.down,1000,-5,AStarVerticalHits);ToSetGridVerRaycasts.AddNoResize(cmd);
-//if(disChanged)ToSetGridVerHits.Add(cmd,new RaycastHit[AStarVerticalHits])else;
-    
-
-//    //Debug.LogWarning(i+" "+gcoord);
-//if(LOG&&LOG_LEVEL<=-100)Debug.Log(i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x)+": "+ToSetGridVerRaycasts[i/AStarVerticalHits].from);
-
-
-//i+=AStarVerticalHits;}}
-
-
-
-            
-//ToSetGridVerHits.Clear();
-//int i=0;RaycastHit[]hits=new RaycastHit[AStarVerticalHits];
-//foreach(var raycast in ToSetGridVerRaycasts){
-//for(int ridx=0;ridx<AStarVerticalHits;ridx++)hits[ridx]=ToSetGridVerHitsResultsBuffer[i+ridx];
-//ToSetGridVerHits.Add(raycast,hits);
-//i++;}
-
-
 ToSetGridVerHits.Clear();var gridStartHeight=startPos.y+(AStarVerticalHits/2f)*NodeSize.y;var disableCommandHeight=-Mathf.Ceil(Chunk.Height/2f)-1;
+if(LOG&&LOG_LEVEL<=1)Debug.Log("disableCommandHeight value:"+disableCommandHeight);
 int vHits=0;
 do{
-    Debug.LogWarning(vHits+" disableCommandHeight:"+disableCommandHeight);
-
-
+if(LOG&&LOG_LEVEL<=0)Debug.Log("current vertical hit test:"+vHits);
 i=0;j=0;float fromHeight;
 for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
 for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
 if(vHits>0){
 if(ToSetGridVerHits[j][vHits-1].normal!=Vector3.zero){
-    Debug.LogWarning("hit something");
 fromHeight=ToSetGridVerHits[j][vHits-1].point.y-.1f;
 }else{
 fromHeight=disableCommandHeight;
@@ -345,16 +226,9 @@ fromHeight=gridStartHeight;
 Vector2 gridpos=gcoord;gridpos.x*=NodeSize.x;gridpos.y*=NodeSize.z;gridpos.x+=startPos.x;gridpos.y+=startPos.z;var cmd=new RaycastCommand(new Vector3(gridpos.x,fromHeight,gridpos.y),Vector3.down,1000,noCharLayer);ToSetGridVerRaycasts.AddNoResize(cmd);
 if(vHits==0)ToSetGridVerHits[j]=ToSetGridVerHitsResults[j];
 if(LOG&&LOG_LEVEL<=-100)Debug.Log(i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x)+": "+ToSetGridVerRaycasts[i/AStarVerticalHits].from);
-
-
-
 i+=AStarVerticalHits;j++;}}
-
-
             backgroundDataSet2.Set();foregroundDataSet2.WaitOne();if(Stop)goto _Stop;
 }while(++vHits<AStarVerticalHits);
-
-
 i=0;j=0;foreach(var result in ToSetGridVerHits){
 for(int ridx=0;ridx<AStarVerticalHits;ridx++){int nodeIdx=i+ridx;var hit=result.Value[ridx];
 if(hit.normal==Vector3.zero){
@@ -368,62 +242,21 @@ i+=AStarVerticalHits;j++;}
 originNode=GetNodeAt(startPos);
 targetNode=GetNodeAt(target.point+Vector3.up*NodeHalfSize.y);
 
+
+
+
             backgroundDataSet3.Set();foregroundDataSet3.WaitOne();if(Stop)goto _Stop;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3");
 
 
-//i=0;j=0;foreach(var result in ToSetGridVerHits){
-//if(LOG&&LOG_LEVEL<=-100)Debug.Log(i+": "+result.Key.from);
-
-
-//for(int ridx=0;ridx<AStarVerticalHits;ridx++){int nodeIdx=i+ridx;var hit=result.Value[ridx];
-//if(float.IsNaN(hit.normal.x)||float.IsNaN(hit.normal.y)||float.IsNaN(hit.normal.z)||hit.normal==Vector3.zero||hit.normal.magnitude>1.00001f||hit.normal.magnitude<0.99999f){
-//Nodes[nodeIdx].valid=false;
-//}else{
-//Nodes[nodeIdx].valid=true;
-//Nodes[nodeIdx].Position=hit.point;Nodes[nodeIdx].Normal=hit.normal.normalized;
-//}
-//}
-
-
-//i+=AStarVerticalHits;j++;}//for(i=0,j=0;j<ToSetGridVerHits.Count;i+=AStarVerticalHits,j++){
-
-
-//for(int ridx=0;ridx<AStarVerticalHits;ridx++){
-//}
-
-
-//}//foreach(var result in ToSetGridVerHits){
-
-//if(LOG&&LOG_LEVEL<=-100)Debug.Log(i+": "+result.Key.from);
-
-//RaycastHit[]hits=result.Value;for(int ridx=0;ridx<AStarVerticalHits;ridx++){var hit=hits[ridx];
-
-//    //Debug.LogWarning(hit.normal);
-//if(hit.normal==Vector3.zero)continue;if(float.IsNaN(hit.normal.x)||float.IsNaN(hit.normal.y)||float.IsNaN(hit.normal.z))continue;
-
-//    //Debug.LogWarning(hit.point);
-
-//    Nodes[i]=new Node(hit.point);
-
-//i++;}
-//i+=AStarVerticalHits;}
-//for(int rayidx=0;rayidx<ToSetGridVerRaycasts.Length;rayidx++){
-//for(int ridx=0;ridx<AStarVerticalHits;ridx++){
-//i++;}
-
-//    Debug.LogWarning(i+": "+ToSetGridVerRaycasts[i/AStarVerticalHits].from);
-
-//}
-//i=0;foreach(var result in ToSetGridVerHits){for(int ridx=0;ridx<AStarVerticalHits;ridx++){
-
-//    Debug.LogWarning(i);
-
-//i++;}}
 
 
             backgroundDataSet4.Set();foregroundDataSet4.WaitOne();if(Stop)goto _Stop;
 if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 4");
+
+
+
+
 backgroundDataSet1.Set();}
 int GetNodeIndex(int cz,int vy,int cx){return (cx+AStarDistance.x)*gridResolution.y*AStarVerticalHits+(cz+AStarDistance.y)*AStarVerticalHits+vy;}Node GetNodeAt(Vector3 position){Node result=null;float minDis=-1,dis;for(int n=0;n<Nodes.Length;n++){var node=Nodes[n];dis=Vector3.Distance(position,node.Position);if(minDis==-1||dis<minDis){result=node;minDis=dis;}}return result;}
         _Stop:{
@@ -431,10 +264,6 @@ int GetNodeIndex(int cz,int vy,int cx){return (cx+AStarDistance.x)*gridResolutio
 if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
     }
 }catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}}
-
-
-
-    
 #if UNITY_EDITOR
 protected override void OnDrawGizmos(){
     if(backgroundDataSet1.WaitOne(0)){
@@ -443,7 +272,6 @@ var oldcolor=Gizmos.color;
 var emptyColor=new Color(1,1,1,.25f);
 var originColor=new Color(0,0,1,.25f);
 var targetColor=new Color(0,0,1,.25f);
-//if(DRAW_LEVEL<=-110)foreach(var node in Nodes)foreach(var neighbour in node.neighbours)if(node.valid&&neighbour.node.valid)Debug.DrawLine(node.Position,neighbour.node.Position,Color.white,1f);
 if(Nodes!=null)foreach(var node in Nodes){
 if(node.valid){
      if(node==originNode)
