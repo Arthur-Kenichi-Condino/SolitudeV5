@@ -254,6 +254,20 @@ Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y+1,gcoordverhit-1,gcoord
         if(gcoordverhit<AStarVerticalHits-1)
 Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y+1,gcoordverhit+1,gcoord.x+1),Nodes[idx]));
     }
+    if(gcoord.x>-AStarDistance.x&&gcoord.y<AStarDistance.y){
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y+1,gcoordverhit,gcoord.x-1),Nodes[idx]));
+        if(gcoordverhit>0)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y+1,gcoordverhit-1,gcoord.x-1),Nodes[idx]));
+        if(gcoordverhit<AStarVerticalHits-1)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y+1,gcoordverhit+1,gcoord.x-1),Nodes[idx]));
+    }
+    if(gcoord.y>-AStarDistance.y&&gcoord.x<AStarDistance.x){
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit,gcoord.x+1),Nodes[idx]));
+        if(gcoordverhit>0)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit-1,gcoord.x+1),Nodes[idx]));
+        if(gcoordverhit<AStarVerticalHits-1)
+Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit+1,gcoord.x+1),Nodes[idx]));
+    }
 
 
 }
