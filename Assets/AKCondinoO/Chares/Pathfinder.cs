@@ -37,7 +37,7 @@ Nodes=new Node[gridResolution.x*gridResolution.y*AStarVerticalHits];for(int i=0;
 if(LOG&&LOG_LEVEL<=2)Debug.Log("gridResolution:"+gridResolution+";Nodes:"+Nodes.Length);
 cr=StartCoroutine(CRDoRaycasts());
 int raycasts=gridResolution.x*gridResolution.y;
-Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,ToSetGridVerRaycasts=new NativeList<RaycastCommand>(raycasts,Allocator.Persistent),ToSetGridVerHitsResultsBuffer=new NativeArray<RaycastHit>(raycasts,Allocator.Persistent,NativeArrayOptions.UninitializedMemory),},TaskCreationOptions.LongRunning);
+Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,ToSetGridVerRaycasts=new NativeList<RaycastCommand>(raycasts,Allocator.Persistent),ToSetGridVerHitsResultsBuffer=new NativeArray<RaycastHit>(raycasts,Allocator.Persistent,NativeArrayOptions.UninitializedMemory),commands3a=new NativeList<RaycastCommand>()},TaskCreationOptions.LongRunning);
 }
 bool Stop{
     get{bool tmp;lock(Stop_Syn){tmp=Stop_v;      }return tmp;}
@@ -50,8 +50,10 @@ foregroundDataSet4.Set();}}
 protected override void OnDisable(){
 StopCoroutine(cr);
 handle2.Complete();
+handle3a.Complete();
 Stop=true;try{task.Wait();}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}
 try{if(ToSetGridVerRaycasts.IsCreated)ToSetGridVerRaycasts.Dispose();}finally{}try{if(ToSetGridVerHitsResultsBuffer.IsCreated)ToSetGridVerHitsResultsBuffer.Dispose();}finally{}
+try{if(commands3a.IsCreated)commands3a.Dispose();}finally{}
                    base.OnDisable();
 }
 protected override void OnDestroy(){if(Stop){
@@ -102,6 +104,7 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("dequeue");
 IEnumerator CRDoRaycasts(){
 if(LOG&&LOG_LEVEL<=2)Debug.Log("begin");
 _loop:{}
+if(commands3a.IsCreated)commands3a.Clear();
 if(LOG&&LOG_LEVEL<=2)Debug.Log("ToSetGridVerHits.Count before phase id '2':"+ToSetGridVerHits.Count);
 int vHits=0;
 do{
@@ -294,6 +297,16 @@ var reachableState=neighbour.neighbourCanBeReached[indexOfMe];
 }
 originNode=GetNodeAt(startPos);
 targetNode=GetNodeAt(target.point+Vector3.up*NodeHalfSize.y);
+if(LOG&&LOG_LEVEL<=2)Debug.Log("nodesGrounded.Count:"+nodesGrounded.Count);
+Vector3 halfExtents3a=NodeHalfSize;
+        halfExtents3a.y=.25f;
+Quaternion orientation3a=Quaternion.identity;
+Vector3 direction3a=Vector3.up;
+float dis3a=NodeSize.y+.3f;
+for(int g=0;g<nodesGrounded.Count;g++){
+Vector3 center3a=nodesGrounded[g].floorHit.point;
+        center3a.y-=(.3f);
+}
 
 
 
