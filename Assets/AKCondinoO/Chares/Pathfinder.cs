@@ -267,12 +267,21 @@ i=0;j=0;foreach(var result in ToSetGridVerHits){
 for(int ridx=0;ridx<AStarVerticalHits;ridx++){int nodeIdx=i+ridx;var hit=result.Value[ridx];
 if(hit.normal==Vector3.zero){
 Nodes[nodeIdx].valid=false;
+TellNeighboursReachabilityOf(Nodes[nodeIdx],false);
 }else{
 Nodes[nodeIdx].valid=true;
 Nodes[nodeIdx].Position=hit.point+Vector3.up*NodeHalfSize.y;Nodes[nodeIdx].Normal=hit.normal.normalized;
+TellNeighboursReachabilityOf(Nodes[nodeIdx],true);
 }
 }
 i+=AStarVerticalHits;j++;}
+void TellNeighboursReachabilityOf(Node node,bool yes){
+for(int n=0;n<node.neighbours.Count;n++){var neighbour=node.neighbours[n].node;var indexOfMe=node.indexOfMe[n];
+var reachableState=neighbour.neighbourCanBeReached[indexOfMe];
+    reachableState.yes=yes;
+    neighbour.neighbourCanBeReached[indexOfMe]=reachableState;
+}
+}
 originNode=GetNodeAt(startPos);
 targetNode=GetNodeAt(target.point+Vector3.up*NodeHalfSize.y);
 
