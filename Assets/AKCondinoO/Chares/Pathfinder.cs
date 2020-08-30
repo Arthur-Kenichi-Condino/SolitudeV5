@@ -25,6 +25,12 @@ waitUntil4=new WaitUntil(()=>backgroundDataSet4.WaitOne(0));
 [NonSerialized]readonly AutoResetEvent foregroundDataSet4=new AutoResetEvent(false);[NonSerialized]readonly AutoResetEvent backgroundDataSet4=new AutoResetEvent(false);
 protected override void OnEnable(){
                    base.OnEnable();
+backgroundDataSet1.Set();foregroundDataSet1.Reset();
+backgroundDataSet2.Reset();foregroundDataSet2.Reset();
+backgroundDataSet3a.Reset();foregroundDataSet3a.Reset();
+backgroundDataSet3b.Reset();foregroundDataSet3b.Reset();
+backgroundDataSet3c.Reset();foregroundDataSet3c.Reset();
+backgroundDataSet4.Reset();foregroundDataSet4.Reset();
 noCharLayer=~(1<<LayerMask.NameToLayer("Char"));
 gridResolution=new Vector2Int(AStarDistance.x*2+1,AStarDistance.y*2+1);
 Nodes=new Node[gridResolution.x*gridResolution.y*AStarVerticalHits];for(int i=0;i<Nodes.Length;i++)Nodes[i]=new Node();

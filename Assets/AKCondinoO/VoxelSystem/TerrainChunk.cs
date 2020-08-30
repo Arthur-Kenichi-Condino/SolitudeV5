@@ -14,6 +14,7 @@ using UnityEngine.Rendering;
 namespace AKCondinoO.Voxels{public class TerrainChunk:Chunk{
 [NonSerialized]Task task;[NonSerialized]readonly AutoResetEvent foregroundDataSet=new AutoResetEvent(false);[NonSerialized]public readonly ManualResetEvent backgroundDataSet=new ManualResetEvent(true);
 protected override void OnEnable(){
+backgroundDataSet.Set();foregroundDataSet.Reset();
     if(mesh==null){
         mesh=new Mesh(){bounds=new Bounds(Vector3.zero,new Vector3(Width,Height,Depth))};gameObject.GetComponent<MeshFilter>().sharedMesh=mesh;renderer=gameObject.GetComponent<MeshRenderer>();collider=gameObject.GetComponent<MeshCollider>();collider.sharedMesh=mesh;
     }
