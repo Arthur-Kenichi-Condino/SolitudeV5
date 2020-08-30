@@ -149,6 +149,7 @@ goto _loop;
 
     
 [NonSerialized]JobHandle handle2;[NonSerialized]NativeList<RaycastCommand>ToSetGridVerRaycasts;[NonSerialized]NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer;[NonSerialized]readonly Dictionary<int,RaycastHit[]>ToSetGridVerHits=new Dictionary<int,RaycastHit[]>();
+[NonSerialized]JobHandle handle3a;[NonSerialized]NativeList<RaycastCommand>commands3a;
 [NonSerialized]Vector3 NodeHalfSize;
 [NonSerialized]Vector3 NodeSize;
 [NonSerialized]RaycastHit target;[NonSerialized]Vector3 startPos;[NonSerialized]Vector3 boundsExtents;
@@ -161,7 +162,7 @@ for(gcoord.y=-AStarDistance.y                                          ;gcoord.y
 if(j>=ToSetGridVerHitsResults.Count)ToSetGridVerHitsResults.Add(new RaycastHit[AStarVerticalHits]);
 for(int gcoordverhit=0;gcoordverhit<AStarVerticalHits;gcoordverhit++){int nodeIdx=i+gcoordverhit;
 Nodes[nodeIdx].Idx=nodeIdx;
-Nodes[nodeIdx].neighbours.Clear();
+Nodes[nodeIdx].neighbours.Clear();Nodes[nodeIdx].neighbourCanBeReached.Clear();
 int idx;
     if(gcoordverhit>0)
 Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y,gcoordverhit-1,gcoord.x),Nodes[idx]));
@@ -225,8 +226,8 @@ Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit+1,gcoord
     }
 }
 i+=AStarVerticalHits;j++;}}
-for(int n=0;n<Nodes.Length;n++){var node=Nodes[n];for(int v=0;v<node.neighbours.Count;v++){var neighbour=node.neighbours[v].node;
-int indexOfMe=-1;for(int vv=0;vv<neighbour.neighbours.Count;vv++){if(neighbour.neighbours[vv].node==node)indexOfMe=vv;}node.indexOfMe.Add(indexOfMe);
+for(int nodeIdx=0;nodeIdx<Nodes.Length;nodeIdx++){Nodes[nodeIdx].indexOfMe.Clear();var node=Nodes[nodeIdx];for(int n=0;n<node.neighbours.Count;n++){var neighbour=node.neighbours[n].node;
+int indexOfMe=-1;for(int nn=0;nn<neighbour.neighbours.Count;nn++){if(neighbour.neighbours[nn].node==node)indexOfMe=nn;}node.indexOfMe.Add(indexOfMe);
 }}
         while(!Stop){foregroundDataSet1.WaitOne();if(Stop)goto _Stop;
 if(LOG&&LOG_LEVEL<=2)Debug.Log("begin pathfind");
@@ -290,7 +291,7 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 4");
 
 
 backgroundDataSet1.Set();}
-int GetNodeIndex(int cz,int vy,int cx){return (cx+AStarDistance.x)*gridResolution.y*AStarVerticalHits+(cz+AStarDistance.y)*AStarVerticalHits+vy;}Node GetNodeAt(Vector3 position){Node result=null;float minDis=-1,dis;for(int n=0;n<Nodes.Length;n++){var node=Nodes[n];dis=Vector3.Distance(position,node.Position);if(minDis==-1||dis<minDis){result=node;minDis=dis;}}return result;}
+int GetNodeIndex(int cz,int vy,int cx){return (cx+AStarDistance.x)*gridResolution.y*AStarVerticalHits+(cz+AStarDistance.y)*AStarVerticalHits+vy;}Node GetNodeAt(Vector3 position){Node result=null;float minDis=-1,dis;for(int nodeIdx=0;nodeIdx<Nodes.Length;nodeIdx++){var node=Nodes[nodeIdx];dis=Vector3.Distance(position,node.Position);if(minDis==-1||dis<minDis){result=node;minDis=dis;}}return result;}
         _Stop:{
         }
 if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
@@ -324,7 +325,7 @@ Gizmos.color=oldcolor;
 #endif
 [NonSerialized]int noCharLayer;
 [Serializable]public class Node:IHeapItem<Node>{
-public bool valid{get;set;}public int Idx{get;set;}public readonly List<(int idx,Node node)>neighbours=new List<(int,Node)>();public readonly List<int>indexOfMe=new List<int>();
+public bool valid{get;set;}public int Idx{get;set;}public readonly List<(int idx,Node node)>neighbours=new List<(int,Node)>();public readonly List<int>indexOfMe=new List<int>();public readonly List<(bool yes,PreferredReachableMode mode)>neighbourCanBeReached=new List<(bool,PreferredReachableMode)>();
 public int HeapIndex{get;set;}
 public float F{get;private set;}//  heuristics
 public float G{get{return g;}set{g=value;F=g+h;}}float g;//  node dis to start
@@ -338,5 +339,12 @@ return -comparison;}
 public Vector3 Position{get;set;}public Vector3 Normal{get;set;}
 public override int GetHashCode(){return Position.GetHashCode();}public override bool Equals(object obj){if(ReferenceEquals(this,obj))return true;if(!(obj is Node node))return false;return(Position==node.Position);}
 public Node Parent;
+public enum PreferredReachableMode{
+jump,
+ramp,
+walk,
+fall,
+teleport,
+}
 }
 }
