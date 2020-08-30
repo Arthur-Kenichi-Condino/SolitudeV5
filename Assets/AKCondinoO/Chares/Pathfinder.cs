@@ -151,6 +151,7 @@ goto _loop;
     
 [NonSerialized]JobHandle handle2;[NonSerialized]NativeList<RaycastCommand>ToSetGridVerRaycasts;[NonSerialized]NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer;[NonSerialized]readonly Dictionary<int,RaycastHit[]>ToSetGridVerHits=new Dictionary<int,RaycastHit[]>();
 [NonSerialized]JobHandle handle3a;[NonSerialized]NativeList<RaycastCommand>commands3a;
+[NonSerialized]readonly List<(int idx,Node node,RaycastHit floorHit)>nodesGrounded=new List<(int,Node,RaycastHit)>();
 [NonSerialized]Vector3 NodeHalfSize;
 [NonSerialized]Vector3 NodeSize;
 [NonSerialized]RaycastHit target;[NonSerialized]Vector3 startPos;[NonSerialized]Vector3 boundsExtents;
@@ -263,6 +264,7 @@ if(LOG&&LOG_LEVEL<=-100)Debug.Log(i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x)+": "+
 i+=AStarVerticalHits;j++;}}
             backgroundDataSet2.Set();foregroundDataSet2.WaitOne();if(Stop)goto _Stop;
 }while(++vHits<AStarVerticalHits);
+nodesGrounded.Clear();
 i=0;j=0;foreach(var result in ToSetGridVerHits){
 for(int ridx=0;ridx<AStarVerticalHits;ridx++){int nodeIdx=i+ridx;var hit=result.Value[ridx];
 if(hit.normal==Vector3.zero){
@@ -272,10 +274,12 @@ TellNeighboursReachabilityOf(Nodes[nodeIdx],false);
 Nodes[nodeIdx].valid=true;
 Nodes[nodeIdx].Position=hit.point+Vector3.up*NodeHalfSize.y;Nodes[nodeIdx].Normal=hit.normal.normalized;
 TellNeighboursReachabilityOf(Nodes[nodeIdx],true);
+nodesGrounded.Add((nodeIdx,Nodes[nodeIdx],hit));
 }
 }
 i+=AStarVerticalHits;j++;}
 void TellNeighboursReachabilityOf(Node node,bool yes){
+if(LOG&&LOG_LEVEL<=0)Debug.Log("node.neighbours.Count:"+node.neighbours.Count+"=="+node.indexOfMe.Count+":node.indexOfMe.Count;node.neighbourCanBeReached.Count:"+node.neighbourCanBeReached.Count);
 for(int n=0;n<node.neighbours.Count;n++){var neighbour=node.neighbours[n].node;var indexOfMe=node.indexOfMe[n];
 var reachableState=neighbour.neighbourCanBeReached[indexOfMe];
     reachableState.yes=yes;
