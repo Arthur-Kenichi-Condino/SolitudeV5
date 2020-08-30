@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Unity.Collections;
@@ -162,7 +163,7 @@ for(gcoord.y=-AStarDistance.y                                          ;gcoord.y
 if(j>=ToSetGridVerHitsResults.Count)ToSetGridVerHitsResults.Add(new RaycastHit[AStarVerticalHits]);
 for(int gcoordverhit=0;gcoordverhit<AStarVerticalHits;gcoordverhit++){int nodeIdx=i+gcoordverhit;
 Nodes[nodeIdx].Idx=nodeIdx;
-Nodes[nodeIdx].neighbours.Clear();Nodes[nodeIdx].neighbourCanBeReached.Clear();
+Nodes[nodeIdx].neighbours.Clear();
 int idx;
     if(gcoordverhit>0)
 Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y,gcoordverhit-1,gcoord.x),Nodes[idx]));
@@ -224,11 +225,15 @@ Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit-1,gcoord
         if(gcoordverhit<AStarVerticalHits-1)
 Nodes[nodeIdx].neighbours.Add((idx=GetNodeIndex(gcoord.y-1,gcoordverhit+1,gcoord.x+1),Nodes[idx]));
     }
+Nodes[nodeIdx].neighbourCanBeReached.Clear();Nodes[nodeIdx].neighbourCanBeReached.AddRange(Enumerable.Repeat((true,Node.PreferredReachableMode.walk),Nodes[nodeIdx].neighbours.Count));
 }
 i+=AStarVerticalHits;j++;}}
-for(int nodeIdx=0;nodeIdx<Nodes.Length;nodeIdx++){Nodes[nodeIdx].indexOfMe.Clear();var node=Nodes[nodeIdx];for(int n=0;n<node.neighbours.Count;n++){var neighbour=node.neighbours[n].node;
+for(int nodeIdx=0;nodeIdx<Nodes.Length;nodeIdx++){
+Nodes[nodeIdx].indexOfMe.Clear();var node=Nodes[nodeIdx];
+for(int n=0;n<node.neighbours.Count;n++){var neighbour=node.neighbours[n].node;
 int indexOfMe=-1;for(int nn=0;nn<neighbour.neighbours.Count;nn++){if(neighbour.neighbours[nn].node==node)indexOfMe=nn;}node.indexOfMe.Add(indexOfMe);
-}}
+}
+}
         while(!Stop){foregroundDataSet1.WaitOne();if(Stop)goto _Stop;
 if(LOG&&LOG_LEVEL<=2)Debug.Log("begin pathfind");
             NodeHalfSize=boundsExtents;
