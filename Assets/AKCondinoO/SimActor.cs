@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using UnityEngine;
 public class SimActor:SimObject{
 protected override void Awake(){
+                   base.Awake();
 tgtPos=tgtPos_Pre=transform.position;
 tgtRot=tgtRot_Pre=transform.eulerAngles;
-                   base.Awake();
 }
 protected override void Update(){
 ProcessMovementInput();
@@ -113,4 +113,9 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
     }
 }
 #endregion
+#if UNITY_EDITOR
+protected override void OnDrawGizmos(){
+                   base.OnDrawGizmos();
+}
+#endif
 }

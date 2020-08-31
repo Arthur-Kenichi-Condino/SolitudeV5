@@ -54,6 +54,8 @@ return;
 }
 [NonSerialized]Task task1,task2;[NonSerialized]readonly AutoResetEvent foregroundDataSet1=new AutoResetEvent(false);[NonSerialized]readonly ManualResetEvent foregroundDataSet2=new ManualResetEvent(true);[NonSerialized]readonly ManualResetEvent backgroundDataSet1=new ManualResetEvent(true);
 protected virtual void OnEnable(){
+backgroundDataSet1.Set();foregroundDataSet1.Reset();
+                         foregroundDataSet2.Set();
 Stop=false;task1=Task.Factory.StartNew(BG1,new object[]{LOG,LOG_LEVEL,new System.Random(),saveSubfolder},TaskCreationOptions.LongRunning);
            task2=Task.Factory.StartNew(BG2,new object[]{LOG,LOG_LEVEL,}                                 ,TaskCreationOptions.LongRunning);
 
@@ -318,7 +320,7 @@ return new Vector2Int((pos.x>0)?(pos.x-(int)pos.x==0.5f?Mathf.FloorToInt(pos.x):
 public static Vector2Int PosToRgn(Vector3 pos){Vector2Int coord=PosToCoord(pos);
 return new Vector2Int(coord.x*Width,coord.y*Depth);
 }
-public static int GetIdx(int cx,int cy){return cy+cx*(Width+1);}
+public static int GetIdx(int cx,int cy){return cy+cx*(Depth+1);}
 public const int Width=6250;
 public const int Depth=6250;
 
