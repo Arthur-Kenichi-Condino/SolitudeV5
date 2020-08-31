@@ -36,8 +36,9 @@ gridResolution=new Vector2Int(AStarDistance.x*2+1,AStarDistance.y*2+1);
 Nodes=new Node[gridResolution.x*gridResolution.y*AStarVerticalHits];for(int i=0;i<Nodes.Length;i++)Nodes[i]=new Node();
 if(LOG&&LOG_LEVEL<=2)Debug.Log("gridResolution:"+gridResolution+";Nodes:"+Nodes.Length);
 cr=StartCoroutine(CRDoRaycasts());
-int raycasts=gridResolution.x*gridResolution.y;
-Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,ToSetGridVerRaycasts=new NativeList<RaycastCommand>(raycasts,Allocator.Persistent),ToSetGridVerHitsResultsBuffer=new NativeArray<RaycastHit>(raycasts,Allocator.Persistent,NativeArrayOptions.UninitializedMemory),commands3a=new NativeList<RaycastCommand>()},TaskCreationOptions.LongRunning);
+int raycasts=gridResolution.x*gridResolution.y;int resultsBufferSize=raycasts*AStarVerticalHits;
+Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,ToSetGridVerRaycasts=new NativeList<RaycastCommand>(raycasts,Allocator.Persistent),ToSetGridVerHitsResultsBuffer=new NativeArray<RaycastHit>(raycasts,Allocator.Persistent,NativeArrayOptions.UninitializedMemory),
+commands3a=new NativeList<BoxcastCommand>(resultsBufferSize,Allocator.Persistent),results3a=new NativeArray<RaycastHit>(resultsBufferSize,Allocator.Persistent,NativeArrayOptions.UninitializedMemory),},TaskCreationOptions.LongRunning);
 }
 bool Stop{
     get{bool tmp;lock(Stop_Syn){tmp=Stop_v;      }return tmp;}
@@ -53,7 +54,7 @@ handle2.Complete();
 handle3a.Complete();
 Stop=true;try{task.Wait();}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}
 try{if(ToSetGridVerRaycasts.IsCreated)ToSetGridVerRaycasts.Dispose();}finally{}try{if(ToSetGridVerHitsResultsBuffer.IsCreated)ToSetGridVerHitsResultsBuffer.Dispose();}finally{}
-try{if(commands3a.IsCreated)commands3a.Dispose();}finally{}
+try{if(commands3a.IsCreated)commands3a.Dispose();}finally{}try{if(results3a.IsCreated)results3a.Dispose();}finally{}
                    base.OnDisable();
 }
 protected override void OnDestroy(){if(Stop){
@@ -91,6 +92,7 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("dequeue");
             boundsExtents=collider.bounds.extents;
 
     
+if(commands3a.IsCreated)commands3a.Clear();
             backgroundDataSet1.Reset();foregroundDataSet1.Set();
         }
     }
@@ -104,7 +106,6 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("dequeue");
 IEnumerator CRDoRaycasts(){
 if(LOG&&LOG_LEVEL<=2)Debug.Log("begin");
 _loop:{}
-if(commands3a.IsCreated)commands3a.Clear();
 if(LOG&&LOG_LEVEL<=2)Debug.Log("ToSetGridVerHits.Count before phase id '2':"+ToSetGridVerHits.Count);
 int vHits=0;
 do{
@@ -123,7 +124,9 @@ ToSetGridVerRaycasts.Clear();
 foregroundDataSet2.Set();
 }while(++vHits<AStarVerticalHits);    
 yield return waitUntil3a;
-if(LOG&&LOG_LEVEL<=2)Debug.Log("do raycasts 3a;ToSetGridVerHits.Count after phase id '2' when different from 0 should then stay constant:"+ToSetGridVerHits.Count);
+if(LOG&&LOG_LEVEL<=2)Debug.Log("do raycasts 3a;commands3a.Length/results3a.Length:"+commands3a.Length+"/"+results3a.Length+";ToSetGridVerHits.Count after phase id '2' when different from 0 should then stay constant:"+ToSetGridVerHits.Count);
+handle3a=BoxcastCommand.ScheduleBatch(commands3a,results3a,1,default(JobHandle));
+while(!handle3a.IsCompleted)yield return null;handle3a.Complete();
 
 
 
@@ -159,13 +162,14 @@ goto _loop;
 
     
 [NonSerialized]JobHandle handle2;[NonSerialized]NativeList<RaycastCommand>ToSetGridVerRaycasts;[NonSerialized]NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer;[NonSerialized]readonly Dictionary<int,RaycastHit[]>ToSetGridVerHits=new Dictionary<int,RaycastHit[]>();
-[NonSerialized]JobHandle handle3a;[NonSerialized]NativeList<RaycastCommand>commands3a;
+[NonSerialized]JobHandle handle3a;[NonSerialized]NativeList<BoxcastCommand>commands3a;[NonSerialized]NativeArray<RaycastHit>results3a;
 [NonSerialized]readonly List<(int idx,Node node,RaycastHit floorHit)>nodesGrounded=new List<(int,Node,RaycastHit)>();
 [NonSerialized]Vector3 NodeHalfSize;
 [NonSerialized]Vector3 NodeSize;
 [NonSerialized]RaycastHit target;[NonSerialized]Vector3 startPos;[NonSerialized]Vector3 boundsExtents;
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
-    if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is NativeList<RaycastCommand>ToSetGridVerRaycasts&&parameters[3]is NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer){
+    if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is NativeList<RaycastCommand>ToSetGridVerRaycasts&&parameters[3]is NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer
+&&parameters[4]is NativeList<BoxcastCommand>commands3a&&parameters[5]is NativeArray<RaycastHit>results3a){
 List<RaycastHit[]>ToSetGridVerHitsResults=new List<RaycastHit[]>();
 int i=0,j=0;
 for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
@@ -306,6 +310,7 @@ float dis3a=NodeSize.y+.3f;
 for(int g=0;g<nodesGrounded.Count;g++){
 Vector3 center3a=nodesGrounded[g].floorHit.point;
         center3a.y-=(.3f);
+commands3a.AddNoResize(new BoxcastCommand(center3a,halfExtents3a,orientation3a,direction3a,dis3a,noCharLayer));
 }
 
 
