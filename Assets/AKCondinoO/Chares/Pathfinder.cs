@@ -128,7 +128,7 @@ yield return waitUntil3a;
 if(LOG&&LOG_LEVEL<=2)Debug.Log("do raycasts 3a;commands3a.Length/results3a.Length:"+commands3a.Length+"/"+results3a.Length+";ToSetGridVerHits.Count after phase id '2' when different from 0 should then stay constant:"+ToSetGridVerHits.Count);
 handle3a=BoxcastCommand.ScheduleBatch(commands3a,results3a,1,default(JobHandle));
 while(!handle3a.IsCompleted)yield return null;handle3a.Complete();
-resultsManaged3a.Clear();for(int c=0;c<commands3a.Length;c++)resultsManaged3a.Add(results3a[c]);
+resultsManaged3a.Clear();for(int c=0;c<commands3a.Length;c++)resultsManaged3a.Add((results3a[c],results3a[c].collider!=null));
 foregroundDataSet3a.Set();
 yield return waitUntil3b;
 if(LOG&&LOG_LEVEL<=2)Debug.Log("do raycasts 3b");
@@ -160,7 +160,7 @@ goto _loop;
 
     
 [NonSerialized]JobHandle handle2;[NonSerialized]NativeList<RaycastCommand>ToSetGridVerRaycasts;[NonSerialized]NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer;[NonSerialized]readonly Dictionary<int,RaycastHit[]>ToSetGridVerHits=new Dictionary<int,RaycastHit[]>();
-[NonSerialized]JobHandle handle3a;[NonSerialized]NativeList<BoxcastCommand>commands3a;[NonSerialized]NativeArray<RaycastHit>results3a;[NonSerialized]readonly List<RaycastHit>resultsManaged3a=new List<RaycastHit>();
+[NonSerialized]JobHandle handle3a;[NonSerialized]NativeList<BoxcastCommand>commands3a;[NonSerialized]NativeArray<RaycastHit>results3a;[NonSerialized]readonly List<(RaycastHit hit,bool colliderNotNull)>resultsManaged3a=new List<(RaycastHit,bool)>();
 [NonSerialized]readonly List<(int idx,Node node,RaycastHit floorHit)>nodesGrounded=new List<(int,Node,RaycastHit)>();
 [NonSerialized]Vector3 NodeHalfSize;
 [NonSerialized]Vector3 NodeSize;
@@ -296,6 +296,7 @@ var reachableState=neighbour.neighbourCanBeReached[indexOfMe];
     reachableState.yes=yes;
     neighbour.neighbourCanBeReached[indexOfMe]=reachableState;
 }
+node.Walkable=yes;
 }
 originNode=GetNodeAt(startPos);
 targetNode=GetNodeAt(target.point+Vector3.up*NodeHalfSize.y);
@@ -315,7 +316,14 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3a");
 
 
 for(int r=0;r<resultsManaged3a.Count;r++){var result3a=resultsManaged3a[r];
-//if()
+if(Vector3.Angle(nodesGrounded[r].floorHit.normal,Vector3.up)>60){//  Obstructed! Floor too steep
+SetAsObstructed(nodesGrounded[r].node);
+}
+}
+void SetAsObstructed(Node node){
+//.clear and nodesObstructed.Add((node.index,node.value,results[_i]));
+Debug.LogWarning("obstructed!");
+TellNeighboursReachabilityOf(node,false);
 }
 
 
@@ -348,12 +356,15 @@ var oldcolor=Gizmos.color;
 var emptyColor=new Color(1,1,1,.25f);
 var originColor=new Color(0,0,1,.25f);
 var targetColor=new Color(0,0,1,.25f);
+var obstructedColor=new Color(1,0,0,.25f);
 if(Nodes!=null)foreach(var node in Nodes){
 if(node.valid){
      if(node==originNode)
 Gizmos.color=originColor;
 else if(node==targetNode)
 Gizmos.color=targetColor;
+else if(!node.Walkable)
+Gizmos.color=obstructedColor;
 else
 Gizmos.color=emptyColor;
 Gizmos.DrawCube(node.Position,NodeSize);
@@ -369,6 +380,7 @@ Gizmos.color=oldcolor;
 [NonSerialized]int noCharLayer;
 [Serializable]public class Node:IHeapItem<Node>{
 public bool valid{get;set;}public int Idx{get;set;}public readonly List<(int idx,Node node)>neighbours=new List<(int,Node)>();public readonly List<int>indexOfMe=new List<int>();public readonly List<(bool yes,PreferredReachableMode mode)>neighbourCanBeReached=new List<(bool,PreferredReachableMode)>();
+public bool Walkable{get;set;}
 public int HeapIndex{get;set;}
 public float F{get;private set;}//  heuristics
 public float G{get{return g;}set{g=value;F=g+h;}}float g;//  node dis to start
