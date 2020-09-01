@@ -375,6 +375,8 @@ pathFound=true;
 goto _Found;
 }
 var neighbours=currentNode.neighbours;
+if(LOG&&LOG_LEVEL<=-50)Debug.Log("neighbours.Count:"+neighbours.Count);
+for(int n=0;n<neighbours.Count;n++){var neighbour=neighbours[n];}
 }
 _Found:{}
 
