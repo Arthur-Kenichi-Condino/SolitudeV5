@@ -34,6 +34,8 @@ backgroundDataSet4.Reset();foregroundDataSet4.Reset();
 noCharLayer=~(1<<LayerMask.NameToLayer("Char"));
 gridResolution=new Vector2Int(AStarDistance.x*2+1,AStarDistance.y*2+1);
 Nodes=new Node[gridResolution.x*gridResolution.y*AStarVerticalHits];for(int i=0;i<Nodes.Length;i++)Nodes[i]=new Node();
+ClosedNodes=new Heap<Node>(Nodes.Length);
+  OpenNodes=new Heap<Node>(Nodes.Length);
 int raycasts=gridResolution.x*gridResolution.y;int resultsBufferSize=raycasts*AStarVerticalHits;
 if(LOG&&LOG_LEVEL<=2)Debug.Log("gridResolution:"+gridResolution+";Nodes:"+Nodes.Length+";raycasts:"+raycasts+";resultsBufferSize:"+resultsBufferSize);
 resultsManaged3a.Clear();resultsManaged3a.Capacity=resultsBufferSize;
@@ -159,11 +161,15 @@ goto _loop;
     public bool DEBUG_GOTO;
 
     
+[NonSerialized]Vector3 NodeHalfSize;
+[NonSerialized]Vector3 NodeSize;
 [NonSerialized]JobHandle handle2;[NonSerialized]NativeList<RaycastCommand>ToSetGridVerRaycasts;[NonSerialized]NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer;[NonSerialized]readonly Dictionary<int,RaycastHit[]>ToSetGridVerHits=new Dictionary<int,RaycastHit[]>();
 [NonSerialized]JobHandle handle3a;[NonSerialized]NativeList<BoxcastCommand>commands3a;[NonSerialized]NativeArray<RaycastHit>results3a;[NonSerialized]readonly List<(RaycastHit hit,bool colliderNotNull)>resultsManaged3a=new List<(RaycastHit,bool)>();
 [NonSerialized]readonly List<(int idx,Node node,RaycastHit floorHit)>nodesGrounded=new List<(int,Node,RaycastHit)>();
-[NonSerialized]Vector3 NodeHalfSize;
-[NonSerialized]Vector3 NodeSize;
+[NonSerialized]readonly List<(int idx,Node node,RaycastHit floorHit)>nodesWalkable=new List<(int,Node,RaycastHit)>();
+[NonSerialized]readonly List<(int idx,Node node,RaycastHit obstacleHit)>nodesObstructed=new List<(int,Node,RaycastHit)>();
+[NonSerialized]Heap<Node>ClosedNodes;
+[NonSerialized]Heap<Node>OpenNodes;
 [NonSerialized]RaycastHit target;[NonSerialized]Vector3 startPos;[NonSerialized]Vector3 boundsExtents;
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is NativeList<RaycastCommand>ToSetGridVerRaycasts&&parameters[3]is NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer
@@ -315,15 +321,31 @@ commands3a.AddNoResize(new BoxcastCommand(center3a,halfExtents3a,orientation3a,d
 if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3a");
 
 
+nodesWalkable.Clear();
+nodesObstructed.Clear();
 for(int r=0;r<resultsManaged3a.Count;r++){var result3a=resultsManaged3a[r];
 if(Vector3.Angle(nodesGrounded[r].floorHit.normal,Vector3.up)>60){//  Obstructed! Floor too steep
-SetAsObstructed(nodesGrounded[r].node);
+SetAsObstructed(nodesGrounded[r].idx,nodesGrounded[r].node,result3a.hit);
+}else{
+    if(result3a.colliderNotNull){
+        if(result3a.hit.point.y>=(nodesGrounded[r].floorHit.point.y-.05f)){//  Obstructed! Obstacle above floor hit/detected
+SetAsObstructed(nodesGrounded[r].idx,nodesGrounded[r].node,result3a.hit);
+        }else{
+SetAsWalkable(nodesGrounded[r].idx,nodesGrounded[r].node,nodesGrounded[r].floorHit);
+        }
+    }else{
+SetAsWalkable(nodesGrounded[r].idx,nodesGrounded[r].node,nodesGrounded[r].floorHit);
+    }
 }
 }
-void SetAsObstructed(Node node){
-//.clear and nodesObstructed.Add((node.index,node.value,results[_i]));
-Debug.LogWarning("obstructed!");
+void SetAsWalkable(int idx,Node node,RaycastHit floorHit){
+TellNeighboursReachabilityOf(node,true);
+nodesWalkable.Add((idx,node,floorHit));
+}
+void SetAsObstructed(int idx,Node node,RaycastHit obstacleHit){
+if(LOG&&LOG_LEVEL<=-100)Debug.Log("obstruction found at:"+node.Position);
 TellNeighboursReachabilityOf(node,false);
+nodesObstructed.Add((idx,node,obstacleHit));
 }
 
 
@@ -339,6 +361,11 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3c");
 if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 4");
 
 
+//Debug.LogWarning(default(Node));
+bool pathFound=false;Node lastTestedNode=null;
+ClosedNodes.Clear();
+  OpenNodes.Clear();
+  OpenNodes.Add(originNode);
 
 
 backgroundDataSet1.Set();}
