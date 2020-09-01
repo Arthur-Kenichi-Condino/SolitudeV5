@@ -366,6 +366,17 @@ bool pathFound=false;Node lastTestedNode=null;
 ClosedNodes.Clear();
   OpenNodes.Clear();
   OpenNodes.Add(originNode);
+while(OpenNodes.Count>0){
+if(LOG&&LOG_LEVEL<=-100)Debug.Log("OpenNodes.Count:"+OpenNodes.Count);
+var currentNode=OpenNodes.RemoveFirst();ClosedNodes.Add(currentNode);lastTestedNode=currentNode;//  Node agora testado!
+if(currentNode==targetNode){
+if(LOG&&LOG_LEVEL<=0)Debug.Log("_path_found_:currentNode==targetNode");
+pathFound=true;
+goto _Found;
+}
+var neighbours=currentNode.neighbours;
+}
+_Found:{}
 
 
 backgroundDataSet1.Set();}
