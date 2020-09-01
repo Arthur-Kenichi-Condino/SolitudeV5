@@ -170,7 +170,7 @@ goto _loop;
 [NonSerialized]readonly List<(int idx,Node node,RaycastHit obstacleHit)>nodesObstructed=new List<(int,Node,RaycastHit)>();
 [NonSerialized]Heap<Node>ClosedNodes;
 [NonSerialized]Heap<Node>OpenNodes;
-[NonSerialized]RaycastHit target;[NonSerialized]Vector3 startPos;[NonSerialized]Vector3 boundsExtents;
+[NonSerialized]RaycastHit target;[NonSerialized]Vector3 startPos;[NonSerialized]Vector3 boundsExtents;[NonSerialized]bool preferClimbing=false;
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is NativeList<RaycastCommand>ToSetGridVerRaycasts&&parameters[3]is NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer
 &&parameters[4]is NativeList<BoxcastCommand>commands3a&&parameters[5]is NativeArray<RaycastHit>results3a){
@@ -368,17 +368,35 @@ ClosedNodes.Clear();
   OpenNodes.Add(originNode);
 while(OpenNodes.Count>0){
 if(LOG&&LOG_LEVEL<=-100)Debug.Log("OpenNodes.Count:"+OpenNodes.Count);
-var currentNode=OpenNodes.RemoveFirst();ClosedNodes.Add(currentNode);lastTestedNode=currentNode;//  Node agora testado!
-if(currentNode==targetNode){
+var current=OpenNodes.RemoveFirst();ClosedNodes.Add(current);lastTestedNode=current;//  Node agora testado!
+if(current==targetNode){
 if(LOG&&LOG_LEVEL<=0)Debug.Log("_path_found_:currentNode==targetNode");
 pathFound=true;
 goto _Found;
 }
-var neighbours=currentNode.neighbours;
+var neighbours=current.neighbours;
 if(LOG&&LOG_LEVEL<=-50)Debug.Log("neighbours.Count:"+neighbours.Count);
-for(int n=0;n<neighbours.Count;n++){var neighbour=neighbours[n];}
+for(int n=0;n<neighbours.Count;n++){var neighbour=neighbours[n];
+if(ClosedNodes.Contains(neighbour.node)){//  Already tested
+continue;}
+if(!neighbour.node.Walkable){
+continue;}
+if(!current.neighbourCanBeReached[n].yes){
+continue;}
+bool inOpenNodes;var G_NewCost=current.G+GetDistance(current,neighbour.node);if(!(inOpenNodes=OpenNodes.Contains(neighbour.node))||G_NewCost<neighbour.node.G){//  Vizinho válido para avaliação de encontrar caminho
+}
+}
 }
 _Found:{}
+float GetDistance(Node nodeA,Node nodeB){
+var dis=Vector3.Distance(nodeA.Position,nodeB.Position);
+if(!preferClimbing){
+var h=Mathf.Abs(nodeA.Position.y-nodeB.Position.y);
+if(h!=0){
+dis*=1+(1/h);
+}
+}
+return(dis);}
 
 
 backgroundDataSet1.Set();}
