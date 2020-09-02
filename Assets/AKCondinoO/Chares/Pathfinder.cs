@@ -170,7 +170,7 @@ goto _loop;
 [NonSerialized]readonly List<(int idx,Node node,RaycastHit obstacleHit)>nodesObstructed=new List<(int,Node,RaycastHit)>();
 [NonSerialized]Heap<Node>ClosedNodes;
 [NonSerialized]Heap<Node>OpenNodes;
-[NonSerialized]RaycastHit target;[NonSerialized]Vector3 startPos;[NonSerialized]Vector3 boundsExtents;[NonSerialized]bool preferClimbing=false;[NonSerialized]List<Node>resultPath;
+[NonSerialized]RaycastHit target;[NonSerialized]Vector3 startPos;[NonSerialized]Vector3 boundsExtents;[NonSerialized]bool preferClimbing=false;[NonSerialized]List<Node>resultPath=new List<Node>(0);
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is NativeList<RaycastCommand>ToSetGridVerRaycasts&&parameters[3]is NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer
 &&parameters[4]is NativeList<BoxcastCommand>commands3a&&parameters[5]is NativeArray<RaycastHit>results3a){
@@ -398,11 +398,7 @@ OpenNodes.UpdateItem(neighbour.node);
 }
 float GetDistance(Node nodeA,Node nodeB){
 var dis=Vector3.Distance(nodeA.Position,nodeB.Position);
-if(!preferClimbing){
-var h=Mathf.Abs(nodeA.Position.y-nodeB.Position.y);
-if(h!=0){
-dis*=1+(1/h);
-}
+if(preferClimbing){
 }
 return(dis);}
 _Found:{}
@@ -435,6 +431,7 @@ var emptyColor=new Color(1,1,1,.25f);
 var originColor=new Color(0,0,1,.25f);
 var targetColor=new Color(0,0,1,.25f);
 var obstructedColor=new Color(1,0,0,.25f);
+var pathColor=new Color(0,0,1,.25f);
 if(Nodes!=null)foreach(var node in Nodes){
 if(node.valid){
      if(node==originNode)
@@ -443,6 +440,8 @@ else if(node==targetNode)
 Gizmos.color=targetColor;
 else if(!node.Walkable)
 Gizmos.color=obstructedColor;
+else if(resultPath.Contains(node))
+Gizmos.color=pathColor;
 else
 Gizmos.color=emptyColor;
 Gizmos.DrawCube(node.Position,NodeSize);
