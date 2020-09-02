@@ -170,7 +170,7 @@ goto _loop;
 [NonSerialized]readonly List<(int idx,Node node,RaycastHit obstacleHit)>nodesObstructed=new List<(int,Node,RaycastHit)>();
 [NonSerialized]Heap<Node>ClosedNodes;
 [NonSerialized]Heap<Node>OpenNodes;
-[NonSerialized]RaycastHit target;[NonSerialized]Vector3 startPos;[NonSerialized]Vector3 boundsExtents;[NonSerialized]bool preferClimbing=false;
+[NonSerialized]RaycastHit target;[NonSerialized]Vector3 startPos;[NonSerialized]Vector3 boundsExtents;[NonSerialized]bool preferClimbing=false;[NonSerialized]List<Node>resultPath;
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is NativeList<RaycastCommand>ToSetGridVerRaycasts&&parameters[3]is NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer
 &&parameters[4]is NativeList<BoxcastCommand>commands3a&&parameters[5]is NativeArray<RaycastHit>results3a){
@@ -284,6 +284,7 @@ i+=AStarVerticalHits;j++;}}
 nodesGrounded.Clear();
 i=0;j=0;foreach(var result in ToSetGridVerHits){
 for(int ridx=0;ridx<AStarVerticalHits;ridx++){int nodeIdx=i+ridx;var hit=result.Value[ridx];
+Nodes[nodeIdx].Parent=null;
 if(hit.normal==Vector3.zero){
 Nodes[nodeIdx].valid=false;
 TellNeighboursReachabilityOf(Nodes[nodeIdx],false);
@@ -383,11 +384,18 @@ if(!neighbour.node.Walkable){
 continue;}
 if(!current.neighbourCanBeReached[n].yes){
 continue;}
-bool inOpenNodes;var G_NewCost=current.G+GetDistance(current,neighbour.node);if(!(inOpenNodes=OpenNodes.Contains(neighbour.node))||G_NewCost<neighbour.node.G){//  Vizinho válido para avaliação de encontrar caminho
+bool inOpenNodes;var G_NewCost=current.G+GetDistance(current,neighbour.node);if(!(inOpenNodes=OpenNodes.Contains(neighbour.node))||G_NewCost<neighbour.node.G){
+neighbour.node.G=G_NewCost;//  Vizinho válido para avaliação de encontrar caminho
+neighbour.node.H=GetDistance(neighbour.node,targetNode);
+neighbour.node.Parent=current; 
+if(!inOpenNodes){
+OpenNodes.Add(neighbour.node);
+}else{
+OpenNodes.UpdateItem(neighbour.node);
 }
 }
 }
-_Found:{}
+}
 float GetDistance(Node nodeA,Node nodeB){
 var dis=Vector3.Distance(nodeA.Position,nodeB.Position);
 if(!preferClimbing){
@@ -397,6 +405,18 @@ dis*=1+(1/h);
 }
 }
 return(dis);}
+_Found:{}
+List<Node>path=new List<Node>();
+Node last=null;if(pathFound)last=targetNode;else if(ClosedNodes.Count>0)last=ClosedNodes.RemoveFirst();
+var step=last;
+int c=Nodes.Length;do{
+if(step==null){break;}
+path.Add(step);
+step=step.Parent;
+}while(step!=originNode&&--c>0);
+if(LOG&&LOG_LEVEL<=1)Debug.Log("path retraced: retrace count should never reach 0:"+c);
+if(path.Count>0)path.Reverse();
+resultPath=path;
 
 
 backgroundDataSet1.Set();}
