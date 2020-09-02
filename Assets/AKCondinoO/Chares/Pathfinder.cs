@@ -9,7 +9,7 @@ using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 public class Pathfinder:SimActor{
-[NonSerialized]Vector2Int AStarDistance=new Vector2Int(5,5);[NonSerialized]int AStarVerticalHits=3;[NonSerialized]Vector2Int gridResolution;[NonSerialized]Node[]Nodes;[NonSerialized]Node originNode;[NonSerialized]Node targetNode;
+[NonSerialized]Vector2Int AStarDistance=new Vector2Int(10,10);[NonSerialized]int AStarVerticalHits=3;[NonSerialized]Vector2Int gridResolution;[NonSerialized]Node[]Nodes;[NonSerialized]Node originNode;[NonSerialized]Node targetNode;
 protected override void Awake(){
                    base.Awake();
 waitUntil2=new WaitUntil(()=>backgroundDataSet2.WaitOne(0));
@@ -428,7 +428,7 @@ protected override void OnDrawGizmos(){
     if(backgroundDataSet1.WaitOne(0)){
 if(DRAW_LEVEL<=-100){
 var oldcolor=Gizmos.color;
-var emptyColor=new Color(1,1,1,.25f);
+var emptyColor=new Color(1,1,1,.25f);var emptyLineColor=new Color(1,1,1,.0625f);
 var originColor=new Color(0,0,1,.25f);
 var targetColor=new Color(0,0,1,.25f);
 var obstructedColor=new Color(1,0,0,.25f);
@@ -446,7 +446,7 @@ Gizmos.color=pathColor;
 else
 Gizmos.color=emptyColor;
 Gizmos.DrawCube(node.Position,NodeSize);
-if(DRAW_LEVEL<=-110)foreach(var neighbour in node.neighbours)if(neighbour.node.valid)Debug.DrawLine(node.Position,neighbour.node.Position,Color.white);
+if(DRAW_LEVEL<=-110)foreach(var neighbour in node.neighbours)if(neighbour.node.valid)Debug.DrawLine(node.Position,neighbour.node.Position,emptyLineColor);
 }
 }
 Gizmos.color=oldcolor;

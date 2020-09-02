@@ -119,3 +119,10 @@ protected override void OnDrawGizmos(){
 }
 #endif
 }
+public interface iCamFollowable{
+LinkedListNode<iCamFollowable>CamFollowableNode{get;set;}
+bool BeingCamFollowed{get;set;}
+Vector3 CamLookAtUp{get;set;}
+Vector3 CamLookAtForward{get;set;}
+Vector3 CamPosition{get;set;}
+}
