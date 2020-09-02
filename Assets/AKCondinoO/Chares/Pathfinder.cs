@@ -81,7 +81,8 @@ return null;}
 protected override void Update(){
 
 
-    if(DEBUG_GOTO){DEBUG_GOTO=false;GoTo(new Ray(new Vector3(1,10,-10),Vector3.down));//GoToQueue.AddLast(new RaycastHit());
+    if(DEBUG_GOTO){DEBUG_GOTO=false;GoTo(new Ray(new Vector3(1,0,-10),Vector3.down));//GoToQueue.AddLast(new RaycastHit());
+        Debug.DrawRay(new Vector3(1,0,-10),Vector3.down*1000,Color.red,5f);
     }
 
 
