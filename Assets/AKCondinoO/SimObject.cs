@@ -28,6 +28,7 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("BodyRadius:"+BodyRadius+", name:"+name);
 protected virtual void OnEnable(){}
 protected virtual void OnDisable(){}
 protected virtual void OnDestroy(){}
+protected virtual void FixedUpdate(){}
 [NonSerialized]Vector3 pos;
 [NonSerialized]Vector3 pos_Pre;
 [NonSerialized]Vector2Int coord;[NonSerialized]int idx;[NonSerialized]Chunk chunk;

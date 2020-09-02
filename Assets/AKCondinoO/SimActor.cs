@@ -9,6 +9,16 @@ protected override void Awake(){
 tgtPos=tgtPos_Pre=transform.position;
 tgtRot=tgtRot_Pre=transform.eulerAngles;
 }
+[NonSerialized]Vector3 eulerAngles,headEulerAngles;
+protected override void FixedUpdate(){
+                   base.FixedUpdate();
+    if(rigidbody!=null){
+        if(inputViewRotationEuler!=Vector3.zero){
+headEulerAngles+=inputViewRotationEuler;
+            inputViewRotationEuler=Vector3.zero;
+        }
+    }
+}
 protected override void Update(){
 ProcessMovementInput();
                    base.Update();

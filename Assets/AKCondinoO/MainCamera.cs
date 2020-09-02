@@ -70,6 +70,8 @@ if(CamFollowing==null){
 #region ROTATE
 inputViewRotationEuler.x+=-Enabled.MOUSE_ROTATION_DELTA_Y[0]*InputViewRotationIncreaseSpeed;
 inputViewRotationEuler.y+= Enabled.MOUSE_ROTATION_DELTA_X[0]*InputViewRotationIncreaseSpeed;
+inputViewRotationEuler.x=inputViewRotationEuler.x%360;
+inputViewRotationEuler.y=inputViewRotationEuler.y%360;
 #endregion
 }
 }
