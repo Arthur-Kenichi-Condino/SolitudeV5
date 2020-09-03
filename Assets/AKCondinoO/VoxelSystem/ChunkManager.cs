@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MessagePack;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -243,7 +244,7 @@ edtVxlsByCnkIdx.Clear();
 [NonSerialized]readonly Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId material)>>edtVxlsByCnkIdx=new Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId material)>>();[NonSerialized]readonly List<int>editedDirty=new List<int>();
 void BG1(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is System.Random random&&parameters[3]is string[]saveSubfolder){
-DataContractSerializer saveContract=new DataContractSerializer(typeof(Dictionary<Vector3Int,(double density,MaterialId material)>));
+//DataContractSerializer saveContract=new DataContractSerializer(typeof(Dictionary<Vector3Int,(double density,MaterialId material)>));
         while(!Stop){foregroundDataSet1.WaitOne();if(Stop)goto _Stop;
             foreach(var syn in load_Syn)Monitor.Enter(syn);try{
 foreach(var cnkIdxEdtsPair in edtVxlsByCnkIdx){
@@ -255,7 +256,12 @@ try{
 using(file=new FileStream(fileName,FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None)){
 if(file.Length>0){
 if(LOG&&LOG_LEVEL<=1)Debug.Log("file has data, load it to merge with new save data:fileName:"+fileName);
-if(saveContract.ReadObject(file)is Dictionary<Vector3Int,(double density,MaterialId material)>fileData){
+
+
+
+        
+if(MessagePackSerializer.Deserialize(typeof(Dictionary<Vector3Int,(double density,MaterialId material)>),file)is Dictionary<Vector3Int,(double density,MaterialId material)>fileData){
+//if(saveContract.ReadObject(file)is Dictionary<Vector3Int,(double density,MaterialId material)>fileData){
 foreach(var voxelData in fileData){
 if(!cnkIdxEdtsPair.Value.ContainsKey(voxelData.Key)){
     cnkIdxEdtsPair.Value.Add(voxelData.Key,voxelData.Value);
@@ -264,7 +270,8 @@ if(!cnkIdxEdtsPair.Value.ContainsKey(voxelData.Key)){
 }}
 file.SetLength(0);
 file.Flush(true);
-saveContract.WriteObject(file,cnkIdxEdtsPair.Value);
+MessagePackSerializer.Serialize(typeof(Dictionary<Vector3Int,(double density,MaterialId material)>),file,cnkIdxEdtsPair.Value);
+//saveContract.WriteObject(file,cnkIdxEdtsPair.Value);
 }
 editedDirty.Add(cnkIdxEdtsPair.Key);
 saved=true;
