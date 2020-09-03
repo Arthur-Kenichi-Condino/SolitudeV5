@@ -12,7 +12,7 @@ tgtRot=tgtRot_Pre=transform.eulerAngles;
 [NonSerialized]Vector3 eulerAngles,headEulerAngles;[NonSerialized]Vector3 stopMovement,moveSpeedRotated,moveSpeedToApplyToBody;
 protected override void FixedUpdate(){
                    base.FixedUpdate();
-    if(rigidbody!=null){
+if(rigidbody!=null){
         if(inputViewRotationEuler!=Vector3.zero){
 headEulerAngles+=inputViewRotationEuler;
             inputViewRotationEuler=Vector3.zero;
@@ -22,7 +22,7 @@ moveSpeedToApplyToBody.x=moveSpeedRotated.x==0?rigidbody.velocity.x:moveSpeedRot
 moveSpeedToApplyToBody.z=moveSpeedRotated.z==0?rigidbody.velocity.z:moveSpeedRotated.z>0?(moveSpeedRotated.z>rigidbody.velocity.z?moveSpeedRotated.z:rigidbody.velocity.z):(moveSpeedRotated.z<rigidbody.velocity.z?moveSpeedRotated.z:rigidbody.velocity.z);
 moveSpeedToApplyToBody.y=moveSpeedRotated.y>0&&moveSpeedRotated.y>rigidbody.velocity.y?moveSpeedRotated.y:rigidbody.velocity.y;
         rigidbody.velocity=moveSpeedToApplyToBody;
-    }
+}
 }
 protected override void Update(){
 ProcessMovementInput();
@@ -57,7 +57,7 @@ protected Vector3 tgtRot_Pre,headTgtRot_Pre;
 protected float goToTgtRotTimer,headGoToTgtRotTimer;
 #endregion
 protected virtual void ProcessMovementInput(){
-    if(rigidbody==null){
+if(rigidbody==null){
 #region ROTATION LERP
         if(inputViewRotationEuler!=Vector3.zero){
             tgtRot+=inputViewRotationEuler;
@@ -124,8 +124,8 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
             }
         }
 #endregion
-    }else{
-    }
+}else{
+}
 }
 #endregion
 #if UNITY_EDITOR
@@ -135,6 +135,7 @@ protected override void OnDrawGizmos(){
 #endif
 }
 public interface iCamFollowable{
+string ObjName{get;}
 LinkedListNode<iCamFollowable>CamFollowableNode{get;set;}
 bool BeingCamFollowed{get;set;}
 Vector3 CamLookAtUp{get;set;}

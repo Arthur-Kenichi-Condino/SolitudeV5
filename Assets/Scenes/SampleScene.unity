@@ -766,7 +766,7 @@ PrefabInstance:
     - target: {fileID: 6855673258895166065, guid: d69fcc595bac3f74c8ac30ec3b2d5a1c,
         type: 3}
       propertyPath: LOG_LEVEL
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6855673258895166065, guid: d69fcc595bac3f74c8ac30ec3b2d5a1c,
         type: 3}

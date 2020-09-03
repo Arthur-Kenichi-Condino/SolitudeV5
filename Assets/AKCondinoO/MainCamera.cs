@@ -45,7 +45,7 @@ if(Enabled.SWITCH_CAMERA_MODE[0]){
 if(CamFollowables.Count>0){
 CamFollowing=CamFollowables.First.Value;CamFollowables.RemoveFirst();CamFollowables.AddLast(CamFollowing.CamFollowableNode);
 CamFollowing.BeingCamFollowed=true;
-Debug.LogWarning("CamFollowables.Count:"+CamFollowables.Count);
+if(LOG&&LOG_LEVEL<=1)Debug.Log("camera is now following "+CamFollowing.ObjName+"; CamFollowables.Count:"+CamFollowables.Count);
 }
 }else{
 if(CamFollowing!=null)CamFollowing.BeingCamFollowed=false;

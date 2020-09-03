@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 public class CharControl:AI,iCamFollowable{
+public string ObjName{get{return gameObject.name;}}
 public LinkedListNode<iCamFollowable>CamFollowableNode{get;set;}
 public bool BeingCamFollowed{get;set;}
 public Vector3 CamLookAtUp{get;set;}
