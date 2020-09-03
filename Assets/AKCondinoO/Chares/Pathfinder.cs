@@ -9,7 +9,7 @@ using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 public class Pathfinder:SimActor{
-[NonSerialized]Vector2Int AStarDistance=new Vector2Int(5,5);[NonSerialized]int AStarVerticalHits=3;[NonSerialized]Vector2Int gridResolution;[NonSerialized]Node[]Nodes;[NonSerialized]Node originNode;[NonSerialized]Node targetNode;
+[NonSerialized]Vector2Int AStarDistance=new Vector2Int(10,10);[NonSerialized]int AStarVerticalHits=3;[NonSerialized]Vector2Int gridResolution;[NonSerialized]Node[]Nodes;[NonSerialized]Node originNode;[NonSerialized]Node targetNode;
 protected override void Awake(){
                    base.Awake();
 waitUntil2=new WaitUntil(()=>backgroundDataSet2.WaitOne(0));
@@ -34,6 +34,8 @@ backgroundDataSet4.Reset();foregroundDataSet4.Reset();
 noCharLayer=~(1<<LayerMask.NameToLayer("Char"));
 gridResolution=new Vector2Int(AStarDistance.x*2+1,AStarDistance.y*2+1);
 Nodes=new Node[gridResolution.x*gridResolution.y*AStarVerticalHits];for(int i=0;i<Nodes.Length;i++)Nodes[i]=new Node();
+ClosedNodes=new Heap<Node>(Nodes.Length);ClosedNodes.LOG=LOG;ClosedNodes.LOG_LEVEL=LOG_LEVEL;
+  OpenNodes=new Heap<Node>(Nodes.Length);  OpenNodes.LOG=LOG;  OpenNodes.LOG_LEVEL=LOG_LEVEL;
 int raycasts=gridResolution.x*gridResolution.y;int resultsBufferSize=raycasts*AStarVerticalHits;
 if(LOG&&LOG_LEVEL<=2)Debug.Log("gridResolution:"+gridResolution+";Nodes:"+Nodes.Length+";raycasts:"+raycasts+";resultsBufferSize:"+resultsBufferSize);
 resultsManaged3a.Clear();resultsManaged3a.Capacity=resultsBufferSize;
@@ -79,7 +81,8 @@ return null;}
 protected override void Update(){
 
 
-    if(DEBUG_GOTO){DEBUG_GOTO=false;GoTo(new Ray(new Vector3(1,10,-10),Vector3.down));//GoToQueue.AddLast(new RaycastHit());
+    if(DEBUG_GOTO){DEBUG_GOTO=false;GoTo(new Ray(new Vector3(1,0,-10),Vector3.down));//GoToQueue.AddLast(new RaycastHit());
+        Debug.DrawRay(new Vector3(1,0,-10),Vector3.down*1000,Color.red,5f);
     }
 
 
@@ -159,12 +162,16 @@ goto _loop;
     public bool DEBUG_GOTO;
 
     
+[NonSerialized]Vector3 NodeHalfSize;
+[NonSerialized]Vector3 NodeSize;
 [NonSerialized]JobHandle handle2;[NonSerialized]NativeList<RaycastCommand>ToSetGridVerRaycasts;[NonSerialized]NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer;[NonSerialized]readonly Dictionary<int,RaycastHit[]>ToSetGridVerHits=new Dictionary<int,RaycastHit[]>();
 [NonSerialized]JobHandle handle3a;[NonSerialized]NativeList<BoxcastCommand>commands3a;[NonSerialized]NativeArray<RaycastHit>results3a;[NonSerialized]readonly List<(RaycastHit hit,bool colliderNotNull)>resultsManaged3a=new List<(RaycastHit,bool)>();
 [NonSerialized]readonly List<(int idx,Node node,RaycastHit floorHit)>nodesGrounded=new List<(int,Node,RaycastHit)>();
-[NonSerialized]Vector3 NodeHalfSize;
-[NonSerialized]Vector3 NodeSize;
-[NonSerialized]RaycastHit target;[NonSerialized]Vector3 startPos;[NonSerialized]Vector3 boundsExtents;
+[NonSerialized]readonly List<(int idx,Node node,RaycastHit floorHit)>nodesWalkable=new List<(int,Node,RaycastHit)>();
+[NonSerialized]readonly List<(int idx,Node node,RaycastHit obstacleHit)>nodesObstructed=new List<(int,Node,RaycastHit)>();
+[NonSerialized]Heap<Node>ClosedNodes;
+[NonSerialized]Heap<Node>OpenNodes;
+[NonSerialized]RaycastHit target;[NonSerialized]Vector3 startPos;[NonSerialized]Vector3 boundsExtents;[NonSerialized]bool preferClimbing=false;[NonSerialized]List<Node>resultPath=new List<Node>(0);
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is NativeList<RaycastCommand>ToSetGridVerRaycasts&&parameters[3]is NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer
 &&parameters[4]is NativeList<BoxcastCommand>commands3a&&parameters[5]is NativeArray<RaycastHit>results3a){
@@ -278,6 +285,7 @@ i+=AStarVerticalHits;j++;}}
 nodesGrounded.Clear();
 i=0;j=0;foreach(var result in ToSetGridVerHits){
 for(int ridx=0;ridx<AStarVerticalHits;ridx++){int nodeIdx=i+ridx;var hit=result.Value[ridx];
+Nodes[nodeIdx].Parent=null;
 if(hit.normal==Vector3.zero){
 Nodes[nodeIdx].valid=false;
 TellNeighboursReachabilityOf(Nodes[nodeIdx],false);
@@ -315,15 +323,31 @@ commands3a.AddNoResize(new BoxcastCommand(center3a,halfExtents3a,orientation3a,d
 if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3a");
 
 
+nodesWalkable.Clear();
+nodesObstructed.Clear();
 for(int r=0;r<resultsManaged3a.Count;r++){var result3a=resultsManaged3a[r];
 if(Vector3.Angle(nodesGrounded[r].floorHit.normal,Vector3.up)>60){//  Obstructed! Floor too steep
-SetAsObstructed(nodesGrounded[r].node);
+SetAsObstructed(nodesGrounded[r].idx,nodesGrounded[r].node,result3a.hit);
+}else{
+    if(result3a.colliderNotNull){
+        if(result3a.hit.point.y>=(nodesGrounded[r].floorHit.point.y-.05f)){//  Obstructed! Obstacle above floor hit/detected
+SetAsObstructed(nodesGrounded[r].idx,nodesGrounded[r].node,result3a.hit);
+        }else{
+SetAsWalkable(nodesGrounded[r].idx,nodesGrounded[r].node,nodesGrounded[r].floorHit);
+        }
+    }else{
+SetAsWalkable(nodesGrounded[r].idx,nodesGrounded[r].node,nodesGrounded[r].floorHit);
+    }
 }
 }
-void SetAsObstructed(Node node){
-//.clear and nodesObstructed.Add((node.index,node.value,results[_i]));
-Debug.LogWarning("obstructed!");
+void SetAsWalkable(int idx,Node node,RaycastHit floorHit){
+TellNeighboursReachabilityOf(node,true);
+nodesWalkable.Add((idx,node,floorHit));
+}
+void SetAsObstructed(int idx,Node node,RaycastHit obstacleHit){
+if(LOG&&LOG_LEVEL<=-100)Debug.Log("obstruction found at:"+node.Position);
 TellNeighboursReachabilityOf(node,false);
+nodesObstructed.Add((idx,node,obstacleHit));
 }
 
 
@@ -339,6 +363,57 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3c");
 if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 4");
 
 
+//Debug.LogWarning(default(Node));
+bool pathFound=false;Node lastTestedNode=null;
+ClosedNodes.Clear();
+  OpenNodes.Clear();
+  OpenNodes.Add(originNode);
+while(OpenNodes.Count>0){
+if(LOG&&LOG_LEVEL<=-100)Debug.Log("OpenNodes.Count:"+OpenNodes.Count);
+var current=OpenNodes.RemoveFirst();ClosedNodes.Add(current);lastTestedNode=current;//  Node agora testado!
+if(current==targetNode){
+if(LOG&&LOG_LEVEL<=0)Debug.Log("_path_found_:currentNode==targetNode");
+pathFound=true;
+goto _Found;
+}
+var neighbours=current.neighbours;
+if(LOG&&LOG_LEVEL<=-50)Debug.Log("neighbours.Count:"+neighbours.Count);
+for(int n=0;n<neighbours.Count;n++){var neighbour=neighbours[n];
+if(ClosedNodes.Contains(neighbour.node)){//  Already tested
+continue;}
+if(!neighbour.node.Walkable){
+continue;}
+if(!current.neighbourCanBeReached[n].yes){
+continue;}
+bool inOpenNodes;var G_NewCost=current.G+GetDistance(current,neighbour.node);if(!(inOpenNodes=OpenNodes.Contains(neighbour.node))||G_NewCost<neighbour.node.G){
+neighbour.node.G=G_NewCost;//  Vizinho válido para avaliação de encontrar caminho
+neighbour.node.H=GetDistance(neighbour.node,targetNode);
+neighbour.node.Parent=current; 
+if(!inOpenNodes){
+OpenNodes.Add(neighbour.node);
+}else{
+OpenNodes.UpdateItem(neighbour.node);
+}
+}
+}
+}
+float GetDistance(Node nodeA,Node nodeB){
+var dis=Vector3.Distance(nodeA.Position,nodeB.Position);
+if(preferClimbing){
+}
+return(dis);}
+_Found:{}
+List<Node>path=new List<Node>();
+Node last=null;if(pathFound)last=targetNode;else if(ClosedNodes.Count>0)last=ClosedNodes.RemoveFirst();
+var step=last;
+int c=Nodes.Length;do{
+if(step==null){break;}
+path.Add(step);
+step=step.Parent;
+}while(step!=originNode&&--c>0);
+if(LOG&&LOG_LEVEL<=1)Debug.Log("path retraced: retrace count should never reach 0:"+c);
+if(path.Count>0)path.Reverse();
+resultPath=path;
 
 
 backgroundDataSet1.Set();}
@@ -353,10 +428,11 @@ protected override void OnDrawGizmos(){
     if(backgroundDataSet1.WaitOne(0)){
 if(DRAW_LEVEL<=-100){
 var oldcolor=Gizmos.color;
-var emptyColor=new Color(1,1,1,.25f);
+var emptyColor=new Color(1,1,1,.25f);var emptyLineColor=new Color(1,1,1,.0625f);
 var originColor=new Color(0,0,1,.25f);
 var targetColor=new Color(0,0,1,.25f);
 var obstructedColor=new Color(1,0,0,.25f);
+var pathColor=new Color(0,0,1,.25f);
 if(Nodes!=null)foreach(var node in Nodes){
 if(node.valid){
      if(node==originNode)
@@ -365,10 +441,12 @@ else if(node==targetNode)
 Gizmos.color=targetColor;
 else if(!node.Walkable)
 Gizmos.color=obstructedColor;
+else if(resultPath.Contains(node))
+Gizmos.color=pathColor;
 else
 Gizmos.color=emptyColor;
 Gizmos.DrawCube(node.Position,NodeSize);
-if(DRAW_LEVEL<=-110)foreach(var neighbour in node.neighbours)if(neighbour.node.valid)Debug.DrawLine(node.Position,neighbour.node.Position,Color.white);
+if(DRAW_LEVEL<=-110)foreach(var neighbour in node.neighbours)if(neighbour.node.valid)Debug.DrawLine(node.Position,neighbour.node.Position,emptyLineColor);
 }
 }
 Gizmos.color=oldcolor;

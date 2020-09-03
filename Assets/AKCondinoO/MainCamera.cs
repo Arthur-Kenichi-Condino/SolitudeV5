@@ -5,6 +5,7 @@ using System.Reflection;
 using UnityEngine;
 public class MainCamera:SimActor{
 public static Dictionary<string,object[]>AllCommands=new Dictionary<string,object[]>();public static Dictionary<string,bool[]>AllStates=new Dictionary<string,bool[]>();
+public static readonly LinkedList<iCamFollowable>CamFollowables=new LinkedList<iCamFollowable>();public iCamFollowable CamFollowing=null;
 protected override void Awake(){
                    base.Awake();
 foreach(FieldInfo field in typeof(Commands).GetFields(BindingFlags.Public|BindingFlags.Static)){
@@ -39,6 +40,19 @@ Cursor.lockState=CursorLockMode.Locked;
 Enabled.MOUSE_ROTATION_DELTA_X[1]=Enabled.MOUSE_ROTATION_DELTA_X[0];Enabled.MOUSE_ROTATION_DELTA_X[0]=Commands.ROTATION_SENSITIVITY_X*Input.GetAxis("Mouse X");
 Enabled.MOUSE_ROTATION_DELTA_Y[1]=Enabled.MOUSE_ROTATION_DELTA_Y[0];Enabled.MOUSE_ROTATION_DELTA_Y[0]=Commands.ROTATION_SENSITIVITY_Y*Input.GetAxis("Mouse Y");
 if(!Enabled.PAUSE[0]){
+if(Enabled.SWITCH_CAMERA_MODE[0]!=Enabled.SWITCH_CAMERA_MODE[1]){
+if(Enabled.SWITCH_CAMERA_MODE[0]){
+if(CamFollowables.Count>0){
+CamFollowing=CamFollowables.First.Value;CamFollowables.RemoveFirst();CamFollowables.AddLast(CamFollowing.CamFollowableNode);
+CamFollowing.BeingCamFollowed=true;
+if(LOG&&LOG_LEVEL<=1)Debug.Log("camera is now following "+CamFollowing.ObjName+"; CamFollowables.Count:"+CamFollowables.Count);
+}
+}else{
+if(CamFollowing!=null)CamFollowing.BeingCamFollowed=false;
+CamFollowing=null;
+}
+}
+if(CamFollowing==null){
 #region FORWARD BACKWARD
     if(Enabled.FORWARD [0]){inputMoveSpeed.z+=InputMoveAcceleration.z;} 
     if(Enabled.BACKWARD[0]){inputMoveSpeed.z-=InputMoveAcceleration.z;}
@@ -56,7 +70,10 @@ if(!Enabled.PAUSE[0]){
 #region ROTATE
 inputViewRotationEuler.x+=-Enabled.MOUSE_ROTATION_DELTA_Y[0]*InputViewRotationIncreaseSpeed;
 inputViewRotationEuler.y+= Enabled.MOUSE_ROTATION_DELTA_X[0]*InputViewRotationIncreaseSpeed;
+inputViewRotationEuler.x=inputViewRotationEuler.x%360;
+inputViewRotationEuler.y=inputViewRotationEuler.y%360;
 #endregion
+}
 }
                    base.Update();
 }
@@ -88,6 +105,7 @@ public static readonly bool[]RIGHT   ={false,false};
 public static readonly bool[]LEFT    ={false,false};
 public static readonly float[]MOUSE_ROTATION_DELTA_X={0,0};
 public static readonly float[]MOUSE_ROTATION_DELTA_Y={0,0};
+public static readonly bool[]SWITCH_CAMERA_MODE={false,false};//  Free camera or follow and command a player
 }
 public static class Commands{
 public static object[]PAUSE={KeyCode.Tab,"alternateDown"};
@@ -97,4 +115,5 @@ public static object[]RIGHT   ={KeyCode.D,"activeHeld"};
 public static object[]LEFT    ={KeyCode.A,"activeHeld"};
 public static float ROTATION_SENSITIVITY_X=360.0f;
 public static float ROTATION_SENSITIVITY_Y=360.0f;
+public static object[]SWITCH_CAMERA_MODE={KeyCode.RightAlt,"alternateDown"};  //  Free or following the player
 }

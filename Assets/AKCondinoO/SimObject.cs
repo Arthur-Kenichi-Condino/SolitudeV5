@@ -28,6 +28,36 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("BodyRadius:"+BodyRadius+", name:"+name);
 protected virtual void OnEnable(){}
 protected virtual void OnDisable(){}
 protected virtual void OnDestroy(){}
+protected virtual void FixedUpdate(){
+if(rigidbody!=null){
+if(LOG&&LOG_LEVEL<=0)Debug.Log("collisions.Count:"+collisions.Count);
+foreach(var collision in collisions){
+for(int i=0;i<collision.Value.Count;i++){var contact=collision.Value[i];if(contact.normal==Vector3.zero)break;
+
+
+//Debug.LogWarning("test floor");
+
+
+}
+}
+}
+}
+[NonSerialized]protected readonly Dictionary<(GameObject,Collider,Collision),List<ContactPoint>>collisions=new Dictionary<(GameObject,Collider,Collision),List<ContactPoint>>();
+void OnCollisionStay(Collision collision){
+if(LOG&&LOG_LEVEL<=0)Debug.Log("collision stay:"+collision.collider.name);
+var tuple=(collision.gameObject,collision.collider,collision);
+if(!collisions.ContainsKey(tuple)){collisions.Add(tuple,new List<ContactPoint>());}collision.GetContacts(collisions[tuple]);
+if(DRAW_LEVEL<=-100){
+for(int i=0;i<collision.contactCount;i++){var contact=collision.GetContact(i);
+Debug.DrawRay(contact.point,contact.normal,Color.white,.5f);
+}
+}
+}
+void OnCollisionExit(Collision collision){
+if(LOG&&LOG_LEVEL<=0)Debug.Log("collision exit:"+collision.collider.name);
+var tuple=(collision.gameObject,collision.collider,collision);
+collisions.Remove(tuple);
+}
 [NonSerialized]Vector3 pos;
 [NonSerialized]Vector3 pos_Pre;
 [NonSerialized]Vector2Int coord;[NonSerialized]int idx;[NonSerialized]Chunk chunk;

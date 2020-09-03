@@ -62,7 +62,7 @@ Stop=false;task1=Task.Factory.StartNew(BG1,new object[]{LOG,LOG_LEVEL,new System
 
 
 
-    //Build();//Build();
+    //Build();
 
 
 
@@ -234,10 +234,8 @@ _End:{}
 
     }
     void Cancel(){
+if(LOG&&LOG_LEVEL<=2)Debug.Log("cancel edit");
 edtVxlsByCnkIdx.Clear();
-
-        Debug.LogWarning("cancel");
-
     }
 }
 //[NonSerialized]public static readonly object load_Syn=new object();

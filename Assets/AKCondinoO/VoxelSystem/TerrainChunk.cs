@@ -50,7 +50,7 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("did job now build");
     if(baking)return;
 if(DRAW_LEVEL<=-100)for(int i=0;i<TempVer.Length;i++){Debug.DrawRay(TempVer[i].pos,TempVer[i].normal,Color.green);}
 if(DISABLE){
-if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("building is DISABLED for debugging purposes");
+if(LOG&&LOG_LEVEL<=1000)Debug.LogWarning("chunk mesh building is DISABLED for debugging purposes");
 return;
 }
         if(needsRebuild){
