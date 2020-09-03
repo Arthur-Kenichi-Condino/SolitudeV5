@@ -26,7 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <NoConfig>true</NoConfig>
@@ -61,6 +61,7 @@
     <Compile Include="Assets\NVIDIA\Flex\Assets\FlexContainer.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Assets\FlexClothAsset.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Assets\FlexSolidAsset.cs" />
+    <Compile Include="Assets\AKCondinoO\UI\Buttons.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Native\Flex.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Helpers\FlexBuffer.cs" />
     <Compile Include="Assets\AKCondinoO\VoxelSystem\Biome.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Assets\AKCondinoO\VoxelSystem\Tables.cs" />
     <Compile Include="Assets\AKCondinoO\VoxelSystem\TerrainChunk.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Helpers\FlexSoftSkinning.cs" />
+    <Compile Include="Assets\AKCondinoO\UI\F3Build.cs" />
     <Compile Include="Assets\AKCondinoO\Main.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Helpers\FlexFluidRenderer.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Native\FlexExt.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="Assets\NVIDIA\Flex\Actors\FlexSourceActor.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Assets\FlexAsset.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Assets\FlexSourceAsset.cs" />
+    <Compile Include="Assets\AKCondinoO\UI\F1Sim.cs" />
     <Compile Include="Assets\AKCondinoO\FileInfoExtensions.cs" />
     <Compile Include="Assets\AKCondinoO\SimActor.cs" />
     <Compile Include="Assets\AKCondinoO\Chares\Pathfinder.cs" />
@@ -97,9 +100,65 @@
     <Compile Include="Assets\AKCondinoO\VoxelSystem\Plains.cs" />
     <Compile Include="Assets\AKCondinoO\VoxelSystem\TerrainChunkManager.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Helpers\FlexScene.cs" />
-    <Compile Include="Assets\AKCondinoO\UI\Buttons.cs" />
-    <Compile Include="Assets\AKCondinoO\UI\F1Sim.cs" />
-    <Compile Include="Assets\AKCondinoO\UI\F3Build.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\UnsafeMemory.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\IJsonFormatterResolver.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Resolvers\DynamicGenericResolver.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Resolvers\CompositeResolver.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\Emit\MetaMember.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\DoubleConversion\StringToDoubleConverter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\FarmHash.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Resolvers\StandardResolver.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\CollectionFormatters.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\Emit\ILViewer.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\DoubleConversion\PowersOfTenCache.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\IgnoreFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\DoubleConversion\IEEE.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\JsonWriter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\Emit\ExpressionUtility.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\DoubleConversion\StringToDouble.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\AutomataDictionary.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\DynamicObjectTypeFallbackFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\PrimitiveObjectFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\DateTimeFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\Emit\MetaType.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\BinaryUtil.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\ThreadsafeTypeKeyHashTable.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\AnonymousFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\JsonReader.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Attributes.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Unity\ResolverAndFormatters.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\PrimitiveFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\Emit\DynamicAssembly.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\DoubleConversion\DiyFp.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\ByteArrayStringHashTable.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\DoubleConversion\DoubleToStringConverter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\MultiDimentionalArrayFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\DictionaryFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\EnumFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Resolvers\BuiltinResolver.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Resolvers\DynamicObjectResolver.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\NumberConverter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\StandardClassLibraryFormatters.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\GuidBits.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Resolvers\EnumResolver.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\ValueTupleFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Shims\Reflection.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\Emit\ILGeneratorExtensions.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\UnsafeMemory.Low.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\JsonSerializer.NonGeneric.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\StringEncoding.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\JsonSerializer.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Resolvers\AttributeFormatterResolver.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\JsonToken.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\ByteArrayComparer.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\ArrayBuffer.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\IJsonFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\FuncExtensions.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\NullableFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\ArrayPool.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\ReflectionExtensions.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\TupleFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\StringMutator.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\NVIDIA\Flex\Resources\Shaders\FlexDrawFluid.shader" />
@@ -323,6 +382,15 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.0-preview\Runtime\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory">
+      <HintPath>Assets\Plugins\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Buffers">
+      <HintPath>Assets\Plugins\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions.4.2.0.1">
+      <HintPath>Assets\Plugins\System.Threading.Tasks.Extensions.4.2.0.1.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>A:\Program Files\2020.1.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\mscorlib.dll</HintPath>
@@ -716,6 +784,10 @@
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
       <Project>{E5274ECA-092E-AF89-D57A-8154E5C5F5EE}</Project>
       <Name>Assembly-CSharp-firstpass</Name>
+    </ProjectReference>
+    <ProjectReference Include="MessagePack.csproj">
+      <Project>{9464F564-D8E5-1530-394D-09A2E2214017}</Project>
+      <Name>MessagePack</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

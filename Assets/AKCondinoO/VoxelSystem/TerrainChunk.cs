@@ -1,4 +1,5 @@
-﻿using paulbourke.MarchingCubes;
+﻿using MessagePack;
+using paulbourke.MarchingCubes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -114,7 +115,6 @@ public struct Vertex{
 [NonSerialized]Vector2Int cnkRgn1;
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is NativeList<Vertex>TempVer&&parameters[3]is NativeList<ushort>TempTriangles&&parameters[4]is System.Random random&&parameters[5]is string[]saveSubfolder){
-DataContractSerializer saveContract=new DataContractSerializer(typeof(Dictionary<Vector3Int,(double density,MaterialId material)>));
 Voxel[]polygonCell=new Voxel[8];
         while(!Stop){foregroundDataSet.WaitOne();if(Stop)goto _Stop;
 lock(tasksBusyCount_Syn){tasksBusyCount++;}queue.WaitOne(tasksBusyCount*5000);
@@ -136,7 +136,7 @@ try{
 using(file=new FileStream(fileName,FileMode.Open,FileAccess.Read,FileShare.Read)){
 if(file.Length>0){
 if(LOG&&LOG_LEVEL<=1)Debug.Log("file has data, loading it before building the mesh:fileName:"+fileName);
-if(saveContract.ReadObject(file)is Dictionary<Vector3Int,(double density,MaterialId material)>fileData){
+if(MessagePackSerializer.Deserialize(typeof(Dictionary<Vector3Int,(double density,MaterialId material)>),file)is Dictionary<Vector3Int,(double density,MaterialId material)>fileData){
 
 foreach(var voxelData in fileData){
 voxels[GetIdx(voxelData.Key.x,voxelData.Key.y,voxelData.Key.z)]=new Voxel(voxelData.Value.density,Vector3.zero,voxelData.Value.material);
@@ -184,7 +184,7 @@ try{
 using(file=new FileStream(fileName,FileMode.Open,FileAccess.Read,FileShare.Read)){
 if(file.Length>0){
 if(LOG&&LOG_LEVEL<=1)Debug.Log("file has data, loading it before building the mesh:fileName:"+fileName);
-if(saveContract.ReadObject(file)is Dictionary<Vector3Int,(double density,MaterialId material)>fileData){
+if(MessagePackSerializer.Deserialize(typeof(Dictionary<Vector3Int,(double density,MaterialId material)>),file)is Dictionary<Vector3Int,(double density,MaterialId material)>fileData){
         
 foreach(var voxelData in fileData){
 neighbors[i1][GetIdx(voxelData.Key.x,voxelData.Key.y,voxelData.Key.z)]=new Voxel(voxelData.Value.density,Vector3.zero,voxelData.Value.material);
