@@ -189,7 +189,8 @@ while(!handle3ciiA1.IsCompleted)yield return null;handle3ciiA1.Complete();
 while(!handle3ciiB1.IsCompleted)yield return null;handle3ciiB1.Complete();
 while(!handle3ciiA2.IsCompleted)yield return null;handle3ciiA2.Complete();
 while(!handle3ciiB2.IsCompleted)yield return null;handle3ciiB2.Complete();
-var watch=System.Diagnostics.Stopwatch.StartNew();
+int loopLimitToYield=Mathf.Max(gridResolution.x,gridResolution.y)*AStarVerticalHits*26,countToYield=0;//  <- This keeps FPS in a good mood
+if(LOG&&LOG_LEVEL<=2)Debug.Log("yield every "+loopLimitToYield+" objects processed");var watch=System.Diagnostics.Stopwatch.StartNew();
 resultsManaged3ciA.Clear();
 resultsManaged3ciB.Clear();
 resultsManaged3ciiA1.Clear();
@@ -200,7 +201,8 @@ resultsManaged3ciiB2.Clear();for(int c=0;c<commands3ciA.Length;c++){resultsManag
                                                                     resultsManaged3ciiA1.Add((results3ciiA1[c],results3ciiA1[c].collider!=null));
                                                                     resultsManaged3ciiB1.Add((results3ciiB1[c],results3ciiB1[c].collider!=null));
                                                                     resultsManaged3ciiA2.Add((results3ciiA2[c],results3ciiA2[c].collider!=null));
-                                                                    resultsManaged3ciiB2.Add((results3ciiB2[c],results3ciiB2[c].collider!=null));}
+                                                                    resultsManaged3ciiB2.Add((results3ciiB2[c],results3ciiB2[c].collider!=null));
+if(++countToYield>loopLimitToYield){yield return null;countToYield=0;}}
 if(LOG&&LOG_LEVEL<=2)Debug.Log("took "+watch.ElapsedMilliseconds+" ms");
 
 
@@ -494,6 +496,10 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3c");
 foreach(var kvp in resultToNodeAndNeighbour){var ridx=kvp.Key;var node=kvp.Value.Item1;var n=kvp.Value.Item2;var neighbour=node.neighbours[n];var reachable=node.neighbourCanBeReached[n];
 var result3ciA=resultsManaged3ciA[ridx];
 var result3ciB=resultsManaged3ciB[ridx];
+var result3ciiA1=resultsManaged3ciiA1[ridx];
+var result3ciiB1=resultsManaged3ciiB1[ridx];
+var result3ciiA2=resultsManaged3ciiA2[ridx];
+var result3ciiB2=resultsManaged3ciiB2[ridx];
 if(!result3ciA.colliderNotNull&&
    !result3ciB.colliderNotNull){
     reachable.yes=true;
