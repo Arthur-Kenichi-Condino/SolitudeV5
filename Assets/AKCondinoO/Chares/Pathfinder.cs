@@ -45,7 +45,11 @@ Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,ToSetGridVer
 commands3a=new NativeList<BoxcastCommand>(resultsBufferSize,Allocator.Persistent),results3a=new NativeArray<RaycastHit>(resultsBufferSize,Allocator.Persistent,NativeArrayOptions.UninitializedMemory),
 commands3b=new NativeList<BoxcastCommand>(resultsBufferSize,Allocator.Persistent),results3b=new NativeArray<RaycastHit>(resultsBufferSize,Allocator.Persistent,NativeArrayOptions.UninitializedMemory),
 commands3ciA=new NativeList<BoxcastCommand>(Allocator.Persistent),results3ciA=new NativeList<RaycastHit>(Allocator.Persistent),
-commands3ciB=new NativeList<RaycastCommand>(Allocator.Persistent),results3ciB=new NativeList<RaycastHit>(Allocator.Persistent),},TaskCreationOptions.LongRunning);
+commands3ciB=new NativeList<RaycastCommand>(Allocator.Persistent),results3ciB=new NativeList<RaycastHit>(Allocator.Persistent),
+commands3ciiA1=new NativeList<BoxcastCommand>(Allocator.Persistent),results3ciiA1=new NativeList<RaycastHit>(Allocator.Persistent),
+commands3ciiB1=new NativeList<RaycastCommand>(Allocator.Persistent),results3ciiB1=new NativeList<RaycastHit>(Allocator.Persistent),
+commands3ciiA2=new NativeList<BoxcastCommand>(Allocator.Persistent),results3ciiA2=new NativeList<RaycastHit>(Allocator.Persistent),
+commands3ciiB2=new NativeList<RaycastCommand>(Allocator.Persistent),results3ciiB2=new NativeList<RaycastHit>(Allocator.Persistent),},TaskCreationOptions.LongRunning);
 }
 bool Stop{
     get{bool tmp;lock(Stop_Syn){tmp=Stop_v;      }return tmp;}
@@ -62,12 +66,20 @@ handle3a.Complete();
 handle3b.Complete();
 handle3ciA.Complete();
 handle3ciB.Complete();
+handle3ciiA1.Complete();
+handle3ciiB1.Complete();
+handle3ciiA2.Complete();
+handle3ciiB2.Complete();
 Stop=true;try{task.Wait();}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}
 try{if(ToSetGridVerRaycasts.IsCreated)ToSetGridVerRaycasts.Dispose();}finally{}try{if(ToSetGridVerHitsResultsBuffer.IsCreated)ToSetGridVerHitsResultsBuffer.Dispose();}finally{}
 try{if(commands3a.IsCreated)commands3a.Dispose();}finally{}try{if(results3a.IsCreated)results3a.Dispose();}finally{}
 try{if(commands3b.IsCreated)commands3b.Dispose();}finally{}try{if(results3b.IsCreated)results3b.Dispose();}finally{}
 try{if(commands3ciA.IsCreated)commands3ciA.Dispose();}finally{}try{if(results3ciA.IsCreated)results3ciA.Dispose();}finally{}
 try{if(commands3ciB.IsCreated)commands3ciB.Dispose();}finally{}try{if(results3ciB.IsCreated)results3ciB.Dispose();}finally{}
+try{if(commands3ciiA1.IsCreated)commands3ciiA1.Dispose();}finally{}try{if(results3ciiA1.IsCreated)results3ciiA1.Dispose();}finally{}
+try{if(commands3ciiB1.IsCreated)commands3ciiB1.Dispose();}finally{}try{if(results3ciiB1.IsCreated)results3ciiB1.Dispose();}finally{}
+try{if(commands3ciiA2.IsCreated)commands3ciiA2.Dispose();}finally{}try{if(results3ciiA2.IsCreated)results3ciiA2.Dispose();}finally{}
+try{if(commands3ciiB2.IsCreated)commands3ciiB2.Dispose();}finally{}try{if(results3ciiB2.IsCreated)results3ciiB2.Dispose();}finally{}
                    base.OnDisable();
 }
 protected override void OnDestroy(){if(Stop){
@@ -91,6 +103,7 @@ return null;}
 protected override void Update(){
 
 
+    if(Input.GetKeyDown(KeyCode.C))DEBUG_GOTO=true;
     if(DEBUG_GOTO){DEBUG_GOTO=false;GoTo(new Ray(new Vector3(1,0,-10),Vector3.down));//GoToQueue.AddLast(new RaycastHit());
         Debug.DrawRay(new Vector3(1,0,-10),Vector3.down*1000,Color.red,5f);
     }
@@ -110,6 +123,10 @@ if(commands3a.IsCreated)commands3a.Clear();
 if(commands3b.IsCreated)commands3b.Clear();
 if(commands3ciA.IsCreated)commands3ciA.Clear();if(results3ciA.IsCreated)results3ciA.Clear();
 if(commands3ciB.IsCreated)commands3ciB.Clear();if(results3ciB.IsCreated)results3ciB.Clear();
+if(commands3ciiA1.IsCreated)commands3ciiA1.Clear();if(results3ciiA1.IsCreated)results3ciiA1.Clear();
+if(commands3ciiB1.IsCreated)commands3ciiB1.Clear();if(results3ciiB1.IsCreated)results3ciiB1.Clear();
+if(commands3ciiA2.IsCreated)commands3ciiA2.Clear();if(results3ciiA2.IsCreated)results3ciiA2.Clear();
+if(commands3ciiB2.IsCreated)commands3ciiB2.Clear();if(results3ciiB2.IsCreated)results3ciiB2.Clear();
             backgroundDataSet1.Reset();foregroundDataSet1.Set();
         }
     }
@@ -162,11 +179,27 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("do raycasts 3c");
 
 handle3ciA=BoxcastCommand.ScheduleBatch(commands3ciA,results3ciA,1,default(JobHandle));
 handle3ciB=RaycastCommand.ScheduleBatch(commands3ciB,results3ciB,1,default(JobHandle));
+handle3ciiA1=BoxcastCommand.ScheduleBatch(commands3ciiA1,results3ciiA1,1,default(JobHandle));
+handle3ciiB1=RaycastCommand.ScheduleBatch(commands3ciiB1,results3ciiB1,1,default(JobHandle));
+handle3ciiA2=BoxcastCommand.ScheduleBatch(commands3ciiA2,results3ciiA2,1,default(JobHandle));
+handle3ciiB2=RaycastCommand.ScheduleBatch(commands3ciiB2,results3ciiB2,1,default(JobHandle));
 while(!handle3ciA.IsCompleted)yield return null;handle3ciA.Complete();
 while(!handle3ciB.IsCompleted)yield return null;handle3ciB.Complete();
+while(!handle3ciiA1.IsCompleted)yield return null;handle3ciiA1.Complete();
+while(!handle3ciiB1.IsCompleted)yield return null;handle3ciiB1.Complete();
+while(!handle3ciiA2.IsCompleted)yield return null;handle3ciiA2.Complete();
+while(!handle3ciiB2.IsCompleted)yield return null;handle3ciiB2.Complete();
 resultsManaged3ciA.Clear();
-resultsManaged3ciB.Clear();for(int c=0;c<commands3ciA.Length;c++){resultsManaged3ciA.Add((results3ciA[c],results3ciA[c].collider!=null));
-                                                                  resultsManaged3ciB.Add((results3ciB[c],results3ciB[c].collider!=null));}
+resultsManaged3ciB.Clear();
+resultsManaged3ciiA1.Clear();
+resultsManaged3ciiB1.Clear();
+resultsManaged3ciiA2.Clear();
+resultsManaged3ciiB2.Clear();for(int c=0;c<commands3ciA.Length;c++){resultsManaged3ciA.Add((results3ciA[c],results3ciA[c].collider!=null));
+                                                                    resultsManaged3ciB.Add((results3ciB[c],results3ciB[c].collider!=null));
+                                                                    resultsManaged3ciiA1.Add((results3ciiA1[c],results3ciiA1[c].collider!=null));
+                                                                    resultsManaged3ciiB1.Add((results3ciiB1[c],results3ciiB1[c].collider!=null));
+                                                                    resultsManaged3ciiA2.Add((results3ciiA2[c],results3ciiA2[c].collider!=null));
+                                                                    resultsManaged3ciiB2.Add((results3ciiB2[c],results3ciiB2[c].collider!=null));}
 
 
 foregroundDataSet3c.Set();
@@ -193,6 +226,10 @@ goto _loop;
 [NonSerialized]Dictionary<int,(Node,int)>resultToNodeAndNeighbour;
 [NonSerialized]JobHandle handle3ciA;[NonSerialized]NativeList<BoxcastCommand>commands3ciA;[NonSerialized]NativeList<RaycastHit>results3ciA;[NonSerialized]readonly List<(RaycastHit hit,bool colliderNotNull)>resultsManaged3ciA=new List<(RaycastHit,bool)>();
 [NonSerialized]JobHandle handle3ciB;[NonSerialized]NativeList<RaycastCommand>commands3ciB;[NonSerialized]NativeList<RaycastHit>results3ciB;[NonSerialized]readonly List<(RaycastHit hit,bool colliderNotNull)>resultsManaged3ciB=new List<(RaycastHit,bool)>();
+[NonSerialized]JobHandle handle3ciiA1;[NonSerialized]NativeList<BoxcastCommand>commands3ciiA1;[NonSerialized]NativeList<RaycastHit>results3ciiA1;[NonSerialized]readonly List<(RaycastHit hit,bool colliderNotNull)>resultsManaged3ciiA1=new List<(RaycastHit,bool)>();
+[NonSerialized]JobHandle handle3ciiB1;[NonSerialized]NativeList<RaycastCommand>commands3ciiB1;[NonSerialized]NativeList<RaycastHit>results3ciiB1;[NonSerialized]readonly List<(RaycastHit hit,bool colliderNotNull)>resultsManaged3ciiB1=new List<(RaycastHit,bool)>();
+[NonSerialized]JobHandle handle3ciiA2;[NonSerialized]NativeList<BoxcastCommand>commands3ciiA2;[NonSerialized]NativeList<RaycastHit>results3ciiA2;[NonSerialized]readonly List<(RaycastHit hit,bool colliderNotNull)>resultsManaged3ciiA2=new List<(RaycastHit,bool)>();
+[NonSerialized]JobHandle handle3ciiB2;[NonSerialized]NativeList<RaycastCommand>commands3ciiB2;[NonSerialized]NativeList<RaycastHit>results3ciiB2;[NonSerialized]readonly List<(RaycastHit hit,bool colliderNotNull)>resultsManaged3ciiB2=new List<(RaycastHit,bool)>();
 [NonSerialized]readonly List<(int idx,Node node,RaycastHit floorHit)>nodesGrounded=new List<(int,Node,RaycastHit)>();
 [NonSerialized]readonly List<(int idx,Node node,RaycastHit floorHit)>nodesWalkable=new List<(int,Node,RaycastHit)>();
 [NonSerialized]readonly List<(int idx,Node node,RaycastHit obstacleHit)>nodesObstructed=new List<(int,Node,RaycastHit)>();
@@ -278,6 +315,10 @@ i+=AStarVerticalHits;j++;}}
 resultToNodeAndNeighbour=new Dictionary<int,(Node,int)>(tnc);
 commands3ciA.Capacity=tnc;results3ciA.Capacity=tnc;
 commands3ciB.Capacity=tnc;results3ciB.Capacity=tnc;
+commands3ciiA1.Capacity=tnc;results3ciiA1.Capacity=tnc;
+commands3ciiB1.Capacity=tnc;results3ciiB1.Capacity=tnc;
+commands3ciiA2.Capacity=tnc;results3ciiA2.Capacity=tnc;
+commands3ciiB2.Capacity=tnc;results3ciiB2.Capacity=tnc;
 for(int nodeIdx=0;nodeIdx<Nodes.Length;nodeIdx++){
 Nodes[nodeIdx].indexOfMe.Clear();var node=Nodes[nodeIdx];
 for(int n=0;n<node.neighbours.Count;n++){var neighbour=node.neighbours[n].node;
@@ -420,6 +461,20 @@ var look=direction3c;
 Quaternion orientation3c=Quaternion.LookRotation(look!=Vector3.zero?look:startForward,Vector3.up);
 results3ciA.AddNoResize(new RaycastHit());commands3ciA.AddNoResize(new BoxcastCommand(startPos,halfExtents3c,orientation3c,direction3c,Vector3.Distance(endPos,startPos),noCharLayer));
 results3ciB.AddNoResize(new RaycastHit());commands3ciB.AddNoResize(new RaycastCommand(startPos,direction3c,Vector3.Distance(endPos,startPos),noCharLayer));
+Vector3 jumpPos;
+if(startPos.y<endPos.y){
+        jumpPos=startPos;
+        jumpPos.y=endPos.y;
+        direction3c=(jumpPos-startPos).normalized;
+}else{
+        jumpPos=endPos;
+        jumpPos.y=startPos.y;
+        direction3c=(jumpPos-startPos).normalized;
+}
+results3ciiA1.AddNoResize(new RaycastHit());commands3ciiA1.AddNoResize(new BoxcastCommand(startPos,halfExtents3c,orientation3c,direction3c,Vector3.Distance(jumpPos,startPos),noCharLayer));
+results3ciiB1.AddNoResize(new RaycastHit());commands3ciiB1.AddNoResize(new RaycastCommand(startPos,direction3c,Vector3.Distance(jumpPos,startPos),noCharLayer));
+results3ciiA2.AddNoResize(new RaycastHit());commands3ciiA2.AddNoResize(new BoxcastCommand(jumpPos,halfExtents3c,orientation3c,direction3c,Vector3.Distance(endPos,jumpPos),noCharLayer));
+results3ciiB2.AddNoResize(new RaycastHit());commands3ciiB2.AddNoResize(new RaycastCommand(jumpPos,direction3c,Vector3.Distance(endPos,jumpPos),noCharLayer));
 resultToNodeAndNeighbour[ridx++]=(nodesWalkable[w].node,n);
         }
     }
@@ -435,6 +490,15 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3c");
 foreach(var kvp in resultToNodeAndNeighbour){var ridx=kvp.Key;var node=kvp.Value.Item1;var n=kvp.Value.Item2;var neighbour=node.neighbours[n];var reachable=node.neighbourCanBeReached[n];
 var result3ciA=resultsManaged3ciA[ridx];
 var result3ciB=resultsManaged3ciB[ridx];
+if(!result3ciA.colliderNotNull&&
+   !result3ciB.colliderNotNull){
+    reachable.yes=true;
+    reachable.mode=Node.PreferredReachableMode.ramp;
+//}else if(){
+}else{
+    reachable.yes=false;
+}
+node.neighbourCanBeReached[n]=reachable;
 }
 //for(int w=0,ridx=0;w<nodesWalkable.Count;w++){
 //    for(int n=0;n<nodesWalkable[w].node.neighbourCanBeReached.Count;n++,ridx++){var neighbour=nodesWalkable[w].node.neighbours[n];var reachable=nodesWalkable[w].node.neighbourCanBeReached[n];
