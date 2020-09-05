@@ -162,7 +162,8 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("do raycasts 3c");
 
 handle3ciA=BoxcastCommand.ScheduleBatch(commands3ciA,results3ciA,1,default(JobHandle));
 handle3ciB=RaycastCommand.ScheduleBatch(commands3ciB,results3ciB,1,default(JobHandle));
-while(!handle3ciA.IsCompleted||!handle3ciB.IsCompleted)yield return null;handle3ciA.Complete();handle3ciB.Complete();
+while(!handle3ciA.IsCompleted)yield return null;handle3ciA.Complete();
+while(!handle3ciB.IsCompleted)yield return null;handle3ciB.Complete();
 resultsManaged3ciA.Clear();
 resultsManaged3ciB.Clear();for(int c=0;c<commands3ciA.Length;c++){resultsManaged3ciA.Add((results3ciA[c],results3ciA[c].collider!=null));
                                                                   resultsManaged3ciB.Add((results3ciB[c],results3ciB[c].collider!=null));}
