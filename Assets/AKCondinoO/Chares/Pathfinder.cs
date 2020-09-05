@@ -235,6 +235,7 @@ goto _loop;
 [NonSerialized]readonly List<(int idx,Node node,RaycastHit obstacleHit)>nodesObstructed=new List<(int,Node,RaycastHit)>();
 [NonSerialized]Heap<Node>ClosedNodes;
 [NonSerialized]Heap<Node>OpenNodes;
+[NonSerialized]public static readonly object tasksBusyCount_Syn=new object();[NonSerialized]public static int tasksBusyCount=0;[NonSerialized]public static readonly AutoResetEvent queue=new AutoResetEvent(true);
 [NonSerialized]RaycastHit target;[NonSerialized]Vector3 startPos;[NonSerialized]Vector3 startForward;[NonSerialized]Vector3 boundsExtents;[NonSerialized]bool preferClimbing=false;[NonSerialized]List<Node>resultPath=new List<Node>(0);
 void BG(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is NativeList<RaycastCommand>ToSetGridVerRaycasts&&parameters[3]is NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer
@@ -326,6 +327,7 @@ int indexOfMe=-1;for(int nn=0;nn<neighbour.neighbours.Count;nn++){if(neighbour.n
 }
 }
         while(!Stop){foregroundDataSet1.WaitOne();if(Stop)goto _Stop;
+lock(tasksBusyCount_Syn){tasksBusyCount++;}queue.WaitOne(tasksBusyCount*100);
 if(LOG&&LOG_LEVEL<=2)Debug.Log("begin pathfind");
             NodeHalfSize=boundsExtents;
             NodeHalfSize.x+=.1f;
@@ -566,6 +568,7 @@ if(path.Count>0)path.Reverse();
 resultPath=path;
 
 
+lock(tasksBusyCount_Syn){tasksBusyCount--;}queue.Set();
 backgroundDataSet1.Set();}
 int GetNodeIndex(int cz,int vy,int cx){return (cx+AStarDistance.x)*gridResolution.y*AStarVerticalHits+(cz+AStarDistance.y)*AStarVerticalHits+vy;}Node GetNodeAt(Vector3 position){Node result=null;float minDis=-1,dis;for(int nodeIdx=0;nodeIdx<Nodes.Length;nodeIdx++){var node=Nodes[nodeIdx];dis=Vector3.Distance(position,node.Position);if(minDis==-1||dis<minDis){result=node;minDis=dis;}}return result;}
         _Stop:{
