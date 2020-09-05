@@ -39,6 +39,11 @@ inputViewRotationEuler.y=inputViewRotationEuler.y%360;
 }
 }
                    base.ProcessMovementInput();
+if(BeingCamFollowed){
+    CamPosition=drawPos+(headDrawRotation*CamOffset);
+    CamLookAtForward=((headDrawRotation*(Vector3.forward*1000))-CamPosition).normalized;
+    CamLookAtUp=transform.up;
+}
 }
 #if UNITY_EDITOR
 protected override void OnDrawGizmos(){

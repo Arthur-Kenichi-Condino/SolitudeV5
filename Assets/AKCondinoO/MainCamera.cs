@@ -73,7 +73,12 @@ inputViewRotationEuler.y+= Enabled.MOUSE_ROTATION_DELTA_X[0]*InputViewRotationIn
 inputViewRotationEuler.x=inputViewRotationEuler.x%360;
 inputViewRotationEuler.y=inputViewRotationEuler.y%360;
 #endregion
+}else{
+inputMoveSpeed=Vector3.zero;
+    tgtRot=Quaternion.LookRotation(CamFollowing.CamLookAtForward,CamFollowing.CamLookAtUp).eulerAngles;tgtPos=CamFollowing.CamPosition;
 }
+}else{
+inputMoveSpeed=Vector3.zero;
 }
                    base.Update();
 }

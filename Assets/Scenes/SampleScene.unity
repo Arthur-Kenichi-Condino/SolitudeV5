@@ -811,7 +811,7 @@ PrefabInstance:
     - target: {fileID: 4283238192805469864, guid: d69fcc595bac3f74c8ac30ec3b2d5a1c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.53
+      value: -1.91
       objectReference: {fileID: 0}
     - target: {fileID: 4283238192805469864, guid: d69fcc595bac3f74c8ac30ec3b2d5a1c,
         type: 3}
@@ -892,6 +892,11 @@ PrefabInstance:
         type: 3}
       propertyPath: LOG
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855673258895166065, guid: d69fcc595bac3f74c8ac30ec3b2d5a1c,
+        type: 3}
+      propertyPath: InputViewRotationIncreaseSpeed
+      value: 0.025
       objectReference: {fileID: 0}
     - target: {fileID: 8074571762502490011, guid: d69fcc595bac3f74c8ac30ec3b2d5a1c,
         type: 3}
