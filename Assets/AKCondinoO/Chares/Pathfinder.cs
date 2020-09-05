@@ -380,6 +380,7 @@ if(LOG&&LOG_LEVEL<=0)Debug.Log("node.neighbours.Count:"+node.neighbours.Count+"=
 for(int n=0;n<node.neighbours.Count;n++){var neighbour=node.neighbours[n].node;var indexOfMe=node.indexOfMe[n];
 var reachableState=neighbour.neighbourCanBeReached[indexOfMe];
     reachableState.yes=yes;
+    reachableState.mode=yes?Node.PreferredReachableMode.walk:Node.PreferredReachableMode.teleport;
     neighbour.neighbourCanBeReached[indexOfMe]=reachableState;
 }
 node.Walkable=yes;
@@ -504,7 +505,10 @@ if(!result3ciA.colliderNotNull&&
    !result3ciB.colliderNotNull){
     reachable.yes=true;
     reachable.mode=Node.PreferredReachableMode.ramp;
-//}else if(){
+}else if(!result3ciiA1.colliderNotNull&&!result3ciiA2.colliderNotNull&&
+         !result3ciiB1.colliderNotNull&&!result3ciiB2.colliderNotNull){
+    reachable.yes=true;
+    reachable.mode=neighbour.node.Position.y>=node.Position.y?Node.PreferredReachableMode.jump:Node.PreferredReachableMode.fall;
 }else{
     reachable.yes=false;
 }
