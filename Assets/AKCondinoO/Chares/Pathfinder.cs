@@ -189,6 +189,7 @@ while(!handle3ciiA1.IsCompleted)yield return null;handle3ciiA1.Complete();
 while(!handle3ciiB1.IsCompleted)yield return null;handle3ciiB1.Complete();
 while(!handle3ciiA2.IsCompleted)yield return null;handle3ciiA2.Complete();
 while(!handle3ciiB2.IsCompleted)yield return null;handle3ciiB2.Complete();
+var watch=System.Diagnostics.Stopwatch.StartNew();
 resultsManaged3ciA.Clear();
 resultsManaged3ciB.Clear();
 resultsManaged3ciiA1.Clear();
@@ -200,6 +201,7 @@ resultsManaged3ciiB2.Clear();for(int c=0;c<commands3ciA.Length;c++){resultsManag
                                                                     resultsManaged3ciiB1.Add((results3ciiB1[c],results3ciiB1[c].collider!=null));
                                                                     resultsManaged3ciiA2.Add((results3ciiA2[c],results3ciiA2[c].collider!=null));
                                                                     resultsManaged3ciiB2.Add((results3ciiB2[c],results3ciiB2[c].collider!=null));}
+if(LOG&&LOG_LEVEL<=2)Debug.Log("took "+watch.ElapsedMilliseconds+" ms");
 
 
 foregroundDataSet3c.Set();
