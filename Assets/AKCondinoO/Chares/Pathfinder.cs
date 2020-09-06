@@ -99,12 +99,14 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("GoTo:"+hit.point);
 return GoToQueue.AddLast(hit);
 }
 return null;}    
+protected void MoveToRandom(){
+}
 [NonSerialized]readonly protected Queue<(Vector3 pos,Node.PreferredReachableMode mode)>CurPath=new Queue<(Vector3,Node.PreferredReachableMode)>();[NonSerialized]protected(Vector3 pos,Node.PreferredReachableMode mode)?CurPathTgt=null;
 [NonSerialized]readonly LinkedList<RaycastHit>GoToQueue=new LinkedList<RaycastHit>();[NonSerialized]bool tracing;
 protected override void Update(){
 
 
-    if(Input.GetKeyDown(KeyCode.C))DEBUG_GOTO=true;
+    //if(Input.GetKeyDown(KeyCode.C))DEBUG_GOTO=true;
     if(DEBUG_GOTO){DEBUG_GOTO=false;GoTo(new Ray(new Vector3(1,0,-10),Vector3.down));//GoToQueue.AddLast(new RaycastHit());
         Debug.DrawRay(new Vector3(1,0,-10),Vector3.down*1000,Color.red,5f);
     }
