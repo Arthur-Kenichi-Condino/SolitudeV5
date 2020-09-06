@@ -18,15 +18,15 @@ if(!Enabled.PAUSE[0]){
 if(BeingCamFollowed){
 if(IsGrounded||!HittingWall){
 #region FORWARD BACKWARD
-    if(Enabled.FORWARD [0]){inputMoveSpeed.z+=InputMoveAcceleration.z;} 
-    if(Enabled.BACKWARD[0]){inputMoveSpeed.z-=InputMoveAcceleration.z;}
+    if(Enabled.FORWARD [0]){inputMoveSpeed.z+=InputMoveAcceleration.z;Autonomous=AutonomyDelayAfterControl;} 
+    if(Enabled.BACKWARD[0]){inputMoveSpeed.z-=InputMoveAcceleration.z;Autonomous=AutonomyDelayAfterControl;}
         if(!Enabled.FORWARD[0]&&!Enabled.BACKWARD[0]){inputMoveSpeed.z=0;}
             if( inputMoveSpeed.z>InputMaxMoveSpeed.z){inputMoveSpeed.z= InputMaxMoveSpeed.z;}
             if(-inputMoveSpeed.z>InputMaxMoveSpeed.z){inputMoveSpeed.z=-InputMaxMoveSpeed.z;}
 #endregion
 #region RIGHT LEFT
-    if(Enabled.RIGHT   [0]){inputMoveSpeed.x+=InputMoveAcceleration.x;} 
-    if(Enabled.LEFT    [0]){inputMoveSpeed.x-=InputMoveAcceleration.x;}
+    if(Enabled.RIGHT   [0]){inputMoveSpeed.x+=InputMoveAcceleration.x;Autonomous=AutonomyDelayAfterControl;} 
+    if(Enabled.LEFT    [0]){inputMoveSpeed.x-=InputMoveAcceleration.x;Autonomous=AutonomyDelayAfterControl;}
         if(!Enabled.RIGHT[0]&&!Enabled.LEFT[0]){inputMoveSpeed.x=0;}
             if( inputMoveSpeed.x>InputMaxMoveSpeed.x){inputMoveSpeed.x= InputMaxMoveSpeed.x;}
             if(-inputMoveSpeed.x>InputMaxMoveSpeed.x){inputMoveSpeed.x=-InputMaxMoveSpeed.x;}
@@ -40,9 +40,10 @@ inputViewRotationEuler.x+=-Enabled.MOUSE_ROTATION_DELTA_Y[0]*InputViewRotationIn
 inputViewRotationEuler.y+= Enabled.MOUSE_ROTATION_DELTA_X[0]*InputViewRotationIncreaseSpeed;
 inputViewRotationEuler.x=inputViewRotationEuler.x%360;
 inputViewRotationEuler.y=inputViewRotationEuler.y%360;
+if(Enabled.MOUSE_ROTATION_DELTA_Y[0]!=0||Enabled.MOUSE_ROTATION_DELTA_X[0]!=0)Autonomous=AutonomyDelayAfterControl;
 #endregion
 if(IsGrounded&&(Jump||(Jump=Enabled.JUMP[0]!=Enabled.JUMP[1]))){
-inputMoveSpeed.y=InputMoveAcceleration.y;
+inputMoveSpeed.y=InputMoveAcceleration.y;Autonomous=AutonomyDelayAfterControl;
 }else{
 inputMoveSpeed.y=0;
 }

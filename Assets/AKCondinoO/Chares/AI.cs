@@ -3,9 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class AI:Pathfinder{
+protected float Autonomous=0;public float AutonomyDelayAfterControl=30;
 protected override void Update(){
                    base.Update();
+if(Autonomous<=0){
 WALK_PATH();
+}else{
+    Autonomous-=Time.deltaTime;
+}
 }
 [NonSerialized]public Vector3 ReachedTgtDisThreshold=new Vector3(.1f,.1f,.1f);
 [NonSerialized]Vector3 _axisDiff,_dir;
@@ -41,17 +46,38 @@ if(_axisDist.y<=ReachedTgtDisThreshold.y&&
 
 return;
 }
-if(_axisDist.y>float.Epsilon||
-   _axisDist.x>float.Epsilon||
+if(_axisDist.x>float.Epsilon||
    _axisDist.z>float.Epsilon){
 inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.eulerAngles.y;
 }
 
 
+if(CurPathTgt.Value.mode==Node.PreferredReachableMode.jump&&transform.position.y<CurPathTgt.Value.pos.y+.1f){
+
+    
+inputMoveSpeed.x=0;
+inputMoveSpeed.z=0;
+if(IsGrounded){
+Jump=true;
+inputMoveSpeed.y=InputMaxMoveSpeed.y;
+}else{
+inputMoveSpeed.y=0;
+}
+
+
+}else{
+    
+
 inputMoveSpeed.x=0;
 inputMoveSpeed.z=InputMaxMoveSpeed.z;
+inputMoveSpeed.y=0;
 
 
+}
+
+
+}else{
+inputMoveSpeed=Vector3.zero;
 }
 }
 #if UNITY_EDITOR

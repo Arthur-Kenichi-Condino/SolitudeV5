@@ -376,7 +376,7 @@ Nodes[nodeIdx].valid=false;
 TellNeighboursReachabilityOf(Nodes[nodeIdx],false);
 }else{
 Nodes[nodeIdx].valid=true;
-Nodes[nodeIdx].Position=hit.point+Vector3.up*NodeHalfSize.y;Nodes[nodeIdx].Normal=hit.normal.normalized;
+Nodes[nodeIdx].Position=hit.point+Vector3.up*(NodeHalfSize.y+Mathf.Tan(Mathf.Deg2Rad*Vector3.Angle(Vector3.up,hit.normal.normalized))*NodeHalfSize.z);Nodes[nodeIdx].Normal=hit.normal.normalized;
 TellNeighboursReachabilityOf(Nodes[nodeIdx],true);
 nodesGrounded.Add((nodeIdx,Nodes[nodeIdx],hit));
 }
@@ -479,14 +479,14 @@ Vector3 jumpPos;
 if(startPos.y<endPos.y){
         jumpPos=startPos;
         jumpPos.y=endPos.y;
-        direction3c=(jumpPos-startPos).normalized;
 }else{
         jumpPos=endPos;
         jumpPos.y=startPos.y;
-        direction3c=(jumpPos-startPos).normalized;
 }
+        direction3c=(jumpPos-startPos).normalized;
 results3ciiA1.AddNoResize(new RaycastHit());commands3ciiA1.AddNoResize(new BoxcastCommand(startPos,halfExtents3c,orientation3c,direction3c,Vector3.Distance(jumpPos,startPos),noCharLayer));
 results3ciiB1.AddNoResize(new RaycastHit());commands3ciiB1.AddNoResize(new RaycastCommand(startPos,direction3c,Vector3.Distance(jumpPos,startPos),noCharLayer));
+        direction3c=(endPos-jumpPos).normalized;
 results3ciiA2.AddNoResize(new RaycastHit());commands3ciiA2.AddNoResize(new BoxcastCommand(jumpPos,halfExtents3c,orientation3c,direction3c,Vector3.Distance(endPos,jumpPos),noCharLayer));
 results3ciiB2.AddNoResize(new RaycastHit());commands3ciiB2.AddNoResize(new RaycastCommand(jumpPos,direction3c,Vector3.Distance(endPos,jumpPos),noCharLayer));
 resultToNodeAndNeighbour[ridx++]=(nodesWalkable[w].node,n);

@@ -906,7 +906,7 @@ PrefabInstance:
     - target: {fileID: 4283238192805469864, guid: d69fcc595bac3f74c8ac30ec3b2d5a1c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.91
+      value: -3.7
       objectReference: {fileID: 0}
     - target: {fileID: 4283238192805469864, guid: d69fcc595bac3f74c8ac30ec3b2d5a1c,
         type: 3}
@@ -1017,6 +1017,11 @@ PrefabInstance:
         type: 3}
       propertyPath: InputMaxMoveSpeed.y
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855673258895166065, guid: d69fcc595bac3f74c8ac30ec3b2d5a1c,
+        type: 3}
+      propertyPath: AutonomyDelayAfterControl
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 8074571762502490011, guid: d69fcc595bac3f74c8ac30ec3b2d5a1c,
         type: 3}
