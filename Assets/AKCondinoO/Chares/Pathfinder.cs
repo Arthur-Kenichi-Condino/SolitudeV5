@@ -99,7 +99,8 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("GoTo:"+hit.point);
 return GoToQueue.AddLast(hit);
 }
 return null;}    
-[NonSerialized]readonly LinkedList<RaycastHit>GoToQueue=new LinkedList<RaycastHit>();
+[NonSerialized]readonly protected Queue<(Vector3 pos,Node.PreferredReachableMode mode)>CurPath=new Queue<(Vector3,Node.PreferredReachableMode)>();[NonSerialized]protected(Vector3 pos,Node.PreferredReachableMode mode)?CurPathTgt=null;
+[NonSerialized]readonly LinkedList<RaycastHit>GoToQueue=new LinkedList<RaycastHit>();[NonSerialized]bool tracing;
 protected override void Update(){
 
 
@@ -110,10 +111,16 @@ protected override void Update(){
 
 
     if(backgroundDataSet1.WaitOne(0)){
+        if(tracing){
+if(LOG&&LOG_LEVEL<=1)Debug.Log("path traced, set CurPath");
+            CurPathTgt=null;CurPath.Clear();for(int p=0;p<resultPath.Count;p++){CurPath.Enqueue((resultPath[p].Position,resultPath[p].Mode));}
+            tracing=false;
+        }
         if(GoToQueue.Count>0){
 if(LOG&&LOG_LEVEL<=1)Debug.Log("dequeue");
 
 
+            tracing=true;
             target=GoToQueue.First.Value;GoToQueue.RemoveFirst();
             startPos=transform.position;startForward=transform.forward;
             boundsExtents=collider.bounds.extents;
@@ -504,7 +511,7 @@ var result3ciiB2=resultsManaged3ciiB2[ridx];
 if(!result3ciA.colliderNotNull&&
    !result3ciB.colliderNotNull){
     reachable.yes=true;
-    reachable.mode=Node.PreferredReachableMode.ramp;
+    reachable.mode=neighbour.node.Position.y!=node.Position.y?Node.PreferredReachableMode.ramp:Node.PreferredReachableMode.walk;
 }else if(!result3ciiA1.colliderNotNull&&!result3ciiA2.colliderNotNull&&
          !result3ciiB1.colliderNotNull&&!result3ciiB2.colliderNotNull){
     reachable.yes=true;
@@ -573,6 +580,7 @@ var step=last;
 int c=Nodes.Length;do{
 if(step==null){break;}
 path.Add(step);
+int indexOfMe;if(step.Parent!=null)if((indexOfMe=step.Parent.neighbours.IndexOf((step.Idx,step)))>=0){step.Mode=step.Parent.neighbourCanBeReached[indexOfMe].mode;}else{step.Mode=Node.PreferredReachableMode.jump;}
 step=step.Parent;
 }while(step!=originNode&&--c>0);
 if(LOG&&LOG_LEVEL<=1)Debug.Log("path retraced: retrace count should never reach 0:"+c);
@@ -634,7 +642,7 @@ int comparison=F.CompareTo(toCompare.F);
     comparison=H.CompareTo(toCompare.H);
  }
 return -comparison;}
-public Vector3 Position{get;set;}public Vector3 Normal{get;set;}
+public Vector3 Position{get;set;}public Vector3 Normal{get;set;}public PreferredReachableMode Mode{get;set;}
 public override int GetHashCode(){return Position.GetHashCode();}public override bool Equals(object obj){if(ReferenceEquals(this,obj))return true;if(!(obj is Node node))return false;return(Position==node.Position);}
 public Node Parent;
 public enum PreferredReachableMode{

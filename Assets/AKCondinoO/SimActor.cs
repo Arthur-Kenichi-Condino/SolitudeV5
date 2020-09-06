@@ -160,6 +160,30 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
         }
     }
     tgtRot=transform.eulerAngles;
+    if(goToTgtRotTimer==0){
+        if(tgtRot!=tgtRot_Pre){
+            rotationLerpVal=0;
+            rotationLerpA=drawRotation;
+            rotationLerpB=Quaternion.Euler(tgtRot);
+            tgtRot_Pre=tgtRot;
+            goToTgtRotTimer+=Time.deltaTime;
+        }
+    }else{
+        goToTgtRotTimer+=Time.deltaTime;
+    }
+    if(goToTgtRotTimer!=0){
+        rotationLerpVal+=RotationLerpSpeed;
+        if(rotationLerpVal>=1){
+            rotationLerpVal=1;
+            goToTgtRotTimer=0;
+        }
+        drawRotation=Quaternion.Lerp(rotationLerpA,rotationLerpB,rotationLerpVal);
+        if(goToTgtRotTimer>GetNewTgtRotCdTime){
+            if(tgtRot!=tgtRot_Pre){
+                goToTgtRotTimer=0;
+            }
+        }
+    }
     tgtPos=transform.position;
     if(goToTgtPosTimer==0){
         if(tgtPos!=tgtPos_Pre){
