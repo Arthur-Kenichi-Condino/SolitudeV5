@@ -16,6 +16,7 @@ CamFollowableNode=MainCamera.CamFollowables.AddLast(this);
 protected override void ProcessMovementInput(){
 if(!Enabled.PAUSE[0]){
 if(BeingCamFollowed){
+if(IsGrounded||!HittingWall){
 #region FORWARD BACKWARD
     if(Enabled.FORWARD [0]){inputMoveSpeed.z+=InputMoveAcceleration.z;} 
     if(Enabled.BACKWARD[0]){inputMoveSpeed.z-=InputMoveAcceleration.z;}
@@ -30,12 +31,21 @@ if(BeingCamFollowed){
             if( inputMoveSpeed.x>InputMaxMoveSpeed.x){inputMoveSpeed.x= InputMaxMoveSpeed.x;}
             if(-inputMoveSpeed.x>InputMaxMoveSpeed.x){inputMoveSpeed.x=-InputMaxMoveSpeed.x;}
 #endregion
+}else{
+inputMoveSpeed.x=0;
+inputMoveSpeed.z=0;
+}
 #region ROTATE
 inputViewRotationEuler.x+=-Enabled.MOUSE_ROTATION_DELTA_Y[0]*InputViewRotationIncreaseSpeed;
 inputViewRotationEuler.y+= Enabled.MOUSE_ROTATION_DELTA_X[0]*InputViewRotationIncreaseSpeed;
 inputViewRotationEuler.x=inputViewRotationEuler.x%360;
 inputViewRotationEuler.y=inputViewRotationEuler.y%360;
 #endregion
+if(IsGrounded&&(Jump||(Jump=Enabled.JUMP[0]!=Enabled.JUMP[1]))){
+inputMoveSpeed.y=InputMoveAcceleration.y;
+}else{
+inputMoveSpeed.y=0;
+}
 }
 }
                    base.ProcessMovementInput();

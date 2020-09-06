@@ -7,6 +7,7 @@ protected override void Update(){
                    base.Update();
 WALK_PATH();
 }
+[NonSerialized]public Vector3 ReachedTgtDisThreshold=new Vector3(.1f,.1f,.1f);
 [NonSerialized]Vector3 _axisDiff,_dir;
 [NonSerialized]Vector3 _axisDist;
 void WALK_PATH(){
@@ -29,6 +30,17 @@ _axisDiff.z=CurPathTgt.Value.pos.z-transform.position.z;_axisDist.z=Mathf.Abs(_a
 _dir=_axisDiff.normalized;
 
 
+if(_axisDist.y<=ReachedTgtDisThreshold.y&&
+   _axisDist.x<=ReachedTgtDisThreshold.x&&
+   _axisDist.z<=ReachedTgtDisThreshold.z){    
+
+
+    CurPathTgt=null;
+        Debug.LogWarning("dest reached");
+
+
+return;
+}
 if(_axisDist.y>float.Epsilon||
    _axisDist.x>float.Epsilon||
    _axisDist.z>float.Epsilon){

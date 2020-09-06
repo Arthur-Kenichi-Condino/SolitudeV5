@@ -9,6 +9,7 @@ protected override void Awake(){
 tgtPos=tgtPos_Pre=transform.position;
 tgtRot=tgtRot_Pre=transform.eulerAngles;
 }
+[NonSerialized]protected bool Jump;
 [NonSerialized]Vector3 eulerAngles,headEulerAngles;[NonSerialized]float angleBetweenBodyAndHead;[NonSerialized]Vector3 stopMovement,moveSpeedRotated,moveSpeedToApplyToBody;
 protected override void FixedUpdate(){
                    base.FixedUpdate();
@@ -28,6 +29,7 @@ moveSpeedRotated=rigidbody.rotation*inputMoveSpeed;
 moveSpeedToApplyToBody.x=moveSpeedRotated.x==0?rigidbody.velocity.x:moveSpeedRotated.x>0?(moveSpeedRotated.x>rigidbody.velocity.x?moveSpeedRotated.x:rigidbody.velocity.x):(moveSpeedRotated.x<rigidbody.velocity.x?moveSpeedRotated.x:rigidbody.velocity.x);
 moveSpeedToApplyToBody.z=moveSpeedRotated.z==0?rigidbody.velocity.z:moveSpeedRotated.z>0?(moveSpeedRotated.z>rigidbody.velocity.z?moveSpeedRotated.z:rigidbody.velocity.z):(moveSpeedRotated.z<rigidbody.velocity.z?moveSpeedRotated.z:rigidbody.velocity.z);
 moveSpeedToApplyToBody.y=moveSpeedRotated.y>0&&moveSpeedRotated.y>rigidbody.velocity.y?moveSpeedRotated.y:rigidbody.velocity.y;
+Jump=false;
         rigidbody.velocity=moveSpeedToApplyToBody;
 }
 }
