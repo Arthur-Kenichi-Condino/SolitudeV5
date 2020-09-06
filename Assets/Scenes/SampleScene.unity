@@ -829,11 +829,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ALARM
       objectReference: {fileID: 0}
-    - target: {fileID: 1481341642692946145, guid: 26af6aa4ce237114d81c539a3b07373c,
-        type: 3}
-      propertyPath: LOG
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8043709400278367053, guid: 26af6aa4ce237114d81c539a3b07373c,
         type: 3}
       propertyPath: m_LocalPosition.x

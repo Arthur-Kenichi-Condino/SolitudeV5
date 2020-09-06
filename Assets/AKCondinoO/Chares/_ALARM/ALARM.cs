@@ -13,7 +13,7 @@ var action=(CreativeIdleness)mathrandom.Next(0,CreativeIdlenessActionsCount);
 if(LOG&&LOG_LEVEL<=1)Debug.Log("CreativeIdleness action: "+action);
     switch(action){
         case(CreativeIdleness.MOVE_RANDOM):{
-            MoveToRandom();
+            MoveToRandom(mathrandom);
         break;}
     }
 Boredom=0;

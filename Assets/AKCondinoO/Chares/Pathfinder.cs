@@ -99,7 +99,8 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("GoTo:"+hit.point);
 return GoToQueue.AddLast(hit);
 }
 return null;}    
-protected void MoveToRandom(){
+protected void MoveToRandom(System.Random mathrandom){
+    GoTo(new Ray(transform.position+new Vector3(mathrandom.Next(-16,17),16,mathrandom.Next(-16,17)),Vector3.down));
 }
 [NonSerialized]readonly protected Queue<(Vector3 pos,Node.PreferredReachableMode mode)>CurPath=new Queue<(Vector3,Node.PreferredReachableMode)>();[NonSerialized]protected(Vector3 pos,Node.PreferredReachableMode mode)?CurPathTgt=null;
 [NonSerialized]readonly LinkedList<RaycastHit>GoToQueue=new LinkedList<RaycastHit>();[NonSerialized]bool tracing;
