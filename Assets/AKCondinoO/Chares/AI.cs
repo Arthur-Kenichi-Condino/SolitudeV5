@@ -84,9 +84,11 @@ inputMoveSpeed.y=0;
 
 }else{
     
-
+    
 inputMoveSpeed.x=0;
+if(IsGrounded||!HittingWall){
 inputMoveSpeed.z=InputMaxMoveSpeed.z;
+}
 inputMoveSpeed.y=0;
 
 
