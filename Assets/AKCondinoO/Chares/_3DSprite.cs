@@ -8,4 +8,8 @@ protected override void Awake(){
                    base.Awake();
 animator=GetComponentInChildren<Animator>();
 }
+protected override void LateUpdate(){
+                   base.LateUpdate();
+animator.transform.rotation=Quaternion.LookRotation((Camera.main.transform.position-animator.transform.position).normalized,Vector3.up);
+}
 }

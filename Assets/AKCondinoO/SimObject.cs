@@ -78,6 +78,7 @@ coord=ChunkManager.PosToCoord(pos);idx=ChunkManager.GetIdx(coord.x,coord.y);
 }
 }
 }
+protected virtual void LateUpdate(){}
 #if UNITY_EDITOR
 protected virtual void OnDrawGizmos(){
 }
