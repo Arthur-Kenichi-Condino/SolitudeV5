@@ -4,14 +4,31 @@ using System.Collections.Generic;
 using UnityEngine;
 public class AI:Pathfinder{
 protected float Autonomous=0;public float AutonomyDelayAfterControl=30;
+protected State MyState=State.IDLE_ST;
 protected override void Update(){
                    base.Update();
 if(Autonomous<=0){
 WALK_PATH();
+
+    
+if(MyState==State.EXCUSE_ST){OnEXCUSE_ST();}
+if(MyState==State.FOLLOW_ST){OnFOLLOW_ST();}
+if(MyState==State.IDLE_ST){OnIDLE_ST();}
+if(MyState==State.CHASE_ST){OnCHASE_ST();}
+if(MyState==State.ATTACK_ST){OnATTACK_ST();}
+if(MyState==State.SKILL_OBJECT_ST){OnSKILL_OBJECT_ST();}
+
+
 }else{
     Autonomous-=Time.deltaTime;
 }
 }
+protected virtual void OnEXCUSE_ST(){}
+protected virtual void OnFOLLOW_ST(){}
+protected virtual void OnIDLE_ST(){}
+protected virtual void OnCHASE_ST(){}
+protected virtual void OnATTACK_ST(){}
+protected virtual void OnSKILL_OBJECT_ST(){}
 [NonSerialized]public Vector3 ReachedTgtDisThreshold=new Vector3(.1f,.1f,.1f);
 [NonSerialized]Vector3 _axisDiff,_dir;
 [NonSerialized]Vector3 _axisDist;
@@ -85,4 +102,14 @@ protected override void OnDrawGizmos(){
                    base.OnDrawGizmos();
 }
 #endif
+public enum State:int{
+IDLE_ST=0,
+STOP_CMD_ST=10,
+MOVE_CMD_ST=11,
+FOLLOW_ST=1,
+EXCUSE_ST=2,
+CHASE_ST=3,
+ATTACK_ST=4,
+SKILL_OBJECT_ST=5,
+}
 }
