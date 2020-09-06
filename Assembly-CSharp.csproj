@@ -159,6 +159,8 @@
     <Compile Include="Assets\AKCondinoO\VoxelSystem\TerrainChunkManager.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Internal\StringMutator.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Helpers\FlexScene.cs" />
+    <Compile Include="Assets\AKCondinoO\Chares\_ALARM\ALARM.cs" />
+    <Compile Include="Assets\AKCondinoO\Chares\_3DSprite.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\NVIDIA\Flex\Resources\Shaders\FlexDrawFluid.shader" />
@@ -778,6 +780,9 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.2D.Sprite.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
