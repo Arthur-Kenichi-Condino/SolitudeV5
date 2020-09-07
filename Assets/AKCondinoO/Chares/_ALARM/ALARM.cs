@@ -28,6 +28,10 @@ Boredom+=0.1f;
 }
 protected override void Attack(AI enemy){
                    base.Attack(enemy);
-if(attackStance==-1){attackStance=0;curAnimTime=0;}
+if(hitStance==-1)if(attackStance==-1){attackStance=0;curAnimTime=0;}
+}
+protected override void TakeDamage(AI fromEnemy){
+                   base.TakeDamage(fromEnemy);
+attackStance=-1;hitStance=0;curAnimTime=0;
 }
 }

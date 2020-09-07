@@ -9,7 +9,8 @@ protected override void Update(){
                    base.Update();
 
 
-    if(DEBUG_ATTACK){DEBUG_ATTACK=false;Attack(null);}
+    if(DEBUG_ATTACK){Attack(null);}
+    if(DEBUG_GETHIT){DEBUG_GETHIT=false;TakeDamage(null);}
 
 
 if(Autonomous<=0){
@@ -35,9 +36,11 @@ protected virtual void OnCHASE_ST(){}
 protected virtual void OnATTACK_ST(){}
 protected virtual void OnSKILL_OBJECT_ST(){}
 protected virtual void Attack(AI enemy){}
+protected virtual void TakeDamage(AI fromEnemy){}
 
 
     public bool DEBUG_ATTACK;
+    public bool DEBUG_GETHIT;
 
 
 [NonSerialized]public Vector3 ReachedTgtDisThreshold=new Vector3(.1f,.1f,.1f);

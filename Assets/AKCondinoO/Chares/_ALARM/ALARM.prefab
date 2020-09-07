@@ -60,6 +60,9 @@ MonoBehaviour:
   GetNewTgtRotCdTime: 0.05
   DEBUG_GOTO: 0
   AutonomyDelayAfterControl: 5
+  DEBUG_ATTACK: 0
+  DEBUG_GETHIT: 0
+  motionRhythm: 0.0245
 --- !u!65 &8356489079188606030
 BoxCollider:
   m_ObjectHideFlags: 0
