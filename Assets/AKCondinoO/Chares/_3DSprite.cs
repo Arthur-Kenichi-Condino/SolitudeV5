@@ -24,6 +24,12 @@ _flipX=Vector3.SignedAngle(_forward,_forwardFromCameraToSprite,Vector3.up)>=0;re
 _back=Vector3.Angle(_forward,_forwardFromCameraToSprite)<=90;animator.SetBool("back",_back);
 
     
+if(deadStance!=-1){
+BlockMovement=true;
+    MyMotion=Motions.MOTION_DEAD;
+curAnimTime_normalized=Mathf.Clamp01(curAnimTime/animator.GetCurrentAnimatorStateInfo(0).length);if(curAnimTime_normalized>=1){
+    curAnimTime=-1;animator.SetFloat("time",curAnimTime_normalized);}
+}
 if(hitStance!=-1){
 BlockMovement=true;
     MyMotion=Motions.MOTION_HIT;
@@ -36,7 +42,7 @@ BlockMovement=true;
 curAnimTime_normalized=Mathf.Clamp01(curAnimTime/animator.GetCurrentAnimatorStateInfo(0).length);if(curAnimTime_normalized>=1){
     attackStance=-1;curAnimTime=-1;}
 }
-if(hitStance==-1&&attackStance==-1){
+if(deadStance==-1&&hitStance==-1&&attackStance==-1){
 BlockMovement=false;
     MyMotion=(rigidbody!=null&&(Mathf.Abs(rigidbody.velocity.x)>.05f||Mathf.Abs(rigidbody.velocity.z)>.05f))?Motions.MOTION_MOVE:Motions.MOTION_STAND;
 }
