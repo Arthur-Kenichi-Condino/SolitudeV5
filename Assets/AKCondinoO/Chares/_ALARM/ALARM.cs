@@ -34,4 +34,7 @@ protected override void TakeDamage(AI fromEnemy){
                    base.TakeDamage(fromEnemy);
 attackStance=-1;hitStance=0;curAnimTime=0;
 }
+protected override void Die(){
+                   base.Die();
+}
 }

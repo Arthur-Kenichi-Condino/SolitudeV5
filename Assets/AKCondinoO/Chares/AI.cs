@@ -11,6 +11,7 @@ protected override void Update(){
 
     if(DEBUG_ATTACK){Attack(null);}
     if(DEBUG_GETHIT){DEBUG_GETHIT=false;TakeDamage(null);}
+    if(DEBUG_DIE){DEBUG_DIE=false;Die();}
 
 
 if(Autonomous<=0){
@@ -37,13 +38,16 @@ protected virtual void OnATTACK_ST(){}
 protected virtual void OnSKILL_OBJECT_ST(){}
 protected virtual void Attack(AI enemy){}
 protected virtual void TakeDamage(AI fromEnemy){}
+protected virtual void Die(){}
 
 
     public bool DEBUG_ATTACK;
     public bool DEBUG_GETHIT;
+    public bool DEBUG_DIE;
 
 
 [NonSerialized]public Vector3 ReachedTgtDisThreshold=new Vector3(.1f,.1f,.1f);
+[NonSerialized]protected bool BlockMovement;
 [NonSerialized]Vector3 _axisDiff,_dir;
 [NonSerialized]Vector3 _axisDist;
 void WALK_PATH(){
@@ -80,6 +84,7 @@ if(_axisDist.y<=ReachedTgtDisThreshold.y&&
 
 return;
 }
+if(!BlockMovement){
 if(_axisDist.x>float.Epsilon||
    _axisDist.z>float.Epsilon){
 inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.eulerAngles.y;
@@ -113,6 +118,9 @@ inputMoveSpeed.z=0;
 inputMoveSpeed.y=0;
 
 
+}
+}else{
+inputMoveSpeed=Vector3.zero;
 }
 
 

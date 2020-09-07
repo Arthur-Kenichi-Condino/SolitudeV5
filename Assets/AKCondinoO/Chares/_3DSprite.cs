@@ -9,7 +9,7 @@ protected override void Awake(){
 animator=GetComponentInChildren<Animator>();renderer=GetComponentInChildren<SpriteRenderer>();
 }
 protected Motions MyMotion=Motions.MOTION_STAND; 
-public float motionRhythm=0.0245f;[NonSerialized]protected float curAnimTime=-1;[NonSerialized]float curAnimTime_normalized;[NonSerialized]protected int attackStance=-1;[NonSerialized]protected int hitStance=-1;
+public float motionRhythm=0.0245f;[NonSerialized]protected float curAnimTime=-1;[NonSerialized]float curAnimTime_normalized;[NonSerialized]protected int attackStance=-1;[NonSerialized]protected int hitStance=-1;[NonSerialized]protected int deadStance=-1;
 [NonSerialized]Vector3 _forward,_cameraForward,_forwardFromCameraToSprite;[NonSerialized]bool _back;[NonSerialized]bool _flipX;
 protected override void LateUpdate(){
                    base.LateUpdate();
@@ -25,16 +25,19 @@ _back=Vector3.Angle(_forward,_forwardFromCameraToSprite)<=90;animator.SetBool("b
 
     
 if(hitStance!=-1){
+BlockMovement=true;
     MyMotion=Motions.MOTION_HIT;
 curAnimTime_normalized=Mathf.Clamp01(curAnimTime/animator.GetCurrentAnimatorStateInfo(0).length);if(curAnimTime_normalized>=1){
     hitStance=-1;curAnimTime=-1;}
 }
 if(attackStance!=-1){
+BlockMovement=true;
     MyMotion=attackStance==0?Motions.MOTION_ATTACK:Motions.MOTION_ATTACK2;
 curAnimTime_normalized=Mathf.Clamp01(curAnimTime/animator.GetCurrentAnimatorStateInfo(0).length);if(curAnimTime_normalized>=1){
     attackStance=-1;curAnimTime=-1;}
 }
 if(hitStance==-1&&attackStance==-1){
+BlockMovement=false;
     MyMotion=(rigidbody!=null&&(Mathf.Abs(rigidbody.velocity.x)>.05f||Mathf.Abs(rigidbody.velocity.z)>.05f))?Motions.MOTION_MOVE:Motions.MOTION_STAND;
 }
 
@@ -44,6 +47,7 @@ animator.SetBool("MOTION_MOVE"   ,MyMotion==Motions.MOTION_MOVE   );
 animator.SetBool("MOTION_HIT"    ,MyMotion==Motions.MOTION_HIT    );
 animator.SetBool("MOTION_ATTACK" ,MyMotion==Motions.MOTION_ATTACK );
 animator.SetBool("MOTION_ATTACK2",MyMotion==Motions.MOTION_ATTACK2);
+animator.SetBool("MOTION_DEAD"   ,MyMotion==Motions.MOTION_DEAD   );
 
 
 if(curAnimTime!=-1){curAnimTime+=motionRhythm*animator.GetCurrentAnimatorStateInfo(0).speed*animator.GetCurrentAnimatorStateInfo(0).length;
