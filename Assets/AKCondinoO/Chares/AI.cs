@@ -85,6 +85,16 @@ if(_axisDist.y<=ReachedTgtDisThreshold.y&&
 return;
 }
 if(!BlockMovement){
+
+
+if(_axisDist.y>ReachedTgtDisThreshold.y&&transform.position.y<CurPathTgt.Value.pos.y+.1f&&
+   _axisDist.x<=ReachedTgtDisThreshold.x&&
+   _axisDist.z<=ReachedTgtDisThreshold.z){   
+    var cur=CurPathTgt.Value;cur.mode=Node.PreferredReachableMode.jump;
+    CurPathTgt=cur;
+}
+
+
 if(_axisDist.x>float.Epsilon||
    _axisDist.z>float.Epsilon){
 inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.eulerAngles.y;

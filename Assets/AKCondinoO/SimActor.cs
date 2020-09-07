@@ -26,11 +26,20 @@ eulerAngles.y=headEulerAngles.y;
         rigidbody.rotation=Quaternion.Euler(eulerAngles);
 headEulerAngles.x=Mathf.Clamp(headEulerAngles.x,rigidbody.rotation.eulerAngles.x-90,rigidbody.rotation.eulerAngles.x+90);
 moveSpeedRotated=rigidbody.rotation*inputMoveSpeed;
+        if(inputMoveSpeed.x==0&&inputMoveSpeed.z==0){
+stopHorizontalMovement();
+        }
 moveSpeedToApplyToBody.x=moveSpeedRotated.x==0?rigidbody.velocity.x:moveSpeedRotated.x>0?(moveSpeedRotated.x>rigidbody.velocity.x?moveSpeedRotated.x:rigidbody.velocity.x):(moveSpeedRotated.x<rigidbody.velocity.x?moveSpeedRotated.x:rigidbody.velocity.x);
 moveSpeedToApplyToBody.z=moveSpeedRotated.z==0?rigidbody.velocity.z:moveSpeedRotated.z>0?(moveSpeedRotated.z>rigidbody.velocity.z?moveSpeedRotated.z:rigidbody.velocity.z):(moveSpeedRotated.z<rigidbody.velocity.z?moveSpeedRotated.z:rigidbody.velocity.z);
 moveSpeedToApplyToBody.y=moveSpeedRotated.y>0&&moveSpeedRotated.y>rigidbody.velocity.y?moveSpeedRotated.y:rigidbody.velocity.y;
 Jump=false;
         rigidbody.velocity=moveSpeedToApplyToBody;
+void stopHorizontalMovement(){
+stopMovement=rigidbody.velocity;
+stopMovement.x=0;
+stopMovement.z=0;
+    rigidbody.velocity=stopMovement;
+}
 }
 }
 protected override void Update(){
