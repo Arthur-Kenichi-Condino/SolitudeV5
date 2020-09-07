@@ -58,6 +58,9 @@ if(CurPath.Count>0&&CurPathTgt==null){
 if(CurPathTgt.HasValue){
 
 
+ReachedTgtDisThreshold.y=colliderHalfExtents.y*.25f;
+ReachedTgtDisThreshold.x=colliderHalfExtents.x*.25f;
+ReachedTgtDisThreshold.z=colliderHalfExtents.z*.25f;
 _axisDiff.y=CurPathTgt.Value.pos.y-transform.position.y;_axisDist.y=Mathf.Abs(_axisDiff.y);
 _axisDiff.x=CurPathTgt.Value.pos.x-transform.position.x;_axisDist.x=Mathf.Abs(_axisDiff.x);
 _axisDiff.z=CurPathTgt.Value.pos.z-transform.position.z;_axisDist.z=Mathf.Abs(_axisDiff.z);
@@ -100,8 +103,12 @@ inputMoveSpeed.y=0;
     
     
 inputMoveSpeed.x=0;
-if(IsGrounded||!HittingWall){
+if((IsGrounded||!HittingWall)&&
+  (_axisDist.x>ReachedTgtDisThreshold.x||
+   _axisDist.z>ReachedTgtDisThreshold.z)){
 inputMoveSpeed.z=InputMaxMoveSpeed.z;
+}else{
+inputMoveSpeed.z=0;
 }
 inputMoveSpeed.y=0;
 
