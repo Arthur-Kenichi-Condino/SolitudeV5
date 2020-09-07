@@ -26,4 +26,8 @@ Boredom+=0.1f;
     NextIdleActionTimer-=Time.deltaTime;
 }
 }
+protected override void Attack(AI enemy){
+                   base.Attack(enemy);
+if(attackStance==-1){attackStance=0;curAnimTime=0;}
+}
 }

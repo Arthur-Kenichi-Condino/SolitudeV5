@@ -7,6 +7,11 @@ protected float Autonomous=0;public float AutonomyDelayAfterControl=30;
 protected State MyState=State.IDLE_ST;
 protected override void Update(){
                    base.Update();
+
+
+    if(DEBUG_ATTACK){DEBUG_ATTACK=false;Attack(null);}
+
+
 if(Autonomous<=0){
 WALK_PATH();
 
@@ -29,6 +34,12 @@ protected virtual void OnIDLE_ST(){}
 protected virtual void OnCHASE_ST(){}
 protected virtual void OnATTACK_ST(){}
 protected virtual void OnSKILL_OBJECT_ST(){}
+protected virtual void Attack(AI enemy){}
+
+
+    public bool DEBUG_ATTACK;
+
+
 [NonSerialized]public Vector3 ReachedTgtDisThreshold=new Vector3(.1f,.1f,.1f);
 [NonSerialized]Vector3 _axisDiff,_dir;
 [NonSerialized]Vector3 _axisDist;

@@ -9,6 +9,7 @@ protected override void Awake(){
 animator=GetComponentInChildren<Animator>();renderer=GetComponentInChildren<SpriteRenderer>();
 }
 protected Motions MyMotion=Motions.MOTION_STAND; 
+public float motionRhythm=0.0249f;[NonSerialized]protected float curAnimTime=-1;[NonSerialized]float curAnimTime_normalized;[NonSerialized]protected int attackStance=-1;
 [NonSerialized]Vector3 _forward,_cameraForward,_forwardFromCameraToSprite;[NonSerialized]bool _back;[NonSerialized]bool _flipX;
 protected override void LateUpdate(){
                    base.LateUpdate();
@@ -23,11 +24,26 @@ _flipX=Vector3.SignedAngle(_forward,_forwardFromCameraToSprite,Vector3.up)>=0;re
 _back=Vector3.Angle(_forward,_forwardFromCameraToSprite)<=90;animator.SetBool("back",_back);
 
 
+if(attackStance!=-1){
+    MyMotion=attackStance==0?Motions.MOTION_ATTACK:Motions.MOTION_ATTACK2;
+if(curAnimTime_normalized>=1){attackStance=-1;curAnimTime=-1;curAnimTime_normalized=0;}
+}
+if(attackStance==-1){
     MyMotion=(rigidbody!=null&&(Mathf.Abs(rigidbody.velocity.x)>.05f||Mathf.Abs(rigidbody.velocity.z)>.05f))?Motions.MOTION_MOVE:Motions.MOTION_STAND;
+}
 
 
 animator.SetBool("MOTION_STAND"  ,MyMotion==Motions.MOTION_STAND  );
 animator.SetBool("MOTION_MOVE"   ,MyMotion==Motions.MOTION_MOVE   );
+animator.SetBool("MOTION_ATTACK" ,MyMotion==Motions.MOTION_ATTACK );
+animator.SetBool("MOTION_ATTACK2",MyMotion==Motions.MOTION_ATTACK2);
+
+
+if(curAnimTime!=-1){curAnimTime+=motionRhythm*animator.GetCurrentAnimatorStateInfo(0).speed*animator.GetCurrentAnimatorStateInfo(0).length;curAnimTime_normalized=Mathf.Clamp01(curAnimTime/animator.GetCurrentAnimatorStateInfo(0).length);
+animator.SetFloat("time",curAnimTime_normalized);
+}
+
+
 }
 public enum Motions:int{
 MOTION_STAND  =0,
