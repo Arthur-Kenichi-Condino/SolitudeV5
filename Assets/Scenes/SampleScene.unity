@@ -803,6 +803,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: ALARM
       objectReference: {fileID: 0}
+    - target: {fileID: 1481341642692946145, guid: 26af6aa4ce237114d81c539a3b07373c,
+        type: 3}
+      propertyPath: DoMovementSnapshotTime
+      value: 0.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 1481341642692946145, guid: 26af6aa4ce237114d81c539a3b07373c,
+        type: 3}
+      propertyPath: NoMoveStuckDetectionTime
+      value: 1.27
+      objectReference: {fileID: 0}
     - target: {fileID: 8043709400278367053, guid: 26af6aa4ce237114d81c539a3b07373c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -949,7 +959,7 @@ PrefabInstance:
     - target: {fileID: 4283238192805469864, guid: d69fcc595bac3f74c8ac30ec3b2d5a1c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.7
+      value: 8.79
       objectReference: {fileID: 0}
     - target: {fileID: 4283238192805469864, guid: d69fcc595bac3f74c8ac30ec3b2d5a1c,
         type: 3}

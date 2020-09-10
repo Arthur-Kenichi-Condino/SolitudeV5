@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class AI:Pathfinder{
+public class AI:Pathfinder{[NonSerialized]protected System.Random mathrandom=new System.Random();
 protected float Autonomous=0;public float AutonomyDelayAfterControl=30;
 protected State MyState=State.IDLE_ST;
 protected override void Update(){
@@ -48,7 +48,7 @@ protected virtual void Die(){}
 
 [NonSerialized]public Vector3 ReachedTgtDisThreshold=new Vector3(.1f,.1f,.1f);
 [NonSerialized]protected bool BlockMovement;
-[NonSerialized]float _movementSnapshotTimer;[NonSerialized]Vector3 _movementSnapshotPos;public float MoveStuckDetectionTime;[NonSerialized]float _stuckNoMovementTimer;
+[NonSerialized]float _movementSnapshotTimer;[NonSerialized]Vector3 _movementSnapshotPos;public float DoMovementSnapshotTime;[NonSerialized]float _noMovementTimer;[SerializeField,Tooltip("Value must be above 1.5 times DoMovementSnapshotTime")]public float NoMoveStuckDetectionTime;
 [NonSerialized]Vector3 _axisDiff,_dir;
 [NonSerialized]Vector3 _axisDist;
 void WALK_PATH(){
@@ -93,6 +93,22 @@ if(_axisDist.y>ReachedTgtDisThreshold.y&&transform.position.y<CurPathTgt.Value.p
    _axisDist.z<=ReachedTgtDisThreshold.z){   
     var cur=CurPathTgt.Value;cur.mode=Node.PreferredReachableMode.jump;
     CurPathTgt=cur;
+}
+
+
+if(_movementSnapshotTimer<=0){
+    Debug.LogWarning("movement snapshot");
+    if(Mathf.Abs(transform.position.y-_movementSnapshotPos.y)>.1f||
+       Mathf.Abs(transform.position.x-_movementSnapshotPos.x)>.1f||
+       Mathf.Abs(transform.position.z-_movementSnapshotPos.z)>.1f){
+        Debug.LogWarning("normal movement detected");
+        _noMovementTimer=NoMoveStuckDetectionTime*(float)(mathrandom.NextDouble()+.5f);
+    }else{
+        Debug.LogWarning("I am stuck!");
+    }_movementSnapshotPos=transform.position;
+    _movementSnapshotTimer=DoMovementSnapshotTime*(float)(mathrandom.NextDouble()+.5f);
+}else{
+    _movementSnapshotTimer-=Time.deltaTime;
 }
 
 
