@@ -48,7 +48,7 @@ protected virtual void Die(){}
 
 [NonSerialized]public Vector3 ReachedTgtDisThreshold=new Vector3(.1f,.1f,.1f);
 [NonSerialized]protected bool BlockMovement;
-[NonSerialized]float _movementSnapshotTimer;[NonSerialized]Vector3 _movementSnapshotPos;public float DoMovementSnapshotTime;[NonSerialized]float _noMovementTimer;[SerializeField,Tooltip("Value must be above 1.5 times DoMovementSnapshotTime")]public float NoMoveStuckDetectionTime;
+[NonSerialized]float _movementSnapshotTimer;[NonSerialized]Vector3 _movementSnapshotPos;public float DoMovementSnapshotTime;[NonSerialized]float _noMovementTimer;[SerializeField,Tooltip("Value must be above 1.5 times DoMovementSnapshotTime")]public float NoMoveStuckDetectionTime;[NonSerialized]protected GetUnstuckActions _noMovementGetUnstuckAction=GetUnstuckActions.none;public enum GetUnstuckActions:int{none=-1,jumpAllWayUp=0,moveSidewaysRandomDir=1,moveCircularlyAroundTgt=2,moveBackwards=3,moveLooselyToRandomDir=4,}
 [NonSerialized]Vector3 _axisDiff,_dir;
 [NonSerialized]Vector3 _axisDist;
 void WALK_PATH(){
@@ -89,14 +89,6 @@ return;
 if(!BlockMovement){
 
 
-if(_axisDist.y>ReachedTgtDisThreshold.y&&transform.position.y<CurPathTgt.Value.pos.y+.1f&&
-   _axisDist.x<=ReachedTgtDisThreshold.x&&
-   _axisDist.z<=ReachedTgtDisThreshold.z){   
-    var cur=CurPathTgt.Value;cur.mode=Node.PreferredReachableMode.jump;
-    CurPathTgt=cur;
-}
-
-
 _noMovementTimer-=Time.deltaTime;
 if(_movementSnapshotTimer<=0){
     Debug.LogWarning("movement snapshot");
@@ -115,6 +107,20 @@ if(_movementSnapshotTimer<=0){
 if(_noMovementTimer<=0){
     Debug.LogWarning("I've been stuck for long enough! Try something new!");
     _noMovementTimer=NoMoveStuckDetectionTime*(float)(mathrandom.NextDouble()+.5f);
+}
+
+
+switch(_noMovementGetUnstuckAction){ 
+#region none
+default:{
+
+
+if(CurPathTgt.Value.mode!=Node.PreferredReachableMode.jump&&
+   _axisDist.y>ReachedTgtDisThreshold.y&&transform.position.y<CurPathTgt.Value.pos.y+.1f&&
+   _axisDist.x<=ReachedTgtDisThreshold.x&&
+   _axisDist.z<=ReachedTgtDisThreshold.z){   
+    var cur=CurPathTgt.Value;cur.mode=Node.PreferredReachableMode.jump;
+    CurPathTgt=cur;
 }
 
 
@@ -152,6 +158,13 @@ inputMoveSpeed.y=0;
 
 
 }
+
+
+break;}
+#endregion
+}
+
+
 }else{
 inputMoveSpeed=Vector3.zero;
 }
@@ -161,7 +174,6 @@ inputMoveSpeed=Vector3.zero;
 inputMoveSpeed=Vector3.zero;
 }
 }
-public enum GetUnstuckMode:byte{jumpAllWayUp=0,moveSidewaysRandomDir=1,moveCircularlyAroundTgt=2,moveBackwards=3,}
 #if UNITY_EDITOR
 protected override void OnDrawGizmos(){
                    base.OnDrawGizmos();
