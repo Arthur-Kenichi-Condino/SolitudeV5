@@ -161,6 +161,7 @@ inputMoveSpeed=Vector3.zero;
 inputMoveSpeed=Vector3.zero;
 }
 }
+public enum GetUnstuckMode:byte{jumpAllWayUp=0,moveSidewaysRandomDir=1,moveCircularlyAroundTgt=2,moveBackwards=3,}
 #if UNITY_EDITOR
 protected override void OnDrawGizmos(){
                    base.OnDrawGizmos();
