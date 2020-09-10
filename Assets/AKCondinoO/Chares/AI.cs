@@ -57,6 +57,7 @@ if(CurPath.Count>0&&CurPathTgt==null){
 
 
         Debug.LogWarning(CurPathTgt.Value.mode);
+    _noMovementTimer=NoMoveStuckDetectionTime*(float)(mathrandom.NextDouble()+.5f);
 
 
 }
@@ -96,6 +97,7 @@ if(_axisDist.y>ReachedTgtDisThreshold.y&&transform.position.y<CurPathTgt.Value.p
 }
 
 
+_noMovementTimer-=Time.deltaTime;
 if(_movementSnapshotTimer<=0){
     Debug.LogWarning("movement snapshot");
     if(Mathf.Abs(transform.position.y-_movementSnapshotPos.y)>.1f||
@@ -109,6 +111,10 @@ if(_movementSnapshotTimer<=0){
     _movementSnapshotTimer=DoMovementSnapshotTime*(float)(mathrandom.NextDouble()+.5f);
 }else{
     _movementSnapshotTimer-=Time.deltaTime;
+}
+if(_noMovementTimer<=0){
+    Debug.LogWarning("I've been stuck for long enough! Try something new!");
+    _noMovementTimer=NoMoveStuckDetectionTime*(float)(mathrandom.NextDouble()+.5f);
 }
 
 
