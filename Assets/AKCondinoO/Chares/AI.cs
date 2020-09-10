@@ -112,6 +112,40 @@ if(_noMovementTimer<=0){
 
 
 switch(_noMovementGetUnstuckAction){ 
+
+case(GetUnstuckActions.jumpAllWayUp):{
+
+
+    Debug.LogWarning("jumpAllWayUp");
+
+if(_axisDist.x>float.Epsilon||
+   _axisDist.z>float.Epsilon){
+inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.eulerAngles.y;
+}
+
+inputMoveSpeed.x=0;
+if(!IsGrounded&&!HittingWall){
+if(rigidbody.velocity.y<=float.Epsilon&&
+  (_axisDist.x>ReachedTgtDisThreshold.x||
+   _axisDist.z>ReachedTgtDisThreshold.z)){
+inputMoveSpeed.z=InputMaxMoveSpeed.z;
+}else{
+inputMoveSpeed.z=0;
+}
+inputMoveSpeed.y=0;
+}else{
+inputMoveSpeed.z=0;
+if(IsGrounded){
+Jump=true;
+inputMoveSpeed.y=InputMaxMoveSpeed.y;
+}else{
+inputMoveSpeed.y=0;
+}
+}
+
+
+break;}
+
 #region none
 default:{
 
