@@ -48,7 +48,7 @@ protected virtual void Die(){}
 
 [NonSerialized]public Vector3 ReachedTgtDisThreshold=new Vector3(.1f,.1f,.1f);
 [NonSerialized]protected bool BlockMovement;
-[NonSerialized]float _movementSnapshotTimer;[NonSerialized]Vector3 _movementSnapshotPos;public float DoMovementSnapshotTime;[NonSerialized]float _noMovementTimer;[SerializeField,Tooltip("Value must be above 1.5 times DoMovementSnapshotTime")]public float NoMoveStuckDetectionTime;[NonSerialized]protected GetUnstuckActions _noMovementGetUnstuckAction=GetUnstuckActions.none;public enum GetUnstuckActions:int{none=-1,jumpAllWayUp=0,moveSidewaysRandomDir=1,moveCircularlyAroundTgt=2,moveBackwards=3,moveLooselyToRandomDir=4,}[NonSerialized]readonly int GetUnstuckActionsCount=Enum.GetValues(typeof(GetUnstuckActions)).Length-1;
+[NonSerialized]float _movementSnapshotTimer;[NonSerialized]Vector3 _movementSnapshotPos;public float DoMovementSnapshotTime;[NonSerialized]float _movementWasDetectedTimer;[SerializeField,Tooltip("Value must be above 1.5 times DoMovementSnapshotTime")]public float NoMovementDetectionTime;[NonSerialized]protected GetUnstuckActions _noMovementGetUnstuckAction=GetUnstuckActions.none;[NonSerialized]protected float _noMovementGetUnstuckTimer=0;public float MaxGetUnstuckActionTime;public enum GetUnstuckActions:int{none=-1,jumpAllWayUp=0,moveSidewaysRandomDir=1,moveCircularlyAroundTgt=2,moveBackwards=3,moveLooselyToRandomDir=4,}[NonSerialized]readonly int GetUnstuckActionsCount=Enum.GetValues(typeof(GetUnstuckActions)).Length-1;
 [NonSerialized]Vector3 _axisDiff,_dir;
 [NonSerialized]Vector3 _axisDist;
 void WALK_PATH(){
@@ -57,7 +57,7 @@ if(CurPath.Count>0&&CurPathTgt==null){
 
 
         Debug.LogWarning(CurPathTgt.Value.mode);
-    _noMovementTimer=NoMoveStuckDetectionTime*(float)(mathrandom.NextDouble()+.5f);_noMovementGetUnstuckAction=GetUnstuckActions.none;
+    _movementWasDetectedTimer=NoMovementDetectionTime*(float)(mathrandom.NextDouble()+.5f);_noMovementGetUnstuckAction=GetUnstuckActions.none;
 
 
 }
@@ -89,34 +89,52 @@ return;
 if(!BlockMovement){
 
 
-_noMovementTimer-=Time.deltaTime;
+_movementWasDetectedTimer-=Time.deltaTime;
 if(_movementSnapshotTimer<=0){
     Debug.LogWarning("movement snapshot");
     if(Mathf.Abs(transform.position.y-_movementSnapshotPos.y)>.1f||
        Mathf.Abs(transform.position.x-_movementSnapshotPos.x)>.1f||
        Mathf.Abs(transform.position.z-_movementSnapshotPos.z)>.1f){
         Debug.LogWarning("normal movement detected");
-        _noMovementTimer=NoMoveStuckDetectionTime*(float)(mathrandom.NextDouble()+.5f);
+_movementWasDetectedTimer=NoMovementDetectionTime*(float)(mathrandom.NextDouble()+.5f);
     }else{
         Debug.LogWarning("I am stuck!");
     }_movementSnapshotPos=transform.position;
-    _movementSnapshotTimer=DoMovementSnapshotTime*(float)(mathrandom.NextDouble()+.5f);
+_movementSnapshotTimer=DoMovementSnapshotTime*(float)(mathrandom.NextDouble()+.5f);
 }else{
-    _movementSnapshotTimer-=Time.deltaTime;
+_movementSnapshotTimer-=Time.deltaTime;
 }
-if(_noMovementTimer<=0){
-    _noMovementGetUnstuckAction=(GetUnstuckActions)mathrandom.Next(-1,GetUnstuckActionsCount);
+if(_movementWasDetectedTimer<=0){
+_noMovementGetUnstuckAction=(GetUnstuckActions)mathrandom.Next(-1,GetUnstuckActionsCount);_noMovementGetUnstuckTimer=MaxGetUnstuckActionTime*(float)(mathrandom.NextDouble()+.5f);
     Debug.LogWarning("I've been stuck for long enough! Try something new! _noMovementGetUnstuckAction:"+_noMovementGetUnstuckAction);
-    _noMovementTimer=NoMoveStuckDetectionTime*(float)(mathrandom.NextDouble()+.5f);
+_movementWasDetectedTimer=NoMovementDetectionTime*(float)(mathrandom.NextDouble()+.5f);
+}else if(_noMovementGetUnstuckAction!=GetUnstuckActions.none){
+_noMovementGetUnstuckTimer-=Time.deltaTime;
+    if(_noMovementGetUnstuckTimer<=0){
+_noMovementGetUnstuckAction=(GetUnstuckActions)mathrandom.Next(-1,GetUnstuckActionsCount);_noMovementGetUnstuckTimer=MaxGetUnstuckActionTime*(float)(mathrandom.NextDouble()+.5f);
+        Debug.LogWarning("My action to get unstuck didn't work! Try something else! _noMovementGetUnstuckAction:"+_noMovementGetUnstuckAction);
+    }
 }
 
 
 switch(_noMovementGetUnstuckAction){ 
+    
+    
+case(GetUnstuckActions.moveBackwards):{
 
+    
+    Debug.LogWarning("moveBackwards");
+
+
+break;}
+
+
+#region jumpAllWayUp
 case(GetUnstuckActions.jumpAllWayUp):{
 
 
     Debug.LogWarning("jumpAllWayUp");
+
 
 if(_axisDist.x>float.Epsilon||
    _axisDist.z>float.Epsilon){
@@ -125,6 +143,7 @@ inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.e
 
 inputMoveSpeed.x=0;
 if(!IsGrounded&&!HittingWall){
+#region estou no ar, não estou tocando nada; se atingi a altitude máxima: mover para destino; caso contrário, estou subindo ainda
 if(rigidbody.velocity.y<=float.Epsilon&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
    _axisDist.z>ReachedTgtDisThreshold.z)){
@@ -133,7 +152,9 @@ inputMoveSpeed.z=InputMaxMoveSpeed.z;
 inputMoveSpeed.z=0;
 }
 inputMoveSpeed.y=0;
+#endregion
 }else{
+#region se estou no chão, pular
 inputMoveSpeed.z=0;
 if(IsGrounded){
 Jump=true;
@@ -141,10 +162,12 @@ inputMoveSpeed.y=InputMaxMoveSpeed.y;
 }else{
 inputMoveSpeed.y=0;
 }
+#endregion
 }
 
 
 break;}
+#endregion
 
 #region none
 default:{
@@ -168,6 +191,7 @@ inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.e
 if(CurPathTgt.Value.mode==Node.PreferredReachableMode.jump&&transform.position.y<CurPathTgt.Value.pos.y+.1f){
 
     
+#region necessário pular
 inputMoveSpeed.x=0;
 inputMoveSpeed.z=0;
 if(IsGrounded){
@@ -176,11 +200,13 @@ inputMoveSpeed.y=InputMaxMoveSpeed.y;
 }else{
 inputMoveSpeed.y=0;
 }
+#endregion
 
 
 }else{
     
     
+#region ir para o destino normalmente
 inputMoveSpeed.x=0;
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
@@ -190,6 +216,7 @@ inputMoveSpeed.z=InputMaxMoveSpeed.z;
 inputMoveSpeed.z=0;
 }
 inputMoveSpeed.y=0;
+#endregion
 
 
 }
