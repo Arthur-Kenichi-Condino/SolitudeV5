@@ -52,15 +52,13 @@ protected virtual void Die(){}
 
 [NonSerialized]public Vector3 ReachedTgtDisThreshold=new Vector3(.1f,.1f,.1f);
 [NonSerialized]protected bool BlockMovement;
-[NonSerialized]protected float MovementQualityEvaluationTimeReferenceValue=2.27f;[NonSerialized]float _movementSnapshotTimer;[NonSerialized]Vector3 _movementSnapshotPos;[NonSerialized]protected float DoMovementSnapshotTime;[NonSerialized]float _movementWasDetectedTimer;[NonSerialized]protected float NoMovementDetectionTime;[NonSerialized]protected GetUnstuckActions _noMovementGetUnstuckAction=GetUnstuckActions.none;[NonSerialized]protected float _noMovementGetUnstuckTimer=0;[NonSerialized]protected float MaxGetUnstuckActionTime;public enum GetUnstuckActions:int{none=-1,jumpAllWayUp=0,moveSidewaysRandomDir=1,moveCircularlyAroundTgt=2,moveBackwards=3,moveLooselyToRandomDir=4,}[NonSerialized]readonly int GetUnstuckActionsCount=Enum.GetValues(typeof(GetUnstuckActions)).Length-1;
+[NonSerialized]protected float MovementQualityEvaluationTimeReferenceValue=2.27f;[NonSerialized]float _movementSnapshotTimer;[NonSerialized]Vector3 _movementSnapshotPos;[NonSerialized]protected float DoMovementSnapshotTime;[NonSerialized]float _movementWasDetectedTimer;[NonSerialized]protected float NoMovementDetectionTime;[NonSerialized]protected GetUnstuckActions _noMovementGetUnstuckAction=GetUnstuckActions.none;[NonSerialized]protected float _noMovementGetUnstuckTimer=0;[NonSerialized]protected float MaxGetUnstuckActionTime;[NonSerialized]int moveSidewaysRandomDir_dir=1;[NonSerialized]int moveCircularlyAroundTgt_dir=1;public enum GetUnstuckActions:int{none=-1,jumpAllWayUp=0,moveSidewaysRandomDir=1,moveCircularlyAroundTgt=2,moveBackwards=3,moveLooselyToRandomDir=4,}[NonSerialized]readonly int GetUnstuckActionsCount=Enum.GetValues(typeof(GetUnstuckActions)).Length-1;
 [NonSerialized]Vector3 _axisDiff,_dir;
 [NonSerialized]Vector3 _axisDist;
 void WALK_PATH(){
 if(CurPath.Count>0&&CurPathTgt==null){
     CurPathTgt=CurPath.Dequeue();
-
-
-        Debug.LogWarning(CurPathTgt.Value.mode);
+if(LOG&&LOG_LEVEL<=1)Debug.Log("WALK_PATH new dest:"+CurPathTgt.Value.pos+","+CurPathTgt.Value.mode);
 _movementWasDetectedTimer=NoMovementDetectionTime*(float)(mathrandom.NextDouble()+.5f);_noMovementGetUnstuckAction=GetUnstuckActions.none;
 
 
@@ -93,6 +91,7 @@ return;
 if(!BlockMovement){
 
 
+void renew_movementWasDetectedTimer(){_movementWasDetectedTimer=NoMovementDetectionTime*(float)(mathrandom.NextDouble()+.5f);}
 _movementWasDetectedTimer-=Time.deltaTime;
 if(_movementSnapshotTimer<=0){
     Debug.LogWarning("movement snapshot");
@@ -100,7 +99,7 @@ if(_movementSnapshotTimer<=0){
        Mathf.Abs(transform.position.x-_movementSnapshotPos.x)>.1f||
        Mathf.Abs(transform.position.z-_movementSnapshotPos.z)>.1f){
         Debug.LogWarning("normal movement detected");
-_movementWasDetectedTimer=NoMovementDetectionTime*(float)(mathrandom.NextDouble()+.5f);
+renew_movementWasDetectedTimer();
     }else{
         Debug.LogWarning("I am stuck!");
     }
@@ -109,21 +108,23 @@ _movementSnapshotPos=transform.position;_movementSnapshotTimer=DoMovementSnapsho
 _movementSnapshotTimer-=Time.deltaTime;
 }
 if(_movementWasDetectedTimer<=0){
-_noMovementGetUnstuckAction=(GetUnstuckActions)mathrandom.Next(-1,GetUnstuckActionsCount);_noMovementGetUnstuckTimer=MaxGetUnstuckActionTime*(float)(mathrandom.NextDouble()+.5f);
+mathrandomGetUnstuckAction();
     Debug.LogWarning("I've been stuck for long enough! Try something new! _noMovementGetUnstuckAction:"+_noMovementGetUnstuckAction);
-_movementWasDetectedTimer=NoMovementDetectionTime*(float)(mathrandom.NextDouble()+.5f);
+renew_movementWasDetectedTimer();
 }else if(_noMovementGetUnstuckAction!=GetUnstuckActions.none){
 _noMovementGetUnstuckTimer-=Time.deltaTime;
     if(_noMovementGetUnstuckTimer<=0){
-_noMovementGetUnstuckAction=(GetUnstuckActions)mathrandom.Next(-1,GetUnstuckActionsCount);_noMovementGetUnstuckTimer=MaxGetUnstuckActionTime*(float)(mathrandom.NextDouble()+.5f);
+mathrandomGetUnstuckAction();
         Debug.LogWarning("My action to get unstuck didn't get me to target on a good fashioned time! Try something else! _noMovementGetUnstuckAction:"+_noMovementGetUnstuckAction);
     }
 }
+void mathrandomGetUnstuckAction(){_noMovementGetUnstuckAction=(GetUnstuckActions)mathrandom.Next(-1,GetUnstuckActionsCount);_noMovementGetUnstuckTimer=MaxGetUnstuckActionTime*(float)(mathrandom.NextDouble()+.5f);if(_noMovementGetUnstuckAction==GetUnstuckActions.moveSidewaysRandomDir){moveSidewaysRandomDir_dir=mathrandom.Next(0,2)==1?1:-1;}if(_noMovementGetUnstuckAction==GetUnstuckActions.moveCircularlyAroundTgt){moveCircularlyAroundTgt_dir=mathrandom.Next(0,2)==1?1:-1;}}
 
 
 switch(_noMovementGetUnstuckAction){ 
     
-    
+
+#region moveBackwards
 case(GetUnstuckActions.moveBackwards):{
 
     
@@ -144,6 +145,45 @@ inputMoveSpeed.z=-InputMaxMoveSpeed.z;
 }else{
 inputMoveSpeed.z=0;
 }
+inputMoveSpeed.y=0;
+
+
+break;}
+#endregion
+
+    
+case(GetUnstuckActions.moveCircularlyAroundTgt):{
+
+    
+if(_axisDist.x>float.Epsilon||
+   _axisDist.z>float.Epsilon){
+inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.eulerAngles.y;
+}
+if((IsGrounded||!HittingWall)&&
+  (_axisDist.x>ReachedTgtDisThreshold.x||
+   _axisDist.z>ReachedTgtDisThreshold.z)){
+inputMoveSpeed.x=InputMaxMoveSpeed.x*moveCircularlyAroundTgt_dir;
+}else{
+inputMoveSpeed.x=0;
+}
+inputMoveSpeed.z=0;
+inputMoveSpeed.y=0;
+
+
+break;}
+
+
+case(GetUnstuckActions.moveSidewaysRandomDir):{
+
+    
+if((IsGrounded||!HittingWall)&&
+  (_axisDist.x>ReachedTgtDisThreshold.x||
+   _axisDist.z>ReachedTgtDisThreshold.z)){
+inputMoveSpeed.x=InputMaxMoveSpeed.x*moveSidewaysRandomDir_dir;
+}else{
+inputMoveSpeed.x=0;
+}
+inputMoveSpeed.z=0;
 inputMoveSpeed.y=0;
 
 
@@ -195,7 +235,7 @@ default:{
 
 
 if(CurPathTgt.Value.mode!=Node.PreferredReachableMode.jump&&
-   _axisDist.y>ReachedTgtDisThreshold.y&&transform.position.y<CurPathTgt.Value.pos.y+.1f&&
+   _axisDist.y>ReachedTgtDisThreshold.y&&(transform.position.y<CurPathTgt.Value.pos.y+.1f||rigidbody.velocity.y<=float.Epsilon)&&
    _axisDist.x<=ReachedTgtDisThreshold.x&&
    _axisDist.z<=ReachedTgtDisThreshold.z){   
     var cur=CurPathTgt.Value;cur.mode=Node.PreferredReachableMode.jump;
