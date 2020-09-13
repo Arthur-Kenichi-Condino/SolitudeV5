@@ -47,17 +47,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LOG: 1
   LOG_LEVEL: 1
-  DRAW_LEVEL: -110
+  DRAW_LEVEL: 1
   Lerp: 1
   MoveLerpSpeed: 0.125
-  InputMoveAcceleration: {x: 0, y: 0, z: 0}
-  InputMaxMoveSpeed: {x: 0, y: 0, z: 0}
+  InputMoveAcceleration: {x: 3, y: 5, z: 3}
+  InputMaxMoveSpeed: {x: 3, y: 5, z: 3}
   GetNewTgtPosCdTime: 0.05
   RotationLerpSpeed: 0.125
   HeadRotationLerpSpeed: 0.125
-  InputViewRotationIncreaseSpeed: 0
+  InputViewRotationIncreaseSpeed: 0.025
   GetNewTgtRotCdTime: 0.05
   DEBUG_GOTO: 0
+  AutonomyDelayAfterControl: 30
+  DEBUG_ATTACK: 0
+  DEBUG_GETHIT: 0
+  DEBUG_DIE: 0
+  CamOffset: {x: 0.4, y: 0.4, z: -2.15}
 --- !u!65 &4550411354643971414
 BoxCollider:
   m_ObjectHideFlags: 0

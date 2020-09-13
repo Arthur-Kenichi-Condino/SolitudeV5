@@ -28,14 +28,17 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("BodyRadius:"+BodyRadius+", name:"+name);
 protected virtual void OnEnable(){}
 protected virtual void OnDisable(){}
 protected virtual void OnDestroy(){}
+protected bool IsGrounded;protected bool HittingWall;
 protected virtual void FixedUpdate(){
 if(rigidbody!=null){
+IsGrounded=false;HittingWall=false;
 if(LOG&&LOG_LEVEL<=0)Debug.Log("collisions.Count:"+collisions.Count);
 foreach(var collision in collisions){
 for(int i=0;i<collision.Value.Count;i++){var contact=collision.Value[i];if(contact.normal==Vector3.zero)break;
 
 
-//Debug.LogWarning("test floor");
+IsGrounded=IsGrounded||(Vector3.Angle(contact.normal,Vector3.up)<=60&&contact.point.y<=transform.position.y-collider.bounds.extents.y+.1f);HittingWall=HittingWall||Vector3.Angle(contact.normal,Vector3.up)>60;
+//Debug.LogWarning(Vector3.Angle(contact.normal,Vector3.up));
 
 
 }
@@ -75,6 +78,7 @@ coord=ChunkManager.PosToCoord(pos);idx=ChunkManager.GetIdx(coord.x,coord.y);
 }
 }
 }
+protected virtual void LateUpdate(){}
 #if UNITY_EDITOR
 protected virtual void OnDrawGizmos(){
 }

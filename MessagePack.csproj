@@ -359,8 +359,8 @@
     <Reference Include="System.Memory">
       <HintPath>Assets\Plugins\System.Memory.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe.4.0.4.1">
-      <HintPath>Assets\Plugins\System.Runtime.CompilerServices.Unsafe.4.0.4.1.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>Library\PackageCache\com.unity.collections@0.8.0-preview.5\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions.4.2.0.1">
       <HintPath>Assets\Plugins\System.Threading.Tasks.Extensions.4.2.0.1.dll</HintPath>

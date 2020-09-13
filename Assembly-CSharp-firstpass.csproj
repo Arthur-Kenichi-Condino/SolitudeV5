@@ -286,6 +286,15 @@
     <Reference Include="UnityEditor">
       <HintPath>A:\Program Files\2020.1.1f1\Editor\Data\Managed\UnityEditor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Buffers">
+      <HintPath>Assets\Plugins\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory">
+      <HintPath>Assets\Plugins\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions.4.2.0.1">
+      <HintPath>Assets\Plugins\System.Threading.Tasks.Extensions.4.2.0.1.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Burst.Unsafe">
       <HintPath>Library\PackageCache\com.unity.burst@1.3.0-preview.9\Unity.Burst.Unsafe.dll</HintPath>
     </Reference>
@@ -294,15 +303,6 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.0-preview\Runtime\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Memory">
-      <HintPath>Assets\Plugins\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Buffers">
-      <HintPath>Assets\Plugins\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions.4.2.0.1">
-      <HintPath>Assets\Plugins\System.Threading.Tasks.Extensions.4.2.0.1.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>A:\Program Files\2020.1.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\mscorlib.dll</HintPath>
@@ -678,6 +678,9 @@
     </Reference>
     <Reference Include="Unity.Mathematics">
       <HintPath>Library\ScriptAssemblies\Unity.Mathematics.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.2D.Sprite.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualStudio.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
