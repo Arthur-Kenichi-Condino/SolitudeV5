@@ -7,7 +7,8 @@ public class SimActor:SimObject{
 protected override void Awake(){
                    base.Awake();
 tgtPos=tgtPos_Pre=transform.position;
-tgtRot=tgtRot_Pre=transform.eulerAngles;
+tgtRot=tgtRot_Pre=transform.eulerAngles;headTgtRot=headTgtRot_Pre=tgtRot;
+drawPos=transform.position;drawRotation=headDrawRotation=transform.rotation;
 }
 [NonSerialized]protected bool Jump;
 [NonSerialized]Vector3 eulerAngles,headEulerAngles;[NonSerialized]float angleBetweenBodyAndHead;[NonSerialized]Vector3 stopMovement,moveSpeedRotated,moveSpeedToApplyToBody;

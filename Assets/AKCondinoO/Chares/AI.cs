@@ -58,50 +58,36 @@ protected virtual void Die(){}
 void WALK_PATH(){
 if(CurPath.Count>0&&CurPathTgt==null){
     CurPathTgt=CurPath.Dequeue();
-if(LOG&&LOG_LEVEL<=1)Debug.Log("WALK_PATH new dest:"+CurPathTgt.Value.pos+","+CurPathTgt.Value.mode);
+if(LOG&&LOG_LEVEL<=0)Debug.Log("WALK_PATH new dest:"+CurPathTgt.Value.pos+","+CurPathTgt.Value.mode);
 _movementWasDetectedTimer=NoMovementDetectionTime*(float)(mathrandom.NextDouble()+.5f);_noMovementGetUnstuckAction=GetUnstuckActions.none;
-
-
 }
 if(CurPathTgt.HasValue){
-
-
 ReachedTgtDisThreshold.y=colliderHalfExtents.y*.25f;
 ReachedTgtDisThreshold.x=colliderHalfExtents.x*.25f;
 ReachedTgtDisThreshold.z=colliderHalfExtents.z*.25f;
 _axisDiff.y=CurPathTgt.Value.pos.y-transform.position.y;_axisDist.y=Mathf.Abs(_axisDiff.y);
 _axisDiff.x=CurPathTgt.Value.pos.x-transform.position.x;_axisDist.x=Mathf.Abs(_axisDiff.x);
-_axisDiff.z=CurPathTgt.Value.pos.z-transform.position.z;_axisDist.z=Mathf.Abs(_axisDiff.z);
-            
-            
+_axisDiff.z=CurPathTgt.Value.pos.z-transform.position.z;_axisDist.z=Mathf.Abs(_axisDiff.z);      
 _dir=_axisDiff.normalized;
-
-
 if(_axisDist.y<=ReachedTgtDisThreshold.y&&
    _axisDist.x<=ReachedTgtDisThreshold.x&&
    _axisDist.z<=ReachedTgtDisThreshold.z){    
-
-
     CurPathTgt=null;
-        Debug.LogWarning("dest reached");
-
-
+if(LOG&&LOG_LEVEL<=0)Debug.Log("WALK_PATH dest reached");
 return;
 }
 if(!BlockMovement){
-
-
 void renew_movementWasDetectedTimer(){_movementWasDetectedTimer=NoMovementDetectionTime*(float)(mathrandom.NextDouble()+.5f);}
 _movementWasDetectedTimer-=Time.deltaTime;
 if(_movementSnapshotTimer<=0){
-    Debug.LogWarning("movement snapshot");
+if(LOG&&LOG_LEVEL<=0)Debug.Log("movement snapshot");
     if(Mathf.Abs(transform.position.y-_movementSnapshotPos.y)>.1f||
        Mathf.Abs(transform.position.x-_movementSnapshotPos.x)>.1f||
        Mathf.Abs(transform.position.z-_movementSnapshotPos.z)>.1f){
-        Debug.LogWarning("normal movement detected");
+if(LOG&&LOG_LEVEL<=0)Debug.Log("normal movement detected");
 renew_movementWasDetectedTimer();
     }else{
-        Debug.LogWarning("I am stuck!");
+if(LOG&&LOG_LEVEL<=0)Debug.Log("I am stuck in this position!");
     }
 _movementSnapshotPos=transform.position;_movementSnapshotTimer=DoMovementSnapshotTime*(float)(mathrandom.NextDouble()+.5f);
 }else{
@@ -109,34 +95,23 @@ _movementSnapshotTimer-=Time.deltaTime;
 }
 if(_movementWasDetectedTimer<=0){
 mathrandomGetUnstuckAction();
-    Debug.LogWarning("I've been stuck for long enough! Try something new! _noMovementGetUnstuckAction:"+_noMovementGetUnstuckAction);
+if(LOG&&LOG_LEVEL<=0)Debug.Log("I've been stuck for long enough! Try something new! _noMovementGetUnstuckAction:"+_noMovementGetUnstuckAction);
 renew_movementWasDetectedTimer();
 }else if(_noMovementGetUnstuckAction!=GetUnstuckActions.none){
 _noMovementGetUnstuckTimer-=Time.deltaTime;
     if(_noMovementGetUnstuckTimer<=0){
 mathrandomGetUnstuckAction();
-        Debug.LogWarning("My action to get unstuck didn't get me to target on a good fashioned time! Try something else! _noMovementGetUnstuckAction:"+_noMovementGetUnstuckAction);
+if(LOG&&LOG_LEVEL<=0)Debug.Log("my action to get unstuck didn't get me to target on a good fashioned time! Try something else! _noMovementGetUnstuckAction:"+_noMovementGetUnstuckAction);
     }
 }
 void mathrandomGetUnstuckAction(){_noMovementGetUnstuckAction=(GetUnstuckActions)mathrandom.Next(-1,GetUnstuckActionsCount);_noMovementGetUnstuckTimer=MaxGetUnstuckActionTime*(float)(mathrandom.NextDouble()+.5f);if(_noMovementGetUnstuckAction==GetUnstuckActions.moveSidewaysRandomDir){moveSidewaysRandomDir_dir=mathrandom.Next(0,2)==1?1:-1;}if(_noMovementGetUnstuckAction==GetUnstuckActions.moveCircularlyAroundTgt){moveCircularlyAroundTgt_dir=mathrandom.Next(0,2)==1?1:-1;}}
-
-
 switch(_noMovementGetUnstuckAction){ 
-    
-
 #region moveBackwards
 case(GetUnstuckActions.moveBackwards):{
-
-    
-    Debug.LogWarning("moveBackwards");
-
-    
 if(_axisDist.x>float.Epsilon||
    _axisDist.z>float.Epsilon){
 inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.eulerAngles.y;
 }
-
-
 inputMoveSpeed.x=0;
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
@@ -146,15 +121,10 @@ inputMoveSpeed.z=-InputMaxMoveSpeed.z;
 inputMoveSpeed.z=0;
 }
 inputMoveSpeed.y=0;
-
-
 break;}
 #endregion
-
-    
+#region moveCircularlyAroundTgt
 case(GetUnstuckActions.moveCircularlyAroundTgt):{
-
-    
 if(_axisDist.x>float.Epsilon||
    _axisDist.z>float.Epsilon){
 inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.eulerAngles.y;
@@ -168,14 +138,10 @@ inputMoveSpeed.x=0;
 }
 inputMoveSpeed.z=0;
 inputMoveSpeed.y=0;
-
-
 break;}
-
-
+#endregion
+#region moveSidewaysRandomDir
 case(GetUnstuckActions.moveSidewaysRandomDir):{
-
-    
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
    _axisDist.z>ReachedTgtDisThreshold.z)){
@@ -185,23 +151,14 @@ inputMoveSpeed.x=0;
 }
 inputMoveSpeed.z=0;
 inputMoveSpeed.y=0;
-
-
 break;}
-
-
+#endregion
 #region jumpAllWayUp
 case(GetUnstuckActions.jumpAllWayUp):{
-
-
-    Debug.LogWarning("jumpAllWayUp");
-
-
 if(_axisDist.x>float.Epsilon||
    _axisDist.z>float.Epsilon){
 inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.eulerAngles.y;
 }
-
 inputMoveSpeed.x=0;
 if(!IsGrounded&&!HittingWall){
 #region estou no ar, não estou tocando nada; se atingi a altitude máxima: mover para destino; caso contrário, estou subindo ainda
@@ -225,15 +182,11 @@ inputMoveSpeed.y=0;
 }
 #endregion
 }
-
-
 break;}
 #endregion
 
 #region none
 default:{
-
-
 if(CurPathTgt.Value.mode!=Node.PreferredReachableMode.jump&&
    _axisDist.y>ReachedTgtDisThreshold.y&&(transform.position.y<CurPathTgt.Value.pos.y+.1f||rigidbody.velocity.y<=float.Epsilon)&&
    _axisDist.x<=ReachedTgtDisThreshold.x&&
@@ -241,18 +194,12 @@ if(CurPathTgt.Value.mode!=Node.PreferredReachableMode.jump&&
     var cur=CurPathTgt.Value;cur.mode=Node.PreferredReachableMode.jump;
     CurPathTgt=cur;
 }
-
-
 if(_axisDist.x>float.Epsilon||
    _axisDist.z>float.Epsilon){
 inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.eulerAngles.y;
 }
-
-
 inputMoveSpeed.x=0;
 if(CurPathTgt.Value.mode==Node.PreferredReachableMode.jump&&transform.position.y<CurPathTgt.Value.pos.y+.1f){
-
-    
 #region necessário pular
 inputMoveSpeed.z=0;
 if(IsGrounded){
@@ -262,11 +209,7 @@ inputMoveSpeed.y=InputMaxMoveSpeed.y;
 inputMoveSpeed.y=0;
 }
 #endregion
-
-
 }else{
-    
-    
 #region ir para o destino normalmente
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
@@ -277,21 +220,13 @@ inputMoveSpeed.z=0;
 }
 inputMoveSpeed.y=0;
 #endregion
-
-
 }
-
-
 break;}
 #endregion
 }
-
-
 }else{
 inputMoveSpeed=Vector3.zero;
 }
-
-
 }else{
 inputMoveSpeed=Vector3.zero;
 }
