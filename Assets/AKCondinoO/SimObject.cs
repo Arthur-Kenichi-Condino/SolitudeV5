@@ -63,16 +63,18 @@ collisions.Remove(tuple);
 }
 [NonSerialized]Vector3 pos;
 [NonSerialized]Vector3 pos_Pre;
-[NonSerialized]Vector2Int coord;[NonSerialized]int idx;[NonSerialized]Chunk chunk;
+[NonSerialized]Vector2Int coord;[NonSerialized]int idx;[NonSerialized]Chunk chunk;protected bool OutOfSight;
 protected virtual void Update(){
 if(rigidbody!=null){
 pos=transform.position;
 if(pos!=pos_Pre){
+OutOfSight=false;
 coord=ChunkManager.PosToCoord(pos);idx=ChunkManager.GetIdx(coord.x,coord.y);
     if(pos.y<-128||!ChunkManager.main.Chunks.TryGetValue(idx,out chunk)||!chunk.Built){
         rigidbody.velocity=Vector3.zero;
         rigidbody.angularVelocity=Vector3.zero;
         pos=transform.position=pos_Pre;
+OutOfSight=true;
     }
     pos_Pre=pos;
 }

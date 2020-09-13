@@ -162,6 +162,7 @@
     <Compile Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Scripts\Scene2and3\MyListPool.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Formatters\IgnoreFormatter.cs" />
     <Compile Include="Assets\UMA\Examples\Physics Examples\UMA_JiggleMaster\UMA_JiggleElement.cs" />
+    <Compile Include="Assets\AKCondinoO\Chares\ActorManagementMentana.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Internal\DoubleConversion\IEEE.cs" />
     <Compile Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Scripts\Scene2and3\BtnGetAssetBundle.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\Timeline\UmaWardrobe\UmaWardrobeTrack.cs" />
@@ -416,7 +417,6 @@
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\DNAConverterField.cs" />
     <Compile Include="Assets\UMA\Examples\Physics Examples\Scripts\ClothHelper.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\Scripts\DynamicDNAConverterBehaviour.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\ActorManagementMentana.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\UMA\Core\StandardAssets\UMA\Atlas\AtlasNormalShader32.shader" />

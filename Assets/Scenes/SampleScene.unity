@@ -694,6 +694,27 @@ PrefabInstance:
       propertyPath: m_Name
       value: ActorManagementMentana
       objectReference: {fileID: 0}
+    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
+        type: 3}
+      propertyPath: actorsPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
+        type: 3}
+      propertyPath: actorsMaxInstantiations.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
+        type: 3}
+      propertyPath: actorsPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 1234469548589373247, guid: 26af6aa4ce237114d81c539a3b07373c,
+        type: 3}
+    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
+        type: 3}
+      propertyPath: actorsMaxInstantiations.Array.data[0]
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10725eaf686bf0147b88fddfec998997, type: 3}
 --- !u!1 &1605657047
