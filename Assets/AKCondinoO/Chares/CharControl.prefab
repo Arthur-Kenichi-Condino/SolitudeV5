@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LOG: 1
   LOG_LEVEL: 1
-  DRAW_LEVEL: 1
+  DRAW_LEVEL: -100
   Lerp: 1
   MoveLerpSpeed: 0.125
   InputMoveAcceleration: {x: 3, y: 5, z: 3}
