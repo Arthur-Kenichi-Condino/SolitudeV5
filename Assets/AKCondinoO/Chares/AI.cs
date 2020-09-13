@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class AI:Pathfinder{[NonSerialized]protected System.Random mathrandom=new System.Random();
+protected override void OnEnable(){
+                   base.OnEnable();
+NoMovementDetectionTime=MovementQualityEvaluationTimeReferenceValue;DoMovementSnapshotTime=NoMovementDetectionTime*.21f;MaxGetUnstuckActionTime=NoMovementDetectionTime*.32f;
+}
 protected float Autonomous=0;public float AutonomyDelayAfterControl=30;
 protected State MyState=State.IDLE_ST;
 protected override void Update(){
@@ -48,7 +52,7 @@ protected virtual void Die(){}
 
 [NonSerialized]public Vector3 ReachedTgtDisThreshold=new Vector3(.1f,.1f,.1f);
 [NonSerialized]protected bool BlockMovement;
-[NonSerialized]float _movementSnapshotTimer;[NonSerialized]Vector3 _movementSnapshotPos;public float DoMovementSnapshotTime;[NonSerialized]float _movementWasDetectedTimer;[SerializeField,Tooltip("Value must be above 1.5 times DoMovementSnapshotTime")]public float NoMovementDetectionTime;[NonSerialized]protected GetUnstuckActions _noMovementGetUnstuckAction=GetUnstuckActions.none;[NonSerialized]protected float _noMovementGetUnstuckTimer=0;public float MaxGetUnstuckActionTime;public enum GetUnstuckActions:int{none=-1,jumpAllWayUp=0,moveSidewaysRandomDir=1,moveCircularlyAroundTgt=2,moveBackwards=3,moveLooselyToRandomDir=4,}[NonSerialized]readonly int GetUnstuckActionsCount=Enum.GetValues(typeof(GetUnstuckActions)).Length-1;
+[NonSerialized]protected float MovementQualityEvaluationTimeReferenceValue=2.27f;[NonSerialized]float _movementSnapshotTimer;[NonSerialized]Vector3 _movementSnapshotPos;[NonSerialized]protected float DoMovementSnapshotTime;[NonSerialized]float _movementWasDetectedTimer;[NonSerialized]protected float NoMovementDetectionTime;[NonSerialized]protected GetUnstuckActions _noMovementGetUnstuckAction=GetUnstuckActions.none;[NonSerialized]protected float _noMovementGetUnstuckTimer=0;[NonSerialized]protected float MaxGetUnstuckActionTime;public enum GetUnstuckActions:int{none=-1,jumpAllWayUp=0,moveSidewaysRandomDir=1,moveCircularlyAroundTgt=2,moveBackwards=3,moveLooselyToRandomDir=4,}[NonSerialized]readonly int GetUnstuckActionsCount=Enum.GetValues(typeof(GetUnstuckActions)).Length-1;
 [NonSerialized]Vector3 _axisDiff,_dir;
 [NonSerialized]Vector3 _axisDist;
 void WALK_PATH(){
@@ -57,7 +61,7 @@ if(CurPath.Count>0&&CurPathTgt==null){
 
 
         Debug.LogWarning(CurPathTgt.Value.mode);
-    _movementWasDetectedTimer=NoMovementDetectionTime*(float)(mathrandom.NextDouble()+.5f);_noMovementGetUnstuckAction=GetUnstuckActions.none;
+_movementWasDetectedTimer=NoMovementDetectionTime*(float)(mathrandom.NextDouble()+.5f);_noMovementGetUnstuckAction=GetUnstuckActions.none;
 
 
 }
@@ -99,8 +103,8 @@ if(_movementSnapshotTimer<=0){
 _movementWasDetectedTimer=NoMovementDetectionTime*(float)(mathrandom.NextDouble()+.5f);
     }else{
         Debug.LogWarning("I am stuck!");
-    }_movementSnapshotPos=transform.position;
-_movementSnapshotTimer=DoMovementSnapshotTime*(float)(mathrandom.NextDouble()+.5f);
+    }
+_movementSnapshotPos=transform.position;_movementSnapshotTimer=DoMovementSnapshotTime*(float)(mathrandom.NextDouble()+.5f);
 }else{
 _movementSnapshotTimer-=Time.deltaTime;
 }
@@ -112,7 +116,7 @@ _movementWasDetectedTimer=NoMovementDetectionTime*(float)(mathrandom.NextDouble(
 _noMovementGetUnstuckTimer-=Time.deltaTime;
     if(_noMovementGetUnstuckTimer<=0){
 _noMovementGetUnstuckAction=(GetUnstuckActions)mathrandom.Next(-1,GetUnstuckActionsCount);_noMovementGetUnstuckTimer=MaxGetUnstuckActionTime*(float)(mathrandom.NextDouble()+.5f);
-        Debug.LogWarning("My action to get unstuck didn't work! Try something else! _noMovementGetUnstuckAction:"+_noMovementGetUnstuckAction);
+        Debug.LogWarning("My action to get unstuck didn't get me to target on a good fashioned time! Try something else! _noMovementGetUnstuckAction:"+_noMovementGetUnstuckAction);
     }
 }
 
@@ -124,6 +128,23 @@ case(GetUnstuckActions.moveBackwards):{
 
     
     Debug.LogWarning("moveBackwards");
+
+    
+if(_axisDist.x>float.Epsilon||
+   _axisDist.z>float.Epsilon){
+inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.eulerAngles.y;
+}
+
+
+inputMoveSpeed.x=0;
+if((IsGrounded||!HittingWall)&&
+  (_axisDist.x>ReachedTgtDisThreshold.x||
+   _axisDist.z>ReachedTgtDisThreshold.z)){
+inputMoveSpeed.z=-InputMaxMoveSpeed.z;
+}else{
+inputMoveSpeed.z=0;
+}
+inputMoveSpeed.y=0;
 
 
 break;}
@@ -188,11 +209,11 @@ inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.e
 }
 
 
+inputMoveSpeed.x=0;
 if(CurPathTgt.Value.mode==Node.PreferredReachableMode.jump&&transform.position.y<CurPathTgt.Value.pos.y+.1f){
 
     
 #region necessário pular
-inputMoveSpeed.x=0;
 inputMoveSpeed.z=0;
 if(IsGrounded){
 Jump=true;
@@ -207,7 +228,6 @@ inputMoveSpeed.y=0;
     
     
 #region ir para o destino normalmente
-inputMoveSpeed.x=0;
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
    _axisDist.z>ReachedTgtDisThreshold.z)){

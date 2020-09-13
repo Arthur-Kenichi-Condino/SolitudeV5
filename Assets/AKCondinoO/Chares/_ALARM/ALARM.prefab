@@ -63,6 +63,7 @@ MonoBehaviour:
   DEBUG_ATTACK: 0
   DEBUG_GETHIT: 0
   DEBUG_DIE: 0
+  MovementQualityEvaluationTimeReference: 1.27
   motionRhythm: 0.0245
 --- !u!65 &8356489079188606030
 BoxCollider:

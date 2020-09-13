@@ -805,18 +805,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1481341642692946145, guid: 26af6aa4ce237114d81c539a3b07373c,
         type: 3}
-      propertyPath: DoMovementSnapshotTime
-      value: 0.27
-      objectReference: {fileID: 0}
-    - target: {fileID: 1481341642692946145, guid: 26af6aa4ce237114d81c539a3b07373c,
-        type: 3}
-      propertyPath: NoMoveStuckDetectionTime
-      value: 1.27
-      objectReference: {fileID: 0}
-    - target: {fileID: 1481341642692946145, guid: 26af6aa4ce237114d81c539a3b07373c,
-        type: 3}
-      propertyPath: MaxGetUnstuckActionTime
-      value: 1.27
+      propertyPath: MovementQualityEvaluationTimeReference
+      value: 2.27
       objectReference: {fileID: 0}
     - target: {fileID: 8043709400278367053, guid: 26af6aa4ce237114d81c539a3b07373c,
         type: 3}
