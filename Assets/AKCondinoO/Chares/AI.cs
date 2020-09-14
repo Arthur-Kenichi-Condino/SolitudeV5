@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class AI:Pathfinder{[NonSerialized]protected System.Random mathrandom=new System.Random();
+[NonSerialized]public int Id;
 protected override void OnEnable(){
                    base.OnEnable();
 NoMovementDetectionTime=MovementQualityEvaluationTimeReferenceValue;DoMovementSnapshotTime=NoMovementDetectionTime*.21f;MaxGetUnstuckActionTime=NoMovementDetectionTime*.32f;
