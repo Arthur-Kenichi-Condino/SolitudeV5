@@ -708,7 +708,7 @@ PrefabInstance:
         type: 3}
       propertyPath: actorsPrefabs.Array.data[0]
       value: 
-      objectReference: {fileID: 1234469548589373247, guid: 26af6aa4ce237114d81c539a3b07373c,
+      objectReference: {fileID: 1481341642692946145, guid: 26af6aa4ce237114d81c539a3b07373c,
         type: 3}
     - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
         type: 3}

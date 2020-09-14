@@ -63,7 +63,7 @@ collisions.Remove(tuple);
 }
 [NonSerialized]Vector3 pos;
 [NonSerialized]Vector3 pos_Pre;
-[NonSerialized]Vector2Int coord;[NonSerialized]int idx;[NonSerialized]Chunk chunk;protected bool OutOfSight;
+[NonSerialized]Vector2Int coord;[NonSerialized]int idx;[NonSerialized]Chunk chunk;[NonSerialized]bool OutOfSight_v=true;public bool OutOfSight{get{return OutOfSight_v;}protected set{OutOfSight_v=value;}}
 protected virtual void Update(){
 if(rigidbody!=null){
 pos=transform.position;
