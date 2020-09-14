@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class ActorManagementMentana:MonoBehaviour{
-[NonSerialized]public readonly Dictionary<int,AI>Actors=new Dictionary<int,AI>();[NonSerialized]public readonly Dictionary<int,List<AI>>ActorsByTypeId=new Dictionary<int,List<AI>>();
+[NonSerialized]public static readonly Dictionary<int,AI>Actors=new Dictionary<int,AI>();[NonSerialized]public static readonly Dictionary<int,List<AI>>ActorsByTypeId=new Dictionary<int,List<AI>>();
 [SerializeField]AI[]actorsPrefabs;[SerializeField]int[]actorsMaxInstantiations;[NonSerialized]int nextActorId;
 void Awake(){
 if(actorsPrefabs!=null&&actorsMaxInstantiations!=null){
@@ -12,7 +12,7 @@ ActorsByTypeId.Add(i,new List<AI>(amount));for(int j=0;j<amount;j++){int id=i+j;
 }
 }
 }
-[NonSerialized]public readonly Dictionary<int,AI>GetActors=new Dictionary<int,AI>();
+public void Contains(AI actor){}[NonSerialized]public static readonly Dictionary<int,AI>GetActors=new Dictionary<int,AI>();
 void Update(){
 
     //  no actor: se id dele no dicionario actors != dele mesmo, destruir ele;
