@@ -45,4 +45,5 @@ _continue:{}}
     //  spawn remove da queue, adiciona pra getactors e coloca outofsight como false
 
 }
+[NonSerialized]public float TryActorStagingInterval=1f;[NonSerialized]float NextActorStagingTimer;[NonSerialized]public float ChanceToStage;public enum CreativeIdleness:int{CreateAlly,SpawnEnemy,}[NonSerialized]readonly int CreativeIdlenessActionsCount=Enum.GetValues(typeof(CreativeIdleness)).Length;
 }
