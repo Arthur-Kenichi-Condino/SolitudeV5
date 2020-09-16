@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class ActorManagementMentana:MonoBehaviour{
+public class ActorManagementMentana:MonoBehaviour{[NonSerialized]protected System.Random mathrandom=new System.Random();
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
 public static bool Contains(AI actor){if(!Actors.ContainsKey(actor.Id)||Actors[actor.Id]!=actor){unregistered.Add(actor);return(false);}return(true);}[NonSerialized]static readonly List<AI>unregistered=new List<AI>();[NonSerialized]public static readonly Dictionary<int,AI>Actors=new Dictionary<int,AI>();[NonSerialized]public static readonly Dictionary<int,List<AI>>ActorsByTypeId=new Dictionary<int,List<AI>>();
 [SerializeField]AI[]actorsPrefabs;[SerializeField]int[]actorsMaxInstantiations;[NonSerialized]int nextActorId;
@@ -38,11 +38,30 @@ var toDestroy=unregistered[u].gameObject;
 if(LOG&&LOG_LEVEL<=0)Debug.Log("destroy unavailable actor of type:"+unregistered[u].GetType());
 unregistered.RemoveAt(u);Destroy(toDestroy);
 _continue:{}}
+
+
+if(NextActorStagingTimer<=0){
+if(mathrandom.NextDouble()<=ChanceToStage){
+
+    Debug.LogWarning("do staging action");
+
+ChanceToStage=0;
+}else{
+
+    Debug.LogWarning("staging failed");
+
+ChanceToStage+=0.1f;
+}
+    NextActorStagingTimer=TryActorStagingInterval;
+}else{
+    NextActorStagingTimer-=Time.deltaTime;
+}
 //for(int i=0;i<actorsPrefabs){}
     //  no actor: se id dele no dicionario actors != dele mesmo, destruir ele;
     //  queue de inactive actors pra dar spawn
     //  OutOfSight=true remove de getactors e adiciona pra queue
     //  spawn remove da queue, adiciona pra getactors e coloca outofsight como false
+
 
 }
 [NonSerialized]public float TryActorStagingInterval=1f;[NonSerialized]float NextActorStagingTimer;[NonSerialized]public float ChanceToStage;public enum CreativeIdleness:int{CreateAlly,SpawnEnemy,}[NonSerialized]readonly int CreativeIdlenessActionsCount=Enum.GetValues(typeof(CreativeIdleness)).Length;
