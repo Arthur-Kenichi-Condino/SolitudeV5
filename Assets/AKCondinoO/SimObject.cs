@@ -63,7 +63,7 @@ collisions.Remove(tuple);
 }
 [NonSerialized]Vector3 pos;
 [NonSerialized]Vector3 pos_Pre;
-[NonSerialized]Vector2Int coord;[NonSerialized]int idx;[NonSerialized]Chunk chunk;[NonSerialized]bool OutOfSight_v=true;public bool OutOfSight{get{return OutOfSight_v;}protected set{OutOfSight_v=value;}}
+[NonSerialized]Vector2Int coord;[NonSerialized]int idx;[NonSerialized]Chunk chunk;[NonSerialized]protected bool OutOfSight_v=true;public virtual bool OutOfSight{get{return OutOfSight_v;}protected set{OutOfSight_v=value;}}//  Objects need to be disabled and enabled by managers
 protected virtual void Update(){
 if(rigidbody!=null){
 pos=transform.position;

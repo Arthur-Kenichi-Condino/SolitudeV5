@@ -2,16 +2,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static ActorManagementMentana;
 public class AI:Pathfinder{[NonSerialized]protected System.Random mathrandom=new System.Random();
-[NonSerialized]public int Id;
+public int Id{get;internal set;}public int TypeId{get;internal set;}
 protected override void OnEnable(){
                    base.OnEnable();
 NoMovementDetectionTime=MovementQualityEvaluationTimeReferenceValue;DoMovementSnapshotTime=NoMovementDetectionTime*.21f;MaxGetUnstuckActionTime=NoMovementDetectionTime*.32f;
 }
+protected override void OnDisable(){
+                   base.OnDisable();
+}
 protected float Autonomous=0;public float AutonomyDelayAfterControl=30;
 protected State MyState=State.IDLE_ST;
+public override bool OutOfSight{get{return OutOfSight_v;}protected set{OutOfSight_v=value;
+if(value){
+if(GetActors.ContainsKey(Id)){GetActors.Remove(Id);
+gameObject.SetActive(false);
+if(LOG&&LOG_LEVEL<=0)Debug.Log("disable OutOfSight actor and add to inactive queue");
+InactiveActorsByTypeId[TypeId].AddLast(this);
+}else{
+if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("OutOfSight actor wasn't marked to be active so it should already be in its InactiveActorsByTypeId queue");
+}
+}
+}
+}
 protected override void Update(){
                    base.Update();
+    
+    
+if(!Contains(this)){if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("unregistered actor detected");}
+if(!GetActors.ContainsKey(Id)){
+gameObject.SetActive(false);
+if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("actor isn't marked to be active but is enabled anyway: this causes it to be ignored by other actors: actors must be enabled by their manager");
+}
 
 
     if(DEBUG_ATTACK){Attack(null);}

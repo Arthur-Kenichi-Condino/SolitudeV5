@@ -715,6 +715,16 @@ PrefabInstance:
       propertyPath: actorsMaxInstantiations.Array.data[0]
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
+        type: 3}
+      propertyPath: LOG
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
+        type: 3}
+      propertyPath: LOG_LEVEL
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10725eaf686bf0147b88fddfec998997, type: 3}
 --- !u!1 &1605657047
