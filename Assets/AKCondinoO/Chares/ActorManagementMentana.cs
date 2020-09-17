@@ -20,6 +20,7 @@ nextActorId=id+1;}
 }
 }
 }
+[SerializeField]int[]monsterTypeIds;
 [NonSerialized]public static readonly Dictionary<int,AI>GetActors=new Dictionary<int,AI>();[NonSerialized]public static readonly Dictionary<int,LinkedList<AI>>InactiveActorsByTypeId=new Dictionary<int,LinkedList<AI>>();
 [NonSerialized]protected static Vector3 actPos,center,size;
 [NonSerialized]protected static Vector2Int actReg;
@@ -27,7 +28,9 @@ bool firstLoop=true;void Update(){
 
 if(firstLoop||actPos!=Camera.main.transform.position){
     actPos=Camera.main.transform.position;
-    actReg=ChunkManager.PosToRgn(actPos);Debug.LogWarning(actPos+" "+ChunkManager.PosToCoord(actPos)+" "+actReg);center=new Vector3(actReg.x,0,actReg.y);
+    actReg=ChunkManager.PosToRgn(actPos);
+    Debug.LogWarning(actPos+" "+actReg);
+    center=new Vector3(actReg.x,0,actReg.y);size=new Vector3(Chunk.Width*(ChunkManager.main.instantiationDistance.x*2+1),Chunk.Height,Chunk.Depth*(ChunkManager.main.instantiationDistance.y*2+1));
 }
 
 for(int u=unregistered.Count-1;u>=0;u--){for(int i=0;i<actorsPrefabs.Length;i++){if(actorsPrefabs[i].GetType()==unregistered[u].GetType()){var prefab=actorsPrefabs[i];
@@ -50,8 +53,23 @@ _continue:{}}
 
 if(NextActorStagingTimer<=0){
 if(mathrandom.NextDouble()<=ChanceToStage){
-
-    Debug.LogWarning("do staging action");
+    
+var action=(CreativeIdleness)mathrandom.Next(0,CreativeIdlenessActionsCount);
+    Debug.LogWarning("do staging action:"+action);
+switch(action){
+    case(CreativeIdleness.SpawnEnemy):{
+        if(GetValidRandomPos(out Vector3 pos)){
+            if(monsterTypeIds!=null){
+var typeId=mathrandom.Next(0,monsterTypeIds.Length);
+                Debug.LogWarning("spawn monster of type id:"+typeId);
+            }
+        }
+    break;}
+    case(CreativeIdleness.CreateAlly):{
+        if(GetValidRandomPos(out Vector3 pos)){
+        }
+    break;}
+}
 
 ChanceToStage=0;
 }else{
@@ -72,12 +90,29 @@ ChanceToStage+=0.1f;
 
 
 firstLoop=false;}
+
+
+bool GetValidRandomPos(out Vector3 pos){
+var ray=new Ray(center+new Vector3((float)(mathrandom.NextDouble()*2f-1)*(size.x/2f),size.y/2f,(float)(mathrandom.NextDouble()*2f-1)*(size.z/2f)),Vector3.down);
+    Debug.DrawRay(ray.origin,Vector3.down*Chunk.Height,Color.white,1f);
+if(Physics.Raycast(ray,out RaycastHit hit,Chunk.Height)){
+pos=hit.point;
+return true;
+}
+pos=default;
+return false;}
+
+
 [NonSerialized]public float TryActorStagingInterval=1f;[NonSerialized]float NextActorStagingTimer;[NonSerialized]public float ChanceToStage;public enum CreativeIdleness:int{CreateAlly,SpawnEnemy,}[NonSerialized]readonly int CreativeIdlenessActionsCount=Enum.GetValues(typeof(CreativeIdleness)).Length;
 #if UNITY_EDITOR
+[NonSerialized]Color gizmosAreaCubeColor=new Color(1,1,1,0.125f);
 protected void OnDrawGizmos(){
 if(DRAW_LEVEL<=1){
-Debug.LogWarning(center);
-Gizmos.DrawCube(center,Vector3.one*50);
+//Debug.LogWarning(center);
+var oldColor=Gizmos.color;
+Gizmos.color=gizmosAreaCubeColor;
+Gizmos.DrawCube(center,size);
+Gizmos.color=oldColor;
 }
 }
 #endif

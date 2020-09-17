@@ -109,7 +109,7 @@ protected override void Update(){
 
     //if(Input.GetKeyDown(KeyCode.C))DEBUG_GOTO=true;
     if(DEBUG_GOTO){DEBUG_GOTO=false;GoTo(new Ray(new Vector3(1,0,-10),Vector3.down));//GoToQueue.AddLast(new RaycastHit());
-        Debug.DrawRay(new Vector3(1,0,-10),Vector3.down*1000,Color.red,5f);
+        Debug.DrawRay(new Vector3(1,0,-10),Vector3.down*1000,Color.white,5f);
     }
 
 
