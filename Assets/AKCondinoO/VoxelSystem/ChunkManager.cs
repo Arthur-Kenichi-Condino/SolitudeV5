@@ -315,7 +315,7 @@ return new Vector2Int((pos.x>0)?(pos.x-(int)pos.x==0.5f?Mathf.FloorToInt(pos.x):
                       (pos.z>0)?(pos.z-(int)pos.z==0.5f?Mathf.FloorToInt(pos.z):Mathf.RoundToInt(pos.z)):(int)Math.Round(pos.z,MidpointRounding.AwayFromZero));
 }
 public static Vector2Int PosToRgn(Vector3 pos){Vector2Int coord=PosToCoord(pos);
-return new Vector2Int(coord.x*Width,coord.y*Depth);
+return new Vector2Int(coord.x*Chunk.Width,coord.y*Chunk.Depth);
 }
 public static int GetIdx(int cx,int cy){return cy+cx*(Depth+1);}
 public const int Width=6250;

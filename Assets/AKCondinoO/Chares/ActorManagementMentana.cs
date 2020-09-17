@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AKCondinoO.Voxels;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +21,14 @@ nextActorId=id+1;}
 }
 }
 [NonSerialized]public static readonly Dictionary<int,AI>GetActors=new Dictionary<int,AI>();[NonSerialized]public static readonly Dictionary<int,LinkedList<AI>>InactiveActorsByTypeId=new Dictionary<int,LinkedList<AI>>();
-void Update(){
+[NonSerialized]protected static Vector3 actPos,center,size;
+[NonSerialized]protected static Vector2Int actReg;
+bool firstLoop=true;void Update(){
+
+if(firstLoop||actPos!=Camera.main.transform.position){
+    actPos=Camera.main.transform.position;
+    actReg=ChunkManager.PosToRgn(actPos);Debug.LogWarning(actPos+" "+ChunkManager.PosToCoord(actPos)+" "+actReg);center=new Vector3(actReg.x,0,actReg.y);
+}
 
 for(int u=unregistered.Count-1;u>=0;u--){for(int i=0;i<actorsPrefabs.Length;i++){if(actorsPrefabs[i].GetType()==unregistered[u].GetType()){var prefab=actorsPrefabs[i];
 
@@ -63,6 +71,14 @@ ChanceToStage+=0.1f;
     //  spawn remove da queue, adiciona pra getactors e coloca outofsight como false
 
 
-}
+firstLoop=false;}
 [NonSerialized]public float TryActorStagingInterval=1f;[NonSerialized]float NextActorStagingTimer;[NonSerialized]public float ChanceToStage;public enum CreativeIdleness:int{CreateAlly,SpawnEnemy,}[NonSerialized]readonly int CreativeIdlenessActionsCount=Enum.GetValues(typeof(CreativeIdleness)).Length;
+#if UNITY_EDITOR
+protected void OnDrawGizmos(){
+if(DRAW_LEVEL<=1){
+Debug.LogWarning(center);
+Gizmos.DrawCube(center,Vector3.one*50);
+}
+}
+#endif
 }
