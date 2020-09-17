@@ -108,8 +108,10 @@ firstLoop=false;}
 
     
 void StageActor(AI actor,RaycastHit hitInfo,Vector3 pos){
-    Debug.LogWarning("staging actor of type:"+actor.GetType());
-pos.y+=actor.collider.bounds.extents.y+.1f;actor.transform.position=pos;actor.OutOfSight=false;GetActors.Add(actor.Id,actor);actor.gameObject.SetActive(true);
+    Debug.DrawRay(hitInfo.point,hitInfo.normal,Color.white,5);
+var angle=Vector3.Angle(Vector3.up,hitInfo.normal);var tan=Mathf.Tan(Mathf.Deg2Rad*angle);
+    Debug.LogWarning("staging actor of type:"+actor.GetType()+"[angle:"+angle+";tan:"+tan);
+pos.y+=actor.collider.bounds.extents.y+tan*actor.BodyRadius+.1f;actor.transform.position=pos;actor.OutOfSight=false;GetActors.Add(actor.Id,actor);actor.gameObject.SetActive(true);
 }
 //void StageActor(AI actor,Vector3 pos){
 //    Debug.LogWarning("staging actor of type:"+actor.GetType());
@@ -122,7 +124,7 @@ var c=center+new Vector3((float)(mathrandom.NextDouble()*2f-1)*(size.x*.5f),size
                          (float)(mathrandom.NextDouble()*2f-1)*(size.z*.5f));
     Debug.DrawRay(c,Vector3.down*Chunk.Height,Color.white,1f);
 bool result=Physics.BoxCast(c,actor.collider.bounds.extents,Vector3.down,out hitInfo,Quaternion.identity,size.y);
-pos=hitInfo.point;pos.x=c.x;pos.z=c.z;
+pos=hitInfo.point+hitInfo.normal*actor.BodyRadius;
 return result;}
 //bool GetValidRandomPos(out Vector3 pos){
 //var ray=new Ray(center+new Vector3((float)(mathrandom.NextDouble()*2f-1)*(size.x/2f),size.y/2f,(float)(mathrandom.NextDouble()*2f-1)*(size.z/2f)),Vector3.down);
