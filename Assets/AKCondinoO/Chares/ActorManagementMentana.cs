@@ -58,16 +58,31 @@ var action=(CreativeIdleness)mathrandom.Next(0,CreativeIdlenessActionsCount);
     Debug.LogWarning("do staging action:"+action);
 switch(action){
     case(CreativeIdleness.SpawnEnemy):{
-        if(GetValidRandomPos(out Vector3 pos)){
-            if(monsterTypeIds!=null){
-var typeId=mathrandom.Next(0,monsterTypeIds.Length);
-                Debug.LogWarning("spawn monster of type id:"+typeId);
-            }
-        }
+if(monsterTypeIds!=null){
+var typeId=monsterTypeIds[mathrandom.Next(0,monsterTypeIds.Length)];if(InactiveActorsByTypeId.ContainsKey(typeId)&&InactiveActorsByTypeId[typeId].Count>0){var actorCast=InactiveActorsByTypeId[typeId].First.Value;
+    if(GetValidRandomPos(actorCast,out RaycastHit hitInfo,out Vector3 pos)){
+        Debug.LogWarning("spawn monster of type id:"+typeId);
+InactiveActorsByTypeId[typeId].RemoveFirst();StageActor(actorCast,hitInfo,pos);
+    }else{
+        Debug.LogWarning("no valid position found for monster of type id:"+typeId);
+    }
+}else{
+    Debug.LogWarning("spawn limit reached for monster of type id:"+typeId);
+}
+}
+//        if(GetValidRandomPos(out Vector3 pos)){
+//            if(monsterTypeIds!=null){
+//var typeId=mathrandom.Next(0,monsterTypeIds.Length);
+//                if(InactiveActorsByTypeId[typeId].Count>0){
+//var actorCast=InactiveActorsByTypeId[typeId].First;InactiveActorsByTypeId[typeId].RemoveFirst();StageActor(actorCast.Value,pos);
+//                    
+//                }else{
+//                    Debug.LogWarning("spawn limit reached for monster of type id:"+typeId);
+//                }
+//            }
+//        }
     break;}
     case(CreativeIdleness.CreateAlly):{
-        if(GetValidRandomPos(out Vector3 pos)){
-        }
     break;}
 }
 
@@ -91,16 +106,33 @@ ChanceToStage+=0.1f;
 
 firstLoop=false;}
 
-
-bool GetValidRandomPos(out Vector3 pos){
-var ray=new Ray(center+new Vector3((float)(mathrandom.NextDouble()*2f-1)*(size.x/2f),size.y/2f,(float)(mathrandom.NextDouble()*2f-1)*(size.z/2f)),Vector3.down);
-    Debug.DrawRay(ray.origin,Vector3.down*Chunk.Height,Color.white,1f);
-if(Physics.Raycast(ray,out RaycastHit hit,Chunk.Height)){
-pos=hit.point;
-return true;
+    
+void StageActor(AI actor,RaycastHit hitInfo,Vector3 pos){
+    Debug.LogWarning("staging actor of type:"+actor.GetType());
+pos.y+=actor.collider.bounds.extents.y+.1f;actor.transform.position=pos;actor.OutOfSight=false;GetActors.Add(actor.Id,actor);actor.gameObject.SetActive(true);
 }
-pos=default;
-return false;}
+//void StageActor(AI actor,Vector3 pos){
+//    Debug.LogWarning("staging actor of type:"+actor.GetType());
+//pos.y+=actor.collider.bounds.extents.y*2;actor.transform.position=pos;actor.OutOfSight=false;GetActors.Add(actor.Id,actor);actor.gameObject.SetActive(true);
+//}
+
+    
+bool GetValidRandomPos(AI actor,out RaycastHit hitInfo,out Vector3 pos){
+var c=center+new Vector3((float)(mathrandom.NextDouble()*2f-1)*(size.x*.5f),size.y*.5f,
+                         (float)(mathrandom.NextDouble()*2f-1)*(size.z*.5f));
+    Debug.DrawRay(c,Vector3.down*Chunk.Height,Color.white,1f);
+bool result=Physics.BoxCast(c,actor.collider.bounds.extents,Vector3.down,out hitInfo,Quaternion.identity,size.y);
+pos=hitInfo.point;pos.x=c.x;pos.z=c.z;
+return result;}
+//bool GetValidRandomPos(out Vector3 pos){
+//var ray=new Ray(center+new Vector3((float)(mathrandom.NextDouble()*2f-1)*(size.x/2f),size.y/2f,(float)(mathrandom.NextDouble()*2f-1)*(size.z/2f)),Vector3.down);
+//    Debug.DrawRay(ray.origin,Vector3.down*Chunk.Height,Color.white,1f);
+//if(Physics.Raycast(ray,out RaycastHit hit,Chunk.Height)){
+//pos=hit.point;
+//return true;
+//}
+//pos=default;
+//return false;}
 
 
 [NonSerialized]public float TryActorStagingInterval=1f;[NonSerialized]float NextActorStagingTimer;[NonSerialized]public float ChanceToStage;public enum CreativeIdleness:int{CreateAlly,SpawnEnemy,}[NonSerialized]readonly int CreativeIdlenessActionsCount=Enum.GetValues(typeof(CreativeIdleness)).Length;

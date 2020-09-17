@@ -14,7 +14,7 @@ protected override void OnDisable(){
 }
 protected float Autonomous=0;public float AutonomyDelayAfterControl=30;
 protected State MyState=State.IDLE_ST;
-public override bool OutOfSight{get{return OutOfSight_v;}protected set{OutOfSight_v=value;
+public override bool OutOfSight{get{return OutOfSight_v;}set{OutOfSight_v=value;
 if(value){
 if(GetActors.ContainsKey(Id)){GetActors.Remove(Id);
 gameObject.SetActive(false);
