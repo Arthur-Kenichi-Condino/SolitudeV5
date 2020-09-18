@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 1889326662303311925}
   - component: {fileID: 100464781440049015}
   - component: {fileID: 5155531778243983149}
-  m_Layer: 0
-  m_Name: ALARM_3D_SPRITE
+  m_Layer: 8
+  m_Name: BAYERI_3D_SPRITE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,7 +72,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 4464494831607387969, guid: 21626b8fabeffcf44bf28a09a289f329,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -80,7 +81,7 @@ SpriteRenderer:
   m_Size: {x: 2.56, y: 2.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &5155531778243983149
@@ -93,7 +94,7 @@ Animator:
   m_GameObject: {fileID: 3898248454432277950}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 97284197259afeb429e7d56ff18eab0a, type: 2}
+  m_Controller: {fileID: 9100000, guid: 9b93d2f935ec79946af4f80a22c4eb5e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

@@ -5,6 +5,11 @@ using UnityEngine;
 using static ActorManagementMentana;
 public class AI:Pathfinder{[NonSerialized]protected System.Random mathrandom=new System.Random();
 public int Id{get;internal set;}public int TypeId{get;internal set;}
+[NonSerialized]protected Sight MySight;
+protected override void Awake(){
+                   base.Awake();
+MySight=GetComponentInChildren<Sight>();
+}
 protected override void OnEnable(){
                    base.OnEnable();
 NoMovementDetectionTime=MovementQualityEvaluationTimeReferenceValue;DoMovementSnapshotTime=NoMovementDetectionTime*.21f;MaxGetUnstuckActionTime=NoMovementDetectionTime*.32f;

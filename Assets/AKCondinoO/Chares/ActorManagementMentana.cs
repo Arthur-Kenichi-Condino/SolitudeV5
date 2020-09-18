@@ -52,16 +52,19 @@ if(LOG&&LOG_LEVEL<=0)Debug.Log("destroy unavailable actor of type:"+unregistered
 unregistered.RemoveAt(u);Destroy(toDestroy);
 _continue:{}}
 
+if(DEBUG_SPAWN_ENEMY!=-1){
+NextActorStagingTimer=0;ChanceToStage=1;
+}
 
 if(NextActorStagingTimer<=0){
 if(mathrandom.NextDouble()<=ChanceToStage){
     
-var action=(CreativeIdleness)mathrandom.Next(0,CreativeIdlenessActionsCount);
+var action=DEBUG_SPAWN_ENEMY!=-1?CreativeIdleness.SpawnEnemy:(CreativeIdleness)mathrandom.Next(0,CreativeIdlenessActionsCount);
     Debug.LogWarning("do staging action:"+action);
 switch(action){
     case(CreativeIdleness.SpawnEnemy):{
 if(monsterTypeIds!=null){
-var typeId=monsterTypeIds[mathrandom.Next(0,monsterTypeIds.Length)];if(InactiveActorsByTypeId.ContainsKey(typeId)&&InactiveActorsByTypeId[typeId].Count>0){var actorCast=InactiveActorsByTypeId[typeId].First.Value;
+var typeId=DEBUG_SPAWN_ENEMY!=-1?DEBUG_SPAWN_ENEMY:monsterTypeIds[mathrandom.Next(0,monsterTypeIds.Length)];if(InactiveActorsByTypeId.ContainsKey(typeId)&&InactiveActorsByTypeId[typeId].Count>0){var actorCast=InactiveActorsByTypeId[typeId].First.Value;
     if(GetValidRandomPos(actorCast,out RaycastHit hitInfo,out Vector3 pos)){
         Debug.LogWarning("spawn monster of type id:"+typeId);
 InactiveActorsByTypeId[typeId].RemoveFirst();StageActor(actorCast,hitInfo,pos);
@@ -105,6 +108,7 @@ ChanceToStage+=0.1f;
     //  OutOfSight=true remove de getactors e adiciona pra queue
     //  spawn remove da queue, adiciona pra getactors e coloca outofsight como false
 
+DEBUG_SPAWN_ENEMY=-1;
 
 firstLoop=false;}
 
