@@ -7,16 +7,18 @@ public class ActorManagementMentana:MonoBehaviour{[NonSerialized]protected Syste
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
 public static bool Contains(AI actor){if(!Actors.ContainsKey(actor.Id)||Actors[actor.Id]!=actor){unregistered.Add(actor);return(false);}return(true);}[NonSerialized]static readonly List<AI>unregistered=new List<AI>();[NonSerialized]public static readonly Dictionary<int,AI>Actors=new Dictionary<int,AI>();[NonSerialized]public static readonly Dictionary<int,List<AI>>ActorsByTypeId=new Dictionary<int,List<AI>>();
 [SerializeField]AI[]actorsPrefabs;[SerializeField]int[]actorsMaxInstantiations;[NonSerialized]int nextActorId;
+public static ActorManagementMentana main{get;private set;}
 void Awake(){
+main=this;
 if(actorsPrefabs!=null&&actorsMaxInstantiations!=null){
 for(int i=0;i<actorsPrefabs.Length;i++){if(i>=actorsMaxInstantiations.Length){break;}var prefab=actorsPrefabs[i];if(prefab==null){break;}var amount=actorsMaxInstantiations[i];
 ActorsByTypeId.Add(i,new List<AI>(amount));InactiveActorsByTypeId.Add(i,new LinkedList<AI>());for(int j=0;j<amount;j++){
-var typeId=i;var id=i+j;
+var typeId=i;var id=nextActorId++;
 var aI=Instantiate(prefab);
     aI.Id=id;aI.TypeId=typeId;
 var gO=aI.gameObject;gO.name=prefab.name+"("+typeId+":"+id+")";if(gO.activeSelf){gO.SetActive(false);if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("please keep the prefab disabled or the objects will be initialized and deinitialized at instantiation");}
 Actors.Add(id,aI);ActorsByTypeId[typeId].Add(aI);InactiveActorsByTypeId[typeId].AddLast(aI);
-nextActorId=id+1;}
+}
 }
 }
 }

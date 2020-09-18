@@ -31,7 +31,7 @@ protected override void Update(){
     
     
 if(!Contains(this)){if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("unregistered actor detected");}
-if(!GetActors.ContainsKey(Id)){
+if(main.gameObject.activeSelf&&!GetActors.ContainsKey(Id)){
 gameObject.SetActive(false);
 if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("actor isn't marked to be active but is enabled anyway: this causes it to be ignored by other actors: actors must be enabled by their manager");
 }
