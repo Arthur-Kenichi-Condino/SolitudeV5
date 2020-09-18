@@ -22,7 +22,7 @@ Actors.Add(id,aI);ActorsByTypeId[typeId].Add(aI);InactiveActorsByTypeId[typeId].
 }
 }
 }
-[SerializeField]int[]monsterTypeIds;
+[SerializeField]int[]monsterTypeIds;[SerializeField]int[]homunculusTypeIds;
 [NonSerialized]public static readonly Dictionary<int,AI>GetActors=new Dictionary<int,AI>();[NonSerialized]public static readonly Dictionary<int,LinkedList<AI>>InactiveActorsByTypeId=new Dictionary<int,LinkedList<AI>>();
 [NonSerialized]protected static Vector3 actPos,center,size;
 [NonSerialized]protected static Vector2Int actReg;
@@ -137,8 +137,6 @@ return result;}
 //}
 //pos=default;
 //return false;}
-
-
 [NonSerialized]public float TryActorStagingInterval=1f;[NonSerialized]float NextActorStagingTimer;[NonSerialized]public float ChanceToStage;public enum CreativeIdleness:int{CreateAlly,SpawnEnemy,}[NonSerialized]readonly int CreativeIdlenessActionsCount=Enum.GetValues(typeof(CreativeIdleness)).Length;
 #if UNITY_EDITOR
 [NonSerialized]Color gizmosAreaCubeColor=new Color(1,1,1,0.125f);
@@ -152,4 +150,10 @@ Gizmos.color=oldColor;
 }
 }
 #endif
+
+
+[SerializeField]internal int DEBUG_SPAWN_ENEMY=-1;
+[SerializeField]internal int DEBUG_CREATE_ALLY=-1;
+
+
 }

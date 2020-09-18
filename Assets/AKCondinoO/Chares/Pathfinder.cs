@@ -227,11 +227,6 @@ foregroundDataSet4.Set();
 if(LOG&&LOG_LEVEL<=2)Debug.Log("cr loop end");
 goto _loop;
 }
-
-
-    public bool DEBUG_GOTO;
-
-    
 [NonSerialized]Vector3 NodeHalfSize;
 [NonSerialized]Vector3 NodeSize;
 [NonSerialized]JobHandle handle2;[NonSerialized]NativeList<RaycastCommand>ToSetGridVerRaycasts;[NonSerialized]NativeArray<RaycastHit>ToSetGridVerHitsResultsBuffer;[NonSerialized]readonly Dictionary<int,RaycastHit[]>ToSetGridVerHits=new Dictionary<int,RaycastHit[]>();
@@ -656,4 +651,9 @@ fall,
 teleport,
 }
 }
+
+
+[SerializeField]internal bool DEBUG_GOTO;
+
+    
 }

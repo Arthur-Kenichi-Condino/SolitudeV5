@@ -320,15 +320,6 @@ return new Vector2Int(coord.x*Chunk.Width,coord.y*Chunk.Depth);
 public static int GetIdx(int cx,int cy){return cy+cx*(Depth+1);}
 public const int Width=6250;
 public const int Depth=6250;
-
-
-
-        
-        public bool DEBUG_EDIT=false;
-
-
-
-
 void BG2(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.Normal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL){
 int delay=500;
@@ -342,6 +333,15 @@ int tmp;lock(TerrainChunk.tasksBusyCount_Syn){tmp=TerrainChunk.tasksBusyCount;}T
 if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
     }
 }catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}}
+
+
+
+        
+[SerializeField]internal bool DEBUG_EDIT=false;
+
+
+
+
 }}
 public static class MemoryManagement{
 public static Thread MainThread{get;set;}

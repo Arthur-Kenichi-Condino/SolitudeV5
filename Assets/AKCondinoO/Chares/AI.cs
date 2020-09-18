@@ -37,9 +37,7 @@ if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("actor isn't marked to be active but is 
 }
 
 
-    if(DEBUG_ATTACK){Attack(null);}
-    if(DEBUG_GETHIT){DEBUG_GETHIT=false;TakeDamage(null);}
-    if(DEBUG_DIE){DEBUG_DIE=false;Die();}
+if(DEBUG_ATTACK){Attack(null);}if(DEBUG_GETHIT){DEBUG_GETHIT=false;TakeDamage(null);}if(DEBUG_DIE){DEBUG_DIE=false;Die();}
 
 
 if(Autonomous<=0){
@@ -67,13 +65,6 @@ protected virtual void OnSKILL_OBJECT_ST(){}
 protected virtual void Attack(AI enemy){}
 protected virtual void TakeDamage(AI fromEnemy){}
 protected virtual void Die(){}
-
-
-    public bool DEBUG_ATTACK;
-    public bool DEBUG_GETHIT;
-    public bool DEBUG_DIE;
-
-
 [NonSerialized]public Vector3 ReachedTgtDisThreshold=new Vector3(.1f,.1f,.1f);
 [NonSerialized]protected bool BlockMovement;
 [NonSerialized]protected float MovementQualityEvaluationTimeReferenceValue=2.27f;[NonSerialized]float _movementSnapshotTimer;[NonSerialized]Vector3 _movementSnapshotPos;[NonSerialized]protected float DoMovementSnapshotTime;[NonSerialized]float _movementWasDetectedTimer;[NonSerialized]protected float NoMovementDetectionTime;[NonSerialized]protected GetUnstuckActions _noMovementGetUnstuckAction=GetUnstuckActions.none;[NonSerialized]protected float _noMovementGetUnstuckTimer=0;[NonSerialized]protected float MaxGetUnstuckActionTime;[NonSerialized]int moveSidewaysRandomDir_dir=1;[NonSerialized]int moveCircularlyAroundTgt_dir=1;public enum GetUnstuckActions:int{none=-1,jumpAllWayUp=0,moveSidewaysRandomDir=1,moveCircularlyAroundTgt=2,moveBackwards=3,moveLooselyToRandomDir=4,}[NonSerialized]readonly int GetUnstuckActionsCount=Enum.GetValues(typeof(GetUnstuckActions)).Length-1;
@@ -270,4 +261,11 @@ CHASE_ST=3,
 ATTACK_ST=4,
 SKILL_OBJECT_ST=5,
 }
+
+
+[SerializeField]internal bool DEBUG_ATTACK;
+[SerializeField]internal bool DEBUG_GETHIT;
+[SerializeField]internal bool DEBUG_DIE;
+
+
 }
