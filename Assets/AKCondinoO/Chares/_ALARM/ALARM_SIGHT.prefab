@@ -57,3 +57,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47e1a8f80e0191a4ebc2bd0c3e6288df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hearingRange: 5
+  fieldOfViewAngle: 180
