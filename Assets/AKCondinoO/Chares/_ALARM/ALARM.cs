@@ -2,10 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static ActorManagementMentana;
 public class ALARM:_3DSprite{
 [NonSerialized]public float TryIdleActionInterval=1f;[NonSerialized]float NextIdleActionTimer;[NonSerialized]public float Boredom;public enum CreativeIdleness:int{MOVE_RANDOM=0,RANDOM_SKILL=1,}[NonSerialized]readonly int CreativeIdlenessActionsCount=Enum.GetValues(typeof(CreativeIdleness)).Length;
 protected override void OnIDLE_ST(){
                    base.OnIDLE_ST();
+
+
+foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
+}
+
+
 if(NextIdleActionTimer<=0){
 if(IsGrounded){
 if(mathrandom.NextDouble()<=Boredom){

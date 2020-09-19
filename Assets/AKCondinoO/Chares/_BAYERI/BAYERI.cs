@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static ActorManagementMentana;
 public class BAYERI:_3DSprite{
 protected override void Attack(AI enemy){
                    base.Attack(enemy);
