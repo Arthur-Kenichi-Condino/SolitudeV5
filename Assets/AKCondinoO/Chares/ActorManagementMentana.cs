@@ -159,5 +159,14 @@ Gizmos.color=oldColor;
 [SerializeField]internal int DEBUG_SPAWN_ENEMY=-1;
 [SerializeField]internal int DEBUG_CREATE_ALLY=-1;
 
-
+    
+[Serializable]public enum Roles{
+Neutral,
+MonsterPassive,
+MonsterAggressive,
+HomunculusPassive,
+HomunculusAggressive,
+HumanPassive,
+HumanAggressive,
+}
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static ActorManagementMentana;
 public class AI:Pathfinder{[NonSerialized]protected System.Random mathrandom=new System.Random();
-public int Id{get;internal set;}public int TypeId{get;internal set;}
+public int Id{get;internal set;}public int TypeId{get;internal set;}[SerializeField]public Roles Role;
 [NonSerialized]protected Sight MySight;
 protected override void Awake(){
                    base.Awake();
@@ -272,5 +272,24 @@ SKILL_OBJECT_ST=5,
 [SerializeField]internal bool DEBUG_GETHIT;
 [SerializeField]internal bool DEBUG_DIE;
 
-
+    
+public bool IsAllyTo(AI other){
+if((this.Role==Roles.HomunculusPassive||
+    this.Role==Roles.HomunculusAggressive)&&
+   (other.Role==Roles.HomunculusPassive||
+    other.Role==Roles.HomunculusAggressive||
+    other.Role==Roles.HumanPassive||
+    other.Role==Roles.HumanAggressive)){
+return(true);
+}
+if((this.Role==Roles.HumanPassive||
+    this.Role==Roles.HumanAggressive)&&
+   (other.Role==Roles.HumanPassive||
+    other.Role==Roles.HumanAggressive||
+    other.Role==Roles.HomunculusPassive||
+    other.Role==Roles.HomunculusAggressive)){
+return(true);
+}
+return(this.Role==Roles.Neutral||other.Role==Roles.Neutral);
+}
 }

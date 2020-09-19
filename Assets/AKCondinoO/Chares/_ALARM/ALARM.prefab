@@ -60,6 +60,7 @@ MonoBehaviour:
   InputViewRotationIncreaseSpeed: 0.025
   GetNewTgtRotCdTime: 0.05
   DEBUG_GOTO: 0
+  Faction: 2
   AutonomyDelayAfterControl: 5
   DEBUG_ATTACK: 0
   DEBUG_GETHIT: 0
