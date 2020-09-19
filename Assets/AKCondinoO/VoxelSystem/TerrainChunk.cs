@@ -38,6 +38,7 @@ protected override void Update(){
         if(bakingHandle.IsCompleted){
 bakingHandle.Complete();baking=false;
 if(LOG&&LOG_LEVEL<=2)Debug.Log("mesh baked");
+    collider.sharedMesh=null;
     collider.sharedMesh=mesh;
             Built=true;
         }else return;
@@ -49,7 +50,7 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("did job now build");
             OnBuild();
         }
     if(baking)return;
-if(DRAW_LEVEL<=-100)for(int i=0;i<TempVer.Length;i++){Debug.DrawRay(TempVer[i].pos,TempVer[i].normal,Color.green);}
+if(DRAW_LEVEL<=-100)for(int i=0;i<TempVer.Length;i++){Debug.DrawRay(transform.position+TempVer[i].pos,TempVer[i].normal,Color.green);}
 if(DISABLE){
 if(LOG&&LOG_LEVEL<=1000)Debug.LogWarning("chunk mesh building is DISABLED for debugging purposes");
 return;
