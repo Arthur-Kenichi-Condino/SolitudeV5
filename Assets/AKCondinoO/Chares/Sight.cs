@@ -12,19 +12,27 @@ if(actor!=null){
 
 if(Vector3.Distance(other.transform.position,transform.position)<=hearingRange){
     Debug.LogWarning(other.name+" ...and in hearing range...",this.transform.parent);  
-if(!IsInHearingSight.ContainsKey(actor.Id)){IsInHearingSight.Add(actor.Id,(actor,new Vector3(float.NaN,float.NaN,float.NaN),false));}
+if(!IsInHearingSight.ContainsKey(actor.Id)){
+IsInHearingSight.Add(actor.Id,(actor,new Vector3(float.NaN,float.NaN,float.NaN),false));
+}
 }else{
     Debug.LogWarning(other.name+" ...but not in hearing range...",this.transform.parent);  
-if(IsInHearingSight.ContainsKey(actor.Id)){IsInHearingSight.Remove(actor.Id);}
+if(IsInHearingSight.ContainsKey(actor.Id)){
+IsInHearingSight.Remove(actor.Id);
+}
 }
 
 Vector3 forward=transform.forward,toPlayer=(other.transform.position-transform.position).normalized;float angle=Vector3.Angle(toPlayer,forward);
 if(angle<=fieldOfViewAngle*.5f){
     Debug.LogWarning(other.name+" ...and in vision range",this.transform.parent);    
-if(!IsInVisionSight.ContainsKey(actor.Id)){IsInVisionSight.Add(actor.Id,(actor,new Vector3(float.NaN,float.NaN,float.NaN),false));}
+if(!IsInVisionSight.ContainsKey(actor.Id)){
+IsInVisionSight.Add(actor.Id,(actor,new Vector3(float.NaN,float.NaN,float.NaN),false));
+}
 }else{
     Debug.LogWarning(other.name+" ...but not in vision range",this.transform.parent);  
-if(IsInVisionSight.ContainsKey(actor.Id)){IsInVisionSight.Remove(actor.Id);}
+if(IsInVisionSight.ContainsKey(actor.Id)){
+IsInVisionSight.Remove(actor.Id);
+}
 }
 }
 }
@@ -33,8 +41,12 @@ private void OnTriggerExit(Collider other){
 if(other.tag=="Player"){
 AI actor=other.GetComponent<AI>();
 if(actor!=null){
-if(IsInHearingSight.ContainsKey(actor.Id)){IsInHearingSight.Remove(actor.Id);}
-if(IsInVisionSight.ContainsKey(actor.Id)){IsInVisionSight.Remove(actor.Id);}
+if(IsInHearingSight.ContainsKey(actor.Id)){
+IsInHearingSight.Remove(actor.Id);
+}
+if(IsInVisionSight.ContainsKey(actor.Id)){
+IsInVisionSight.Remove(actor.Id);
+}
 }
 }    
 }
