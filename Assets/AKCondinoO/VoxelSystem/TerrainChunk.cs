@@ -17,7 +17,7 @@ namespace AKCondinoO.Voxels{public class TerrainChunk:Chunk{
 protected override void OnEnable(){
 backgroundDataSet.Set();foregroundDataSet.Reset();
     if(mesh==null){
-        mesh=new Mesh(){bounds=new Bounds(Vector3.zero,new Vector3(Width,Height,Depth))};gameObject.GetComponent<MeshFilter>().sharedMesh=mesh;renderer=gameObject.GetComponent<MeshRenderer>();collider=gameObject.GetComponent<MeshCollider>();collider.sharedMesh=mesh;
+        mesh=new Mesh(){bounds=new Bounds(Vector3.zero,new Vector3(Width,Height,Depth))};gameObject.GetComponent<MeshFilter>().sharedMesh=mesh;renderer=gameObject.GetComponent<MeshRenderer>();collider=gameObject.GetComponent<MeshCollider>();collider.sharedMesh=null;collider.sharedMesh=mesh;
     }
 Stop=false;task=Task.Factory.StartNew(BG,new object[]{LOG,LOG_LEVEL,TempVer=new NativeList<Vertex>(Allocator.Persistent),TempTriangles=new NativeList<ushort>(Allocator.Persistent),new System.Random(),ChunkManager.saveSubfolder,},TaskCreationOptions.LongRunning);
 }
