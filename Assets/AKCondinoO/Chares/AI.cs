@@ -273,6 +273,10 @@ SKILL_OBJECT_ST=5,
 [SerializeField]internal bool DEBUG_DIE;
 
     
+public bool HasPassiveRole(){
+return(Role==Roles.HomunculusPassive||
+       Role==Roles.HumanPassive);
+}
 public bool IsAllyTo(AI other){
 if((this.Role==Roles.HomunculusPassive||
     this.Role==Roles.HomunculusAggressive)&&
