@@ -10,6 +10,11 @@ protected override void OnIDLE_ST(){
 
 
 foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
+if(i!=this.Id){
+if(v.HasPassiveRole()){
+    Debug.LogWarning("my TypeId:"+TypeToTypeId[GetType()]+"; possible target TypeId:"+TypeToTypeId[v.GetType()]);
+}
+}
 }
 
 
