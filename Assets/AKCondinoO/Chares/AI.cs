@@ -275,7 +275,9 @@ SKILL_OBJECT_ST=5,
     
 public bool HasPassiveRole(){
 return(Role==Roles.HomunculusPassive||
-       Role==Roles.HumanPassive);
+       Role==Roles.HomunculusAggressive||
+       Role==Roles.HumanPassive||
+       Role==Roles.HumanAggressive);
 }
 public bool IsAllyTo(AI other){
 if((this.Role==Roles.HomunculusPassive||
