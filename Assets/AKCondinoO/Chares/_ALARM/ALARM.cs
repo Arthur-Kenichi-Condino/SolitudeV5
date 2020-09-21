@@ -9,14 +9,6 @@ protected override void OnIDLE_ST(){
                    base.OnIDLE_ST();
 
 
-foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
-if(i!=this.Id){
-if(v.HasPassiveRole()){
-    Debug.LogWarning("my TypeId:"+TypeToTypeId[GetType()]+"; possible target TypeId:"+TypeToTypeId[v.GetType()]);
-}
-}
-}
-
 
 if(NextIdleActionTimer<=0){
 if(IsGrounded){
@@ -36,6 +28,15 @@ Boredom+=0.1f;
 }
 }else{
     NextIdleActionTimer-=Time.deltaTime;
+}
+}
+protected override void GetTargets(){
+foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
+if(i!=this.Id){
+if(v.HasPassiveRole()){
+    Debug.LogWarning("my TypeId:"+TypeToTypeId[GetType()]+"; possible target TypeId:"+TypeToTypeId[v.GetType()]);
+}
+}
 }
 }
 protected override void Attack(AI enemy){

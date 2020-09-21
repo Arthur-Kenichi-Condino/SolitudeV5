@@ -63,7 +63,11 @@ if(MyState==State.SKILL_OBJECT_ST){OnSKILL_OBJECT_ST();}
 }
 protected virtual void OnEXCUSE_ST(){}
 protected virtual void OnFOLLOW_ST(){}
-protected virtual void OnIDLE_ST(){}
+protected virtual void OnIDLE_ST(){
+GetTargets();
+}
+protected virtual void GetTargets(){
+}
 protected virtual void OnCHASE_ST(){}
 protected virtual void OnATTACK_ST(){}
 protected virtual void OnSKILL_OBJECT_ST(){}
@@ -277,7 +281,8 @@ public bool HasPassiveRole(){
 return(Role==Roles.HomunculusPassive||
        Role==Roles.HomunculusAggressive||
        Role==Roles.HumanPassive||
-       Role==Roles.HumanAggressive);
+       Role==Roles.HumanAggressive||
+       Role==Roles.Neutral);
 }
 public bool IsAllyTo(AI other){
 if((this.Role==Roles.HomunculusPassive||

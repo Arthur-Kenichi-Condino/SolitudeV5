@@ -32,7 +32,7 @@ bool firstLoop=true;void Update(){
 if(firstLoop||actPos!=Camera.main.transform.position){
     actPos=Camera.main.transform.position;
     actReg=ChunkManager.PosToRgn(actPos);
-    Debug.LogWarning(actPos+" "+actReg);
+if(LOG&&LOG_LEVEL<=-10)Debug.Log(actPos+" "+actReg);
     center=new Vector3(actReg.x,0,actReg.y);size=new Vector3(Chunk.Width*(ChunkManager.main.instantiationDistance.x*2+1),Chunk.Height,Chunk.Depth*(ChunkManager.main.instantiationDistance.y*2+1));
 }
 
@@ -90,8 +90,16 @@ InactiveActorsByTypeId[typeId].RemoveFirst();StageActor(actorCast,hitInfo,pos);
     break;}
     case(CreativeIdleness.CreateAlly):{
 if(homunculusTypeIds!=null){
-var typeId=homunculusTypeIds[mathrandom.Next(0,homunculusTypeIds.Length)];
-    Debug.LogWarning("create homunculus of type id:"+typeId);
+var typeId=homunculusTypeIds[mathrandom.Next(0,homunculusTypeIds.Length)];if(InactiveActorsByTypeId.ContainsKey(typeId)&&InactiveActorsByTypeId[typeId].Count>0){var actorCast=InactiveActorsByTypeId[typeId].First.Value;
+    if(GetValidRandomPos(actorCast,out RaycastHit hitInfo,out Vector3 pos)){
+        Debug.LogWarning("create homunculus of type id:"+typeId);
+InactiveActorsByTypeId[typeId].RemoveFirst();StageActor(actorCast,hitInfo,pos);
+    }else{
+        Debug.LogWarning("no valid position found for homunculus of type id:"+typeId);
+    }
+}else{
+    Debug.LogWarning("creation limit reached for homunculus of type id:"+typeId);
+}
 }
     break;}
 }
