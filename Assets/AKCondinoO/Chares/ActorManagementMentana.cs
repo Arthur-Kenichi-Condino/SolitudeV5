@@ -8,9 +8,9 @@ public class ActorManagementMentana:MonoBehaviour{[NonSerialized]protected Syste
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
 public static bool Contains(AI actor){if(!Actors.ContainsKey(actor.Id)||Actors[actor.Id]!=actor){unregistered.Add(actor);return(false);}return(true);}[NonSerialized]static readonly List<AI>unregistered=new List<AI>();[NonSerialized]public static readonly Dictionary<int,AI>Actors=new Dictionary<int,AI>();[NonSerialized]public static readonly Dictionary<int,List<AI>>ActorsByTypeId=new Dictionary<int,List<AI>>();[NonSerialized]public static readonly Dictionary<Type,int>TypeToTypeId=new Dictionary<Type,int>();
 [SerializeField]AI[]actorsPrefabs;[SerializeField]int[]actorsMaxInstantiations;[NonSerialized]int nextActorId;
-public static ActorManagementMentana main{get;private set;}
+public static ActorManagementMentana manager{get;private set;}
 void Awake(){
-main=this;
+manager=this;
 if(actorsPrefabs!=null&&actorsMaxInstantiations!=null){
 for(int i=0;i<actorsPrefabs.Length;i++){if(i>=actorsMaxInstantiations.Length){break;}var prefab=actorsPrefabs[i];if(prefab==null){break;}var amount=actorsMaxInstantiations[i];
 TypeToTypeId.Add(prefab.GetType(),i);ActorsByTypeId.Add(i,new List<AI>(amount));InactiveActorsByTypeId.Add(i,new LinkedList<AI>());for(int j=0;j<amount;j++){
@@ -39,7 +39,7 @@ if(LOG&&LOG_LEVEL<=-10)Debug.Log(actPos+" "+actReg);
 for(int u=unregistered.Count-1;u>=0;u--){for(int i=0;i<actorsPrefabs.Length;i++){if(actorsPrefabs[i].GetType()==unregistered[u].GetType()){var prefab=actorsPrefabs[i];
 
     
-if(LOG&&LOG_LEVEL<=0)Debug.Log("register actor of type:"+unregistered[u].GetType());
+if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("register actor of type:"+unregistered[u].GetType());
 var typeId=i;var id=nextActorId++;
 var aI=unregistered[u];
     aI.Id=id;aI.TypeId=typeId;
@@ -49,7 +49,7 @@ Actors.Add(id,aI);ActorsByTypeId[typeId].Add(aI);InactiveActorsByTypeId[typeId].
 
 unregistered.RemoveAt(u);goto _continue;}}
 var toDestroy=unregistered[u].gameObject;
-if(LOG&&LOG_LEVEL<=0)Debug.Log("destroy unavailable actor of type:"+unregistered[u].GetType());
+if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("destroy unavailable actor of type:"+unregistered[u].GetType());
 unregistered.RemoveAt(u);Destroy(toDestroy);
 _continue:{}}
 
@@ -113,7 +113,7 @@ firstLoop=false;}
 void StageActor(AI actor,RaycastHit hitInfo,Vector3 pos){
     Debug.DrawRay(hitInfo.point,hitInfo.normal,Color.white,5);
 var angle=Vector3.Angle(Vector3.up,hitInfo.normal);var tan=Mathf.Tan(Mathf.Deg2Rad*angle);
-    Debug.LogWarning("staging actor of type:"+actor.GetType()+"[angle:"+angle+";tan:"+tan);
+    Debug.LogWarning("staging actor "+actor.Id+" of type:"+actor.GetType()+"[angle:"+angle+";tan:"+tan);
 pos.y+=actor.collider.bounds.extents.y+tan*actor.BodyRadius+.1f;actor.transform.position=pos;actor.OutOfSight=false;GetActors.Add(actor.Id,actor);actor.gameObject.SetActive(true);
 }
 //void StageActor(AI actor,Vector3 pos){

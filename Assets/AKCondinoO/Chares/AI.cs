@@ -19,27 +19,33 @@ protected override void OnDisable(){
 }
 protected float Autonomous=0;public float AutonomyDelayAfterControl=30;
 protected State MyState=State.IDLE_ST;
-public override bool OutOfSight{get{return OutOfSight_v;}set{OutOfSight_v=value;
-if(value){
-if(GetActors.ContainsKey(Id)){GetActors.Remove(Id);
+#region OutOfSight result set
+public override bool OutOfSight{get{return OutOfSight_v;}set{
+if(value&&OutOfSight_v!=value){
+OutOfSight_disable=true;
+}
+OutOfSight_v=value;
+}
+}
+#endregion
+[NonSerialized]bool firstLoop=true;protected override void Update(){
+                                                      base.Update();
+    
+#region Init    
+if(firstLoop&&!Contains(this)){if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("unregistered actor id detected processed by the manager");}
+#endregion
+#region OutOfSight response
+if(OutOfSight_disable){
 gameObject.SetActive(false);
+if(GetActors.ContainsKey(Id)){GetActors.Remove(Id);
 if(LOG&&LOG_LEVEL<=0)Debug.Log("disable OutOfSight actor and add to inactive queue");
 InactiveActorsByTypeId[TypeId].AddLast(this);
 }else{
 if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("OutOfSight actor wasn't marked to be active so it should already be in its InactiveActorsByTypeId queue");
 }
+    OutOfSight_disable=false;
 }
-}
-}
-protected override void Update(){
-                   base.Update();
-    
-    
-if(!Contains(this)){if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("unregistered actor detected");}
-if(main.gameObject.activeSelf&&!GetActors.ContainsKey(Id)){
-gameObject.SetActive(false);
-if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("actor isn't marked to be active but is enabled anyway: this causes it to be ignored by other actors: actors must be enabled by their manager");
-}
+#endregion
 
 
 if(DEBUG_ATTACK){Attack(null);}if(DEBUG_GETHIT){DEBUG_GETHIT=false;TakeDamage(null);}if(DEBUG_DIE){DEBUG_DIE=false;Die();}
@@ -60,7 +66,7 @@ if(MyState==State.SKILL_OBJECT_ST){OnSKILL_OBJECT_ST();}
 }else{
     Autonomous-=Time.deltaTime;
 }
-}
+firstLoop=false;}
 protected virtual void OnEXCUSE_ST(){}
 protected virtual void OnFOLLOW_ST(){}
 protected virtual void OnIDLE_ST(){
