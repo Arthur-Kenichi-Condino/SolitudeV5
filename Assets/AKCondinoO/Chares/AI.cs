@@ -66,6 +66,7 @@ protected virtual void OnFOLLOW_ST(){}
 protected virtual void OnIDLE_ST(){
 GetTargets();
 }
+protected AI MyEnemy=null;public AI Target{get{return MyEnemy;}}
 protected virtual void GetTargets(){
 }
 protected virtual void OnCHASE_ST(){}

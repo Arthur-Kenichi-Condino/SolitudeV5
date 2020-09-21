@@ -34,7 +34,9 @@ protected override void GetTargets(){
 foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
 if(i!=this.Id){
 if(v.HasPassiveRole()){
+if(MySight.IsInHearingSight.ContainsKey(i)){
     Debug.LogWarning("my TypeId:"+TypeToTypeId[GetType()]+"; possible target TypeId:"+TypeToTypeId[v.GetType()]);
+}
 }
 }
 }

@@ -67,38 +67,27 @@ switch(action){
 if(monsterTypeIds!=null){
 var typeId=(DEBUG_SPAWN_ENEMY!=-1&&monsterTypeIds.Contains(DEBUG_SPAWN_ENEMY))?DEBUG_SPAWN_ENEMY:monsterTypeIds[mathrandom.Next(0,monsterTypeIds.Length)];if(InactiveActorsByTypeId.ContainsKey(typeId)&&InactiveActorsByTypeId[typeId].Count>0){var actorCast=InactiveActorsByTypeId[typeId].First.Value;
     if(GetValidRandomPos(actorCast,out RaycastHit hitInfo,out Vector3 pos)){
-        Debug.LogWarning("spawn monster of type id:"+typeId);
+if(LOG&&LOG_LEVEL<=0)Debug.Log("spawn monster of type id:"+typeId);
 InactiveActorsByTypeId[typeId].RemoveFirst();StageActor(actorCast,hitInfo,pos);
     }else{
-        Debug.LogWarning("no valid position found for monster of type id:"+typeId);
+if(LOG&&LOG_LEVEL<=0)Debug.Log("no valid position found for monster of type id:"+typeId);
     }
 }else{
-    Debug.LogWarning("spawn limit reached for monster of type id:"+typeId);
+if(LOG&&LOG_LEVEL<=0)Debug.Log("spawn limit reached for monster of type id:"+typeId);
 }
 }
-//        if(GetValidRandomPos(out Vector3 pos)){
-//            if(monsterTypeIds!=null){
-//var typeId=mathrandom.Next(0,monsterTypeIds.Length);
-//                if(InactiveActorsByTypeId[typeId].Count>0){
-//var actorCast=InactiveActorsByTypeId[typeId].First;InactiveActorsByTypeId[typeId].RemoveFirst();StageActor(actorCast.Value,pos);
-//                    
-//                }else{
-//                    Debug.LogWarning("spawn limit reached for monster of type id:"+typeId);
-//                }
-//            }
-//        }
     break;}
     case(CreativeIdleness.CreateAlly):{
 if(homunculusTypeIds!=null){
 var typeId=homunculusTypeIds[mathrandom.Next(0,homunculusTypeIds.Length)];if(InactiveActorsByTypeId.ContainsKey(typeId)&&InactiveActorsByTypeId[typeId].Count>0){var actorCast=InactiveActorsByTypeId[typeId].First.Value;
     if(GetValidRandomPos(actorCast,out RaycastHit hitInfo,out Vector3 pos)){
-        Debug.LogWarning("create homunculus of type id:"+typeId);
+if(LOG&&LOG_LEVEL<=0)Debug.Log("create homunculus of type id:"+typeId);
 InactiveActorsByTypeId[typeId].RemoveFirst();StageActor(actorCast,hitInfo,pos);
     }else{
-        Debug.LogWarning("no valid position found for homunculus of type id:"+typeId);
+if(LOG&&LOG_LEVEL<=0)Debug.Log("no valid position found for homunculus of type id:"+typeId);
     }
 }else{
-    Debug.LogWarning("creation limit reached for homunculus of type id:"+typeId);
+if(LOG&&LOG_LEVEL<=0)Debug.Log("creation limit reached for homunculus of type id:"+typeId);
 }
 }
     break;}
@@ -106,8 +95,8 @@ InactiveActorsByTypeId[typeId].RemoveFirst();StageActor(actorCast,hitInfo,pos);
 
 ChanceToStage=0;
 }else{
-
-    Debug.LogWarning("staging failed");
+    
+if(LOG&&LOG_LEVEL<=0)Debug.Log("staging failed");
 
 ChanceToStage+=0.1f;
 }
@@ -115,11 +104,6 @@ ChanceToStage+=0.1f;
 }else{
     NextActorStagingTimer-=Time.deltaTime;
 }
-//for(int i=0;i<actorsPrefabs){}
-    //  no actor: se id dele no dicionario actors != dele mesmo, destruir ele;
-    //  queue de inactive actors pra dar spawn
-    //  OutOfSight=true remove de getactors e adiciona pra queue
-    //  spawn remove da queue, adiciona pra getactors e coloca outofsight como false
 
 DEBUG_SPAWN_ENEMY=-1;
 
