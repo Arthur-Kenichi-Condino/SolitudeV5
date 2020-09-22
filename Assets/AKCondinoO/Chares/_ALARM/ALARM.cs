@@ -39,7 +39,7 @@ if(i!=this.Id){
 if(detected){Vector3 pos=kvp.Value.pos;
 if(v.HasPassiveRole()){
 
-    Debug.LogWarning("my TypeId:"+TypeToTypeId[GetType()]+"; possible target TypeId:"+TypeToTypeId[v.GetType()]);
+    Debug.LogWarning("my TypeId:"+TypeToTypeId[GetType()]+"; possible target TypeId:"+TypeToTypeId[v.GetType()],v);
 
 MyPossibleTargets.Add(i,(v,pos,Vector3.Distance(transform.position,pos)));
 }
