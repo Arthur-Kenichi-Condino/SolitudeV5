@@ -32,7 +32,9 @@ OutOfSight_v=value;
                                                       base.Update();
     
 #region Init    
-if(firstLoop&&!Contains(this)){if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("unregistered actor id detected processed by the manager");}
+if(firstLoop&&!Contains(this)){
+if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("unregistered actor id detected processed by the manager; actor isn't marked to be active but is enabled anyway: this causes it to be ignored by other actors: actors must be enabled by their manager",this.gameObject);
+}
 #endregion
 #region OutOfSight response
 if(OutOfSight_disable){
@@ -72,7 +74,7 @@ protected virtual void OnFOLLOW_ST(){}
 protected virtual void OnIDLE_ST(){
 GetTargets();
 }
-protected AI MyEnemy=null;public AI Target{get{return MyEnemy;}}
+protected AI MyEnemy=null;public AI Target{get{return MyEnemy;}}[NonSerialized]protected readonly Dictionary<int,(AI actor,Vector3 pos,float dis)>MyPossibleTargets=new Dictionary<int,(AI,Vector3,float)>();
 protected virtual void GetTargets(){
 }
 protected virtual void OnCHASE_ST(){}

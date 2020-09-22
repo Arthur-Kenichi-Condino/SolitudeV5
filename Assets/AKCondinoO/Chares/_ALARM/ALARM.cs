@@ -31,15 +31,32 @@ Boredom+=0.1f;
 }
 }
 protected override void GetTargets(){
-foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
+
+
+MyPossibleTargets.Clear();
+foreach(var kvp in MySight.IsInVisionSight){var i=kvp.Key;var v=kvp.Value.actor;bool detected=kvp.Value.directSight;
 if(i!=this.Id){
+if(detected){Vector3 pos=kvp.Value.pos;
 if(v.HasPassiveRole()){
-if(MySight.IsInHearingSight.ContainsKey(i)){
+
     Debug.LogWarning("my TypeId:"+TypeToTypeId[GetType()]+"; possible target TypeId:"+TypeToTypeId[v.GetType()]);
+
+MyPossibleTargets.Add(i,(v,pos,Vector3.Distance(transform.position,pos)));
 }
 }
 }
 }
+
+
+//foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
+//if(i!=this.Id){
+//if(v.HasPassiveRole()){
+//if(MySight.IsInHearingSight.ContainsKey(i)){
+//    Debug.LogWarning("my TypeId:"+TypeToTypeId[GetType()]+"; possible target TypeId:"+TypeToTypeId[v.GetType()]);
+//}
+//}
+//}
+//}
 }
 protected override void Attack(AI enemy){
                    base.Attack(enemy);
