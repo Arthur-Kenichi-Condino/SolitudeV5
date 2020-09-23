@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static ActorManagementMentana;
 public class ALARM:_3DSprite{
@@ -8,6 +9,9 @@ public class ALARM:_3DSprite{
 protected override void OnIDLE_ST(){
                    base.OnIDLE_ST();
 
+if(MyEnemy!=null){
+    Debug.LogWarning("attack or chase?");
+}
 
 
 if(NextIdleActionTimer<=0){
@@ -33,6 +37,11 @@ Boredom+=0.1f;
 protected override void GetTargets(){
 
 
+for(int k=AsAggroEnemies.Keys.Count-1;k>=0;k--){var i=AsAggroEnemies.Keys.ElementAt(k);
+var tuple=AsAggroEnemies[i];
+    tuple.timeout-=Time.deltaTime;
+AsAggroEnemies[i]=tuple;if(AsAggroEnemies[i].timeout<=0){AsAggroEnemies.Remove(i);}
+}
 MyPossibleTargets.Clear();
 foreach(var kvp in MySight.IsInVisionSight){var i=kvp.Key;var v=kvp.Value.actor;bool detected=kvp.Value.directSight;
 if(i!=this.Id){
@@ -41,12 +50,31 @@ if(v.HasPassiveRole()){
 
     Debug.LogWarning(this.Id+", my TypeId:"+TypeToTypeId[GetType()]+"; possible target "+i+", TypeId:"+TypeToTypeId[v.GetType()],v);
 
-MyPossibleTargets.Add(i,(v,pos,Vector3.Distance(transform.position,pos)));
+var dis=Vector3.Distance(transform.position,pos);
+MyPossibleTargets.Add(i,(v,pos,dis));
+if(!AsAggroEnemies.ContainsKey(i)){
+AsAggroEnemies.Add(i,(v,-1,0));
+}
+var tuple=AsAggroEnemies[i];
+    tuple.dis=dis;
+    tuple.timeout=5f;
+AsAggroEnemies[i]=tuple;//  At this time, ALARM is just a killing machine; target marked for a 5 s timeout
 }
 }
 }
 }
-
+MyEnemy=null;
+if(MyEnemy==null){
+float dis=-1;
+foreach(var kvp in AsAggroEnemies){var i=kvp.Key;var v=kvp.Value.actor;var d=kvp.Value.dis;
+if(dis==-1||dis>(dis=d)){
+MyEnemy=v;
+}
+}
+}
+if(MyEnemy!=null){
+    Debug.LogWarning("Me:"+this+"; MyEnemy:"+MyEnemy,MyEnemy);
+}
 
 //foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
 //if(i!=this.Id){

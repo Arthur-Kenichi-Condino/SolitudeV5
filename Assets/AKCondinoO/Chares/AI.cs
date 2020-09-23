@@ -53,6 +53,7 @@ if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("OutOfSight actor wasn't marked to be ac
 if(DEBUG_ATTACK){Attack(null);}if(DEBUG_GETHIT){DEBUG_GETHIT=false;TakeDamage(null);}if(DEBUG_DIE){DEBUG_DIE=false;Die();}
 
 
+GetTargets();
 if(Autonomous<=0){
 WALK_PATH();
 
@@ -69,14 +70,12 @@ if(MyState==State.SKILL_OBJECT_ST){OnSKILL_OBJECT_ST();}
     Autonomous-=Time.deltaTime;
 }
 firstLoop=false;}
-protected virtual void OnEXCUSE_ST(){}
-protected virtual void OnFOLLOW_ST(){}
-protected virtual void OnIDLE_ST(){
-GetTargets();
-}
-protected AI MyEnemy=null;public AI Target{get{return MyEnemy;}}[NonSerialized]protected readonly Dictionary<int,(AI actor,Vector3 pos,float dis)>MyPossibleTargets=new Dictionary<int,(AI,Vector3,float)>();
+protected AI MyEnemy=null;public AI Target{get{return MyEnemy;}}[NonSerialized]protected readonly Dictionary<int,(AI actor,Vector3 pos,float dis)>MyPossibleTargets=new Dictionary<int,(AI,Vector3,float)>();[NonSerialized]protected readonly Dictionary<int,(AI actor,float dis,float timeout)>AsAggroEnemies=new Dictionary<int,(AI,float,float)>();
 protected virtual void GetTargets(){
 }
+protected virtual void OnEXCUSE_ST(){}
+protected virtual void OnFOLLOW_ST(){}
+protected virtual void OnIDLE_ST(){}
 protected virtual void OnCHASE_ST(){}
 protected virtual void OnATTACK_ST(){}
 protected virtual void OnSKILL_OBJECT_ST(){}
