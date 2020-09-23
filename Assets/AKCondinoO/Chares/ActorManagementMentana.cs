@@ -25,7 +25,7 @@ Actors.Add(id,aI);ActorsByTypeId[typeId].Add(aI);InactiveActorsByTypeId[typeId].
 }
 [SerializeField]int[]monsterTypeIds;[SerializeField]int[]homunculusTypeIds;
 [NonSerialized]public static readonly Dictionary<int,AI>GetActors=new Dictionary<int,AI>();[NonSerialized]public static readonly Dictionary<int,LinkedList<AI>>InactiveActorsByTypeId=new Dictionary<int,LinkedList<AI>>();
-[NonSerialized]protected static Vector3 actPos,center,size;
+[NonSerialized]protected static Vector3 actPos,center,size,halfSize;public static Vector3 Center{get{return center;}}public static Vector3 Size{get{return size;}}public static Vector3 HalfSize{get{return halfSize;}}
 [NonSerialized]protected static Vector2Int actReg;
 bool firstLoop=true;void Update(){
 
@@ -33,7 +33,7 @@ if(firstLoop||actPos!=Camera.main.transform.position){
     actPos=Camera.main.transform.position;
     actReg=ChunkManager.PosToRgn(actPos);
 if(LOG&&LOG_LEVEL<=-10)Debug.Log(actPos+" "+actReg);
-    center=new Vector3(actReg.x,0,actReg.y);size=new Vector3(Chunk.Width*(ChunkManager.main.instantiationDistance.x*2+1),Chunk.Height,Chunk.Depth*(ChunkManager.main.instantiationDistance.y*2+1));
+    center=new Vector3(actReg.x,0,actReg.y);size=new Vector3(Chunk.Width*(ChunkManager.main.instantiationDistance.x*2+1)-Chunk.Width,Chunk.Height,Chunk.Depth*(ChunkManager.main.instantiationDistance.y*2+1)-Chunk.Depth);halfSize=size*.5f;
 }
 
 for(int u=unregistered.Count-1;u>=0;u--){for(int i=0;i<actorsPrefabs.Length;i++){if(actorsPrefabs[i].GetType()==unregistered[u].GetType()){var prefab=actorsPrefabs[i];

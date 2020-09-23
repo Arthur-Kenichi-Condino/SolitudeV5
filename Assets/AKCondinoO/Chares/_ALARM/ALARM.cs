@@ -61,6 +61,12 @@ GoTo(new Ray(MyDest,Vector3.down));
 protected override void OnATTACK_ST(){
                    base.OnATTACK_ST();
     Debug.LogWarning("OnATTACK_ST");
+if(MyEnemy==null){
+    Debug.LogWarning("idle");
+MyState=State.IDLE_ST;
+return;
+}
+Attack(MyEnemy);
 }
 protected override void GetTargets(){
 
