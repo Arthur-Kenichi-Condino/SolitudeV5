@@ -143,6 +143,9 @@ if(commands3ciiB2.IsCreated)commands3ciiB2.Clear();if(results3ciiB2.IsCreated)re
     }
                    base.Update();
 }
+protected virtual void STOP(bool clearQueue=true){
+CurPathTgt=null;CurPath.Clear();if(clearQueue)GoToQueue.Clear();
+}
 [NonSerialized]WaitUntil waitUntil2;
 [NonSerialized]WaitUntil waitUntil3a;
 [NonSerialized]WaitUntil waitUntil3b;

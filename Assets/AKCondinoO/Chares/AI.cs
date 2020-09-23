@@ -80,10 +80,14 @@ protected virtual void OnIDLE_ST(){}
 protected virtual void OnCHASE_ST(){}
 protected virtual void OnATTACK_ST(){}
 protected virtual void OnSKILL_OBJECT_ST(){}
-[NonSerialized]protected float MyAttackRange=2f;
+[NonSerialized]protected float MyAttackRange=.1f;
 protected virtual bool IsInAttackSight(AI MyEnemy){
 return false;}
-protected virtual void Attack(AI enemy){}
+protected virtual void Attack(AI enemy){
+if(enemy!=null){
+inputViewRotationEuler.y=Quaternion.LookRotation((enemy.transform.position-transform.position).normalized).eulerAngles.y-transform.eulerAngles.y;
+}
+}
 protected virtual void TakeDamage(AI fromEnemy){}
 protected virtual void Die(){}
 [NonSerialized]public Vector3 ReachedTgtDisThreshold=new Vector3(.1f,.1f,.1f);

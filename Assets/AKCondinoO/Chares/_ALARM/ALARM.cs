@@ -48,11 +48,19 @@ protected override void OnCHASE_ST(){
     Debug.LogWarning("OnCHASE_ST");
 if(MyEnemy==null){
     Debug.LogWarning("idle");
+STOP();
 MyState=State.IDLE_ST;
 return;
 }
+if(IsInAttackSight(MyEnemy)){
+    Debug.LogWarning("attack");
+STOP();
+Attack(MyEnemy);
+MyState=State.ATTACK_ST;
+return;
+}
 //Debug.LogWarning("NaN? "+(MyDest.x==float.NaN));
-if(!destSet||Vector3.Distance(MyDest,MyEnemy.transform.position)>MyAttackRange){
+if(!destSet||CurPath.Count<=0||Vector3.Distance(MyDest,MyEnemy.transform.position)>MyAttackRange){
     Debug.LogWarning("OnCHASE_ST: GoTo");
     MyDest=MyEnemy.transform.position;
 GoTo(new Ray(MyDest,Vector3.down));
@@ -63,7 +71,13 @@ protected override void OnATTACK_ST(){
     Debug.LogWarning("OnATTACK_ST");
 if(MyEnemy==null){
     Debug.LogWarning("idle");
+STOP();
 MyState=State.IDLE_ST;
+return;
+}
+if(!IsInAttackSight(MyEnemy)){
+    Debug.LogWarning("chase");
+MyState=State.CHASE_ST;
 return;
 }
 Attack(MyEnemy);
@@ -101,8 +115,9 @@ MyEnemy=null;
 if(MyEnemy==null){
 float dis=-1;
 foreach(var kvp in AsAggroEnemies){var i=kvp.Key;var v=kvp.Value.actor;var d=kvp.Value.dis;
-if(dis==-1||dis>(dis=d)){
+if(dis==-1||dis>d){
 MyEnemy=v;
+    dis=d;
 }
 }
 }
