@@ -9,8 +9,17 @@ public class ALARM:_3DSprite{
 protected override void OnIDLE_ST(){
                    base.OnIDLE_ST();
 
+
 if(MyEnemy!=null){
-    Debug.LogWarning("attack or chase?");
+if(!IsInAttackSight(MyEnemy)){
+    Debug.LogWarning("chase");
+MyState=State.CHASE_ST;
+return;
+}else{
+    Debug.LogWarning("attack");
+MyState=State.ATTACK_ST;
+return;
+}
 }
 
 
@@ -33,6 +42,25 @@ Boredom+=0.1f;
 }else{
     NextIdleActionTimer-=Time.deltaTime;
 }
+}
+protected override void OnCHASE_ST(){
+                   base.OnCHASE_ST();
+    Debug.LogWarning("OnCHASE_ST");
+if(MyEnemy==null){
+    Debug.LogWarning("idle");
+MyState=State.IDLE_ST;
+return;
+}
+//Debug.LogWarning("NaN? "+(MyDest.x==float.NaN));
+if(!destSet||Vector3.Distance(MyDest,MyEnemy.transform.position)>MyAttackRange){
+    Debug.LogWarning("OnCHASE_ST: GoTo");
+    MyDest=MyEnemy.transform.position;
+GoTo(new Ray(MyDest,Vector3.down));
+}
+}
+protected override void OnATTACK_ST(){
+                   base.OnATTACK_ST();
+    Debug.LogWarning("OnATTACK_ST");
 }
 protected override void GetTargets(){
 
@@ -86,6 +114,11 @@ if(MyEnemy!=null){
 //}
 //}
 }
+protected override bool IsInAttackSight(AI MyEnemy){
+if(Vector3.Distance(transform.position,MyEnemy.transform.position)-(BodyRadius+MyEnemy.BodyRadius)<=MyAttackRange){
+return true;
+}
+return false;}
 protected override void Attack(AI enemy){
                    base.Attack(enemy);
 if(deadStance!=-1||hitStance!=-1)return;if(attackStance==-1){attackStance=0;curAnimTime=0;}

@@ -73,12 +73,16 @@ firstLoop=false;}
 protected AI MyEnemy=null;public AI Target{get{return MyEnemy;}}[NonSerialized]protected readonly Dictionary<int,(AI actor,Vector3 pos,float dis)>MyPossibleTargets=new Dictionary<int,(AI,Vector3,float)>();[NonSerialized]protected readonly Dictionary<int,(AI actor,float dis,float timeout)>AsAggroEnemies=new Dictionary<int,(AI,float,float)>();
 protected virtual void GetTargets(){
 }
+protected Vector3 MyDest{get{return dest;}set{dest=value;destSet=true;}}[NonSerialized]Vector3 dest;protected bool destSet{get;private set;}public Vector3 Dest{get{return dest;}}
 protected virtual void OnEXCUSE_ST(){}
 protected virtual void OnFOLLOW_ST(){}
 protected virtual void OnIDLE_ST(){}
 protected virtual void OnCHASE_ST(){}
 protected virtual void OnATTACK_ST(){}
 protected virtual void OnSKILL_OBJECT_ST(){}
+[NonSerialized]protected float MyAttackRange=2f;
+protected virtual bool IsInAttackSight(AI MyEnemy){
+return false;}
 protected virtual void Attack(AI enemy){}
 protected virtual void TakeDamage(AI fromEnemy){}
 protected virtual void Die(){}
