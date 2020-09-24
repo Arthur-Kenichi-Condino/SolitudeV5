@@ -83,9 +83,25 @@ protected virtual void OnSKILL_OBJECT_ST(){}
 [NonSerialized]protected float MyAttackRange=.1f;
 protected virtual bool IsInAttackSight(AI MyEnemy){
 return false;}
+protected Motions MyMotion=Motions.MOTION_STAND;[NonSerialized]protected int attackStance=-1;[NonSerialized]protected int hitStance=-1;[NonSerialized]protected int deadStance=-1;
 protected virtual void Attack(AI enemy){
+if(attackStance==-1){
+    Debug.LogWarning("new attack started: set to do damage next animation");
+    didDamage=false;
+}
 if(enemy!=null){
 inputViewRotationEuler.y=Quaternion.LookRotation((enemy.transform.position-transform.position).normalized).eulerAngles.y-transform.eulerAngles.y;
+}
+}
+[NonSerialized]protected bool didDamage;
+protected virtual void DoDamageHitbox(){
+if(!didDamage){
+
+
+    Debug.LogWarning("do damage");
+
+
+    didDamage=true;
 }
 }
 protected virtual void TakeDamage(AI fromEnemy){}
@@ -285,6 +301,14 @@ EXCUSE_ST=2,
 CHASE_ST=3,
 ATTACK_ST=4,
 SKILL_OBJECT_ST=5,
+}
+public enum Motions:int{
+MOTION_STAND  =0,
+MOTION_MOVE   =1,
+MOTION_HIT    =2,
+MOTION_ATTACK =3,
+MOTION_ATTACK2=4,
+MOTION_DEAD   =5,
 }
 
 

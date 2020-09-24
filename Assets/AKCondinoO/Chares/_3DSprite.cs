@@ -8,8 +8,7 @@ protected override void Awake(){
                    base.Awake();
 animator=GetComponentInChildren<Animator>();renderer=GetComponentInChildren<SpriteRenderer>();
 }
-protected Motions MyMotion=Motions.MOTION_STAND; 
-public float motionRhythm=0.0245f;[NonSerialized]protected float curAnimTime=-1;[NonSerialized]float curAnimTime_normalized;[NonSerialized]protected int attackStance=-1;[NonSerialized]protected int hitStance=-1;[NonSerialized]protected int deadStance=-1;
+public float motionRhythm=0.0245f;[NonSerialized]protected float curAnimTime=-1;[NonSerialized]float curAnimTime_normalized;
 [NonSerialized]Vector3 _forward,_cameraForward,_forwardFromCameraToSprite;[NonSerialized]bool _back;[NonSerialized]bool _flipX;
 protected override void LateUpdate(){
                    base.LateUpdate();
@@ -61,13 +60,5 @@ animator.SetFloat("time",curAnimTime_normalized);
 }
 
 
-}
-public enum Motions:int{
-MOTION_STAND  =0,
-MOTION_MOVE   =1,
-MOTION_HIT    =2,
-MOTION_ATTACK =3,
-MOTION_ATTACK2=4,
-MOTION_DEAD   =5,
 }
 }
