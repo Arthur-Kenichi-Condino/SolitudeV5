@@ -97,11 +97,11 @@ inputViewRotationEuler.y=Quaternion.LookRotation((enemy.transform.position-trans
 protected virtual void OverlappedCollidersOnAttack(){
 
     
-attackHitboxHalfSize.x=MyAttackRange;
-attackHitboxHalfSize.z=MyAttackRange;
+attackHitboxHalfSize.x=collider.bounds.extents.x;
+attackHitboxHalfSize.z=collider.bounds.extents.z+MyAttackRange;
 attackHitboxHalfSize.y=collider.bounds.extents.y;
-attackHitboxColliders=Physics.OverlapBox(transform.position+transform.forward*(collider.bounds.extents.z+MyAttackRange),attackHitboxHalfSize,transform.rotation);
-Debug.DrawRay(transform.position,transform.forward*(collider.bounds.extents.z+MyAttackRange),Color.white,.1f);
+attackHitboxColliders=Physics.OverlapBox(transform.position+transform.forward*(collider.bounds.extents.z+attackHitboxHalfSize.z),attackHitboxHalfSize,transform.rotation);
+Debug.DrawRay(transform.position,transform.forward*(collider.bounds.extents.z+attackHitboxHalfSize.z),Color.white,.1f);
 
 
 }
