@@ -93,11 +93,15 @@ if(enemy!=null){
 inputViewRotationEuler.y=Quaternion.LookRotation((enemy.transform.position-transform.position).normalized).eulerAngles.y-transform.eulerAngles.y;
 }
 }
-[NonSerialized]protected Collider[]attackHitboxColliders=null;
-protected void OverlappedCollidersOnAttack(){
+[NonSerialized]Vector3 attackHitboxHalfSize;[NonSerialized]protected Collider[]attackHitboxColliders=null;
+protected virtual void OverlappedCollidersOnAttack(){
 
     
-    //Physics.OverlapBox();
+attackHitboxHalfSize.x=MyAttackRange;
+attackHitboxHalfSize.z=MyAttackRange;
+attackHitboxHalfSize.y=collider.bounds.extents.y;
+attackHitboxColliders=Physics.OverlapBox(transform.position+transform.forward*(collider.bounds.extents.z+MyAttackRange),attackHitboxHalfSize,transform.rotation);
+Debug.DrawRay(transform.position,transform.forward*(collider.bounds.extents.z+MyAttackRange),Color.white,.1f);
 
 
 }
@@ -107,6 +111,20 @@ if(!didDamage){
 
 
     Debug.LogWarning("do damage");
+if(attackHitboxColliders==null){
+OverlappedCollidersOnAttack();
+}
+
+
+if(attackHitboxColliders!=null){
+    Debug.LogWarning("attackHitboxColliders.Length:"+attackHitboxColliders.Length);
+for(int i=0;i<attackHitboxColliders.Length;i++){var collider=attackHitboxColliders[i];
+if(collider.tag=="Player"){
+    Debug.LogWarning("collider hit:"+collider.name+"; tag:"+collider.tag,this);
+}
+}
+}
+attackHitboxColliders=null;
 
 
     didDamage=true;
