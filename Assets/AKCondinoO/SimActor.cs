@@ -3,7 +3,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static ActorManagementMentana;
 public class SimActor:SimObject{
+[SerializeField]public RolePlayingAttributes Attributes=new RolePlayingAttributes();
+[Serializable]public class RolePlayingAttributes{
+[SerializeField]public int FOR;
+[SerializeField]public int VIT;
+[SerializeField]public float MaxStamina;[SerializeField]public float Stamina;
+[SerializeField]public int INT;
+[SerializeField]public float MaxFocus;[SerializeField]public float Focus;
+}
+public virtual void InitAttributes(){
+    Debug.LogWarning("init attributes");
+}
 protected override void Awake(){
                    base.Awake();
 tgtPos=tgtPos_Pre=transform.position;
@@ -46,6 +58,11 @@ stopMovement.z=0;
 protected override void Update(){
 ProcessMovementInput();
                    base.Update();
+if(!OutOfSight_v&&
+   (Mathf.Abs(Center.x-transform.position.x)>HalfSize.x||
+    Mathf.Abs(Center.z-transform.position.z)>HalfSize.z)){
+setOutOfSight();
+}
 }
 #region Movement
 public bool Lerp=true;

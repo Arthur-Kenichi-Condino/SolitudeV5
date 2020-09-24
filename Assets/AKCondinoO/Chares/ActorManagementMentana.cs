@@ -114,7 +114,7 @@ void StageActor(AI actor,RaycastHit hitInfo,Vector3 pos){
     Debug.DrawRay(hitInfo.point,hitInfo.normal,Color.white,5);
 var angle=Vector3.Angle(Vector3.up,hitInfo.normal);var tan=Mathf.Tan(Mathf.Deg2Rad*angle);
     Debug.LogWarning("staging actor "+actor.Id+" of type:"+actor.GetType()+"[angle:"+angle+";tan:"+tan);
-pos.y+=actor.collider.bounds.extents.y+tan*actor.BodyRadius+.1f;actor.transform.position=pos;actor.OutOfSight=false;GetActors.Add(actor.Id,actor);actor.gameObject.SetActive(true);
+pos.y+=actor.collider.bounds.extents.y+tan*actor.BodyRadius+.1f;actor.transform.position=pos;actor.OutOfSight=false;GetActors.Add(actor.Id,actor);actor.InitAttributes();actor.gameObject.SetActive(true);
 }
 //void StageActor(AI actor,Vector3 pos){
 //    Debug.LogWarning("staging actor of type:"+actor.GetType());

@@ -13,6 +13,7 @@ MySight=GetComponentInChildren<Sight>();
 protected override void OnEnable(){
                    base.OnEnable();
 NoMovementDetectionTime=MovementQualityEvaluationTimeReferenceValue;DoMovementSnapshotTime=NoMovementDetectionTime*.21f;MaxGetUnstuckActionTime=NoMovementDetectionTime*.32f;
+attackStance=-1;hitStance=-1;deadStance=-1;
 }
 protected override void OnDisable(){
                    base.OnDisable();
@@ -30,6 +31,11 @@ OutOfSight_v=value;
 #endregion
 [NonSerialized]bool firstLoop=true;protected override void Update(){
                                                       base.Update();
+if(!OutOfSight_v&&
+   deadStance!=-1){
+    Debug.LogWarning("I'm dead! :(");
+//setOutOfSight();
+}
     
 #region Init    
 if(firstLoop&&!Contains(this)){
@@ -73,7 +79,7 @@ firstLoop=false;}
 protected AI MyEnemy=null;public AI Target{get{return MyEnemy;}}[NonSerialized]protected readonly Dictionary<int,(AI actor,Vector3 pos,float dis)>MyPossibleTargets=new Dictionary<int,(AI,Vector3,float)>();[NonSerialized]protected readonly Dictionary<int,(AI actor,float dis,float timeout)>AsAggroEnemies=new Dictionary<int,(AI,float,float)>();
 protected virtual void GetTargets(){
 }
-protected Vector3 MyDest{get{return dest;}set{dest=value;destSet=true;}}[NonSerialized]Vector3 dest;protected bool destSet{get;private set;}public Vector3 Dest{get{return dest;}}
+protected Motions MyMotion=Motions.MOTION_STAND;public Motions GetMotion{get{return MyMotion;}}[NonSerialized]protected int attackStance=-1;[SerializeField]protected float attackStanceDamageTime=.5f;[NonSerialized]protected int hitStance=-1;[NonSerialized]protected int deadStance=-1;
 protected virtual void OnEXCUSE_ST(){}
 protected virtual void OnFOLLOW_ST(){}
 protected virtual void OnIDLE_ST(){}
@@ -83,7 +89,7 @@ protected virtual void OnSKILL_OBJECT_ST(){}
 [NonSerialized]protected float MyAttackRange=.1f;
 protected virtual bool IsInAttackSight(AI MyEnemy){
 return false;}
-protected Motions MyMotion=Motions.MOTION_STAND;[NonSerialized]protected int attackStance=-1;[SerializeField]protected float attackStanceDamageTime=.5f;[NonSerialized]protected int hitStance=-1;[NonSerialized]protected int deadStance=-1;
+[NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}
 protected virtual void Attack(AI enemy){
 if(attackStance==-1){
     Debug.LogWarning("new attack started: set to do damage next animation");
@@ -106,7 +112,7 @@ Debug.DrawRay(transform.position,transform.forward*(collider.bounds.extents.z+at
 
 }
 [NonSerialized]protected bool didDamage;
-protected virtual void DoDamageHitbox(){
+protected virtual void DoDamageHitbox(){//  This default function is like a "ghost" attack. It hits everything in front of the actor. Use Boxcast so the attack stops when a target is hit
 if(!didDamage){
 
 
@@ -122,6 +128,7 @@ for(int i=0;i<attackHitboxColliders.Length;i++){var collider=attackHitboxCollide
 AI enemy;
 if(collider.CompareTag("Player")&&(enemy=collider.GetComponent<AI>())!=null){
     Debug.LogWarning("collider hit:"+collider.name+"; tag:"+collider.tag,this);
+    enemy.TakeDamage(this);
 }
 }
 }
@@ -133,6 +140,7 @@ attackHitboxColliders=null;
 }
 protected virtual void TakeDamage(AI fromEnemy){}
 protected virtual void Die(){}
+protected Vector3 MyDest{get{return dest;}set{dest=value;destSet=true;}}[NonSerialized]Vector3 dest;protected bool destSet{get;private set;}public Vector3 Dest{get{return dest;}}
 [NonSerialized]public Vector3 ReachedTgtDisThreshold=new Vector3(.1f,.1f,.1f);
 [NonSerialized]protected bool BlockMovement;
 [NonSerialized]protected float MovementQualityEvaluationTimeReferenceValue=2.27f;[NonSerialized]float _movementSnapshotTimer;[NonSerialized]Vector3 _movementSnapshotPos;[NonSerialized]protected float DoMovementSnapshotTime;[NonSerialized]float _movementWasDetectedTimer;[NonSerialized]protected float NoMovementDetectionTime;[NonSerialized]protected GetUnstuckActions _noMovementGetUnstuckAction=GetUnstuckActions.none;[NonSerialized]protected float _noMovementGetUnstuckTimer=0;[NonSerialized]protected float MaxGetUnstuckActionTime;[NonSerialized]int moveSidewaysRandomDir_dir=1;[NonSerialized]int moveCircularlyAroundTgt_dir=1;public enum GetUnstuckActions:int{none=-1,jumpAllWayUp=0,moveSidewaysRandomDir=1,moveCircularlyAroundTgt=2,moveBackwards=3,moveLooselyToRandomDir=4,}[NonSerialized]readonly int GetUnstuckActionsCount=Enum.GetValues(typeof(GetUnstuckActions)).Length-1;

@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static ActorManagementMentana;
 public class SimObject:MonoBehaviour{
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
 [NonSerialized]public new Collider collider=null;[NonSerialized]public new Rigidbody rigidbody=null;
@@ -76,18 +75,13 @@ setOutOfSight();
     }
     pos_Pre=pos;
 }
-if(!OutOfSight_v&&
-   (Mathf.Abs(Center.x-pos.x)>HalfSize.x||
-    Mathf.Abs(Center.z-pos.z)>HalfSize.z)){
-setOutOfSight();
 }
-void setOutOfSight(){
+}
+protected void setOutOfSight(){
         rigidbody.velocity=Vector3.zero;
         rigidbody.angularVelocity=Vector3.zero;
         pos=transform.position=pos_Pre;
 OutOfSight=true;
-}
-}
 }
 protected virtual void LateUpdate(){}
 #if UNITY_EDITOR

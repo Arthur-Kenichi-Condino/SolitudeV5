@@ -92,7 +92,7 @@ AsAggroEnemies[i]=tuple;if(AsAggroEnemies[i].timeout<=0){AsAggroEnemies.Remove(i
 }
 MyPossibleTargets.Clear();
 foreach(var kvp in MySight.IsInVisionSight){var i=kvp.Key;var v=kvp.Value.actor;bool detected=kvp.Value.directSight;
-if(i!=this.Id){
+if(i!=this.Id&&v.GetMotion!=Motions.MOTION_DEAD){
 if(detected){Vector3 pos=kvp.Value.pos;
 if(v.HasPassiveRole()){
 
