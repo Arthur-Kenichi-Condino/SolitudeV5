@@ -38,7 +38,8 @@ curAnimTime_normalized=Mathf.Clamp01(curAnimTime/animator.GetCurrentAnimatorStat
 if(attackStance!=-1){
 BlockMovement=true;
     MyMotion=attackStance==0?Motions.MOTION_ATTACK:Motions.MOTION_ATTACK2;
-curAnimTime_normalized=Mathf.Clamp01(curAnimTime/animator.GetCurrentAnimatorStateInfo(0).length);if(curAnimTime_normalized>=1){
+curAnimTime_normalized=Mathf.Clamp01(curAnimTime/animator.GetCurrentAnimatorStateInfo(0).length);if(curAnimTime_normalized>=attackStanceDamageTime){
+    DoDamageHitbox();}if(curAnimTime_normalized>=1){
     attackStance=-1;curAnimTime=-1;}
 }
 if(deadStance==-1&&hitStance==-1&&attackStance==-1){

@@ -83,7 +83,7 @@ protected virtual void OnSKILL_OBJECT_ST(){}
 [NonSerialized]protected float MyAttackRange=.1f;
 protected virtual bool IsInAttackSight(AI MyEnemy){
 return false;}
-protected Motions MyMotion=Motions.MOTION_STAND;[NonSerialized]protected int attackStance=-1;[NonSerialized]protected int hitStance=-1;[NonSerialized]protected int deadStance=-1;
+protected Motions MyMotion=Motions.MOTION_STAND;[NonSerialized]protected int attackStance=-1;[SerializeField]protected float attackStanceDamageTime=.5f;[NonSerialized]protected int hitStance=-1;[NonSerialized]protected int deadStance=-1;
 protected virtual void Attack(AI enemy){
 if(attackStance==-1){
     Debug.LogWarning("new attack started: set to do damage next animation");
@@ -92,6 +92,14 @@ if(attackStance==-1){
 if(enemy!=null){
 inputViewRotationEuler.y=Quaternion.LookRotation((enemy.transform.position-transform.position).normalized).eulerAngles.y-transform.eulerAngles.y;
 }
+}
+[NonSerialized]protected Collider[]attackHitboxColliders=null;
+protected void OverlappedCollidersOnAttack(){
+
+    
+    //Physics.OverlapBox();
+
+
 }
 [NonSerialized]protected bool didDamage;
 protected virtual void DoDamageHitbox(){
