@@ -119,7 +119,8 @@ OverlappedCollidersOnAttack();
 if(attackHitboxColliders!=null){
     Debug.LogWarning("attackHitboxColliders.Length:"+attackHitboxColliders.Length);
 for(int i=0;i<attackHitboxColliders.Length;i++){var collider=attackHitboxColliders[i];
-if(collider.tag=="Player"){
+AI enemy;
+if(collider.CompareTag("Player")&&(enemy=collider.GetComponent<AI>())!=null){
     Debug.LogWarning("collider hit:"+collider.name+"; tag:"+collider.tag,this);
 }
 }

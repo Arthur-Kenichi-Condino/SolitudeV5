@@ -10,7 +10,7 @@ stopRaycastLayer=1<<LayerMask.NameToLayer("Default")|1<<LayerMask.NameToLayer("C
 }
 [SerializeField]protected float hearingRange=5f;[NonSerialized]public readonly Dictionary<int,(AI actor,Vector3 pos,bool soundHeard)>IsInHearingSight=new Dictionary<int,(AI,Vector3,bool)>();[SerializeField]protected float fieldOfViewAngle=180f;[NonSerialized]public readonly Dictionary<int,(AI actor,Vector3 pos,bool directSight)>IsInVisionSight=new Dictionary<int,(AI,Vector3,bool)>();
 protected void OnTriggerStay(Collider other){
-if(other.tag=="Player"){
+if(other.CompareTag("Player")){
 AI actor=other.GetComponent<AI>();
 if(actor!=null){
 if(LOG&&LOG_LEVEL<=-10)Debug.Log(other.name+" is in sight...",this.transform.parent);
@@ -54,7 +54,7 @@ IsInVisionSight.Remove(actor.Id);
 }
 }
 private void OnTriggerExit(Collider other){
-if(other.tag=="Player"){
+if(other.CompareTag("Player")){
 AI actor=other.GetComponent<AI>();
 if(actor!=null){
 if(IsInHearingSight.ContainsKey(actor.Id)){
