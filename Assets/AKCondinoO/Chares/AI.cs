@@ -18,7 +18,7 @@ attackStance=-1;hitStance=-1;deadStance=-1;
 protected override void OnDisable(){
                    base.OnDisable();
 }
-protected float Autonomous=0;public float AutonomyDelayAfterControl=30;
+protected float Autonomous=0;public float AutonomyDelayAfterControl=30;protected float Dying=0;protected float DeadForGoodDelay=10;
 protected State MyState=State.IDLE_ST;
 #region OutOfSight result set
 public override bool OutOfSight{get{return OutOfSight_v;}set{
@@ -34,7 +34,11 @@ OutOfSight_v=value;
 if(!OutOfSight_v&&
    deadStance!=-1){
     Debug.LogWarning("I'm dead! :(");
-//setOutOfSight();
+if(Dying<=0){
+setOutOfSight();
+}else{
+    Dying-=Time.deltaTime;
+}
 }
     
 #region Init    
@@ -139,7 +143,9 @@ attackHitboxColliders=null;
 }
 }
 protected virtual void TakeDamage(AI fromEnemy){}
-protected virtual void Die(){}
+protected virtual void Die(){
+if(deadStance==-1){Dying=DeadForGoodDelay;}
+}
 protected Vector3 MyDest{get{return dest;}set{dest=value;destSet=true;}}[NonSerialized]Vector3 dest;protected bool destSet{get;private set;}public Vector3 Dest{get{return dest;}}
 [NonSerialized]public Vector3 ReachedTgtDisThreshold=new Vector3(.1f,.1f,.1f);
 [NonSerialized]protected bool BlockMovement;
