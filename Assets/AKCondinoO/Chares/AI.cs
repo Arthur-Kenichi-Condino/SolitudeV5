@@ -83,7 +83,7 @@ firstLoop=false;}
 protected AI MyEnemy=null;public AI Target{get{return MyEnemy;}}[NonSerialized]protected readonly Dictionary<int,(AI actor,Vector3 pos,float dis)>MyPossibleTargets=new Dictionary<int,(AI,Vector3,float)>();[NonSerialized]protected readonly Dictionary<int,(AI actor,float dis,float timeout)>AsAggroEnemies=new Dictionary<int,(AI,float,float)>();
 protected virtual void GetTargets(){
 }
-protected Motions MyMotion=Motions.MOTION_STAND;public Motions GetMotion{get{return MyMotion;}}[NonSerialized]protected int attackStance=-1;[SerializeField]protected float attackStanceDamageTime=.5f;[NonSerialized]protected int hitStance=-1;[NonSerialized]protected int deadStance=-1;
+protected Motions MyMotion=Motions.MOTION_STAND;public Motions GetMotion{get{return MyMotion;}}[NonSerialized]protected int attackStance=-1;[SerializeField]protected float attackStanceRhythmMultiplier=1f;[SerializeField]protected float attackStanceDamageTime=.5f;[NonSerialized]protected int hitStance=-1;[SerializeField]protected float hitStanceRhythmMultiplier=2f;[NonSerialized]protected int deadStance=-1;[SerializeField]protected float deadStanceRhythmMultiplier=1f;
 protected virtual void OnEXCUSE_ST(){}
 protected virtual void OnFOLLOW_ST(){}
 protected virtual void OnIDLE_ST(){}

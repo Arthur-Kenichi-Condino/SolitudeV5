@@ -5,6 +5,17 @@ using System.Linq;
 using UnityEngine;
 using static ActorManagementMentana;
 public class ALARM:_3DSprite{
+public override void InitAttributes(bool random=true){
+    Debug.LogWarning("init attributes");
+Attributes.FOR=mathrandom.Next(12,73);
+Attributes.VIT=mathrandom.Next(12,25);
+    Attributes.MaxStamina=Attributes.Stamina=GetMaxStamina();
+Attributes.INT=mathrandom.Next(1,25);
+    Attributes.MaxFocus=Attributes.Focus=GetMaxFocus();
+Attributes.AGI=mathrandom.Next(49,73);
+Attributes.DEX=mathrandom.Next(49,73);
+    Attributes.BaseAspd=GetAspd();
+}
 [NonSerialized]public float TryIdleActionInterval=1f;[NonSerialized]float NextIdleActionTimer;[NonSerialized]public float Boredom;public enum CreativeIdleness:int{MOVE_RANDOM=0,RANDOM_SKILL=1,}[NonSerialized]readonly int CreativeIdlenessActionsCount=Enum.GetValues(typeof(CreativeIdleness)).Length;
 protected override void OnIDLE_ST(){
                    base.OnIDLE_ST();

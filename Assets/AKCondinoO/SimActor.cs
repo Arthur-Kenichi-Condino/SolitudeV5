@@ -12,9 +12,21 @@ public class SimActor:SimObject{
 [SerializeField]public float MaxStamina;[SerializeField]public float Stamina;
 [SerializeField]public int INT;
 [SerializeField]public float MaxFocus;[SerializeField]public float Focus;
+[SerializeField]public int AGI;
+[SerializeField]public int DEX;
+[SerializeField]public float BaseAspd;public float Aspd{get{return BaseAspd;}}
 }
-public virtual void InitAttributes(){
+public virtual void InitAttributes(bool random=true){
     Debug.LogWarning("init attributes");
+}
+public virtual float GetMaxStamina(){
+return(Attributes.VIT*100+Attributes.FOR*50);
+}
+public virtual float GetMaxFocus(){
+return(Attributes.VIT*.5f+Attributes.INT*100);
+}
+public virtual float GetAspd(){
+return((((Attributes.AGI/100f)+((Attributes.DEX*.5f)/100f))/2f)*1.5f);
 }
 protected override void Awake(){
                    base.Awake();

@@ -56,7 +56,7 @@ animator.SetBool("MOTION_ATTACK2",MyMotion==Motions.MOTION_ATTACK2);
 animator.SetBool("MOTION_DEAD"   ,MyMotion==Motions.MOTION_DEAD   );
 
 
-if(curAnimTime!=-1){curAnimTime+=motionRhythm*animator.GetCurrentAnimatorStateInfo(0).speed*animator.GetCurrentAnimatorStateInfo(0).length;
+if(curAnimTime!=-1){curAnimTime+=motionRhythm*(attackStance!=-1?(Attributes.Aspd*attackStanceRhythmMultiplier):hitStance!=-1?hitStanceRhythmMultiplier:deadStanceRhythmMultiplier)*animator.GetCurrentAnimatorStateInfo(0).speed*animator.GetCurrentAnimatorStateInfo(0).length;
 animator.SetFloat("time",curAnimTime_normalized);
 }
 
