@@ -26,7 +26,7 @@ public virtual float GetMaxFocus(){
 return(Attributes.VIT*.5f+Attributes.INT*100);
 }
 public virtual float GetAspd(){
-return((((Attributes.AGI/100f)+((Attributes.DEX*.5f)/100f))/2f)*1.5f);
+return Mathf.Clamp(((Attributes.AGI/100f)+(Attributes.DEX*.5f/100f))/2f*1.5f,.5f,1f);
 }
 protected override void Awake(){
                    base.Awake();
