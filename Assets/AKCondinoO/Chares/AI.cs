@@ -84,13 +84,17 @@ protected AI MyEnemy=null;public AI Target{get{return MyEnemy;}}[NonSerialized]p
 protected virtual void GetTargets(){
 
     
+MyPossibleTargets.Clear();
 foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
 if(i!=this.Id){
 
 
-if(v.Target==this){
-if(MyMotion==Motions.MOTION_HIT||(MySight.IsInVisionSight.ContainsKey(i)&&MySight.IsInVisionSight[i].directSight)){
+if(v.Target==this){//  This following mode of detecting targets does not take into consideration the stealth status of enemies
+Vector3 pos;
+if(MyMotion==Motions.MOTION_HIT){pos=v.transform.position;
     Debug.LogWarning("I'm under attack",this);
+}else if(MySight.IsInVisionSight.ContainsKey(i)&&MySight.IsInVisionSight[i].directSight){pos=MySight.IsInVisionSight[i].pos;
+    Debug.LogWarning("enemy approaching my position",this);
 }
 }
 //if(v.HasPassiveRole()){
