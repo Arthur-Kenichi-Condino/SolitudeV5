@@ -92,17 +92,22 @@ if(i!=this.Id){
 
 
 if(v.Target==this){//  This following mode of detecting targets does not take into consideration the stealth status of enemies
-Vector3 pos;
+Vector3 pos;float dis;
 if(MyMotion==Motions.MOTION_HIT){pos=v.transform.position;
-addPossibleTarget();
+addPossibleTarget();attackingMe();
     Debug.LogWarning("I'm under attack",this);
 }else if(MySight.IsInVisionSight.ContainsKey(i)&&MySight.IsInVisionSight[i].directSight){pos=MySight.IsInVisionSight[i].pos;
-addPossibleTarget();
+addPossibleTarget();attackingMe();
     Debug.LogWarning("enemy approaching my position",this);
 }
 void addPossibleTarget(){
-var dis=Vector3.Distance(transform.position,pos);
+dis=Vector3.Distance(transform.position,pos);
 MyPossibleTargets.Add(i,(v,pos,dis));
+}
+void attackingMe(){
+if(!GetEnemiesAttackingMe.ContainsKey(i)){
+GetEnemiesAttackingMe.Add(i,(v,-1,0));
+}
 }
 }
 //if(v.HasPassiveRole()){
