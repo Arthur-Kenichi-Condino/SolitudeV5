@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static ActorManagementMentana;
 public class AI:Pathfinder{[NonSerialized]protected System.Random mathrandom=new System.Random();
@@ -86,6 +87,11 @@ protected AI MyEnemy=null;public AI Target{get{return MyEnemy;}}[NonSerialized]p
 protected virtual void GetTargets(){
 
     
+for(int k=GetEnemiesAttackingMe.Keys.Count-1;k>=0;k--){var i=GetEnemiesAttackingMe.Keys.ElementAt(k);
+var tuple=GetEnemiesAttackingMe[i];
+    tuple.timeout-=Time.deltaTime;
+GetEnemiesAttackingMe[i]=tuple;if(GetEnemiesAttackingMe[i].timeout<=0){GetEnemiesAttackingMe.Remove(i);}
+}
 MyPossibleTargets.Clear();
 foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
 if(i!=this.Id){
@@ -108,6 +114,10 @@ void attackingMe(){
 if(!GetEnemiesAttackingMe.ContainsKey(i)){
 GetEnemiesAttackingMe.Add(i,(v,-1,0));
 }
+var tuple=GetEnemiesAttackingMe[i];
+    tuple.dis=dis;
+    tuple.timeout=5f;
+GetEnemiesAttackingMe[i]=tuple;
 }
 }
 //if(v.HasPassiveRole()){
@@ -118,6 +128,20 @@ GetEnemiesAttackingMe.Add(i,(v,-1,0));
 
 
 }
+}
+MyEnemy=null;
+if(MyEnemy==null){
+
+    
+float dis=-1;
+foreach(var kvp in GetEnemiesAttackingMe){var i=kvp.Key;var v=kvp.Value.actor;var d=kvp.Value.dis;
+if(dis==-1||dis>d){
+MyEnemy=v;
+    dis=d;
+}
+}
+
+
 }
 
 
