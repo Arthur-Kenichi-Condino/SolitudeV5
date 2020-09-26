@@ -81,6 +81,8 @@ if(MyState==State.SKILL_OBJECT_ST){OnSKILL_OBJECT_ST();}
 }
 firstLoop=false;}
 protected AI MyEnemy=null;public AI Target{get{return MyEnemy;}}[NonSerialized]protected readonly Dictionary<int,(AI actor,Vector3 pos,float dis)>MyPossibleTargets=new Dictionary<int,(AI,Vector3,float)>();[NonSerialized]protected readonly Dictionary<int,(AI actor,float dis,float timeout)>AsAggroEnemies=new Dictionary<int,(AI,float,float)>();
+[NonSerialized]protected readonly Dictionary<int,(AI actor,float dis,float timeout)>GetEnemiesAttackingMe=new Dictionary<int,(AI,float,float)>();
+[NonSerialized]protected readonly Dictionary<int,(AI actor,float dis,float timeout)>GetEnemiesAttackingAlly=new Dictionary<int,(AI,float,float)>();
 protected virtual void GetTargets(){
 
     
@@ -92,9 +94,15 @@ if(i!=this.Id){
 if(v.Target==this){//  This following mode of detecting targets does not take into consideration the stealth status of enemies
 Vector3 pos;
 if(MyMotion==Motions.MOTION_HIT){pos=v.transform.position;
+addPossibleTarget();
     Debug.LogWarning("I'm under attack",this);
 }else if(MySight.IsInVisionSight.ContainsKey(i)&&MySight.IsInVisionSight[i].directSight){pos=MySight.IsInVisionSight[i].pos;
+addPossibleTarget();
     Debug.LogWarning("enemy approaching my position",this);
+}
+void addPossibleTarget(){
+var dis=Vector3.Distance(transform.position,pos);
+MyPossibleTargets.Add(i,(v,pos,dis));
 }
 }
 //if(v.HasPassiveRole()){
