@@ -149,9 +149,51 @@ MyEnemy=v;
 protected Motions MyMotion=Motions.MOTION_STAND;public Motions GetMotion{get{return MyMotion;}}[NonSerialized]protected int attackStance=-1;[SerializeField]protected float attackStanceRhythmMultiplier=1f;[SerializeField]protected float attackStanceDamageTime=.5f;[NonSerialized]protected int hitStance=-1;[SerializeField]protected float hitStanceRhythmMultiplier=2f;[NonSerialized]protected int deadStance=-1;[SerializeField]protected float deadStanceRhythmMultiplier=1f;
 protected virtual void OnEXCUSE_ST(){}
 protected virtual void OnFOLLOW_ST(){}
-protected virtual void OnIDLE_ST(){}
-protected virtual void OnCHASE_ST(){}
-protected virtual void OnATTACK_ST(){}
+protected virtual void OnIDLE_ST(){
+
+    
+if(MyEnemy!=null){
+if(!IsInAttackSight(MyEnemy)){
+    Debug.LogWarning("chase");
+MyState=State.CHASE_ST;
+return;
+}else{
+    Debug.LogWarning("attack");
+STOP();
+MyState=State.ATTACK_ST;
+return;
+}
+}
+
+
+}
+protected virtual void OnCHASE_ST(){
+    Debug.LogWarning("OnCHASE_ST");
+if(MyEnemy==null){
+    Debug.LogWarning("idle");
+STOP();
+MyState=State.IDLE_ST;
+return;
+}
+
+
+if(!destSet||CurPath.Count<=0||Vector3.Distance(MyDest,MyEnemy.transform.position)>MyAttackRange){
+    Debug.LogWarning("OnCHASE_ST: GoTo");
+    MyDest=MyEnemy.transform.position;
+GoTo(new Ray(MyDest,Vector3.down));
+}
+
+
+}
+protected virtual void OnATTACK_ST(){
+    Debug.LogWarning("OnATTACK_ST");
+if(MyEnemy==null){
+    Debug.LogWarning("idle");
+STOP();
+MyState=State.IDLE_ST;
+return;
+}
+}
 protected virtual void OnSKILL_OBJECT_ST(){}
 [NonSerialized]protected float MyAttackRange=.1f;
 protected virtual bool IsInAttackSight(AI MyEnemy){

@@ -18,7 +18,6 @@ Attributes.DEX=mathrandom.Next(49,73);
 }
 [NonSerialized]public float TryIdleActionInterval=1f;[NonSerialized]float NextIdleActionTimer;[NonSerialized]public float Boredom;public enum CreativeIdleness:int{MOVE_RANDOM=0,RANDOM_SKILL=1,}[NonSerialized]readonly int CreativeIdlenessActionsCount=Enum.GetValues(typeof(CreativeIdleness)).Length;
 protected override void OnIDLE_ST(){
-                   base.OnIDLE_ST();
 
 
 if(MyEnemy!=null){
@@ -28,6 +27,8 @@ MyState=State.CHASE_ST;
 return;
 }else{
     Debug.LogWarning("attack");
+STOP();
+Attack(MyEnemy);
 MyState=State.ATTACK_ST;
 return;
 }
@@ -55,7 +56,6 @@ Boredom+=0.1f;
 }
 }
 protected override void OnCHASE_ST(){
-                   base.OnCHASE_ST();
     Debug.LogWarning("OnCHASE_ST");
 if(MyEnemy==null){
     Debug.LogWarning("idle");
@@ -78,7 +78,6 @@ GoTo(new Ray(MyDest,Vector3.down));
 }
 }
 protected override void OnATTACK_ST(){
-                   base.OnATTACK_ST();
     Debug.LogWarning("OnATTACK_ST");
 if(MyEnemy==null){
     Debug.LogWarning("idle");
