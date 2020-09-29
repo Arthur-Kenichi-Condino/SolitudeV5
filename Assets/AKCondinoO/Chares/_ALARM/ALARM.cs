@@ -70,7 +70,12 @@ Attack(MyEnemy);
 MyState=State.ATTACK_ST;
 return;
 }
-//Debug.LogWarning("NaN? "+(MyDest.x==float.NaN));
+
+
+if(collisions.Count>0){for(int i=0;i<collisions.Count;i++){
+}}
+
+
 if(!destSet||CurPath.Count<=0||Vector3.Distance(MyDest,MyEnemy.transform.position)>MyAttackRange){
     Debug.LogWarning("OnCHASE_ST: GoTo");
     MyDest=MyEnemy.transform.position;
@@ -146,8 +151,8 @@ if(MyEnemy!=null){
 //}
 
 }
-protected override bool IsInAttackSight(AI MyEnemy){
-if(Vector3.Distance(transform.position,MyEnemy.transform.position)-(BodyRadius+MyEnemy.BodyRadius)<=MyAttackRange){
+protected override bool IsInAttackSight(AI enemy){
+if(Vector3.Distance(transform.position,enemy.transform.position)-(BodyRadius+enemy.BodyRadius)<=MyAttackRange){
 return true;
 }
 return false;}

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1737440702}
   - component: {fileID: 1737440701}
   m_Layer: 5
-  m_Name: Panel2
+  m_Name: PanelF1Sim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,12 +30,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3375661841515285921}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 222.1, y: 26.2}
-  m_SizeDelta: {x: 272, y: 50.6}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 42.5, y: 30.2}
+  m_SizeDelta: {x: -87, y: 58}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1737440702
 CanvasRenderer:
@@ -182,7 +182,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3375661841515285921}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -314,9 +314,9 @@ RectTransform:
   m_Children:
   - {fileID: 6817561275374207891}
   - {fileID: 3375661842028967909}
+  - {fileID: 1737440700}
   - {fileID: 3375661841892458535}
   - {fileID: 3375661840507534960}
-  - {fileID: 1737440700}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -416,7 +416,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3375661841515285921}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

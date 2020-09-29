@@ -175,6 +175,12 @@ STOP();
 MyState=State.IDLE_ST;
 return;
 }
+if(IsInAttackSight(MyEnemy)){
+    Debug.LogWarning("attack");
+STOP();
+MyState=State.ATTACK_ST;
+return;
+}
 
 
 if(!destSet||CurPath.Count<=0||Vector3.Distance(MyDest,MyEnemy.transform.position)>MyAttackRange){
@@ -185,6 +191,7 @@ GoTo(new Ray(MyDest,Vector3.down));
 
 
 }
+[NonSerialized]float sinceLastHitTimer;[NonSerialized]float hitDetectionReactionTick=1f;
 protected virtual void OnATTACK_ST(){
     Debug.LogWarning("OnATTACK_ST");
 if(MyEnemy==null){
@@ -193,10 +200,29 @@ STOP();
 MyState=State.IDLE_ST;
 return;
 }
+
+
+if(MyMotion==Motions.MOTION_HIT&&sinceLastHitTimer<=0){
+    sinceLastHitTimer=hitDetectionReactionTick;
+    Debug.LogWarning("OnATTACK_ST: hitDetectionReactionTick:"+hitDetectionReactionTick);
+}else if(sinceLastHitTimer>0){
+    sinceLastHitTimer-=Time.deltaTime;
+}
+if(!destSet||sinceLastHitTimer==hitDetectionReactionTick){
+    Debug.LogWarning("OnATTACK_ST: move away GoTo");
+    MyDest=MyEnemy.transform.position;var dir=Quaternion.Euler(0,(float)(mathrandom.NextDouble()*2-1)*90,0)*(transform.position-MyEnemy.transform.position).normalized;MyDest+=dir*(MyEnemy.BodyRadius+BodyRadius);
+Debug.DrawLine(MyEnemy.transform.position,MyDest,Color.blue,1f);
+GoTo(new Ray(MyDest,Vector3.down));
+}
+
+
 }
 protected virtual void OnSKILL_OBJECT_ST(){}
 [NonSerialized]protected float MyAttackRange=.1f;
-protected virtual bool IsInAttackSight(AI MyEnemy){
+protected virtual bool IsInAttackSight(AI enemy){
+if(Vector3.Distance(transform.position,enemy.transform.position)-(BodyRadius+enemy.BodyRadius)<=MyAttackRange){
+return true;
+}
 return false;}
 [NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}
 protected virtual void Attack(AI enemy){
