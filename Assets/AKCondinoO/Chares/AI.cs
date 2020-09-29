@@ -30,6 +30,7 @@ OutOfSight_v=value;
 }
 }
 #endregion
+[NonSerialized]protected bool enemyTouchingMe;
 [NonSerialized]bool firstLoop=true;protected override void Update(){
                                                       base.Update();
 if(!OutOfSight_v&&
@@ -65,6 +66,15 @@ if(DEBUG_ATTACK){Attack(null);}if(DEBUG_GETHIT){DEBUG_GETHIT=false;TakeDamage(nu
 
 
 GetTargets();
+
+enemyTouchingMe=false;
+if(collisions.Count>0){foreach(var collision in collisions){
+    if(MyEnemy!=null&&collision.Key.Item1.CompareTag("Player")&&collision.Key.Item1.GetComponent<AI>()==MyEnemy){
+enemyTouchingMe=true;
+    }
+if(enemyTouchingMe)break;//  Break when all checks are true, so only on O(n) operation is processed for any needed check
+}}
+
 if(Autonomous<=0){
 WALK_PATH();
 
@@ -87,62 +97,62 @@ protected AI MyEnemy=null;public AI Target{get{return MyEnemy;}}[NonSerialized]p
 protected virtual void GetTargets(){
 
     
-for(int k=GetEnemiesAttackingMe.Keys.Count-1;k>=0;k--){var i=GetEnemiesAttackingMe.Keys.ElementAt(k);
-var tuple=GetEnemiesAttackingMe[i];
-    tuple.timeout-=Time.deltaTime;
-GetEnemiesAttackingMe[i]=tuple;if(GetEnemiesAttackingMe[i].timeout<=0){GetEnemiesAttackingMe.Remove(i);}
-}
-MyPossibleTargets.Clear();
-foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
-if(i!=this.Id){
+//for(int k=GetEnemiesAttackingMe.Keys.Count-1;k>=0;k--){var i=GetEnemiesAttackingMe.Keys.ElementAt(k);
+//var tuple=GetEnemiesAttackingMe[i];
+//    tuple.timeout-=Time.deltaTime;
+//GetEnemiesAttackingMe[i]=tuple;if(GetEnemiesAttackingMe[i].timeout<=0||GetEnemiesAttackingMe[i].actor.OutOfSight){GetEnemiesAttackingMe.Remove(i);}
+//}
+//MyPossibleTargets.Clear();
+//foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
+//if(i!=this.Id){
 
 
-if(v.Target==this){//  This following mode of detecting targets does not take into consideration the stealth status of enemies
-Vector3 pos;float dis;
-if(MyMotion==Motions.MOTION_HIT){pos=v.transform.position;
-addPossibleTarget();attackingMe();
-    Debug.LogWarning("I'm under attack",this);
-}else if(MySight.IsInVisionSight.ContainsKey(i)&&MySight.IsInVisionSight[i].directSight){pos=MySight.IsInVisionSight[i].pos;
-addPossibleTarget();attackingMe();
-    Debug.LogWarning("enemy approaching my position",this);
-}
-void addPossibleTarget(){
-dis=Vector3.Distance(transform.position,pos);
-MyPossibleTargets.Add(i,(v,pos,dis));
-}
-void attackingMe(){
-if(!GetEnemiesAttackingMe.ContainsKey(i)){
-GetEnemiesAttackingMe.Add(i,(v,-1,0));
-}
-var tuple=GetEnemiesAttackingMe[i];
-    tuple.dis=dis;
-    tuple.timeout=5f;
-GetEnemiesAttackingMe[i]=tuple;
-}
-}
-//if(v.HasPassiveRole()){
-//if(MySight.IsInHearingSight.ContainsKey(i)){
-//    Debug.LogWarning("my TypeId:"+TypeToTypeId[GetType()]+"; possible target TypeId:"+TypeToTypeId[v.GetType()]);
+//if(v.Target==this){//  This following mode of detecting targets does not take into consideration the stealth status of enemies
+//Vector3 pos;float dis;
+//if(MyMotion==Motions.MOTION_HIT){pos=v.transform.position;
+//addPossibleTarget();attackingMe();
+//    Debug.LogWarning("I'm under attack",this);
+//}else if(MySight.IsInVisionSight.ContainsKey(i)&&MySight.IsInVisionSight[i].directSight){pos=MySight.IsInVisionSight[i].pos;
+//addPossibleTarget();attackingMe();
+//    Debug.LogWarning("enemy approaching my position",this);
+//}
+//void addPossibleTarget(){
+//dis=Vector3.Distance(transform.position,pos);
+//MyPossibleTargets.Add(i,(v,pos,dis));
+//}
+//void attackingMe(){
+//if(!GetEnemiesAttackingMe.ContainsKey(i)){
+//GetEnemiesAttackingMe.Add(i,(v,-1,0));
+//}
+//var tuple=GetEnemiesAttackingMe[i];
+//    tuple.dis=dis;
+//    tuple.timeout=5f;
+//GetEnemiesAttackingMe[i]=tuple;
 //}
 //}
+////if(v.HasPassiveRole()){
+////if(MySight.IsInHearingSight.ContainsKey(i)){
+////    Debug.LogWarning("my TypeId:"+TypeToTypeId[GetType()]+"; possible target TypeId:"+TypeToTypeId[v.GetType()]);
+////}
+////}
 
 
-}
-}
-MyEnemy=null;
-if(MyEnemy==null){
+//}
+//}
+//MyEnemy=null;
+//if(MyEnemy==null){
 
     
-float dis=-1;
-foreach(var kvp in GetEnemiesAttackingMe){var i=kvp.Key;var v=kvp.Value.actor;var d=kvp.Value.dis;
-if(dis==-1||dis>d){
-MyEnemy=v;
-    dis=d;
-}
-}
+//float dis=-1;
+//foreach(var kvp in GetEnemiesAttackingMe){var i=kvp.Key;var v=kvp.Value.actor;var d=kvp.Value.dis;
+//if(dis==-1||dis>d){
+//MyEnemy=v;
+//    dis=d;
+//}
+//}
 
 
-}
+//}
 
 
 }
@@ -152,68 +162,72 @@ protected virtual void OnFOLLOW_ST(){}
 protected virtual void OnIDLE_ST(){
 
     
-if(MyEnemy!=null){
-if(!IsInAttackSight(MyEnemy)){
-    Debug.LogWarning("chase");
-MyState=State.CHASE_ST;
-return;
-}else{
-    Debug.LogWarning("attack");
-STOP();
-MyState=State.ATTACK_ST;
-return;
-}
-}
+//if(MyEnemy!=null){
+//if(!IsInAttackSight(MyEnemy)){
+//    Debug.LogWarning("chase");
+//MyState=State.CHASE_ST;
+//return;
+//}else{
+//    Debug.LogWarning("attack");
+//STOP();
+//MyState=State.ATTACK_ST;
+//return;
+//}
+//}
 
 
 }
 protected virtual void OnCHASE_ST(){
     Debug.LogWarning("OnCHASE_ST");
-if(MyEnemy==null){
-    Debug.LogWarning("idle");
-STOP();
-MyState=State.IDLE_ST;
-return;
-}
-if(IsInAttackSight(MyEnemy)){
-    Debug.LogWarning("attack");
-STOP();
-MyState=State.ATTACK_ST;
-return;
-}
+//if(MyEnemy==null){
+//    Debug.LogWarning("idle");
+//STOP();
+//MyState=State.IDLE_ST;
+//return;
+//}
+//if(IsInAttackSight(MyEnemy)){
+//    Debug.LogWarning("attack");
+//STOP();
+//MyState=State.ATTACK_ST;
+//return;
+//}
 
 
-if(!destSet||CurPath.Count<=0||Vector3.Distance(MyDest,MyEnemy.transform.position)>MyAttackRange){
-    Debug.LogWarning("OnCHASE_ST: GoTo");
-    MyDest=MyEnemy.transform.position;
-GoTo(new Ray(MyDest,Vector3.down));
-}
+//if(!destSet||CurPath.Count<=0||Vector3.Distance(MyDest,MyEnemy.transform.position)>MyAttackRange){
+//    Debug.LogWarning("OnCHASE_ST: GoTo");
+//    if(Vector3.Distance(MyEnemy.transform.position,transform.position)>BodyRadius){
+//    MyDest=MyEnemy.transform.position;
+//    }else{
+//    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRadius+BodyRadius+MyAttackRange);
+//    }
+//GoTo(new Ray(MyDest,Vector3.down));
+//}
 
 
 }
 [NonSerialized]float sinceLastHitTimer;[NonSerialized]float hitDetectionReactionTick=1f;
 protected virtual void OnATTACK_ST(){
     Debug.LogWarning("OnATTACK_ST");
-if(MyEnemy==null){
-    Debug.LogWarning("idle");
-STOP();
-MyState=State.IDLE_ST;
-return;
-}
+//if(MyEnemy==null){
+//    Debug.LogWarning("idle");
+//STOP();
+//MyState=State.IDLE_ST;
+//return;
+//}
 
 
-if(MyMotion==Motions.MOTION_HIT&&sinceLastHitTimer<=0){
-    sinceLastHitTimer=hitDetectionReactionTick;
-    Debug.LogWarning("OnATTACK_ST: hitDetectionReactionTick:"+hitDetectionReactionTick);
-}else if(sinceLastHitTimer>0){
-    sinceLastHitTimer-=Time.deltaTime;
-}
-if(!destSet||sinceLastHitTimer==hitDetectionReactionTick){
-    Debug.LogWarning("OnATTACK_ST: move away GoTo");
-    MyDest=MyEnemy.transform.position;var dir=Quaternion.Euler(0,(float)(mathrandom.NextDouble()*2-1)*90,0)*(transform.position-MyEnemy.transform.position).normalized;MyDest+=dir*(MyEnemy.BodyRadius+BodyRadius);
-Debug.DrawLine(MyEnemy.transform.position,MyDest,Color.blue,1f);
-GoTo(new Ray(MyDest,Vector3.down));
-}
+//if(MyMotion==Motions.MOTION_HIT&&sinceLastHitTimer<=0){
+//    sinceLastHitTimer=hitDetectionReactionTick;
+//    Debug.LogWarning("OnATTACK_ST: hitDetectionReactionTick:"+hitDetectionReactionTick);
+//}else if(sinceLastHitTimer>0){
+//    sinceLastHitTimer-=Time.deltaTime;
+//}
+//if(!destSet||sinceLastHitTimer==hitDetectionReactionTick){
+//    Debug.LogWarning("OnATTACK_ST: move away GoTo");
+//    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)(mathrandom.NextDouble()*2-1)*90,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRadius*2+BodyRadius);
+//Debug.DrawLine(MyEnemy.transform.position,MyDest,Color.blue,1f);
+//GoTo(new Ray(MyDest,Vector3.down));
+//}
 
 
 }

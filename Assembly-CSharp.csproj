@@ -262,6 +262,7 @@
     <Compile Include="Assets\NVIDIA\Flex\Assets\FlexSourceAsset.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\SkinnedMeshCombiner.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\Extensions\DynamicCharacterSystem\Scripts\DCSStandardTypes.cs" />
+    <Compile Include="Assets\AKCondinoO\Chares\Sight.cs" />
     <Compile Include="Assets\UMA\Examples\Physics Examples\UMA_JiggleMaster\JiggleBelly\UMA_JiggleBelly.cs" />
     <Compile Include="Assets\UMA\Core\Scripts\DNAEvaluator.cs" />
     <Compile Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Scripts\Scene2and3\CSWardrobeSlotChangerDD.cs" />
@@ -418,7 +419,7 @@
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\DNAConverterField.cs" />
     <Compile Include="Assets\UMA\Examples\Physics Examples\Scripts\ClothHelper.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\Scripts\DynamicDNAConverterBehaviour.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\Sight.cs" />
+    <Compile Include="Assets\AKCondinoO\MathHelper.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\UMA\Core\StandardAssets\UMA\Atlas\AtlasNormalShader32.shader" />
