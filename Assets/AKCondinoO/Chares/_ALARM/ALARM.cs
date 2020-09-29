@@ -6,7 +6,7 @@ using UnityEngine;
 using static ActorManagementMentana;
 public class ALARM:_3DSprite{
 public override void InitAttributes(bool random=true){
-    Debug.LogWarning("init attributes");
+if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":init attributes");
 Attributes.FOR=mathrandom.Next(12,73);
 Attributes.VIT=mathrandom.Next(12,25);
     Attributes.MaxStamina=Attributes.Stamina=GetMaxStamina();
@@ -18,52 +18,86 @@ Attributes.DEX=mathrandom.Next(49,73);
 }
 [NonSerialized]public float TryIdleActionInterval=1f;[NonSerialized]float NextIdleActionTimer;[NonSerialized]public float Boredom;public enum CreativeIdleness:int{MOVE_RANDOM=0,RANDOM_SKILL=1,}[NonSerialized]readonly int CreativeIdlenessActionsCount=Enum.GetValues(typeof(CreativeIdleness)).Length;
 protected override void OnIDLE_ST(){
-
-
-//if(MyEnemy!=null){
-//if(!IsInAttackSight(MyEnemy)){
-//    Debug.LogWarning("chase");
-//MyState=State.CHASE_ST;
-//return;
-//}else{
-//    Debug.LogWarning("attack");
-//STOP();
-//Attack(MyEnemy);
-//MyState=State.ATTACK_ST;
-//return;
-//}
-//}
-
-
-//if(NextIdleActionTimer<=0){
-//if(IsGrounded){
-//if(mathrandom.NextDouble()<=Boredom){
-//var action=(CreativeIdleness)mathrandom.Next(0,CreativeIdlenessActionsCount);
-//if(LOG&&LOG_LEVEL<=1)Debug.Log("CreativeIdleness action: "+action);
-//    switch(action){
-//        case(CreativeIdleness.MOVE_RANDOM):{
-//            MoveToRandom(mathrandom);
-//        break;}
-//    }
-//Boredom=0;
-//}else{
-//Boredom+=0.1f;
-//}
-//        NextIdleActionTimer=TryIdleActionInterval;
-//}
-//}else{
-//    NextIdleActionTimer-=Time.deltaTime;
-//}
+if(MyEnemy!=null){
+if(!IsInAttackSight(MyEnemy)){
+if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":chase",this);
+MyState=State.CHASE_ST;
+return;
+}else{
+if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":attack",this);
+STOP();
+Attack(MyEnemy);
+MyState=State.ATTACK_ST;
+return;
 }
-[NonSerialized]float enemyTouchedReposTimeout;
+}
+if(NextIdleActionTimer<=0){
+if(IsGrounded){
+if(mathrandom.NextDouble()<=Boredom){
+var action=(CreativeIdleness)mathrandom.Next(0,CreativeIdlenessActionsCount);
+if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":CreativeIdleness action:"+action,this);
+    switch(action){
+        case(CreativeIdleness.MOVE_RANDOM):{
+            MoveToRandom(mathrandom);
+        break;}
+    }
+Boredom=0;
+}else{
+Boredom+=0.1f;
+}
+        NextIdleActionTimer=TryIdleActionInterval;
+}
+}else{
+    NextIdleActionTimer-=Time.deltaTime;
+}
+}
+[NonSerialized]float enemyTouchedReposTimeout;[NonSerialized]float enemyTouchedReposTime=2f;
 protected override void OnCHASE_ST(){
-    Debug.LogWarning("OnCHASE_ST");
-//if(MyEnemy==null){
-//    Debug.LogWarning("idle");
-//STOP();
-//MyState=State.IDLE_ST;
+if(LOG&&LOG_LEVEL<=0)Debug.Log(GetType()+":OnCHASE_ST",this);
+if(MyEnemy==null){
+if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":idle",this);
+STOP();
+MyState=State.IDLE_ST;
+return;
+}
+
+
+if(enemyTouchedReposTimeout>0){
+if(!enemyTouchingMe){
+    enemyTouchedReposTimeout=0;
+}else{
+    enemyTouchedReposTimeout-=Time.deltaTime;
+}
+}
+if(enemyTouchedReposTimeout<=0){
+if(IsInAttackSight(MyEnemy)){
+if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":attack",this);
+STOP();
+Attack(MyEnemy);
+MyState=State.ATTACK_ST;
+return;
+}
+if(enemyTouchingMe){
+    enemyTouchedReposTimeout=enemyTouchedReposTime;
+}
+}
+if(enemyTouchedReposTimeout<=0){
+    Debug.LogWarning("OnCHASE_ST: GoTo");
+doChase();
+}else{
+    Debug.LogWarning("OnCHASE_ST: move away GoTo");
+doChasingMoveAway();
+}
+//if(enemyTouchedReposTimeout>0){
+//    enemyTouchedReposTimeout-=Time.deltaTime;
+//}else{
+//if(enemyTouchingMe){
+//    enemyTouchedReposTimeout=2f;
 //return;
 //}
+//}
+
+
 //if(IsInAttackSight(MyEnemy)){
 //    Debug.LogWarning("attack");
 //STOP();

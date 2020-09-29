@@ -205,6 +205,23 @@ protected virtual void OnCHASE_ST(){
 
 
 }
+protected virtual void doChase(){
+if(!destSet||CurPath.Count<=0||Vector3.Distance(MyDest,MyEnemy.transform.position)>MyAttackRange){
+    if(Vector3.Distance(MyEnemy.transform.position,transform.position)>BodyRadius){
+    MyDest=MyEnemy.transform.position;
+    }else{
+    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRadius+BodyRadius+MyAttackRange);
+    }
+GoTo(new Ray(MyDest,Vector3.down));
+}
+}
+protected virtual void doChasingMoveAway(){
+if(!destSet||CurPath.Count<=0){
+    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRadius*2+BodyRadius*2);
+Debug.DrawLine(MyEnemy.transform.position,MyDest,Color.blue,1f);
+GoTo(new Ray(MyDest,Vector3.down));
+}
+}
 [NonSerialized]float sinceLastHitTimer;[NonSerialized]float hitDetectionReactionTick=1f;
 protected virtual void OnATTACK_ST(){
     Debug.LogWarning("OnATTACK_ST");
