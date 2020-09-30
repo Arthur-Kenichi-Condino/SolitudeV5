@@ -48,6 +48,17 @@ MonoBehaviour:
   LOG: 1
   LOG_LEVEL: 1
   DRAW_LEVEL: -100
+  Attributes:
+    FOR: 0
+    VIT: 0
+    MaxStamina: 0
+    Stamina: 0
+    INT: 0
+    MaxFocus: 0
+    Focus: 0
+    AGI: 0
+    DEX: 0
+    BaseAspd: 0
   Lerp: 1
   MoveLerpSpeed: 0.125
   InputMoveAcceleration: {x: 3, y: 5, z: 3}
@@ -58,7 +69,12 @@ MonoBehaviour:
   InputViewRotationIncreaseSpeed: 0.025
   GetNewTgtRotCdTime: 0.05
   DEBUG_GOTO: 0
+  Role: 0
   AutonomyDelayAfterControl: 30
+  attackStanceRhythmMultiplier: 1
+  attackStanceDamageTime: 0.5
+  hitStanceRhythmMultiplier: 2
+  deadStanceRhythmMultiplier: 1
   DEBUG_ATTACK: 0
   DEBUG_GETHIT: 0
   DEBUG_DIE: 0

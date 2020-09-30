@@ -94,160 +94,139 @@ firstLoop=false;}
 protected AI MyEnemy=null;public AI Target{get{return MyEnemy;}}[NonSerialized]protected readonly Dictionary<int,(AI actor,Vector3 pos,float dis)>MyPossibleTargets=new Dictionary<int,(AI,Vector3,float)>();[NonSerialized]protected readonly Dictionary<int,(AI actor,float dis,float timeout)>AsAggroEnemies=new Dictionary<int,(AI,float,float)>();
 [NonSerialized]protected readonly Dictionary<int,(AI actor,float dis,float timeout)>GetEnemiesAttackingMe=new Dictionary<int,(AI,float,float)>();
 [NonSerialized]protected readonly Dictionary<int,(AI actor,float dis,float timeout)>GetEnemiesAttackingAlly=new Dictionary<int,(AI,float,float)>();
-protected virtual void GetTargets(){
-
-    
-//for(int k=GetEnemiesAttackingMe.Keys.Count-1;k>=0;k--){var i=GetEnemiesAttackingMe.Keys.ElementAt(k);
-//var tuple=GetEnemiesAttackingMe[i];
-//    tuple.timeout-=Time.deltaTime;
-//GetEnemiesAttackingMe[i]=tuple;if(GetEnemiesAttackingMe[i].timeout<=0||GetEnemiesAttackingMe[i].actor.OutOfSight){GetEnemiesAttackingMe.Remove(i);}
-//}
-//MyPossibleTargets.Clear();
-//foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
-//if(i!=this.Id){
-
-
-//if(v.Target==this){//  This following mode of detecting targets does not take into consideration the stealth status of enemies
-//Vector3 pos;float dis;
-//if(MyMotion==Motions.MOTION_HIT){pos=v.transform.position;
-//addPossibleTarget();attackingMe();
-//    Debug.LogWarning("I'm under attack",this);
-//}else if(MySight.IsInVisionSight.ContainsKey(i)&&MySight.IsInVisionSight[i].directSight){pos=MySight.IsInVisionSight[i].pos;
-//addPossibleTarget();attackingMe();
-//    Debug.LogWarning("enemy approaching my position",this);
-//}
-//void addPossibleTarget(){
-//dis=Vector3.Distance(transform.position,pos);
-//MyPossibleTargets.Add(i,(v,pos,dis));
-//}
-//void attackingMe(){
-//if(!GetEnemiesAttackingMe.ContainsKey(i)){
-//GetEnemiesAttackingMe.Add(i,(v,-1,0));
-//}
-//var tuple=GetEnemiesAttackingMe[i];
-//    tuple.dis=dis;
-//    tuple.timeout=5f;
-//GetEnemiesAttackingMe[i]=tuple;
-//}
-//}
-////if(v.HasPassiveRole()){
-////if(MySight.IsInHearingSight.ContainsKey(i)){
-////    Debug.LogWarning("my TypeId:"+TypeToTypeId[GetType()]+"; possible target TypeId:"+TypeToTypeId[v.GetType()]);
-////}
-////}
-
-
-//}
-//}
-//MyEnemy=null;
-//if(MyEnemy==null){
-
-    
-//float dis=-1;
-//foreach(var kvp in GetEnemiesAttackingMe){var i=kvp.Key;var v=kvp.Value.actor;var d=kvp.Value.dis;
-//if(dis==-1||dis>d){
-//MyEnemy=v;
-//    dis=d;
-//}
-//}
-
-
-//}
-
-
+protected virtual void GetTargets(){    
+for(int k=GetEnemiesAttackingMe.Keys.Count-1;k>=0;k--){var i=GetEnemiesAttackingMe.Keys.ElementAt(k);
+var tuple=GetEnemiesAttackingMe[i];
+    tuple.timeout-=Time.deltaTime;
+GetEnemiesAttackingMe[i]=tuple;if(GetEnemiesAttackingMe[i].timeout<=0||GetEnemiesAttackingMe[i].actor.OutOfSight){GetEnemiesAttackingMe.Remove(i);}
+}
+MyPossibleTargets.Clear();
+foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
+if(i!=this.Id&&v.GetMotion!=Motions.MOTION_DEAD&&!v.OutOfSight){
+if(v.Target==this){//  This following mode of detecting targets does not take into consideration the stealth status of enemies
+Vector3 pos;float dis;
+if(MyMotion==Motions.MOTION_HIT){pos=v.transform.position;
+addPossibleTarget();attackingMe();
+if(LOG&&LOG_LEVEL<=-10)Debug.Log(GetType()+":I'm under attack",this);
+}else if(MySight.IsInVisionSight.ContainsKey(i)&&MySight.IsInVisionSight[i].directSight){pos=MySight.IsInVisionSight[i].pos;
+addPossibleTarget();attackingMe();
+if(LOG&&LOG_LEVEL<=-10)Debug.Log(GetType()+":enemy approaching my position",this);
+}
+void addPossibleTarget(){
+dis=Vector3.Distance(transform.position,pos);
+MyPossibleTargets.Add(i,(v,pos,dis));
+}
+void attackingMe(){
+if(!GetEnemiesAttackingMe.ContainsKey(i)){
+GetEnemiesAttackingMe.Add(i,(v,-1,0));
+}
+var tuple=GetEnemiesAttackingMe[i];
+    tuple.dis=dis;
+    tuple.timeout=5f;
+GetEnemiesAttackingMe[i]=tuple;
+}
+}
+}
+}
+MyEnemy=null;
+if(MyEnemy==null){    
+float dis=-1;
+foreach(var kvp in GetEnemiesAttackingMe){var i=kvp.Key;var v=kvp.Value.actor;var d=kvp.Value.dis;
+if(dis==-1||dis>d){
+MyEnemy=v;
+    dis=d;
+}
+}
+}
 }
 protected Motions MyMotion=Motions.MOTION_STAND;public Motions GetMotion{get{return MyMotion;}}[NonSerialized]protected int attackStance=-1;[SerializeField]protected float attackStanceRhythmMultiplier=1f;[SerializeField]protected float attackStanceDamageTime=.5f;[NonSerialized]protected int hitStance=-1;[SerializeField]protected float hitStanceRhythmMultiplier=2f;[NonSerialized]protected int deadStance=-1;[SerializeField]protected float deadStanceRhythmMultiplier=1f;
 protected virtual void OnEXCUSE_ST(){}
 protected virtual void OnFOLLOW_ST(){}
 protected virtual void OnIDLE_ST(){
-
-    
-//if(MyEnemy!=null){
-//if(!IsInAttackSight(MyEnemy)){
-//    Debug.LogWarning("chase");
-//MyState=State.CHASE_ST;
-//return;
-//}else{
-//    Debug.LogWarning("attack");
-//STOP();
-//MyState=State.ATTACK_ST;
-//return;
-//}
-//}
-
-
+if(MyEnemy!=null){
+if(!IsInAttackSight(MyEnemy)){
+if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":chase",this);
+MyState=State.CHASE_ST;
+return;
+}else{
+if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":attack",this);
+STOP();
+MyState=State.ATTACK_ST;
+return;
+}
+}
 }
 protected virtual void OnCHASE_ST(){
-    Debug.LogWarning("OnCHASE_ST");
-//if(MyEnemy==null){
-//    Debug.LogWarning("idle");
-//STOP();
-//MyState=State.IDLE_ST;
-//return;
-//}
-//if(IsInAttackSight(MyEnemy)){
-//    Debug.LogWarning("attack");
-//STOP();
-//MyState=State.ATTACK_ST;
-//return;
-//}
-
-
-//if(!destSet||CurPath.Count<=0||Vector3.Distance(MyDest,MyEnemy.transform.position)>MyAttackRange){
-//    Debug.LogWarning("OnCHASE_ST: GoTo");
-//    if(Vector3.Distance(MyEnemy.transform.position,transform.position)>BodyRadius){
-//    MyDest=MyEnemy.transform.position;
-//    }else{
-//    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRadius+BodyRadius+MyAttackRange);
-//    }
-//GoTo(new Ray(MyDest,Vector3.down));
-//}
-
-
+if(LOG&&LOG_LEVEL<=0)Debug.Log(GetType()+":OnCHASE_ST",this);
+if(MyEnemy==null){
+if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":idle",this);
+STOP();
+MyState=State.IDLE_ST;
+return;
+}
+if(IsInAttackSight(MyEnemy)){
+if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":attack",this);
+STOP();
+MyState=State.ATTACK_ST;
+return;
+}
+doChase();
 }
 protected virtual void doChase(){
-if(!destSet||CurPath.Count<=0||Vector3.Distance(MyDest,MyEnemy.transform.position)>MyAttackRange){
+if(tracing||GoToQueue.Count>0)return;
+if(!destSet||CurPathTgt==null||Vector3.Distance(MyDest,MyEnemy.transform.position)>MyAttackRange){
     if(Vector3.Distance(MyEnemy.transform.position,transform.position)>BodyRadius){
     MyDest=MyEnemy.transform.position;
     }else{
     MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRadius+BodyRadius+MyAttackRange);
     }
+if(DRAW_LEVEL<=0)Debug.DrawLine(transform.position,MyDest,Color.blue,1f);
 GoTo(new Ray(MyDest,Vector3.down));
 }
 }
 protected virtual void doChasingMoveAway(){
-if(!destSet||CurPath.Count<=0){
-    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRadius*2+BodyRadius*2);
-Debug.DrawLine(MyEnemy.transform.position,MyDest,Color.blue,1f);
+if(tracing||GoToQueue.Count>0)return;
+if(!destSet||CurPathTgt==null){
+    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRadius+BodyRadius);
+if(DRAW_LEVEL<=0)Debug.DrawLine(transform.position,MyDest,Color.blue,1f);
 GoTo(new Ray(MyDest,Vector3.down));
 }
 }
 [NonSerialized]float sinceLastHitTimer;[NonSerialized]float hitDetectionReactionTick=1f;
 protected virtual void OnATTACK_ST(){
-    Debug.LogWarning("OnATTACK_ST");
-//if(MyEnemy==null){
-//    Debug.LogWarning("idle");
-//STOP();
-//MyState=State.IDLE_ST;
-//return;
-//}
+if(LOG&&LOG_LEVEL<=0)Debug.Log(GetType()+":OnATTACK_ST",this);
+if(MyEnemy==null){
+if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":idle",this);
+STOP();
+MyState=State.IDLE_ST;
+return;
+}
 
 
-//if(MyMotion==Motions.MOTION_HIT&&sinceLastHitTimer<=0){
-//    sinceLastHitTimer=hitDetectionReactionTick;
-//    Debug.LogWarning("OnATTACK_ST: hitDetectionReactionTick:"+hitDetectionReactionTick);
-//}else if(sinceLastHitTimer>0){
-//    sinceLastHitTimer-=Time.deltaTime;
-//}
-//if(!destSet||sinceLastHitTimer==hitDetectionReactionTick){
-//    Debug.LogWarning("OnATTACK_ST: move away GoTo");
-//    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)(mathrandom.NextDouble()*2-1)*90,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRadius*2+BodyRadius);
-//Debug.DrawLine(MyEnemy.transform.position,MyDest,Color.blue,1f);
-//GoTo(new Ray(MyDest,Vector3.down));
-//}
+doAttackingMoveAway();
 
 
 }
+protected virtual bool doAttackingMoveAway(){
+if(tracing||GoToQueue.Count>0)return false;
+if(MyMotion==Motions.MOTION_HIT&&sinceLastHitTimer<=0){
+    sinceLastHitTimer=hitDetectionReactionTick;
+    Debug.LogWarning("OnATTACK_ST: hitDetectionReactionTick:"+hitDetectionReactionTick);
+}else if(sinceLastHitTimer>0){
+    sinceLastHitTimer-=Time.deltaTime;
+}else{
+
+
+
+
+}
+if(!destSet||sinceLastHitTimer==hitDetectionReactionTick){
+    Debug.LogWarning("OnATTACK_ST: move away GoTo");
+    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)(mathrandom.NextDouble()*2-1)*90,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRadius*2+BodyRadius*2);
+Debug.DrawLine(transform.position,MyDest,Color.blue,1f);
+GoTo(new Ray(MyDest,Vector3.down));
+return true;}
+return false;}
 protected virtual void OnSKILL_OBJECT_ST(){}
 [NonSerialized]protected float MyAttackRange=.1f;
 protected virtual bool IsInAttackSight(AI enemy){
@@ -309,7 +288,7 @@ protected virtual void Die(){
 if(deadStance==-1){Dying=DeadForGoodDelay;}
 }
 protected Vector3 MyDest{get{return dest;}set{dest=value;destSet=true;}}[NonSerialized]Vector3 dest;protected bool destSet{get;private set;}public Vector3 Dest{get{return dest;}}
-[NonSerialized]public Vector3 ReachedTgtDisThreshold=new Vector3(.1f,.1f,.1f);
+[NonSerialized]public Vector3 ReachedTgtDisThreshold;
 [NonSerialized]protected bool BlockMovement;
 [NonSerialized]protected float MovementQualityEvaluationTimeReferenceValue=2.27f;[NonSerialized]float _movementSnapshotTimer;[NonSerialized]Vector3 _movementSnapshotPos;[NonSerialized]protected float DoMovementSnapshotTime;[NonSerialized]float _movementWasDetectedTimer;[NonSerialized]protected float NoMovementDetectionTime;[NonSerialized]protected GetUnstuckActions _noMovementGetUnstuckAction=GetUnstuckActions.none;[NonSerialized]protected float _noMovementGetUnstuckTimer=0;[NonSerialized]protected float MaxGetUnstuckActionTime;[NonSerialized]int moveSidewaysRandomDir_dir=1;[NonSerialized]int moveCircularlyAroundTgt_dir=1;public enum GetUnstuckActions:int{none=-1,jumpAllWayUp=0,moveSidewaysRandomDir=1,moveCircularlyAroundTgt=2,moveBackwards=3,moveLooselyToRandomDir=4,}[NonSerialized]readonly int GetUnstuckActionsCount=Enum.GetValues(typeof(GetUnstuckActions)).Length-1;
 [NonSerialized]Vector3 _axisDiff,_dir;

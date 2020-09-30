@@ -103,8 +103,8 @@ return null;}
 protected void MoveToRandom(System.Random mathrandom){
     GoTo(new Ray(transform.position+new Vector3(mathrandom.Next(-16,17),16,mathrandom.Next(-16,17)),Vector3.down));
 }
-[NonSerialized]readonly protected Queue<(Vector3 pos,Node.PreferredReachableMode mode)>CurPath=new Queue<(Vector3,Node.PreferredReachableMode)>();[NonSerialized]protected(Vector3 pos,Node.PreferredReachableMode mode)?CurPathTgt=null;
-[NonSerialized]readonly LinkedList<RaycastHit>GoToQueue=new LinkedList<RaycastHit>();[NonSerialized]bool tracing;
+[NonSerialized]readonly protected Queue<(Vector3 pos,Node.PreferredReachableMode mode)>CurPath=new Queue<(Vector3,Node.PreferredReachableMode)>();[NonSerialized]protected(Vector3 pos,Node.PreferredReachableMode mode)?CurPathTgt=null;[NonSerialized]protected float CurPathValidTimeout;[NonSerialized]protected float PathIsValidTime=5f;
+[NonSerialized]readonly protected LinkedList<RaycastHit>GoToQueue=new LinkedList<RaycastHit>();[NonSerialized]protected bool tracing;
 protected override void Update(){
 
 
@@ -113,11 +113,17 @@ protected override void Update(){
         Debug.DrawRay(new Vector3(1,0,-10),Vector3.down*1000,Color.white,5f);
     }
 
-
+if(CurPathValidTimeout>0){
+    CurPathValidTimeout-=Time.deltaTime;
+}
+if(CurPathValidTimeout<=0&&CurPathTgt!=null){
+    Debug.LogWarning("path is unreachable");
+STOP(false);
+}
     if(backgroundDataSet1.WaitOne(0)){
         if(tracing){
 if(LOG&&LOG_LEVEL<=1)Debug.Log("path traced, set CurPath");
-            CurPathTgt=null;CurPath.Clear();for(int p=0;p<resultPath.Count;p++){CurPath.Enqueue((resultPath[p].Position,resultPath[p].Mode));}
+            CurPathTgt=null;CurPath.Clear();for(int p=0;p<resultPath.Count;p++){CurPath.Enqueue((resultPath[p].Position,resultPath[p].Mode));}CurPathValidTimeout=PathIsValidTime;
             tracing=false;
         }
         if(GoToQueue.Count>0){
@@ -158,12 +164,12 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("ToSetGridVerHits.Count before phase id '2':"+ToS
 int vHits=0;
 do{
 yield return waitUntil2;
-if(LOG&&LOG_LEVEL<=1)Debug.Log("current vertical hit test:"+vHits);
-if(DRAW_LEVEL<=-100)foreach(var raycast in ToSetGridVerRaycasts){Debug.DrawRay(raycast.from,raycast.direction*raycast.distance,Color.white,1f);}
+if(LOG&&LOG_LEVEL<=-10)Debug.Log("current vertical hit test:"+vHits);
+if(DRAW_LEVEL<=-200)foreach(var raycast in ToSetGridVerRaycasts){Debug.DrawRay(raycast.from,raycast.direction*raycast.distance,Color.white,1f);}
 handle2=RaycastCommand.ScheduleBatch(ToSetGridVerRaycasts,ToSetGridVerHitsResultsBuffer,1,default(JobHandle));//  Schedule the batch of raycasts
 while(!handle2.IsCompleted)yield return null;handle2.Complete();//  Wait for the batch processing job to complete
 for(int i=0,j=0;j<ToSetGridVerRaycasts.Length;i+=AStarVerticalHits,j++){var raycast=ToSetGridVerRaycasts[j];var result=ToSetGridVerHitsResultsBuffer[j];
-if(DRAW_LEVEL<=-100)Debug.DrawRay(result.point,result.normal,Color.green,1f);
+if(DRAW_LEVEL<=-200)Debug.DrawRay(result.point,result.normal,Color.green,1f);
 if(result.collider!=null){
 ToSetGridVerHits[j][vHits]=result;}else{ 
 ToSetGridVerHits[j][vHits]=default(RaycastHit);}
@@ -347,10 +353,10 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("begin pathfind");
             NodeHalfSize.z+=.1f;
             NodeSize=NodeHalfSize*2;
 ToSetGridVerHits.Clear();var gridStartHeight=startPos.y+(AStarVerticalHits/2f)*NodeSize.y;var disableCommandHeight=-Mathf.Ceil(Chunk.Height/2f)-1;
-if(LOG&&LOG_LEVEL<=1)Debug.Log("disableCommandHeight value:"+disableCommandHeight);
+if(LOG&&LOG_LEVEL<=-10)Debug.Log("disableCommandHeight value:"+disableCommandHeight);
 int vHits=0;
 do{
-if(LOG&&LOG_LEVEL<=1)Debug.Log("current vertical hit test:"+vHits);
+if(LOG&&LOG_LEVEL<=-10)Debug.Log("current vertical hit test:"+vHits);
 i=0;j=0;float fromHeight;
 for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
 for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
@@ -408,7 +414,7 @@ Vector3 center3a=nodesGrounded[g].floorHit.point;
 commands3a.AddNoResize(new BoxcastCommand(center3a,halfExtents3a,orientation3a,direction3a,dis3a,noCharLayer));
 }
             backgroundDataSet3a.Set();foregroundDataSet3a.WaitOne();if(Stop)goto _Stop;
-if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3a");
+if(LOG&&LOG_LEVEL<=-10)Debug.Log("use raycasts results 3a");
 
 
 nodesWalkable.Clear();
@@ -453,7 +459,7 @@ commands3b.AddNoResize(new BoxcastCommand(center3b,halfExtents3b,orientation3b,d
 
 
             backgroundDataSet3b.Set();foregroundDataSet3b.WaitOne();if(Stop)goto _Stop;
-if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3b");
+if(LOG&&LOG_LEVEL<=-10)Debug.Log("use raycasts results 3b");
 
 
 for(int r=0;r<resultsManaged3b.Count;r++){var result3b=resultsManaged3b[r];
@@ -500,7 +506,7 @@ resultToNodeAndNeighbour[ridx++]=(nodesWalkable[w].node,n);
 //Debug.LogWarning(commands3ciA.Length);
 
             backgroundDataSet3c.Set();foregroundDataSet3c.WaitOne();if(Stop)goto _Stop;
-if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 3c");
+if(LOG&&LOG_LEVEL<=-10)Debug.Log("use raycasts results 3c");
 
 
 foreach(var kvp in resultToNodeAndNeighbour){var ridx=kvp.Key;var node=kvp.Value.Item1;var n=kvp.Value.Item2;var neighbour=node.neighbours[n];var reachable=node.neighbourCanBeReached[n];
@@ -533,7 +539,7 @@ node.neighbourCanBeReached[n]=reachable;
 
 
             backgroundDataSet4.Set();foregroundDataSet4.WaitOne();if(Stop)goto _Stop;
-if(LOG&&LOG_LEVEL<=1)Debug.Log("use raycasts results 4");
+if(LOG&&LOG_LEVEL<=-10)Debug.Log("use raycasts results 4");
 
 
 //Debug.LogWarning(default(Node));
@@ -585,7 +591,7 @@ path.Add(step);
 int indexOfMe;if(step.Parent!=null)if((indexOfMe=step.Parent.neighbours.IndexOf((step.Idx,step)))>=0){step.Mode=step.Parent.neighbourCanBeReached[indexOfMe].mode;}else{step.Mode=Node.PreferredReachableMode.jump;}
 step=step.Parent;
 }while(step!=originNode&&--c>0);
-if(LOG&&LOG_LEVEL<=1)Debug.Log("path retraced: retrace count should never reach 0:"+c);
+if(LOG&&LOG_LEVEL<=-10)Debug.Log("path retraced: retrace count should never reach 0:"+c);
 if(path.Count>0)path.Reverse();
 resultPath=path;
 

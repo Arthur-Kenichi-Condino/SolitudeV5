@@ -20,11 +20,11 @@ Attributes.DEX=mathrandom.Next(49,73);
 protected override void OnIDLE_ST(){
 if(MyEnemy!=null){
 if(!IsInAttackSight(MyEnemy)){
-if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":chase",this);
+if(LOG&&LOG_LEVEL<=-1)Debug.Log(GetType()+":chase",this);
 MyState=State.CHASE_ST;
 return;
 }else{
-if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":attack",this);
+if(LOG&&LOG_LEVEL<=-1)Debug.Log(GetType()+":attack",this);
 STOP();
 Attack(MyEnemy);
 MyState=State.ATTACK_ST;
@@ -35,7 +35,7 @@ if(NextIdleActionTimer<=0){
 if(IsGrounded){
 if(mathrandom.NextDouble()<=Boredom){
 var action=(CreativeIdleness)mathrandom.Next(0,CreativeIdlenessActionsCount);
-if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":CreativeIdleness action:"+action,this);
+if(LOG&&LOG_LEVEL<=-1)Debug.Log(GetType()+":CreativeIdleness action:"+action,this);
     switch(action){
         case(CreativeIdleness.MOVE_RANDOM):{
             MoveToRandom(mathrandom);
@@ -51,152 +51,98 @@ Boredom+=0.1f;
     NextIdleActionTimer-=Time.deltaTime;
 }
 }
-[NonSerialized]float enemyTouchedReposTimeout;[NonSerialized]float enemyTouchedReposTime=2f;
+[NonSerialized]float enemyTouchedReactionTimeout;[NonSerialized]float enemyTouchedReactTime=2f;[NonSerialized]float enemyTouchedReposTimeout;[NonSerialized]float enemyTouchedReposTime=2f;
 protected override void OnCHASE_ST(){
-if(LOG&&LOG_LEVEL<=0)Debug.Log(GetType()+":OnCHASE_ST",this);
+if(LOG&&LOG_LEVEL<=-10)Debug.Log(GetType()+":OnCHASE_ST",this);
 if(MyEnemy==null){
-if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":idle",this);
+if(LOG&&LOG_LEVEL<=-1)Debug.Log(GetType()+":idle",this);
 STOP();
 MyState=State.IDLE_ST;
 return;
 }
-
-
 if(enemyTouchedReposTimeout>0){
-if(!enemyTouchingMe){
-    enemyTouchedReposTimeout=0;
-}else{
     enemyTouchedReposTimeout-=Time.deltaTime;
 }
+if(enemyTouchedReactionTimeout>0){
+if(!enemyTouchingMe){
+        enemyTouchedReactionTimeout=0;
+}else{
+        enemyTouchedReactionTimeout-=Time.deltaTime;
 }
-if(enemyTouchedReposTimeout<=0){
+}
+if(enemyTouchedReactionTimeout<=0){
 if(IsInAttackSight(MyEnemy)){
-if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":attack",this);
+if(LOG&&LOG_LEVEL<=-1)Debug.Log(GetType()+":attack",this);
 STOP();
 Attack(MyEnemy);
 MyState=State.ATTACK_ST;
 return;
 }
 if(enemyTouchingMe){
-    enemyTouchedReposTimeout=enemyTouchedReposTime;
+        enemyTouchedReactionTimeout=enemyTouchedReactTime;enemyTouchedReposTimeout=enemyTouchedReposTime;
 }
 }
-if(enemyTouchedReposTimeout<=0){
-    Debug.LogWarning("OnCHASE_ST: GoTo");
+if(enemyTouchedReactionTimeout<=0&&enemyTouchedReposTimeout<=0){
+if(LOG&&LOG_LEVEL<=-10)Debug.Log(GetType()+":OnCHASE_ST: GoTo",this);
 doChase();
 }else{
-    Debug.LogWarning("OnCHASE_ST: move away GoTo");
+if(LOG&&LOG_LEVEL<=-10)Debug.Log(GetType()+":OnCHASE_ST: move away GoTo",this);
 doChasingMoveAway();
 }
-//if(enemyTouchedReposTimeout>0){
-//    enemyTouchedReposTimeout-=Time.deltaTime;
-//}else{
-//if(enemyTouchingMe){
-//    enemyTouchedReposTimeout=2f;
-//return;
-//}
-//}
-
-
-//if(IsInAttackSight(MyEnemy)){
-//    Debug.LogWarning("attack");
-//STOP();
-//Attack(MyEnemy);
-//MyState=State.ATTACK_ST;
-//return;
-//}
-
-
-//if(enemyTouchedReposTimeout>0){
-//    enemyTouchedReposTimeout-=Time.deltaTime;
-//}
-//if(!destSet||CurPath.Count<=0||(!enemyTouchingMe&&enemyTouchedReposTimeout<=0&&Vector3.Distance(MyDest,MyEnemy.transform.position)>MyAttackRange)){
-
-
-//if(!enemyTouchingMe){
-//    Debug.LogWarning("OnCHASE_ST: GoTo");
-//    if(Vector3.Distance(MyEnemy.transform.position,transform.position)>BodyRadius){
-//    MyDest=MyEnemy.transform.position;
-//    }else{
-//    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRadius+BodyRadius+MyAttackRange);
-//    }
-//}else{
-//    Debug.LogWarning("OnCHASE_ST: move away GoTo");
-//    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRadius*2+BodyRadius*2);
-//Debug.DrawLine(MyEnemy.transform.position,MyDest,Color.blue,1f);
-//    enemyTouchedReposTimeout=2f;
-//}
-//GoTo(new Ray(MyDest,Vector3.down));
-//}
 }
 protected override void OnATTACK_ST(){
-    Debug.LogWarning("OnATTACK_ST");
-//if(MyEnemy==null){
-//    Debug.LogWarning("idle");
-//STOP();
-//MyState=State.IDLE_ST;
-//return;
-//}
-//if(!IsInAttackSight(MyEnemy)){
-//    Debug.LogWarning("chase");
-//MyState=State.CHASE_ST;
-//return;
-//}
-//Attack(MyEnemy);
+if(LOG&&LOG_LEVEL<=-10)Debug.Log(GetType()+":OnATTACK_ST",this);
+if(MyEnemy==null){
+if(LOG&&LOG_LEVEL<=-1)Debug.Log(GetType()+":idle",this);
+STOP();
+MyState=State.IDLE_ST;
+return;
+}
+Attack(MyEnemy);
+if(!IsInAttackSight(MyEnemy)){
+if(LOG&&LOG_LEVEL<=-1)Debug.Log(GetType()+":chase",this);
+MyState=State.CHASE_ST;
+return;
+}
 }
 protected override void GetTargets(){
-
-
-//for(int k=AsAggroEnemies.Keys.Count-1;k>=0;k--){var i=AsAggroEnemies.Keys.ElementAt(k);
-//var tuple=AsAggroEnemies[i];
-//    tuple.timeout-=Time.deltaTime;
-//AsAggroEnemies[i]=tuple;if(AsAggroEnemies[i].timeout<=0||AsAggroEnemies[i].actor.OutOfSight){AsAggroEnemies.Remove(i);}
-//}
-//MyPossibleTargets.Clear();
-//foreach(var kvp in MySight.IsInVisionSight){var i=kvp.Key;var v=kvp.Value.actor;bool detected=kvp.Value.directSight;
-//if(i!=this.Id&&v.GetMotion!=Motions.MOTION_DEAD){
-//if(detected){Vector3 pos=kvp.Value.pos;
-//if(v.HasPassiveRole()){
-
-//    Debug.LogWarning(this.Id+", my TypeId:"+TypeToTypeId[GetType()]+"; possible target "+i+", TypeId:"+TypeToTypeId[v.GetType()],v);
-
-//var dis=Vector3.Distance(transform.position,pos);
-//MyPossibleTargets.Add(i,(v,pos,dis));
-//if(!AsAggroEnemies.ContainsKey(i)){
-//AsAggroEnemies.Add(i,(v,-1,0));
-//}
-//var tuple=AsAggroEnemies[i];
-//    tuple.dis=dis;
-//    tuple.timeout=5f;
-//AsAggroEnemies[i]=tuple;//  At this time, ALARM is just a killing machine; target marked for a 5 s timeout
-//}
-//}
-//}
-//}
-//MyEnemy=null;
-//if(MyEnemy==null){
-//float dis=-1;
-//foreach(var kvp in AsAggroEnemies){var i=kvp.Key;var v=kvp.Value.actor;var d=kvp.Value.dis;
-//if(dis==-1||dis>d){
-//MyEnemy=v;
-//    dis=d;
-//}
-//}
-//}
-//if(MyEnemy!=null){
-//    Debug.LogWarning("Me:"+this+"; MyEnemy:"+MyEnemy,MyEnemy);
-//}
-
-////foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
-////if(i!=this.Id){
-////if(v.HasPassiveRole()){
-////if(MySight.IsInHearingSight.ContainsKey(i)){
-////    Debug.LogWarning("my TypeId:"+TypeToTypeId[GetType()]+"; possible target TypeId:"+TypeToTypeId[v.GetType()]);
-////}
-////}
-////}
-////}
-
+for(int k=AsAggroEnemies.Keys.Count-1;k>=0;k--){var i=AsAggroEnemies.Keys.ElementAt(k);
+var tuple=AsAggroEnemies[i];
+    tuple.timeout-=Time.deltaTime;
+AsAggroEnemies[i]=tuple;if(AsAggroEnemies[i].timeout<=0||AsAggroEnemies[i].actor.OutOfSight){AsAggroEnemies.Remove(i);}
+}
+MyPossibleTargets.Clear();
+foreach(var kvp in MySight.IsInVisionSight){var i=kvp.Key;var v=kvp.Value.actor;bool detected=kvp.Value.directSight;
+if(i!=this.Id&&v.GetMotion!=Motions.MOTION_DEAD&&!v.OutOfSight){
+if(detected){Vector3 pos=kvp.Value.pos;
+if(v.HasPassiveRole()){    
+if(LOG&&LOG_LEVEL<=-20)Debug.Log("me "+this.Id+", my TypeId:"+TypeToTypeId[GetType()]+"; possible target "+i+", TypeId:"+TypeToTypeId[v.GetType()],v);
+var dis=Vector3.Distance(transform.position,pos);
+MyPossibleTargets.Add(i,(v,pos,dis));
+if(!AsAggroEnemies.ContainsKey(i)){
+AsAggroEnemies.Add(i,(v,-1,0));
+}
+var tuple=AsAggroEnemies[i];
+    tuple.dis=dis;
+    tuple.timeout=5f;
+AsAggroEnemies[i]=tuple;//  At this time, ALARM is just a killing machine; target marked for a 5 s timeout
+}
+}
+}
+}
+MyEnemy=null;
+if(MyEnemy==null){
+float dis=-1;
+foreach(var kvp in AsAggroEnemies){var i=kvp.Key;var v=kvp.Value.actor;var d=kvp.Value.dis;
+if(dis==-1||dis>d){
+MyEnemy=v;
+    dis=d;
+}
+}
+}
+if(MyEnemy!=null){
+if(LOG&&LOG_LEVEL<=-10)Debug.Log("Me:"+this+"; MyEnemy:"+MyEnemy,MyEnemy);
+}
 }
 protected override bool IsInAttackSight(AI enemy){
 if(Vector3.Distance(transform.position,enemy.transform.position)-(BodyRadius+enemy.BodyRadius)<=MyAttackRange){
