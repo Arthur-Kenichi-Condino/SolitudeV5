@@ -794,8 +794,87 @@ PrefabInstance:
       propertyPath: m_Name
       value: ActorManagementMentana
       objectReference: {fileID: 0}
+    - target: {fileID: 7789522645625010537, guid: 10725eaf686bf0147b88fddfec998997,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10725eaf686bf0147b88fddfec998997, type: 3}
+--- !u!1001 &1423091811
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2643936908788119338, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 6.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2643936908788119338, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 10.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 2643936908788119338, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2643936908788119338, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2643936908788119338, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2643936908788119338, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2643936908788119338, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2643936908788119338, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 2643936908788119338, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2643936908788119338, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2643936908788119338, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2924836144484334124, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_Name
+      value: BAYERI
+      objectReference: {fileID: 0}
+    - target: {fileID: 2924836144484334124, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 66788a3051bc6d548b32495287c01c2e, type: 3}
 --- !u!1 &1605657047
 GameObject:
   m_ObjectHideFlags: 0
