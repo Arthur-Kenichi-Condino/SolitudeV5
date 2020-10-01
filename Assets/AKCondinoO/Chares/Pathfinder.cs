@@ -402,6 +402,14 @@ node.Walkable=yes;
 }
 originNode=GetNodeAt(startPos);
 targetNode=GetNodeAt(target.point+Vector3.up*NodeHalfSize.y);
+if(targetNode==originNode){
+if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("targetNode==originNode");
+}
+if(targetNode==null){
+if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("targetNode==null");
+}else if(!targetNode.valid){
+if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("!targetNode.valid");
+}
 if(LOG&&LOG_LEVEL<=2)Debug.Log("nodesGrounded.Count:"+nodesGrounded.Count);
 Vector3 halfExtents3a=NodeHalfSize;
         halfExtents3a.y=.25f;
@@ -598,7 +606,7 @@ resultPath=path;
 
 lock(tasksBusyCount_Syn){tasksBusyCount--;}queue.Set();
 backgroundDataSet1.Set();}
-int GetNodeIndex(int cz,int vy,int cx){return (cx+AStarDistance.x)*gridResolution.y*AStarVerticalHits+(cz+AStarDistance.y)*AStarVerticalHits+vy;}Node GetNodeAt(Vector3 position){Node result=null;float minDis=-1,dis;for(int nodeIdx=0;nodeIdx<Nodes.Length;nodeIdx++){var node=Nodes[nodeIdx];dis=Vector3.Distance(position,node.Position);if(minDis==-1||dis<minDis){result=node;minDis=dis;}}return result;}
+int GetNodeIndex(int cz,int vy,int cx){return (cx+AStarDistance.x)*gridResolution.y*AStarVerticalHits+(cz+AStarDistance.y)*AStarVerticalHits+vy;}Node GetNodeAt(Vector3 position){Node result=null;float minDis=-1,dis;for(int nodeIdx=0;nodeIdx<Nodes.Length;nodeIdx++){var node=Nodes[nodeIdx];dis=Vector3.Distance(position,node.Position);if(minDis==-1||((dis<minDis||(!result.valid&&node.valid))&&(!result.valid||node.valid))){result=node;minDis=dis;}}return result;}
         _Stop:{
         }
 if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
