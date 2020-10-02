@@ -8,8 +8,8 @@
     "precompiledReferences": [
         "System.Buffers.dll",
         "System.Memory.dll",
-        "System.Runtime.CompilerServices.Unsafe.dll",
-        "System.Threading.Tasks.Extensions.4.2.0.1.dll"
+        "MessagePack.System.Runtime.CompilerServices.Unsafe.dll",
+        "MessagePack.System.Threading.Tasks.Extensions.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],
