@@ -6,10 +6,11 @@
     "allowUnsafeCode": true,
     "overrideReferences": true,
     "precompiledReferences": [
-        "System.Buffers.dll",
         "System.Memory.dll",
+        "System.Buffers.dll",
+        "MessagePack.System.Threading.Tasks.Extensions.dll",
         "MessagePack.System.Runtime.CompilerServices.Unsafe.dll",
-        "MessagePack.System.Threading.Tasks.Extensions.dll"
+        "System.Runtime.Extensions.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],
