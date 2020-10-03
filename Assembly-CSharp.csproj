@@ -22,11 +22,11 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_2019_4_11;UNITY_2019_4;UNITY_2019;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;PLATFORM_STANDALONE;PLATFORM_STANDALONE_WIN;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;GFXDEVICE_WAITFOREVENT_MESSAGEPUMP;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_STANDARD_2_0;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_2019_4_11;UNITY_2019_4;UNITY_2019;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;PLATFORM_STANDALONE;PLATFORM_STANDALONE_WIN;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;GFXDEVICE_WAITFOREVENT_MESSAGEPUMP;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_4_6;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_LEGACY_INPUT_MANAGER;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <NoConfig>true</NoConfig>
@@ -48,7 +48,7 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnityProjectGenerator>Unity/VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
-    <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
+    <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2019.4.11f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -114,6 +114,65 @@
     <Compile Include="Assets\NVIDIA\Flex\Native\Flex.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Native\FlexExt.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Native\FlexUtils.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Attributes.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\AnonymousFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\CollectionFormatters.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\DateTimeFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\DictionaryFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\DynamicObjectTypeFallbackFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\EnumFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\IgnoreFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\MultiDimentionalArrayFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\NullableFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\PrimitiveFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\PrimitiveObjectFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\StandardClassLibraryFormatters.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\TupleFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Formatters\ValueTupleFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\IJsonFormatter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\IJsonFormatterResolver.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\ArrayBuffer.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\ArrayPool.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\AutomataDictionary.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\BinaryUtil.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\ByteArrayComparer.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\ByteArrayStringHashTable.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\DoubleConversion\DiyFp.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\DoubleConversion\DoubleToStringConverter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\DoubleConversion\IEEE.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\DoubleConversion\PowersOfTenCache.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\DoubleConversion\StringToDouble.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\DoubleConversion\StringToDoubleConverter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\Emit\DynamicAssembly.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\Emit\ExpressionUtility.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\Emit\ILGeneratorExtensions.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\Emit\ILViewer.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\Emit\MetaMember.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\Emit\MetaType.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\FarmHash.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\FuncExtensions.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\GuidBits.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\NumberConverter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\ReflectionExtensions.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\StringEncoding.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\StringMutator.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\ThreadsafeTypeKeyHashTable.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\UnsafeMemory.Low.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Internal\UnsafeMemory.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\JsonReader.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\JsonSerializer.NonGeneric.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\JsonSerializer.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\JsonToken.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\JsonWriter.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Resolvers\AttributeFormatterResolver.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Resolvers\BuiltinResolver.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Resolvers\CompositeResolver.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Resolvers\DynamicGenericResolver.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Resolvers\DynamicObjectResolver.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Resolvers\EnumResolver.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Resolvers\StandardResolver.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Shims\Reflection.cs" />
+    <Compile Include="Assets\Scripts\Utf8Json\Unity\ResolverAndFormatters.cs" />
     <Compile Include="Assets\UMA\Content\Core\HumanFemale\DNA\LegacyDNA\HumanFemaleDNAConverterBehaviour.cs" />
     <Compile Include="Assets\UMA\Content\Core\HumanMale\DNA\LegacyDNA\HumanMaleDNAConverterBehaviour.cs" />
     <Compile Include="Assets\UMA\Content\Example\AdditionalSlots\CapsuleCollider\CapsuleColliderSlotScript.cs" />
