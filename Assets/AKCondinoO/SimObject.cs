@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 public class SimObject:MonoBehaviour{
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
@@ -32,7 +33,7 @@ protected bool IsGrounded;protected bool HittingWall;
 protected virtual void FixedUpdate(){
 if(rigidbody!=null){
 IsGrounded=false;HittingWall=false;
-if(LOG&&LOG_LEVEL<=0)Debug.Log("collisions.Count:"+collisions.Count);
+if(LOG&&LOG_LEVEL<=0)Debug.Log("collisions.Count:"+collisions.Count+";dirtyCollisions.Count:"+dirtyCollisions.Count);
 foreach(var collision in collisions){
 for(int i=0;i<collision.Value.Count;i++){var contact=collision.Value[i];if(contact.normal==Vector3.zero)break;
 
@@ -42,24 +43,43 @@ IsGrounded=IsGrounded||(Vector3.Angle(contact.normal,Vector3.up)<=60&&contact.po
 
 
 }
+dirtyCollisions[collision.Key]=true;}
 }
 }
-}
-[NonSerialized]protected readonly Dictionary<(GameObject,Collider,Collision),List<ContactPoint>>collisions=new Dictionary<(GameObject,Collider,Collision),List<ContactPoint>>();
+[NonSerialized]protected readonly Dictionary<Collider,List<ContactPoint>>collisions=new Dictionary<Collider,List<ContactPoint>>();[NonSerialized]readonly Dictionary<Collider,bool>dirtyCollisions=new Dictionary<Collider,bool>();[NonSerialized]readonly List<ContactPoint>contacts=new List<ContactPoint>();
 void OnCollisionStay(Collision collision){
 if(LOG&&LOG_LEVEL<=0)Debug.Log("collision stay:"+collision.collider.name);
-var tuple=(collision.gameObject,collision.collider,collision);
-if(!collisions.ContainsKey(tuple)){collisions.Add(tuple,new List<ContactPoint>());}collision.GetContacts(collisions[tuple]);
+
+
+if(!collisions.ContainsKey(collision.collider)){collisions.Add(collision.collider,new List<ContactPoint>());dirtyCollisions.Add(collision.collider,false);}else if(dirtyCollisions[collision.collider]){collisions[collision.collider].Clear();dirtyCollisions[collision.collider]=false;}collision.GetContacts(contacts);collisions[collision.collider].AddRange(contacts);
+//if(!collisions.ContainsKey(collision.collider)){collisions.Add(collision.collider,new List<ContactPoint>());}else if(){}collision.GetContacts(contacts);collisions[collision.collider].AddRange();
 if(DRAW_LEVEL<=-100){
 for(int i=0;i<collision.contactCount;i++){var contact=collision.GetContact(i);
 Debug.DrawRay(contact.point,contact.normal,Color.white,.5f);
 }
 }
+
+
+//if(!collisions.ContainsKey(collision.collider)){collisions.Add(collision.collider,new List<ContactPoint>());}else if(){}collision.GetContacts(contacts);collisions[collision.collider].AddRange();
+//if(DRAW_LEVEL<=-100){
+//for(int i=0;i<collision.contactCount;i++){var contact=collision.GetContact(i);
+//Debug.DrawRay(contact.point,contact.normal,Color.white,.5f);
+//}
+//}
+
+
+//var tuple=(collision.gameObject,collision.collider,collision);
+//if(!collisions.ContainsKey(tuple)){collisions.Add(tuple,new List<ContactPoint>());}collision.GetContacts(collisions[tuple]);
+//if(DRAW_LEVEL<=-100){
+//for(int i=0;i<collision.contactCount;i++){var contact=collision.GetContact(i);
+//Debug.DrawRay(contact.point,contact.normal,Color.white,.5f);
+//}
+//}
 }
 void OnCollisionExit(Collision collision){
 if(LOG&&LOG_LEVEL<=0)Debug.Log("collision exit:"+collision.collider.name);
-var tuple=(collision.gameObject,collision.collider,collision);
-collisions.Remove(tuple);
+//var tuple=(collision.gameObject,collision.collider,collision);
+collisions.Remove(collision.collider);dirtyCollisions.Remove(collision.collider);
 }
 [NonSerialized]Vector3 pos;
 [NonSerialized]Vector3 pos_Pre;

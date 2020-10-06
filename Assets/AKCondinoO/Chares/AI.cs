@@ -65,11 +65,12 @@ if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("OutOfSight actor wasn't marked to be ac
 if(DEBUG_ATTACK){Attack(null);}if(DEBUG_GETHIT){DEBUG_GETHIT=false;TakeDamage(null);}if(DEBUG_DIE){DEBUG_DIE=false;Die();}
 
 
+if(LOG&&LOG_LEVEL<=0)Debug.Log("MySight.IsInHearingSight.Count:"+MySight.IsInHearingSight.Count+";MySight.IsInVisionSight.Count:"+MySight.IsInVisionSight.Count);
 GetTargets();
 
 enemyTouchingMe=false;
 if(collisions.Count>0){foreach(var collision in collisions){
-    if(MyEnemy!=null&&collision.Key.Item1.CompareTag("Player")&&collision.Key.Item1.GetComponent<AI>()==MyEnemy){
+    if(MyEnemy!=null&&collision.Key.gameObject.CompareTag("Player")&&collision.Key.gameObject.GetComponent<AI>()==MyEnemy){
 enemyTouchingMe=true;
     }
 if(enemyTouchingMe)break;//  Break when all checks are true, so only on O(n) operation is processed for any needed check
