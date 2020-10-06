@@ -82,7 +82,7 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("TempVer.Length:"+TempVer.Length+";TempTriangles.
 #endregion 
 #region SubMesh
         mesh.subMeshCount=1;
-    mesh.SetSubMesh(0,new SubMeshDescriptor(0,TempTriangles.Length),flags);
+    mesh.SetSubMesh(0,new SubMeshDescriptor(0,TempTriangles.Length){firstVertex=0,vertexCount=TempVer.Length},flags);
 #endregion 
 baking=true;bakingHandle=new BakerJob(){meshId=mesh.GetInstanceID(),}.Schedule();
 }

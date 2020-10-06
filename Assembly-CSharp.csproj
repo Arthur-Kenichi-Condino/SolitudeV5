@@ -68,6 +68,7 @@
     <Compile Include="Assets\AKCondinoO\Chares\CharControl.cs" />
     <Compile Include="Assets\AKCondinoO\Chares\Pathfinder.cs" />
     <Compile Include="Assets\AKCondinoO\Chares\Sight.cs" />
+    <Compile Include="Assets\AKCondinoO\Chares\Skills\Skill.cs" />
     <Compile Include="Assets\AKCondinoO\Chares\_3DSprite.cs" />
     <Compile Include="Assets\AKCondinoO\Chares\_ALARM\ALARM.cs" />
     <Compile Include="Assets\AKCondinoO\Chares\_BAYERI\BAYERI.cs" />
@@ -483,7 +484,6 @@
     <None Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Assets\Resources\CharacterRecipes\HumanMaleRoyalChallenger.txt" />
     <None Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Assets\Resources\CharacterRecipes\Gobs.txt" />
     <None Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Assets\Resources\CharacterRecipes\WerewolfCamp1.txt" />
-    <None Include="Assets\AKCondinoO\Chares\_3DSpriteShader.shader" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.11f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
