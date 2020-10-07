@@ -61,8 +61,8 @@ MonoBehaviour:
     BaseAspd: 0
   Lerp: 1
   MoveLerpSpeed: 0.125
-  InputMoveAcceleration: {x: 3, y: 5, z: 3}
-  InputMaxMoveSpeed: {x: 3, y: 5, z: 3}
+  InputMoveAcceleration: {x: 3, y: 3, z: 3}
+  InputMaxMoveSpeed: {x: 3, y: 3, z: 3}
   GetNewTgtPosCdTime: 0.05
   RotationLerpSpeed: 0.125
   HeadRotationLerpSpeed: 0.125

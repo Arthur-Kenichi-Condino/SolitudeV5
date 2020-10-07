@@ -47,8 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76335e7dd91c468449f572ee30cb5cb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LOG: 1
-  LOG_LEVEL: 0
+  LOG: 0
+  LOG_LEVEL: 1
   DRAW_LEVEL: 1
   Attributes:
     FOR: 0
@@ -63,8 +63,8 @@ MonoBehaviour:
     BaseAspd: 0
   Lerp: 1
   MoveLerpSpeed: 0.125
-  InputMoveAcceleration: {x: 3, y: 5, z: 3}
-  InputMaxMoveSpeed: {x: 3, y: 5, z: 3}
+  InputMoveAcceleration: {x: 3, y: 3, z: 3}
+  InputMaxMoveSpeed: {x: 3, y: 3, z: 3}
   GetNewTgtPosCdTime: 0.05
   RotationLerpSpeed: 0.125
   HeadRotationLerpSpeed: 0.125
@@ -92,7 +92,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.65, y: 1.15, z: 0.65}
+  m_Size: {x: 0.325, y: 1.15, z: 0.325}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &3625691823522571798
 Rigidbody:

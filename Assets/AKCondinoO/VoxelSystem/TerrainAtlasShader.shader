@@ -1,6 +1,6 @@
 ﻿Shader"Custom/TerrainAtlasShader"{
 Properties{
-_Color("Color",Color)=(1,1,1,1) _MainTex("Albedo (RGB)",2D)="white"{} _MainTex1("Albedo (RGB) 1",2D)="white"{} _Glossiness("Smoothness",Range(0,1))=0.5 _Metallic("Metallic",Range(0,1))=0.0
+_Color("Color",Color)=(1,1,1,1) _MainTex("Albedo (RGB)",2D)="white"{} _MainTex1("Albedo (RGB) 1",2D)="white"{} _MainTex2("Albedo (RGB) 1",2D)="white"{} _MainTex3("Albedo (RGB) 1",2D)="white"{} _Glossiness("Smoothness",Range(0,1))=0.5 _Metallic("Metallic",Range(0,1))=0.0
 _TilesResolution("Atlas Tiles Resolution",float)=3 _Scale("Scale",float)=1 _Sharpness("Triplanar Blend Sharpness",float)=1
 }
 SubShader{Tags{"Queue"="AlphaTest" "RenderType"="Transparent" "IgnoreProjector"="True"}
@@ -34,7 +34,7 @@ CGPROGRAM
 #pragma target 3.0
 //  Add fog and make it work
 #pragma multi_compile_fog
-fixed4 _Color;sampler2D _MainTex;sampler2D _MainTex1;half _Glossiness;half _Metallic;
+fixed4 _Color;sampler2D _MainTex;sampler2D _MainTex1;sampler2D _MainTex2;sampler2D _MainTex3;half _Glossiness;half _Metallic;
 float _TilesResolution;float _Scale;float _Sharpness;
 struct Input{
     float3 worldPos:POSITION;
@@ -42,6 +42,8 @@ struct Input{
     float4 color:COLOR;
     float2 uv_MainTex:TEXCOORD0;
     float2 uv2_MainTex1:TEXCOORD1;
+    float2 uv3_MainTex2:TEXCOORD2;
+    float2 uv4_MainTex3:TEXCOORD3;
 };
 //  Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -84,8 +86,28 @@ xAxis1=input.color.g*tex2D(_MainTex1,(frac(xUV)*offsetUVSize+offsetUV1));
 yAxis1=input.color.g*tex2D(_MainTex1,(frac(yUV)*offsetUVSize+offsetUV1));
 zAxis1=input.color.g*tex2D(_MainTex1,(frac(zUV)*offsetUVSize+offsetUV1));
 }
+fixed4 xAxis2=0;
+fixed4 yAxis2=0;
+fixed4 zAxis2=0;
+if(input.uv3_MainTex2.x>=0){
+float2 offsetUV2=input.uv3_MainTex2;
+       offsetUV2=float2(clamp(offsetUV2.x,0,1),clamp(offsetUV2.y,0,1));
+xAxis2=input.color.b*tex2D(_MainTex2,(frac(xUV)*offsetUVSize+offsetUV2));
+yAxis2=input.color.b*tex2D(_MainTex2,(frac(yUV)*offsetUVSize+offsetUV2));
+zAxis2=input.color.b*tex2D(_MainTex2,(frac(zUV)*offsetUVSize+offsetUV2));
+}
+fixed4 xAxis3=0;
+fixed4 yAxis3=0;
+fixed4 zAxis3=0;
+if(input.uv4_MainTex3.x>=0){
+float2 offsetUV3=input.uv4_MainTex3;
+       offsetUV3=float2(clamp(offsetUV3.x,0,1),clamp(offsetUV3.y,0,1));
+xAxis3=input.color.a*tex2D(_MainTex3,(frac(xUV)*offsetUVSize+offsetUV3));
+yAxis3=input.color.a*tex2D(_MainTex3,(frac(yUV)*offsetUVSize+offsetUV3));
+zAxis3=input.color.a*tex2D(_MainTex3,(frac(zUV)*offsetUVSize+offsetUV3));
+}
 //  Finally, blend together all three samples based on the blend mask.
-fixed4 c=(xAxis+xAxis1)*blendWeights.x+(yAxis+yAxis1)*blendWeights.y+(zAxis+zAxis1)*blendWeights.z;
+fixed4 c=(xAxis+xAxis1+xAxis2+xAxis3)*blendWeights.x+(yAxis+yAxis1+yAxis2+yAxis3)*blendWeights.y+(zAxis+zAxis1+zAxis2+zAxis3)*blendWeights.z;
 //  Albedo comes from a texture tinted by color
 o.Albedo=(c.rgb);float alpha=c.a;
 

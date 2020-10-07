@@ -30,6 +30,7 @@ OutOfSight_v=value;
 }
 }
 #endregion
+[NonSerialized]protected bool actorTouchingMe;
 [NonSerialized]protected bool enemyTouchingMe;
 [NonSerialized]bool firstLoop=true;protected override void Update(){
                                                       base.Update();
@@ -68,12 +69,16 @@ if(DEBUG_ATTACK){Attack(null);}if(DEBUG_GETHIT){DEBUG_GETHIT=false;TakeDamage(nu
 if(LOG&&LOG_LEVEL<=0)Debug.Log("MySight.IsInHearingSight.Count:"+MySight.IsInHearingSight.Count+";MySight.IsInVisionSight.Count:"+MySight.IsInVisionSight.Count);
 GetTargets();
 
+actorTouchingMe=false;
 enemyTouchingMe=false;
 if(collisions.Count>0){foreach(var collision in collisions){
+    if(collision.Key.gameObject.CompareTag("Player")){
+actorTouchingMe=true;
+    }
     if(MyEnemy!=null&&collision.Key.gameObject.CompareTag("Player")&&collision.Key.gameObject.GetComponent<AI>()==MyEnemy){
 enemyTouchingMe=true;
     }
-if(enemyTouchingMe)break;//  Break when all checks are true, so only on O(n) operation is processed for any needed check
+if(actorTouchingMe&&enemyTouchingMe)break;//  Break when all checks are true, so only on O(n) operation is processed for any needed check
 }}
 
 if(Autonomous<=0){
@@ -250,8 +255,9 @@ protected virtual void OverlappedCollidersOnAttack(){
 
     
 attackHitboxHalfSize.x=collider.bounds.extents.x;
-attackHitboxHalfSize.z=collider.bounds.extents.z+MyAttackRange;
+attackHitboxHalfSize.z=collider.bounds.extents.z+MyAttackRange+.1f;
 attackHitboxHalfSize.y=collider.bounds.extents.y;
+attackHitboxHalfSize*=_3DSpriteRadiusMultiplier;
 attackHitboxColliders=Physics.OverlapBox(transform.position+transform.forward*(collider.bounds.extents.z+attackHitboxHalfSize.z),attackHitboxHalfSize,transform.rotation);
 Debug.DrawRay(transform.position,transform.forward*(collider.bounds.extents.z+attackHitboxHalfSize.z),Color.white,.1f);
 
@@ -423,7 +429,6 @@ inputMoveSpeed.y=0;
 }
 break;}
 #endregion
-
 #region none
 default:{
 if(CurPathTgt.Value.mode!=Node.PreferredReachableMode.jump&&

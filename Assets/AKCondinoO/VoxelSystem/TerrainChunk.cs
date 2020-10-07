@@ -94,12 +94,16 @@ public struct Vertex{
     public Color color;
     public Vector2 texCoord0;
     public Vector2 texCoord1;
+    public Vector2 texCoord2;
+    public Vector2 texCoord3;
        public Vertex(Vector3 p,Vector3 n,Vector2 uv0){
         pos=p;
         normal=n;
         color=new Color(1f,0f,0f,0f);
         texCoord0=uv0;
         texCoord1=new Vector2(-1f,-1f);
+        texCoord2=new Vector2(-1f,-1f);
+        texCoord3=new Vector2(-1f,-1f);
        }
 }
 [NonSerialized]static readonly VertexAttributeDescriptor[]layout=new[]{
@@ -108,6 +112,8 @@ public struct Vertex{
     new VertexAttributeDescriptor(VertexAttribute.Color    ,VertexAttributeFormat.Float32,4),
     new VertexAttributeDescriptor(VertexAttribute.TexCoord0,VertexAttributeFormat.Float32,2),
     new VertexAttributeDescriptor(VertexAttribute.TexCoord1,VertexAttributeFormat.Float32,2),
+    new VertexAttributeDescriptor(VertexAttribute.TexCoord2,VertexAttributeFormat.Float32,2),
+    new VertexAttributeDescriptor(VertexAttribute.TexCoord3,VertexAttributeFormat.Float32,2),
 };
 [NonSerialized]public static readonly object tasksBusyCount_Syn=new object();[NonSerialized]public static int tasksBusyCount=0;[NonSerialized]public static readonly AutoResetEvent queue=new AutoResetEvent(true);
 [NonSerialized]public readonly object load_Syn=new object();
@@ -556,11 +562,25 @@ foreach(var MaterialIdgroup in MaterialIdGroupsOrdered){bool add;Vector2 uv=Atla
                     v1=TempVer[idx[2]];v1.texCoord1=uv;TempVer[idx[2]]=v1;
         }
         total+=weights[1]=MaterialIdgroup.Count();
+    }else if((add=TempVer[idx[j]].texCoord2==_emptyUV)||TempVer[idx[j]].texCoord2==uv){
+        if(add){var v1=TempVer[idx[0]];v1.texCoord2=uv;TempVer[idx[0]]=v1;
+                    v1=TempVer[idx[1]];v1.texCoord2=uv;TempVer[idx[1]]=v1;
+                    v1=TempVer[idx[2]];v1.texCoord2=uv;TempVer[idx[2]]=v1;
+        }
+        total+=weights[2]=MaterialIdgroup.Count();
+    }else if((add=TempVer[idx[j]].texCoord3==_emptyUV)||TempVer[idx[j]].texCoord3==uv){
+        if(add){var v1=TempVer[idx[0]];v1.texCoord3=uv;TempVer[idx[0]]=v1;
+                    v1=TempVer[idx[1]];v1.texCoord3=uv;TempVer[idx[1]]=v1;
+                    v1=TempVer[idx[2]];v1.texCoord3=uv;TempVer[idx[2]]=v1;
+        }
+        total+=weights[3]=MaterialIdgroup.Count();
     }
 }
 if(weights.Count>1){var v2=TempVer[idx[j]];
  Color col=v2.color;col.r=(weights[0]/(float)total);
                     col.g=(weights[1]/(float)total);
+if(weights.Count>2){col.b=(weights[2]/(float)total);}
+if(weights.Count>3){col.a=(weights[3]/(float)total);}
            v2.color=col;TempVer[idx[j]]=v2;
 }
 }}

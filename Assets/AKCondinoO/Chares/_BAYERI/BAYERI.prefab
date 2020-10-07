@@ -63,8 +63,8 @@ MonoBehaviour:
     BaseAspd: 0
   Lerp: 1
   MoveLerpSpeed: 0.125
-  InputMoveAcceleration: {x: 3, y: 5, z: 3}
-  InputMaxMoveSpeed: {x: 3, y: 5, z: 3}
+  InputMoveAcceleration: {x: 3, y: 3, z: 3}
+  InputMaxMoveSpeed: {x: 3, y: 3, z: 3}
   GetNewTgtPosCdTime: 0.05
   RotationLerpSpeed: 0.125
   HeadRotationLerpSpeed: 0.125
@@ -92,7 +92,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.8, y: 1.25, z: 0.8}
+  m_Size: {x: 0.4, y: 1.25, z: 0.4}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &3862928216701232849
 Rigidbody:
