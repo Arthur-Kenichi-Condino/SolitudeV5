@@ -145,7 +145,7 @@ if(LOG&&LOG_LEVEL<=-10)Debug.Log("Me:"+this+"; MyEnemy:"+MyEnemy,MyEnemy);
 }
 }
 protected override bool IsInAttackSight(AI enemy){
-if(Vector3.Distance(transform.position,enemy.transform.position)-(BodyRadius+enemy.BodyRadius)<=MyAttackRange){
+if(Vector3.Distance(transform.position,enemy.transform.position)-(BodyRange+enemy.BodyRange)<=MyAttackRange){
 return true;
 }
 return false;}

@@ -17,7 +17,7 @@ public class SimActor:SimObject{
 [SerializeField]public float BaseAspd;public float Aspd{get{return BaseAspd;}}
 }
 public virtual void InitAttributes(bool random=true){
-    Debug.LogWarning("init attributes");
+if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("attributes are invalid!");
 }
 public virtual float GetMaxStamina(){
 return(Attributes.VIT*100+Attributes.FOR*50);

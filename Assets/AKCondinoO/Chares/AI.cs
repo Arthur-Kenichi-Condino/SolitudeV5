@@ -181,10 +181,10 @@ doChase();
 protected virtual void doChase(){
 if(tracing||GoToQueue.Count>0)return;
 if(!destSet||CurPathTgt==null||Vector3.Distance(MyDest,MyEnemy.transform.position)>MyAttackRange){
-    if(Vector3.Distance(MyEnemy.transform.position,transform.position)>BodyRadius){
+    if(!actorTouchingMe&&Vector3.Distance(MyEnemy.transform.position,transform.position)>BodyRange){
     MyDest=MyEnemy.transform.position;
     }else{
-    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRadius+BodyRadius+MyAttackRange);
+    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRange+BodyRange+MyAttackRange);
     }
 if(DRAW_LEVEL<=0)Debug.DrawLine(transform.position,MyDest,Color.blue,1f);
 GoTo(new Ray(MyDest,Vector3.down));
@@ -193,7 +193,7 @@ GoTo(new Ray(MyDest,Vector3.down));
 protected virtual void doChasingMoveAway(){
 if(tracing||GoToQueue.Count>0)return;
 if(!destSet||CurPathTgt==null){
-    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRadius+BodyRadius);
+    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRange+BodyRange);
 if(DRAW_LEVEL<=0)Debug.DrawLine(transform.position,MyDest,Color.blue,1f);
 GoTo(new Ray(MyDest,Vector3.down));
 }
@@ -209,34 +209,62 @@ return;
 }
 
 
-doAttackingMoveAway();
+if(doAttackingMoveAway()!=1){
+doAttack();
+}
 
 
 }
-protected virtual bool doAttackingMoveAway(){
-if(tracing||GoToQueue.Count>0)return false;
-if(MyMotion==Motions.MOTION_HIT&&sinceLastHitTimer<=0){
+protected virtual int doAttackingMoveAway(){
+if(tracing||GoToQueue.Count>0)return 0;
+if(MyMotion==Motions.MOTION_HIT&&sinceLastHitTimer<=0&&mathrandom.Next(0,2)==1){
     sinceLastHitTimer=hitDetectionReactionTick;
     Debug.LogWarning("OnATTACK_ST: hitDetectionReactionTick:"+hitDetectionReactionTick);
 }else if(sinceLastHitTimer>0){
     sinceLastHitTimer-=Time.deltaTime;
-}else{
-
-
-
-
+if(CurPathTgt==null){
+return 0;
+}
+return 1;
 }
 if(!destSet||sinceLastHitTimer==hitDetectionReactionTick){
     Debug.LogWarning("OnATTACK_ST: move away GoTo");
-    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)(mathrandom.NextDouble()*2-1)*90,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRadius*2+BodyRadius*2);
+    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)(mathrandom.NextDouble()*2-1)*90,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRange*2+BodyRange*2);
 Debug.DrawLine(transform.position,MyDest,Color.blue,1f);
 GoTo(new Ray(MyDest,Vector3.down));
-return true;}
-return false;}
+return 2;}
+return 0;}
+void doAttack(){
+if(attackHitboxColliders==null){
+OverlappedCollidersOnAttack();
+}
+
+
+bool cancel=false;
+if(attackHitboxColliders!=null){
+for(int i=0;i<attackHitboxColliders.Length;i++){var collider=attackHitboxColliders[i];
+AI actor;
+if(collider.CompareTag("Player")&&(actor=collider.GetComponent<AI>())!=null){
+if(IsAllyTo(actor)){
+    Debug.LogWarning("cancel attack and move, or ally may be hit:"+collider.name+"; tag:"+collider.tag,this);
+cancel=true;
+break;
+}
+}
+}
+}
+if(!cancel){
+Attack(MyEnemy);
+}else{
+}
+
+
+attackHitboxColliders=null;
+}
 protected virtual void OnSKILL_OBJECT_ST(){}
 [NonSerialized]protected float MyAttackRange=.1f;
 protected virtual bool IsInAttackSight(AI enemy){
-if(Vector3.Distance(transform.position,enemy.transform.position)-(BodyRadius+enemy.BodyRadius)<=MyAttackRange){
+if(Vector3.Distance(transform.position,enemy.transform.position)-(BodyRange+enemy.BodyRange)<=MyAttackRange){
 return true;
 }
 return false;}
@@ -255,10 +283,10 @@ protected virtual void OverlappedCollidersOnAttack(){
 
     
 attackHitboxHalfSize.x=collider.bounds.extents.x;
-attackHitboxHalfSize.z=collider.bounds.extents.z+MyAttackRange+.1f;
+attackHitboxHalfSize.z=collider.bounds.extents.z+MyAttackRange;
 attackHitboxHalfSize.y=collider.bounds.extents.y;
-attackHitboxHalfSize*=_3DSpriteRadiusMultiplier;
-attackHitboxColliders=Physics.OverlapBox(transform.position+transform.forward*(collider.bounds.extents.z+attackHitboxHalfSize.z),attackHitboxHalfSize,transform.rotation);
+attackHitboxHalfSize*=RangeMultiplier;
+attackHitboxColliders=Physics.OverlapBox(transform.position+transform.forward*(collider.bounds.extents.z*RangeMultiplier+attackHitboxHalfSize.z),attackHitboxHalfSize,transform.rotation);
 Debug.DrawRay(transform.position,transform.forward*(collider.bounds.extents.z+attackHitboxHalfSize.z),Color.white,.1f);
 
 

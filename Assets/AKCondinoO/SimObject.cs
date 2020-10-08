@@ -16,22 +16,23 @@ GetColliderData();
 pos=pos_Pre=transform.position;
 }
 [NonSerialized]protected Vector3 colliderDefaultSize;
-[NonSerialized]protected Vector3 colliderHalfExtents_v;protected Vector3 colliderHalfExtents{get{return colliderHalfExtents_v*_3DSpriteRadiusMultiplier;}set{colliderHalfExtents_v=value;}}
+[NonSerialized]protected Vector3 colliderHalfExtents_v;protected Vector3 colliderHalfExtents{get{return colliderHalfExtents_v*RangeMultiplier;}set{colliderHalfExtents_v=value;}}
 [NonSerialized]protected float colliderShortestExtent;
-[NonSerialized]protected float BodyRadius_v;public float BodyRadius{get{return BodyRadius_v*_3DSpriteRadiusMultiplier;}set{BodyRadius_v=value;}}
-[NonSerialized]protected float _3DSpriteRadiusMultiplier=2f;
+[NonSerialized]protected float BodyRadius;
+[NonSerialized]protected float BodyRange_v;public float BodyRange{get{return BodyRange_v*RangeMultiplier;}set{BodyRange_v=value;}}
+[NonSerialized]protected float RangeMultiplier=2f;
 protected void GetColliderData(){
 
 
     Debug.LogWarning("this is _3DSprite:"+(this is _3DSprite));
-if(!(this is _3DSprite)){_3DSpriteRadiusMultiplier=1f;}
+if(!(this is _3DSprite)){RangeMultiplier=1f;}
 
 
 colliderHalfExtents=collider.bounds.extents/2;
 colliderShortestExtent=Mathf.Min(collider.bounds.extents.x,collider.bounds.extents.y,collider.bounds.extents.z);
-BodyRadius=Mathf.Max(Mathf.Sqrt(Mathf.Pow(collider.bounds.extents.x,2)*2),
-                     Mathf.Sqrt(Mathf.Pow(collider.bounds.extents.z,2)*2))+.1f;
-if(LOG&&LOG_LEVEL<=1)Debug.Log("BodyRadius:"+BodyRadius+", name:"+name);
+BodyRange=BodyRadius=Mathf.Max(Mathf.Sqrt(Mathf.Pow(collider.bounds.extents.x,2)*2),
+                               Mathf.Sqrt(Mathf.Pow(collider.bounds.extents.z,2)*2))+.1f;
+if(LOG&&LOG_LEVEL<=1)Debug.Log("BodyRadius:"+BodyRange+", name:"+name);
 }
 protected virtual void OnEnable(){}
 protected virtual void OnDisable(){}
