@@ -7,12 +7,12 @@ public override void InitAttributes(bool random=true){
 if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":init attributes");
 Attributes.FOR=mathrandom.Next(52,73);
 Attributes.VIT=mathrandom.Next(52,73);
-    Attributes.MaxStamina=Attributes.Stamina=GetMaxStamina();
+    Attributes.BaseMaxStamina=Attributes.CurStamina=GetBaseMaxStamina();
 Attributes.INT=mathrandom.Next(88,100);
-    Attributes.MaxFocus=Attributes.Focus=GetMaxFocus();
+    Attributes.BaseMaxFocus=Attributes.CurFocus=GetBaseMaxFocus();
 Attributes.AGI=mathrandom.Next(49,73);
 Attributes.DEX=mathrandom.Next(66,100);
-    Attributes.BaseAspd=GetAspd();
+    Attributes.BaseAspd=GetBaseAspd();
 }
 protected override void Attack(AI enemy){
                    base.Attack(enemy);

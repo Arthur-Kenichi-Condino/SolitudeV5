@@ -9,23 +9,25 @@ public class SimActor:SimObject{
 [Serializable]public class RolePlayingAttributes{
 [SerializeField]public int FOR;
 [SerializeField]public int VIT;
-[SerializeField]public float MaxStamina;[SerializeField]public float Stamina;
+[SerializeField]public float BaseMaxStamina;[SerializeField]public float CurStamina;
 [SerializeField]public int INT;
-[SerializeField]public float MaxFocus;[SerializeField]public float Focus;
+[SerializeField]public float BaseMaxFocus;[SerializeField]public float CurFocus;
 [SerializeField]public int AGI;
 [SerializeField]public int DEX;
 [SerializeField]public float BaseAspd;public float Aspd{get{return BaseAspd;}}
+[SerializeField]public float BaseDEF;public float DEF{get{return BaseDEF;}}
+[SerializeField]public float BaseMDEF;public float MDEF{get{return BaseMDEF;}}
 }
 public virtual void InitAttributes(bool random=true){
 if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("attributes are invalid!");
 }
-public virtual float GetMaxStamina(){
+public virtual float GetBaseMaxStamina(){
 return(Attributes.VIT*100+Attributes.FOR*50);
 }
-public virtual float GetMaxFocus(){
+public virtual float GetBaseMaxFocus(){
 return(Attributes.VIT*.5f+Attributes.INT*100);
 }
-public virtual float GetAspd(){
+public virtual float GetBaseAspd(){
 return Mathf.Clamp(((Attributes.AGI/100f)+(Attributes.DEX*.5f/100f))/2f*1.5f,.5f,1f);
 }
 protected override void Awake(){

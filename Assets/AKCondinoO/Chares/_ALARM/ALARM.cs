@@ -9,12 +9,12 @@ public override void InitAttributes(bool random=true){
 if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":init attributes");
 Attributes.FOR=mathrandom.Next(12,73);
 Attributes.VIT=mathrandom.Next(12,25);
-    Attributes.MaxStamina=Attributes.Stamina=GetMaxStamina();
+    Attributes.BaseMaxStamina=Attributes.CurStamina=GetBaseMaxStamina();
 Attributes.INT=mathrandom.Next(1,25);
-    Attributes.MaxFocus=Attributes.Focus=GetMaxFocus();
+    Attributes.BaseMaxFocus=Attributes.CurFocus=GetBaseMaxFocus();
 Attributes.AGI=mathrandom.Next(49,73);
 Attributes.DEX=mathrandom.Next(49,73);
-    Attributes.BaseAspd=GetAspd();
+    Attributes.BaseAspd=GetBaseAspd();
 }
 [NonSerialized]public float TryIdleActionInterval=1f;[NonSerialized]float NextIdleActionTimer;[NonSerialized]public float Boredom;public enum CreativeIdleness:int{MOVE_RANDOM=0,RANDOM_SKILL=1,}[NonSerialized]readonly int CreativeIdlenessActionsCount=Enum.GetValues(typeof(CreativeIdleness)).Length;
 protected override void OnIDLE_ST(){
