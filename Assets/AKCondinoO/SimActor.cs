@@ -19,7 +19,8 @@ public class SimActor:SimObject{
 [SerializeField]public float BaseMDEF;public float MDEF{get{return BaseMDEF;}}
 }
 public virtual void InitAttributes(bool random=true){
-if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("attributes are invalid!");
+if(LOG&&LOG_LEVEL<=100)Debug.LogWarning(GetType()+":attributes were not set!");
+ValidateAttributesSet(0);
 }
 public virtual float GetBaseMaxStamina(){
 return(Attributes.VIT*100+Attributes.FOR*50);
@@ -29,6 +30,11 @@ return(Attributes.VIT*.5f+Attributes.INT*100);
 }
 public virtual float GetBaseAspd(){
 return Mathf.Clamp(((Attributes.AGI/100f)+(Attributes.DEX*.5f/100f))/2f*1.5f,.5f,1f);
+}
+protected void ValidateAttributesSet(int version){
+if(version<=0){
+if(LOG&&LOG_LEVEL<=100)Debug.LogWarning(GetType()+":attributes are invalid! [0]");
+}
 }
 protected override void Awake(){
                    base.Awake();
