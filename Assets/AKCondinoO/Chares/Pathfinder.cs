@@ -417,6 +417,9 @@ for(gcoord.y=-AStarDistance.y                                          ;gcoord.y
     Debug.LogWarning(i+" "+j+" "+i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x));
 
 
+for(int ridx=0;ridx<AStarVerticalHits;ridx++){int nodeIdx=i+ridx;
+    Debug.LogWarning("nodeIdx:"+nodeIdx);
+}
 i+=AStarVerticalHits;j++;}}
 
 
