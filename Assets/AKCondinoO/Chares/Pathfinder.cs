@@ -9,7 +9,7 @@ using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 public class Pathfinder:SimActor{
-[NonSerialized]protected bool CanFly=false;[NonSerialized]Vector2Int AStarDistance=new Vector2Int(10,10);[NonSerialized]int AStarVerticalHits=3;[NonSerialized]Vector2Int gridResolution;[NonSerialized]Node[]Nodes;[NonSerialized]Node originNode;[NonSerialized]Node targetNode;
+[NonSerialized]protected bool canFly=false;[NonSerialized]Vector2Int AStarDistance=new Vector2Int(10,10);[NonSerialized]int AStarVerticalHits=3;[NonSerialized]Vector2Int gridResolution;[NonSerialized]Node[]Nodes;[NonSerialized]Node originNode;[NonSerialized]Node targetNode;
 protected override void Awake(){
                    base.Awake();
 waitUntil2=new WaitUntil(()=>backgroundDataSet2.WaitOne(0));
@@ -109,8 +109,8 @@ protected override void Update(){
 
 
     //if(Input.GetKeyDown(KeyCode.C))DEBUG_GOTO=true;
-    if(DEBUG_GOTO){DEBUG_GOTO=false;GoTo(new Ray(new Vector3(1,0,-10),Vector3.down));//GoToQueue.AddLast(new RaycastHit());
-        Debug.DrawRay(new Vector3(1,0,-10),Vector3.down*1000,Color.white,5f);
+    if(DEBUG_GOTO){DEBUG_GOTO=false;GoTo(new Ray(new Vector3(10,20,-10),Vector3.down));//GoToQueue.AddLast(new RaycastHit());
+        Debug.DrawRay(new Vector3(10,20,-10),Vector3.down*1000,Color.white,5f);
     }
 
 if(CurPathValidTimeout>0){
@@ -162,6 +162,7 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("begin");
 _loop:{}
 if(LOG&&LOG_LEVEL<=2)Debug.Log("ToSetGridVerHits.Count before phase id '2':"+ToSetGridVerHits.Count);
 int vHits=0;
+if(!canFly){
 do{
 yield return waitUntil2;
 if(LOG&&LOG_LEVEL<=-10)Debug.Log("current vertical hit test:"+vHits);
@@ -177,6 +178,16 @@ ToSetGridVerHits[j][vHits]=default(RaycastHit);}
 ToSetGridVerRaycasts.Clear();
 foregroundDataSet2.Set();
 }while(++vHits<AStarVerticalHits);    
+}else{
+
+    
+do{
+yield return waitUntil2;
+foregroundDataSet2.Set();
+}while(++vHits<AStarVerticalHits); 
+
+
+}
 yield return waitUntil3a;
 if(LOG&&LOG_LEVEL<=2)Debug.Log("do raycasts 3a;commands3a.Length/results3a.Length:"+commands3a.Length+"/"+results3a.Length+";ToSetGridVerHits.Count after phase id '2' when different from 0 should then stay constant:"+ToSetGridVerHits.Count);
 handle3a=BoxcastCommand.ScheduleBatch(commands3a,results3a,1,default(JobHandle));
@@ -355,6 +366,7 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("begin pathfind");
 ToSetGridVerHits.Clear();var gridStartHeight=startPos.y+(AStarVerticalHits/2f)*NodeSize.y;var disableCommandHeight=-Mathf.Ceil(Chunk.Height/2f)-1;
 if(LOG&&LOG_LEVEL<=-10)Debug.Log("disableCommandHeight value:"+disableCommandHeight);
 int vHits=0;
+if(!canFly){
 do{
 if(LOG&&LOG_LEVEL<=-10)Debug.Log("current vertical hit test:"+vHits);
 i=0;j=0;float fromHeight;
@@ -390,6 +402,25 @@ nodesGrounded.Add((nodeIdx,Nodes[nodeIdx],hit));
 }
 }
 i+=AStarVerticalHits;j++;}
+}else{
+
+    
+do{
+            backgroundDataSet2.Set();foregroundDataSet2.WaitOne();if(Stop)goto _Stop;
+}while(++vHits<AStarVerticalHits);
+nodesGrounded.Clear();
+i=0;j=0;
+for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
+for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
+
+
+    Debug.LogWarning(i+" "+j+" "+i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x));
+
+
+i+=AStarVerticalHits;j++;}}
+
+
+}
 void TellNeighboursReachabilityOf(Node node,bool yes){
 if(LOG&&LOG_LEVEL<=0)Debug.Log("node.neighbours.Count:"+node.neighbours.Count+"=="+node.indexOfMe.Count+":node.indexOfMe.Count;node.neighbourCanBeReached.Count:"+node.neighbourCanBeReached.Count);
 for(int n=0;n<node.neighbours.Count;n++){var neighbour=node.neighbours[n].node;var indexOfMe=node.indexOfMe[n];
