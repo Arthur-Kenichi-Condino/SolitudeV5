@@ -409,7 +409,7 @@ do{
             backgroundDataSet2.Set();foregroundDataSet2.WaitOne();if(Stop)goto _Stop;
 }while(++vHits<AStarVerticalHits);
 nodesGrounded.Clear();
-i=0;j=0;Vector3 nodepos=new Vector3();
+i=0;j=0;Vector3 nodepos=new Vector3();var h=((AStarVerticalHits-1)/2f)*NodeSize.y;
 for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
 for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
 
@@ -422,7 +422,7 @@ for(int ridx=0;ridx<AStarVerticalHits;ridx++){int nodeIdx=i+ridx;
     Debug.LogWarning("nodeIdx:"+nodeIdx);
 Nodes[nodeIdx].Parent=null;
 Nodes[nodeIdx].valid=true;
-nodepos.y=ridx;nodepos.y*=NodeSize.y;nodepos.y+=startPos.y;Nodes[nodeIdx].Position=nodepos;Nodes[nodeIdx].Normal=Vector3.up;
+nodepos.y=ridx;nodepos.y*=NodeSize.y;nodepos.y+=startPos.y-h;Nodes[nodeIdx].Position=nodepos;Nodes[nodeIdx].Normal=Vector3.up;
 TellNeighboursReachabilityOf(Nodes[nodeIdx],true);
 }
 i+=AStarVerticalHits;j++;}}
