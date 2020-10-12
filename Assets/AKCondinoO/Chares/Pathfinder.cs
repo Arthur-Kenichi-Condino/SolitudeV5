@@ -9,7 +9,7 @@ using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 public class Pathfinder:SimActor{
-[NonSerialized]protected bool canFly=false;[NonSerialized]Vector2Int AStarDistance=new Vector2Int(10,10);[NonSerialized]int AStarVerticalHits=3;[NonSerialized]Vector2Int gridResolution;[NonSerialized]Node[]Nodes;[NonSerialized]Node originNode;[NonSerialized]Node targetNode;
+[NonSerialized]Vector2Int AStarDistance=new Vector2Int(10,10);[NonSerialized]int AStarVerticalHits=3;[NonSerialized]Vector2Int gridResolution;[NonSerialized]Node[]Nodes;[NonSerialized]Node originNode;[NonSerialized]Node targetNode;
 protected override void Awake(){
                    base.Awake();
 waitUntil2=new WaitUntil(()=>backgroundDataSet2.WaitOne(0));
@@ -424,6 +424,7 @@ Nodes[nodeIdx].Parent=null;
 Nodes[nodeIdx].valid=true;
 nodepos.y=ridx;nodepos.y*=NodeSize.y;nodepos.y+=startPos.y-h;Nodes[nodeIdx].Position=nodepos;Nodes[nodeIdx].Normal=Vector3.up;
 TellNeighboursReachabilityOf(Nodes[nodeIdx],true);
+nodesGrounded.Add((nodeIdx,Nodes[nodeIdx],new RaycastHit()));
 }
 i+=AStarVerticalHits;j++;}}
 
@@ -455,12 +456,21 @@ Vector3 halfExtents3a=NodeHalfSize;
 Quaternion orientation3a=Quaternion.identity;
 Vector3 direction3a=Vector3.up;
 float dis3a=NodeSize.y+.3f;
+if(!canFly){
 for(int g=0;g<nodesGrounded.Count;g++){
 Vector3 center3a=nodesGrounded[g].floorHit.point;
         center3a.y-=(.3f);
 commands3a.AddNoResize(new BoxcastCommand(center3a,halfExtents3a,orientation3a,direction3a,dis3a,noCharLayer));
 }
             backgroundDataSet3a.Set();foregroundDataSet3a.WaitOne();if(Stop)goto _Stop;
+}else{
+for(int g=0;g<nodesGrounded.Count;g++){
+Vector3 center3a=nodesGrounded[g].node.Position;
+        center3a.y-=(NodeHalfSize.y+.3f);
+commands3a.AddNoResize(new BoxcastCommand(center3a,halfExtents3a,orientation3a,direction3a,dis3a,noCharLayer));
+}
+            backgroundDataSet3a.Set();foregroundDataSet3a.WaitOne();if(Stop)goto _Stop;
+}
 if(LOG&&LOG_LEVEL<=-10)Debug.Log("use raycasts results 3a");
 
 
@@ -475,12 +485,26 @@ if(LOG&&LOG_LEVEL<=-100)Debug.Log("obstruction found at:"+node.Position);
 TellNeighboursReachabilityOf(node,false);
 nodesObstructed.Add((idx,node,obstacleHit));
 }
+if(!canFly){
 for(int r=0;r<resultsManaged3a.Count;r++){var result3a=resultsManaged3a[r];
 if(Vector3.Angle(nodesGrounded[r].floorHit.normal,Vector3.up)>60){//  Obstructed! Floor too steep
 SetAsObstructed(nodesGrounded[r].idx,nodesGrounded[r].node,result3a.hit);
 }else{
     if(result3a.colliderNotNull){
         if(result3a.hit.point.y>=(nodesGrounded[r].floorHit.point.y-.05f)){//  Obstructed! Obstacle above floor hit/detected
+SetAsObstructed(nodesGrounded[r].idx,nodesGrounded[r].node,result3a.hit);
+        }else{
+SetAsWalkable(nodesGrounded[r].idx,nodesGrounded[r].node,nodesGrounded[r].floorHit);
+        }
+    }else{
+SetAsWalkable(nodesGrounded[r].idx,nodesGrounded[r].node,nodesGrounded[r].floorHit);
+    }
+}
+}
+}else{
+for(int r=0;r<resultsManaged3a.Count;r++){var result3a=resultsManaged3a[r];
+    if(result3a.colliderNotNull){
+        if(result3a.hit.point.y>=(nodesGrounded[r].node.Position.y-(NodeHalfSize.y+.05f))){//  Obstructed! Obstacle above floor hit/detected
 SetAsObstructed(nodesGrounded[r].idx,nodesGrounded[r].node,result3a.hit);
         }else{
 SetAsWalkable(nodesGrounded[r].idx,nodesGrounded[r].node,nodesGrounded[r].floorHit);
@@ -510,7 +534,7 @@ if(LOG&&LOG_LEVEL<=-10)Debug.Log("use raycasts results 3b");
 
 
 for(int r=0;r<resultsManaged3b.Count;r++){var result3b=resultsManaged3b[r];
-if(Vector3.Angle(result3b.hit.normal,Vector3.up)<=60&&Math.Abs(result3b.hit.point.y-(nodesObstructed[r].node.Position.y-NodeHalfSize.y))<=NodeHalfSize.y){
+if(result3b.colliderNotNull&&Vector3.Angle(result3b.hit.normal,Vector3.up)<=60&&Math.Abs(result3b.hit.point.y-(nodesObstructed[r].node.Position.y-NodeHalfSize.y))<=NodeHalfSize.y){
 var pos=nodesObstructed[r].node.Position;pos.y=result3b.hit.point.y+NodeHalfSize.y;nodesObstructed[r].node.Position=pos;
 SetAsWalkable(nodesObstructed[r].idx,nodesObstructed[r].node,nodesObstructed[r].obstacleHit);
 }

@@ -5,6 +5,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using static ActorManagementMentana;
 public class SimActor:SimObject{
+[NonSerialized]protected bool canFly_v;protected bool canFly{get{return canFly_v;}set{
+if(value){
+if(constantForce==null){constantForce=this.gameObject.AddComponent<ConstantForce>();
+if(rigidbody!=null)constantForce.force=new Vector3(0,-(rigidbody.mass*Physics.gravity.y),0);
+}
+}
+canFly_v=value;
+}}[NonSerialized]protected new ConstantForce constantForce=null;
 [SerializeField]public RolePlayingAttributes Attributes=new RolePlayingAttributes();
 [Serializable]public class RolePlayingAttributes{
 [SerializeField]public int FOR;
@@ -64,7 +72,11 @@ stopHorizontalMovement();
         }
 moveSpeedToApplyToBody.x=moveSpeedRotated.x==0?rigidbody.velocity.x:moveSpeedRotated.x>0?(moveSpeedRotated.x>rigidbody.velocity.x?moveSpeedRotated.x:rigidbody.velocity.x):(moveSpeedRotated.x<rigidbody.velocity.x?moveSpeedRotated.x:rigidbody.velocity.x);
 moveSpeedToApplyToBody.z=moveSpeedRotated.z==0?rigidbody.velocity.z:moveSpeedRotated.z>0?(moveSpeedRotated.z>rigidbody.velocity.z?moveSpeedRotated.z:rigidbody.velocity.z):(moveSpeedRotated.z<rigidbody.velocity.z?moveSpeedRotated.z:rigidbody.velocity.z);
+if(!canFly){
 moveSpeedToApplyToBody.y=moveSpeedRotated.y>0&&moveSpeedRotated.y>rigidbody.velocity.y?moveSpeedRotated.y:rigidbody.velocity.y;
+}else{
+moveSpeedToApplyToBody.y=rigidbody.velocity.y;
+}
 Jump=false;
         rigidbody.velocity=moveSpeedToApplyToBody;
 void stopHorizontalMovement(){
