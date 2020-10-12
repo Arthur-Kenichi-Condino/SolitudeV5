@@ -74,7 +74,7 @@ moveSpeedToApplyToBody.z=moveSpeedRotated.z==0?rigidbody.velocity.z:moveSpeedRot
 if(!canFly){
 moveSpeedToApplyToBody.y=moveSpeedRotated.y>0&&moveSpeedRotated.y>rigidbody.velocity.y?moveSpeedRotated.y:rigidbody.velocity.y;
 }else{
-moveSpeedToApplyToBody.y=rigidbody.velocity.y;
+moveSpeedToApplyToBody.y=moveSpeedRotated.y==0?rigidbody.velocity.y:moveSpeedRotated.y>0?(moveSpeedRotated.y>rigidbody.velocity.y?moveSpeedRotated.y:rigidbody.velocity.y):(moveSpeedRotated.y<rigidbody.velocity.y?moveSpeedRotated.y:rigidbody.velocity.y);
 }
 Jump=false;
         rigidbody.velocity=moveSpeedToApplyToBody;

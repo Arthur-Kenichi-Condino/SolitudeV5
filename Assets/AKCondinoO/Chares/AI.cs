@@ -471,6 +471,7 @@ if(_axisDist.x>float.Epsilon||
 inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.eulerAngles.y;
 }
 inputMoveSpeed.x=0;
+if(!canFly){
 if(CurPathTgt.Value.mode==Node.PreferredReachableMode.jump&&transform.position.y<CurPathTgt.Value.pos.y+.1f){
 #region necessário pular
 inputMoveSpeed.z=0;
@@ -492,6 +493,23 @@ inputMoveSpeed.z=0;
 }
 inputMoveSpeed.y=0;
 #endregion
+}
+}else{
+
+
+    Debug.LogWarning(CurPathTgt.Value.mode);
+#region ir para o destino normalmente
+if((IsGrounded||!HittingWall)&&
+  (_axisDist.x>ReachedTgtDisThreshold.x||
+   _axisDist.z>ReachedTgtDisThreshold.z)){
+inputMoveSpeed.z=InputMaxMoveSpeed.z;
+}else{
+inputMoveSpeed.z=0;
+}
+inputMoveSpeed.y=0;
+#endregion
+
+
 }
 break;}
 #endregion
