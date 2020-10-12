@@ -1418,16 +1418,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: EIRA
       objectReference: {fileID: 0}
-    - target: {fileID: 2008670503701242331, guid: a78a72d1aba87cb45b934bfcac199524,
-        type: 3}
-      propertyPath: LOG
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2008670503701242331, guid: a78a72d1aba87cb45b934bfcac199524,
-        type: 3}
-      propertyPath: DRAW_LEVEL
-      value: -100
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a78a72d1aba87cb45b934bfcac199524, type: 3}
 --- !u!114 &6626631766036249352 stripped

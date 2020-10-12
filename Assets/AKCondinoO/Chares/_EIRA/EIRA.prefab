@@ -47,9 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aecde6cc337ff4b4eb423703af42edb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LOG: 0
+  LOG: 1
   LOG_LEVEL: 1
-  DRAW_LEVEL: 1
+  DRAW_LEVEL: -100
   Attributes:
     FOR: 0
     VIT: 0
@@ -65,12 +65,12 @@ MonoBehaviour:
     BaseMDEF: 0
   Lerp: 1
   MoveLerpSpeed: 0.125
-  InputMoveAcceleration: {x: 0, y: 0, z: 0}
-  InputMaxMoveSpeed: {x: 0, y: 0, z: 0}
+  InputMoveAcceleration: {x: 3, y: 3, z: 3}
+  InputMaxMoveSpeed: {x: 3, y: 3, z: 3}
   GetNewTgtPosCdTime: 0.05
   RotationLerpSpeed: 0.125
   HeadRotationLerpSpeed: 0.125
-  InputViewRotationIncreaseSpeed: 0
+  InputViewRotationIncreaseSpeed: 0.025
   GetNewTgtRotCdTime: 0.05
   DEBUG_GOTO: 0
   Role: 0

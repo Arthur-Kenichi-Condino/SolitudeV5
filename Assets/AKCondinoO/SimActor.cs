@@ -7,9 +7,8 @@ using static ActorManagementMentana;
 public class SimActor:SimObject{
 [NonSerialized]protected bool canFly_v;protected bool canFly{get{return canFly_v;}set{
 if(value){
-if(constantForce==null){constantForce=this.gameObject.AddComponent<ConstantForce>();
+if(constantForce==null){constantForce=this.gameObject.AddComponent<ConstantForce>();}
 if(rigidbody!=null)constantForce.force=new Vector3(0,-(rigidbody.mass*Physics.gravity.y),0);
-}
 }
 canFly_v=value;
 }}[NonSerialized]protected new ConstantForce constantForce=null;

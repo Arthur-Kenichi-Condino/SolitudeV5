@@ -414,12 +414,12 @@ for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x
 for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
 
 
-    Debug.LogWarning(i+" "+j+" "+i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x));
+if(LOG&&LOG_LEVEL<=-100)Debug.Log(i+"=="+GetNodeIndex(gcoord.y,0,gcoord.x));
 
 
 nodepos.x=gcoord.x;nodepos.z=gcoord.y;nodepos.x*=NodeSize.x;nodepos.z*=NodeSize.z;nodepos.x+=startPos.x;nodepos.z+=startPos.z;
 for(int ridx=0;ridx<AStarVerticalHits;ridx++){int nodeIdx=i+ridx;
-    Debug.LogWarning("nodeIdx:"+nodeIdx);
+if(LOG&&LOG_LEVEL<=-110)Debug.Log("nodeIdx:"+nodeIdx);
 Nodes[nodeIdx].Parent=null;
 Nodes[nodeIdx].valid=true;
 nodepos.y=ridx;nodepos.y*=NodeSize.y;nodepos.y+=startPos.y-h;Nodes[nodeIdx].Position=nodepos;Nodes[nodeIdx].Normal=Vector3.up;
