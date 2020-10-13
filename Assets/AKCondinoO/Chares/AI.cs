@@ -459,12 +459,20 @@ break;}
 #endregion
 #region none
 default:{
-if(CurPathTgt.Value.mode!=Node.PreferredReachableMode.jump&&
-   _axisDist.y>ReachedTgtDisThreshold.y&&(transform.position.y<CurPathTgt.Value.pos.y+.1f||rigidbody.velocity.y<=float.Epsilon)&&
+if(_axisDist.y>ReachedTgtDisThreshold.y&&
    _axisDist.x<=ReachedTgtDisThreshold.x&&
    _axisDist.z<=ReachedTgtDisThreshold.z){   
+if(transform.position.y>=CurPathTgt.Value.pos.y+.1f){
+    if(CurPathTgt.Value.mode!=Node.PreferredReachableMode.fall){
+    var cur=CurPathTgt.Value;cur.mode=Node.PreferredReachableMode.fall;
+    CurPathTgt=cur;
+    }
+}else if(transform.position.y<CurPathTgt.Value.pos.y+.1f||rigidbody.velocity.y<=float.Epsilon){
+    if(CurPathTgt.Value.mode!=Node.PreferredReachableMode.jump){
     var cur=CurPathTgt.Value;cur.mode=Node.PreferredReachableMode.jump;
     CurPathTgt=cur;
+    }
+}
 }
 if(_axisDist.x>float.Epsilon||
    _axisDist.z>float.Epsilon){
@@ -506,7 +514,17 @@ inputMoveSpeed.z=InputMaxMoveSpeed.z;
 }else{
 inputMoveSpeed.z=0;
 }
+if(_axisDist.y>ReachedTgtDisThreshold.y){
+if(_axisDiff.y<0){
+    Debug.LogWarning("down");
+inputMoveSpeed.y=-InputMaxMoveSpeed.y;
+}else{
+    Debug.LogWarning("up");
+inputMoveSpeed.y=InputMaxMoveSpeed.y;
+}
+}else{
 inputMoveSpeed.y=0;
+}
 #endregion
 
 

@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LOG: 1
   LOG_LEVEL: 1
-  DRAW_LEVEL: -100
+  DRAW_LEVEL: 1
   Attributes:
     FOR: 0
     VIT: 0
@@ -119,6 +119,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 228532327010211491}
     m_Modifications:
+    - target: {fileID: 488606601339784155, guid: 34ed58caa0373c248a7a34077c57adbc,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 72b642587bfa1824781416c52ddbb697, type: 2}
+    - target: {fileID: 4624965802017645441, guid: 34ed58caa0373c248a7a34077c57adbc,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -74577582058598035, guid: 6f00ff49b62611046ba1c7dcaced9fe8,
+        type: 3}
     - target: {fileID: 6589889259656697027, guid: 34ed58caa0373c248a7a34077c57adbc,
         type: 3}
       propertyPath: m_LocalPosition.x

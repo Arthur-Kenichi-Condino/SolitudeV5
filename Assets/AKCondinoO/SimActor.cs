@@ -74,6 +74,10 @@ moveSpeedToApplyToBody.z=moveSpeedRotated.z==0?rigidbody.velocity.z:moveSpeedRot
 if(!canFly){
 moveSpeedToApplyToBody.y=moveSpeedRotated.y>0&&moveSpeedRotated.y>rigidbody.velocity.y?moveSpeedRotated.y:rigidbody.velocity.y;
 }else{
+    //Debug.LogWarning("inputMoveSpeed.y:"+inputMoveSpeed.y+"; moveSpeedRotated.y:"+moveSpeedRotated.y);
+        if(inputMoveSpeed.y==0){
+stopVerticalMovement();
+        }
 moveSpeedToApplyToBody.y=moveSpeedRotated.y==0?rigidbody.velocity.y:moveSpeedRotated.y>0?(moveSpeedRotated.y>rigidbody.velocity.y?moveSpeedRotated.y:rigidbody.velocity.y):(moveSpeedRotated.y<rigidbody.velocity.y?moveSpeedRotated.y:rigidbody.velocity.y);
 }
 Jump=false;
@@ -82,6 +86,11 @@ void stopHorizontalMovement(){
 stopMovement=rigidbody.velocity;
 stopMovement.x=0;
 stopMovement.z=0;
+    rigidbody.velocity=stopMovement;
+}
+void stopVerticalMovement(){
+stopMovement=rigidbody.velocity;
+stopMovement.y=0;
     rigidbody.velocity=stopMovement;
 }
 }
