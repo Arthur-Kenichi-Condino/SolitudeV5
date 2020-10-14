@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 228532327010211491}
   - component: {fileID: 2008670503701242331}
-  - component: {fileID: 724042293336278167}
+  - component: {fileID: 341555408834460584}
   - component: {fileID: 1297369654094743384}
   m_Layer: 8
   m_Name: EIRA
@@ -53,13 +53,14 @@ MonoBehaviour:
   Attributes:
     FOR: 0
     VIT: 0
-    BaseMaxStamina: 0
-    CurStamina: 0
     INT: 0
-    BaseMaxFocus: 0
-    CurFocus: 0
     AGI: 0
     DEX: 0
+    SOR: 0
+    BaseMaxStamina: 0
+    CurStamina: 0
+    BaseMaxFocus: 0
+    CurFocus: 0
     BaseAspd: 0
     BaseDEF: 0
     BaseMDEF: 0
@@ -73,7 +74,7 @@ MonoBehaviour:
   InputViewRotationIncreaseSpeed: 0.025
   GetNewTgtRotCdTime: 0.05
   DEBUG_GOTO: 0
-  Role: 0
+  Role: 3
   AutonomyDelayAfterControl: 30
   attackStanceRhythmMultiplier: 1
   attackStanceDamageTime: 0.5
@@ -83,7 +84,7 @@ MonoBehaviour:
   DEBUG_GETHIT: 0
   DEBUG_DIE: 0
   motionRhythm: 0.0245
---- !u!65 &724042293336278167
+--- !u!65 &341555408834460584
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

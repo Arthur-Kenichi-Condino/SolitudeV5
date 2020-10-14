@@ -19,6 +19,9 @@ var aI=Instantiate(prefab);
     aI.Id=id;aI.TypeId=typeId;
 var gO=aI.gameObject;gO.name=prefab.name+"("+typeId+":"+id+")";if(gO.activeSelf){gO.SetActive(false);if(LOG&&LOG_LEVEL<=1)Debug.Log("set as inactive in instantiation");}
 Actors.Add(id,aI);ActorsByTypeId[typeId].Add(aI);InactiveActorsByTypeId[typeId].AddLast(aI);
+
+    Debug.LogWarning(InactiveActorsByTypeId[typeId].Last.Value);
+
 }
 }
 }
@@ -63,6 +66,11 @@ switch(action){
     case(CreativeIdleness.SpawnEnemy):{
 if(monsterTypeIds!=null){
 var typeId=(DEBUG_SPAWN_ENEMY!=-1&&monsterTypeIds.Contains(DEBUG_SPAWN_ENEMY))?DEBUG_SPAWN_ENEMY:monsterTypeIds[mathrandom.Next(0,monsterTypeIds.Length)];if(InactiveActorsByTypeId.ContainsKey(typeId)&&InactiveActorsByTypeId[typeId].Count>0){var actorCast=InactiveActorsByTypeId[typeId].First.Value;
+
+    
+    Debug.LogWarning("actorCast:"+actorCast);
+
+
     if(GetValidRandomPos(actorCast,out RaycastHit hitInfo,out Vector3 pos)){
 if(LOG&&LOG_LEVEL<=0)Debug.Log("spawn monster of type id:"+typeId);
 InactiveActorsByTypeId[typeId].RemoveFirst();StageActor(actorCast,hitInfo,pos);
@@ -77,6 +85,11 @@ if(LOG&&LOG_LEVEL<=0)Debug.Log("spawn limit reached for monster of type id:"+typ
     case(CreativeIdleness.CreateAlly):{
 if(homunculusTypeIds!=null){
 var typeId=homunculusTypeIds[mathrandom.Next(0,homunculusTypeIds.Length)];if(InactiveActorsByTypeId.ContainsKey(typeId)&&InactiveActorsByTypeId[typeId].Count>0){var actorCast=InactiveActorsByTypeId[typeId].First.Value;
+
+    
+    Debug.LogWarning("actorCast:"+actorCast);
+
+
     if(GetValidRandomPos(actorCast,out RaycastHit hitInfo,out Vector3 pos)){
 if(LOG&&LOG_LEVEL<=0)Debug.Log("create homunculus of type id:"+typeId);
 InactiveActorsByTypeId[typeId].RemoveFirst();StageActor(actorCast,hitInfo,pos);
@@ -113,6 +126,11 @@ pos.y+=actor.collider.bounds.extents.y+tan*actor.BodyRange+.1f;actor.transform.p
 bool GetValidRandomPos(AI actor,out RaycastHit hitInfo,out Vector3 pos){
 var c=center+new Vector3((float)(mathrandom.NextDouble()*2f-1)*(size.x*.5f),size.y*.5f,
                          (float)(mathrandom.NextDouble()*2f-1)*(size.z*.5f));
+
+    
+    Debug.LogWarning("actor:"+actor+"; actor.collider:"+actor.collider);
+
+
     Debug.DrawRay(c,Vector3.down*Chunk.Height,Color.white,1f);
 bool result=Physics.BoxCast(c,actor.collider.bounds.extents,Vector3.down,out hitInfo,Quaternion.identity,size.y);
 pos=hitInfo.point+hitInfo.normal*actor.BodyRange;

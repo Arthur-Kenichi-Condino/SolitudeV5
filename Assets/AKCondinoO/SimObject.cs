@@ -9,6 +9,11 @@ public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
 [NonSerialized]public new Collider collider=null;[NonSerialized]public new Rigidbody rigidbody=null;
 protected virtual void Awake(){
 collider=GetComponent<Collider>();rigidbody=GetComponent<Rigidbody>();
+
+
+    Debug.LogWarning(this.gameObject+" collider:"+collider);
+
+
 if(collider!=null){
 colliderDefaultSize=collider.bounds.size;
 GetColliderData();
