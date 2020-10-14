@@ -9,7 +9,7 @@ using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 public class Pathfinder:SimActor{
-[NonSerialized]Vector2Int AStarDistance=new Vector2Int(10,10);[NonSerialized]int AStarVerticalHits=3;[NonSerialized]Vector2Int gridResolution;[NonSerialized]Node[]Nodes;[NonSerialized]Node originNode;[NonSerialized]Node targetNode;
+[NonSerialized]Vector2Int AStarDistance;[NonSerialized]int AStarVerticalHits;[NonSerialized]Vector2Int gridResolution;[NonSerialized]Node[]Nodes;[NonSerialized]Node originNode;[NonSerialized]Node targetNode;
 protected override void Awake(){
                    base.Awake();
 waitUntil2=new WaitUntil(()=>backgroundDataSet2.WaitOne(0));
@@ -33,6 +33,7 @@ backgroundDataSet3c.Reset();foregroundDataSet3c.Reset();
 backgroundDataSet4.Reset();foregroundDataSet4.Reset();
 noCharLayer=~(1<<LayerMask.NameToLayer("Char")|1<<LayerMask.NameToLayer("Ignore Raycast"));
 if(LOG&&LOG_LEVEL<=2)Debug.Log("noCharLayer:"+noCharLayer+"[1<<LayerMask.NameToLayer(\"Ignore Raycast\")=="+(1<<LayerMask.NameToLayer("Ignore Raycast"))+";1<<LayerMask.NameToLayer(\"Char\")=="+(1<<LayerMask.NameToLayer("Char")));
+if(!canFly){AStarDistance=new Vector2Int(10,10);AStarVerticalHits=3;}else{AStarDistance=new Vector2Int(5,5);AStarVerticalHits=11;}
 gridResolution=new Vector2Int(AStarDistance.x*2+1,AStarDistance.y*2+1);
 Nodes=new Node[gridResolution.x*gridResolution.y*AStarVerticalHits];for(int i=0;i<Nodes.Length;i++)Nodes[i]=new Node();
 ClosedNodes=new Heap<Node>(Nodes.Length);ClosedNodes.LOG=LOG;ClosedNodes.LOG_LEVEL=LOG_LEVEL;
@@ -404,12 +405,18 @@ nodesGrounded.Add((nodeIdx,Nodes[nodeIdx],hit));
 i+=AStarVerticalHits;j++;}
 }else{
 
+
+    //Debug.LogWarning((Mathf.Abs(startPos.y-(target.point.y+NodeHalfSize.y))%NodeSize.y));
+
     
 do{
+if(LOG&&LOG_LEVEL<=-10)Debug.Log("current vertical hit test:"+vHits);
             backgroundDataSet2.Set();foregroundDataSet2.WaitOne();if(Stop)goto _Stop;
 }while(++vHits<AStarVerticalHits);
+
+
 nodesGrounded.Clear();
-i=0;j=0;Vector3 nodepos=new Vector3();var h=((AStarVerticalHits-1)/2f)*NodeSize.y;
+i=0;j=0;Vector3 nodepos=new Vector3();var h=((AStarVerticalHits-1)/2f)*NodeSize.y;var closerToFloorAdj=Mathf.Abs(startPos.y-(target.point.y+NodeHalfSize.y))%NodeSize.y;
 for(Vector2Int gcoord=new Vector2Int(-AStarDistance.x,-AStarDistance.y);gcoord.x<=AStarDistance.x;gcoord.x++){
 for(gcoord.y=-AStarDistance.y                                          ;gcoord.y<=AStarDistance.y;gcoord.y++){
 
@@ -422,7 +429,7 @@ for(int ridx=0;ridx<AStarVerticalHits;ridx++){int nodeIdx=i+ridx;
 if(LOG&&LOG_LEVEL<=-110)Debug.Log("nodeIdx:"+nodeIdx);
 Nodes[nodeIdx].Parent=null;
 Nodes[nodeIdx].valid=true;
-nodepos.y=ridx;nodepos.y*=NodeSize.y;nodepos.y+=startPos.y-h;Nodes[nodeIdx].Position=nodepos;Nodes[nodeIdx].Normal=Vector3.up;
+nodepos.y=ridx;nodepos.y*=NodeSize.y;nodepos.y+=startPos.y-h-closerToFloorAdj;Nodes[nodeIdx].Position=nodepos;Nodes[nodeIdx].Normal=Vector3.up;
 TellNeighboursReachabilityOf(Nodes[nodeIdx],true);
 nodesGrounded.Add((nodeIdx,Nodes[nodeIdx],new RaycastHit()));
 }
