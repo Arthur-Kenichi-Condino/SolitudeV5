@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static ActorManagementMentana;
-public class AI:Pathfinder{[NonSerialized]protected System.Random mathrandom=new System.Random();
+public class AI:Pathfinder{
 public int Id{get;internal set;}public int TypeId{get;internal set;}[SerializeField]public Roles Role;
 [NonSerialized]protected Sight MySight;
 protected override void Awake(){

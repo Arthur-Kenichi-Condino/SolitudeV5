@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-public class SimObject:MonoBehaviour{
+public class SimObject:MonoBehaviour{[NonSerialized]protected System.Random mathrandom=new System.Random();
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
 [NonSerialized]public new Collider collider=null;[NonSerialized]public new Rigidbody rigidbody=null;
 protected virtual void Awake(){

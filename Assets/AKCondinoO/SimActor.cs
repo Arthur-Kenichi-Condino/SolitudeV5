@@ -16,11 +16,12 @@ canFly_v=value;
 [Serializable]public class RolePlayingAttributes{
 [SerializeField]public int FOR;
 [SerializeField]public int VIT;
-[SerializeField]public float BaseMaxStamina;[SerializeField]public float CurStamina;
 [SerializeField]public int INT;
-[SerializeField]public float BaseMaxFocus;[SerializeField]public float CurFocus;
 [SerializeField]public int AGI;
 [SerializeField]public int DEX;
+[SerializeField]public int SOR;
+[SerializeField]public float BaseMaxStamina;[SerializeField]public float CurStamina;
+[SerializeField]public float BaseMaxFocus;[SerializeField]public float CurFocus;
 [SerializeField]public float BaseAspd;public float Aspd{get{return BaseAspd;}}
 [SerializeField]public float BaseDEF;public float DEF{get{return BaseDEF;}}
 [SerializeField]public float BaseMDEF;public float MDEF{get{return BaseMDEF;}}
@@ -30,17 +31,26 @@ if(LOG&&LOG_LEVEL<=100)Debug.LogWarning(GetType()+":attributes were not set!");
 ValidateAttributesSet(0);
 }
 public virtual float GetBaseMaxStamina(){
-return(Attributes.VIT*100+Attributes.FOR*50);
+return(Attributes.VIT*100+Attributes.FOR*50+Attributes.AGI*20);
 }
 public virtual float GetBaseMaxFocus(){
 return(Attributes.VIT*.5f+Attributes.INT*100);
 }
 public virtual float GetBaseAspd(){
-return Mathf.Clamp(((Attributes.AGI/100f)+(Attributes.DEX*.5f/100f))/2f*1.5f,.5f,1f);
+return Mathf.Clamp(((Attributes.AGI/100f)+(Attributes.DEX*.5f/100f))/2f*1.5f,.65f,1f);
 }
 protected void ValidateAttributesSet(int version){
 if(version<=0){
 if(LOG&&LOG_LEVEL<=100)Debug.LogWarning(GetType()+":attributes are invalid! [0]");
+Attributes.FOR=mathrandom.Next(1,100);
+Attributes.VIT=mathrandom.Next(1,100);
+Attributes.INT=mathrandom.Next(1,100);
+Attributes.AGI=mathrandom.Next(1,100);
+Attributes.DEX=mathrandom.Next(1,100);
+Attributes.SOR=mathrandom.Next(1,100);
+    Attributes.BaseMaxStamina=Attributes.CurStamina=GetBaseMaxStamina();
+       Attributes.BaseMaxFocus=Attributes.CurFocus=GetBaseMaxFocus();
+                    Attributes.BaseAspd=GetBaseAspd();
 }
 }
 protected override void Awake(){
