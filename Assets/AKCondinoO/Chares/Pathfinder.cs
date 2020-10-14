@@ -406,11 +406,11 @@ i+=AStarVerticalHits;j++;}
 }else{
 
 
-    //Debug.LogWarning((Mathf.Abs(startPos.y-(target.point.y+NodeHalfSize.y))%NodeSize.y));
+    Debug.LogWarning((Mathf.Abs(startPos.y-(target.point.y+NodeHalfSize.y))%NodeSize.y));
 
     
 do{
-if(LOG&&LOG_LEVEL<=-10)Debug.Log("current vertical hit test:"+vHits);
+if(LOG&&LOG_LEVEL<=-10)Debug.Log("vertical hit tests are not needed; current vHits value:"+vHits);
             backgroundDataSet2.Set();foregroundDataSet2.WaitOne();if(Stop)goto _Stop;
 }while(++vHits<AStarVerticalHits);
 
@@ -662,6 +662,16 @@ return(dis);}
 _Found:{}
 List<Node>path=new List<Node>();
 Node last=null;if(pathFound)last=targetNode;else if(ClosedNodes.Count>0)last=ClosedNodes.RemoveFirst();
+
+
+Debug.LogWarning((last==targetNode)+" "+(last==null)+" "+(last?.Parent==null));
+if(last!=null&&last.Parent==null){
+while(ClosedNodes.Count>0){
+last=ClosedNodes.RemoveFirst();if(last.Parent!=null){break;}
+}
+}
+
+
 var step=last;
 int c=Nodes.Length;do{
 if(step==null){break;}
