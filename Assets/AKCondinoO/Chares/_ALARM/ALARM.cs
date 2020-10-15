@@ -152,6 +152,7 @@ return true;
 }
 return false;}
 protected override void Attack(AI enemy){
+if(nextAttackTimer>0)return;
                    base.Attack(enemy);
 if(deadStance!=-1||hitStance!=-1)return;if(attackStance==-1){attackStance=0;curAnimTime=0;}
 }

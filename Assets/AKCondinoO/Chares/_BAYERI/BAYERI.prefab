@@ -53,14 +53,17 @@ MonoBehaviour:
   Attributes:
     FOR: 0
     VIT: 0
-    MaxStamina: 0
-    Stamina: 0
     INT: 0
-    MaxFocus: 0
-    Focus: 0
     AGI: 0
     DEX: 0
+    SOR: 0
+    BaseMaxStamina: 0
+    CurStamina: 0
+    BaseMaxFocus: 0
+    CurFocus: 0
     BaseAspd: 0
+    BaseDEF: 0
+    BaseMDEF: 0
   Lerp: 1
   MoveLerpSpeed: 0.125
   InputMoveAcceleration: {x: 3, y: 3, z: 3}
@@ -125,7 +128,7 @@ PrefabInstance:
     - target: {fileID: 1889326662303311925, guid: c63a973439d13e44380fe9515b318507,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.05
       objectReference: {fileID: 0}
     - target: {fileID: 1889326662303311925, guid: c63a973439d13e44380fe9515b318507,
         type: 3}
@@ -325,17 +328,17 @@ PrefabInstance:
     - target: {fileID: 510581472703511632, guid: f82d67683cb29f247b9a5f65c1e839d2,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.8
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 510581472703511632, guid: f82d67683cb29f247b9a5f65c1e839d2,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.8
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 510581472703511632, guid: f82d67683cb29f247b9a5f65c1e839d2,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.25
+      value: 1.35
       objectReference: {fileID: 0}
     - target: {fileID: 800374158439041474, guid: f82d67683cb29f247b9a5f65c1e839d2,
         type: 3}

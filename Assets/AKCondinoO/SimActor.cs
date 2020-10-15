@@ -37,7 +37,7 @@ public virtual float GetBaseMaxFocus(){
 return(Attributes.VIT*.5f+Attributes.INT*100);
 }
 public virtual float GetBaseAspd(){
-return Mathf.Clamp(((Attributes.AGI/100f)+(Attributes.DEX*.5f/100f))/2f*1.5f,.65f,1f);
+return Mathf.Clamp(((Attributes.AGI/100f)+(Attributes.DEX*.5f/100f))/2f*1.5f,.5f,1f);
 }
 protected void ValidateAttributesSet(int version){
 if(version<=0){

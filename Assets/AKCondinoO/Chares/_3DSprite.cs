@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class _3DSprite:AI{
-[NonSerialized]protected Animator animator;[NonSerialized]protected new SpriteRenderer renderer;
+[NonSerialized]protected Animator animator;[NonSerialized]protected new SpriteRenderer renderer;[NonSerialized]protected Vector3 spritePosAdj=new Vector3(0,-.05f,0);
 protected override void Awake(){
                    base.Awake();
 animator=GetComponentInChildren<Animator>();renderer=GetComponentInChildren<SpriteRenderer>();
@@ -12,7 +12,7 @@ public float motionRhythm=0.0245f;[NonSerialized]protected float curAnimTime=-1;
 [NonSerialized]Vector3 _forward,_cameraForward,_forwardFromCameraToSprite;[NonSerialized]bool _back;[NonSerialized]bool _flipX;
 protected override void LateUpdate(){
                    base.LateUpdate();
-animator.transform.position=drawPos;
+animator.transform.position=drawPos+spritePosAdj;
 animator.transform.rotation=Quaternion.LookRotation((Camera.main.transform.position-animator.transform.position).normalized,Vector3.up);
 _forward=Vector3.Scale(drawRotation.eulerAngles,Vector3.up);
 _forward=Quaternion.Euler(_forward)*Vector3.forward;

@@ -81,6 +81,9 @@ enemyTouchingMe=true;
 if(actorTouchingMe&&enemyTouchingMe)break;//  Break when all checks are true, so only on O(n) operation is processed for any needed check
 }}
 
+if(nextAttackTimer>0){
+    nextAttackTimer-=Time.deltaTime;
+}
 if(Autonomous<=0){
 WALK_PATH();
 
@@ -198,7 +201,7 @@ if(DRAW_LEVEL<=0)Debug.DrawLine(transform.position,MyDest,Color.blue,1f);
 GoTo(new Ray(MyDest,Vector3.down));
 }
 }
-[NonSerialized]float sinceLastHitTimer;[NonSerialized]float hitDetectionReactionTick=1f;
+[NonSerialized]float sinceLastHitTimer;[NonSerialized]float hitDetectionReactionTick=6f;
 protected virtual void OnATTACK_ST(){
 if(LOG&&LOG_LEVEL<=0)Debug.Log(GetType()+":OnATTACK_ST",this);
 if(MyEnemy==null){
@@ -217,7 +220,7 @@ doAttack();
 }
 protected virtual int doAttackingMoveAway(){
 if(tracing||GoToQueue.Count>0)return 0;
-if(MyMotion==Motions.MOTION_HIT&&sinceLastHitTimer<=0&&mathrandom.Next(0,2)==1){
+if(MyMotion==Motions.MOTION_HIT&&sinceLastHitTimer<=0&&mathrandom.NextDouble()<.1){
     sinceLastHitTimer=hitDetectionReactionTick;
     Debug.LogWarning("OnATTACK_ST: hitDetectionReactionTick:"+hitDetectionReactionTick);
 }else if(sinceLastHitTimer>0){
@@ -268,11 +271,13 @@ if(Vector3.Distance(transform.position,enemy.transform.position)-(BodyRange+enem
 return true;
 }
 return false;}
+[NonSerialized]protected float attackInterval=.25f;[NonSerialized]protected float nextAttackTimer=0;
 [NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}
 protected virtual void Attack(AI enemy){
 if(attackStance==-1){
     Debug.LogWarning("new attack started: set to do damage next animation");
     didDamage=false;
+    nextAttackTimer=attackInterval/Attributes.Aspd;
 }
 if(enemy!=null){
 inputViewRotationEuler.y=Quaternion.LookRotation((enemy.transform.position-transform.position).normalized).eulerAngles.y-transform.eulerAngles.y;
