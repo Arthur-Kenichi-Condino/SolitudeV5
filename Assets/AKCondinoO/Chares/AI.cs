@@ -215,17 +215,23 @@ return;
 if(doAttackingMoveAway()!=1){
 doAttack();
 }
+if(!IsInAttackSight(MyEnemy)){
+if(LOG&&LOG_LEVEL<=-1)Debug.Log(GetType()+":chase",this);
+STOP();
+MyState=State.CHASE_ST;
+return;
+}
 
 
 }
 protected virtual int doAttackingMoveAway(){
 if(tracing||GoToQueue.Count>0)return 0;
-if(MyMotion==Motions.MOTION_HIT&&sinceLastHitTimer<=0&&mathrandom.NextDouble()<.1){
+if((MyMotion==Motions.MOTION_HIT||actorTouchingMe)&&sinceLastHitTimer<=0&&mathrandom.NextDouble()<.1){
     sinceLastHitTimer=hitDetectionReactionTick;
     Debug.LogWarning("OnATTACK_ST: hitDetectionReactionTick:"+hitDetectionReactionTick);
 }else if(sinceLastHitTimer>0){
     sinceLastHitTimer-=Time.deltaTime;
-if(CurPathTgt==null){
+if(CurPathTgt==null||_movementWasDetectedTimer<=0){
 return 0;
 }
 return 1;

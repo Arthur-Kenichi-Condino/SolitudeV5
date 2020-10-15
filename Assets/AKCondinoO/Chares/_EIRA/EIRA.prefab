@@ -76,7 +76,7 @@ MonoBehaviour:
   DEBUG_GOTO: 0
   Role: 3
   AutonomyDelayAfterControl: 30
-  attackStanceRhythmMultiplier: 1
+  attackStanceRhythmMultiplier: 0.4
   attackStanceDamageTime: 0.5
   hitStanceRhythmMultiplier: 2
   deadStanceRhythmMultiplier: 1

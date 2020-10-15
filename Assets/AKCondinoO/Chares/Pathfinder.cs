@@ -95,7 +95,7 @@ backgroundDataSet4.Dispose();foregroundDataSet4.Dispose();
 }
                    base.OnDestroy();
 }
-public LinkedListNode<RaycastHit>GoTo(Ray tgtDir,float maxDis=1000){
+public LinkedListNode<RaycastHit>GoTo(Ray tgtDir,float maxDis=1000,float height=1){
 if(Physics.Raycast(tgtDir,out RaycastHit hit,maxDis,noCharLayer)){
 if(LOG&&LOG_LEVEL<=2)Debug.Log("GoTo:"+hit.point);
 return GoToQueue.AddLast(hit);

@@ -103,6 +103,7 @@ return;
 Attack(MyEnemy);
 if(!IsInAttackSight(MyEnemy)){
 if(LOG&&LOG_LEVEL<=-1)Debug.Log(GetType()+":chase",this);
+STOP();
 MyState=State.CHASE_ST;
 return;
 }
