@@ -43,7 +43,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 10
+  m_Radius: 25
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2916595663269807861
 MonoBehaviour:
@@ -57,5 +57,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47e1a8f80e0191a4ebc2bd0c3e6288df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LOG: 0
+  LOG_LEVEL: 1
   hearingRange: 5
   fieldOfViewAngle: 180

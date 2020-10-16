@@ -7,12 +7,12 @@ using static ActorManagementMentana;
 public class EIRA:_3DSprite{
 public override void InitAttributes(bool random=true){
 if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":init attributes");
-Attributes.FOR=mathrandom.Next(22,52);
+Attributes.STR=mathrandom.Next(22,52);
 Attributes.VIT=mathrandom.Next(22,52);
 Attributes.INT=mathrandom.Next(88,100);
 Attributes.AGI=mathrandom.Next(66,100);
 Attributes.DEX=mathrandom.Next(66,100);
-Attributes.SOR=mathrandom.Next(1,100);
+Attributes.LUK=mathrandom.Next(1,100);
     Attributes.BaseMaxStamina=Attributes.CurStamina=GetBaseMaxStamina();
        Attributes.BaseMaxFocus=Attributes.CurFocus=GetBaseMaxFocus();
                     Attributes.BaseAspd=GetBaseAspd();
@@ -29,6 +29,7 @@ if(deadStance!=-1||hitStance!=-1)return;if(attackStance==-1){attackStance=mathra
 }
 protected override void TakeDamage(AI fromEnemy){
                    base.TakeDamage(fromEnemy);
+if(damage<=0)return;
 if(deadStance!=-1)return;attackStance=-1;hitStance=0;curAnimTime=0;
 }
 protected override void Die(){

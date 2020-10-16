@@ -160,7 +160,7 @@ return;
 }else{
 if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":attack",this);
 STOP();
-MyState=State.ATTACK_ST;
+MyState=State.ATTACK_ST;sinceLastHitTimer=0;
 return;
 }
 }
@@ -176,7 +176,7 @@ return;
 if(IsInAttackSight(MyEnemy)){
 if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":attack",this);
 STOP();
-MyState=State.ATTACK_ST;
+MyState=State.ATTACK_ST;sinceLastHitTimer=0;
 return;
 }
 doChase();
@@ -212,26 +212,35 @@ return;
 }
 
 
-if(doAttackingMoveAway()!=1){
+int r;
+if((r=doAttackingMoveAway())!=1){
 doAttack();
-}
 if(!IsInAttackSight(MyEnemy)){
 if(LOG&&LOG_LEVEL<=-1)Debug.Log(GetType()+":chase",this);
-STOP();
+STOP(true);
 MyState=State.CHASE_ST;
 return;
 }
+}
+if(r==2){}
 
 
 }
 protected virtual int doAttackingMoveAway(){
-if(tracing||GoToQueue.Count>0)return 0;
-if((MyMotion==Motions.MOTION_HIT||actorTouchingMe)&&sinceLastHitTimer<=0&&mathrandom.NextDouble()<.1){
+if(tracing||GoToQueue.Count>0)goto _End;
+if((MyMotion==Motions.MOTION_HIT||actorTouchingMe)&&MyEnemy.AttackRange+MyEnemy.BodyRadius<=MyAttackRange+BodyRadius&&sinceLastHitTimer<=0&&mathrandom.NextDouble()<.05){
+STOP(true);
     sinceLastHitTimer=hitDetectionReactionTick;
     Debug.LogWarning("OnATTACK_ST: hitDetectionReactionTick:"+hitDetectionReactionTick);
 }else if(sinceLastHitTimer>0){
     sinceLastHitTimer-=Time.deltaTime;
-if(CurPathTgt==null||_movementWasDetectedTimer<=0){
+if(actorTouchingMe){
+if(CurPathTgt!=null){
+STOP();
+}
+return 0;
+}
+if(CurPathTgt==null){
 return 0;
 }
 return 1;
@@ -242,6 +251,10 @@ if(!destSet||sinceLastHitTimer==hitDetectionReactionTick){
 Debug.DrawLine(transform.position,MyDest,Color.blue,1f);
 GoTo(new Ray(MyDest,Vector3.down));
 return 2;}
+_End:{}
+if(CurPathTgt!=null){
+STOP();
+}
 return 0;}
 void doAttack(){
 if(attackHitboxColliders==null){
@@ -271,9 +284,9 @@ Attack(MyEnemy);
 attackHitboxColliders=null;
 }
 protected virtual void OnSKILL_OBJECT_ST(){}
-[NonSerialized]protected float MyAttackRange=.1f;
+[NonSerialized]protected float MyAttackRange=.1f;public float AttackRange{get{return MyAttackRange;}}
 protected virtual bool IsInAttackSight(AI enemy){
-if(Vector3.Distance(transform.position,enemy.transform.position)-(BodyRange+enemy.BodyRange)<=MyAttackRange){
+if(Vector3.Distance(transform.position,enemy.transform.position)-(BodyRadius+enemy.BodyRadius)<=MyAttackRange){
 return true;
 }
 return false;}
@@ -329,7 +342,11 @@ attackHitboxColliders=null;
     didDamage=true;
 }
 }
-protected virtual void TakeDamage(AI fromEnemy){}
+[NonSerialized]protected float damage;
+protected virtual void TakeDamage(AI fromEnemy){
+damage=fromEnemy.Attributes.ATK-Attributes.DEF;
+if(damage<=0)damage=0;Attributes.CurStamina-=damage;if(Attributes.CurStamina<=0){Attributes.CurStamina=0;Die();}
+}
 protected virtual void Die(){
 if(deadStance==-1){Dying=DeadForGoodDelay;}
 }
