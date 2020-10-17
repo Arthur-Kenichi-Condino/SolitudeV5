@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static ActorManagementMentana;
-public class AI:Pathfinder{[NonSerialized]protected System.Random mathrandom=new System.Random();
+public class AI:Pathfinder{
 public int Id{get;internal set;}public int TypeId{get;internal set;}[SerializeField]public Roles Role;
 [NonSerialized]protected Sight MySight;
 protected override void Awake(){
@@ -81,6 +81,9 @@ enemyTouchingMe=true;
 if(actorTouchingMe&&enemyTouchingMe)break;//  Break when all checks are true, so only on O(n) operation is processed for any needed check
 }}
 
+if(nextAttackTimer>0){
+    nextAttackTimer-=Time.deltaTime;
+}
 if(Autonomous<=0){
 WALK_PATH();
 
@@ -157,7 +160,7 @@ return;
 }else{
 if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":attack",this);
 STOP();
-MyState=State.ATTACK_ST;
+MyState=State.ATTACK_ST;sinceLastHitTimer=0;
 return;
 }
 }
@@ -173,7 +176,7 @@ return;
 if(IsInAttackSight(MyEnemy)){
 if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":attack",this);
 STOP();
-MyState=State.ATTACK_ST;
+MyState=State.ATTACK_ST;sinceLastHitTimer=0;
 return;
 }
 doChase();
@@ -198,7 +201,7 @@ if(DRAW_LEVEL<=0)Debug.DrawLine(transform.position,MyDest,Color.blue,1f);
 GoTo(new Ray(MyDest,Vector3.down));
 }
 }
-[NonSerialized]float sinceLastHitTimer;[NonSerialized]float hitDetectionReactionTick=1f;
+[NonSerialized]float sinceLastHitTimer;[NonSerialized]float hitDetectionReactionTick=6f;
 protected virtual void OnATTACK_ST(){
 if(LOG&&LOG_LEVEL<=0)Debug.Log(GetType()+":OnATTACK_ST",this);
 if(MyEnemy==null){
@@ -209,19 +212,34 @@ return;
 }
 
 
-if(doAttackingMoveAway()!=1){
+int r;
+if((r=doAttackingMoveAway())!=1){
 doAttack();
+if(!IsInAttackSight(MyEnemy)){
+if(LOG&&LOG_LEVEL<=-1)Debug.Log(GetType()+":chase",this);
+STOP(true);
+MyState=State.CHASE_ST;
+return;
 }
+}
+if(r==2){}
 
 
 }
 protected virtual int doAttackingMoveAway(){
-if(tracing||GoToQueue.Count>0)return 0;
-if(MyMotion==Motions.MOTION_HIT&&sinceLastHitTimer<=0&&mathrandom.Next(0,2)==1){
+if(tracing||GoToQueue.Count>0)goto _End;
+if((MyMotion==Motions.MOTION_HIT||actorTouchingMe)&&sinceLastHitTimer<=0&&MyEnemy.AttackRange+MyEnemy.BodyRadius<=MyAttackRange+BodyRadius&&mathrandom.NextDouble()<.05){
+STOP(true);
     sinceLastHitTimer=hitDetectionReactionTick;
     Debug.LogWarning("OnATTACK_ST: hitDetectionReactionTick:"+hitDetectionReactionTick);
 }else if(sinceLastHitTimer>0){
     sinceLastHitTimer-=Time.deltaTime;
+if(actorTouchingMe){
+if(CurPathTgt!=null){
+STOP();
+}
+return 0;
+}
 if(CurPathTgt==null){
 return 0;
 }
@@ -233,6 +251,10 @@ if(!destSet||sinceLastHitTimer==hitDetectionReactionTick){
 Debug.DrawLine(transform.position,MyDest,Color.blue,1f);
 GoTo(new Ray(MyDest,Vector3.down));
 return 2;}
+_End:{}
+if(CurPathTgt!=null){
+STOP();
+}
 return 0;}
 void doAttack(){
 if(attackHitboxColliders==null){
@@ -262,17 +284,19 @@ Attack(MyEnemy);
 attackHitboxColliders=null;
 }
 protected virtual void OnSKILL_OBJECT_ST(){}
-[NonSerialized]protected float MyAttackRange=.1f;
+[NonSerialized]protected float MyAttackRange=.1f;public float AttackRange{get{return MyAttackRange;}}
 protected virtual bool IsInAttackSight(AI enemy){
-if(Vector3.Distance(transform.position,enemy.transform.position)-(BodyRange+enemy.BodyRange)<=MyAttackRange){
+if(Vector3.Distance(transform.position,enemy.transform.position)-(BodyRadius+enemy.BodyRadius)<=MyAttackRange){
 return true;
 }
 return false;}
+[NonSerialized]protected float attackInterval=.25f;[NonSerialized]protected float nextAttackTimer=0;
 [NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}
 protected virtual void Attack(AI enemy){
 if(attackStance==-1){
     Debug.LogWarning("new attack started: set to do damage next animation");
     didDamage=false;
+    nextAttackTimer=attackInterval/Attributes.Aspd;
 }
 if(enemy!=null){
 inputViewRotationEuler.y=Quaternion.LookRotation((enemy.transform.position-transform.position).normalized).eulerAngles.y-transform.eulerAngles.y;
@@ -318,7 +342,11 @@ attackHitboxColliders=null;
     didDamage=true;
 }
 }
-protected virtual void TakeDamage(AI fromEnemy){}
+[NonSerialized]protected float damage;
+protected virtual void TakeDamage(AI fromEnemy){
+damage=fromEnemy.Attributes.ATK-Attributes.DEF;
+if(damage<=0)damage=0;Attributes.CurStamina-=damage;if(Attributes.CurStamina<=0){Attributes.CurStamina=0;Die();}
+}
 protected virtual void Die(){
 if(deadStance==-1){Dying=DeadForGoodDelay;}
 }
@@ -459,18 +487,27 @@ break;}
 #endregion
 #region none
 default:{
-if(CurPathTgt.Value.mode!=Node.PreferredReachableMode.jump&&
-   _axisDist.y>ReachedTgtDisThreshold.y&&(transform.position.y<CurPathTgt.Value.pos.y+.1f||rigidbody.velocity.y<=float.Epsilon)&&
+if(_axisDist.y>ReachedTgtDisThreshold.y&&
    _axisDist.x<=ReachedTgtDisThreshold.x&&
    _axisDist.z<=ReachedTgtDisThreshold.z){   
+if(transform.position.y>=CurPathTgt.Value.pos.y+.1f){
+    if(CurPathTgt.Value.mode!=Node.PreferredReachableMode.fall){
+    var cur=CurPathTgt.Value;cur.mode=Node.PreferredReachableMode.fall;
+    CurPathTgt=cur;
+    }
+}else if(transform.position.y<CurPathTgt.Value.pos.y+.1f||rigidbody.velocity.y<=float.Epsilon){
+    if(CurPathTgt.Value.mode!=Node.PreferredReachableMode.jump){
     var cur=CurPathTgt.Value;cur.mode=Node.PreferredReachableMode.jump;
     CurPathTgt=cur;
+    }
+}
 }
 if(_axisDist.x>float.Epsilon||
    _axisDist.z>float.Epsilon){
 inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.eulerAngles.y;
 }
 inputMoveSpeed.x=0;
+if(!canFly){
 if(CurPathTgt.Value.mode==Node.PreferredReachableMode.jump&&transform.position.y<CurPathTgt.Value.pos.y+.1f){
 #region necessário pular
 inputMoveSpeed.z=0;
@@ -492,6 +529,33 @@ inputMoveSpeed.z=0;
 }
 inputMoveSpeed.y=0;
 #endregion
+}
+}else{
+
+
+    Debug.LogWarning(CurPathTgt.Value.mode);
+#region ir para o destino normalmente
+if((IsGrounded||!HittingWall)&&
+  (_axisDist.x>ReachedTgtDisThreshold.x||
+   _axisDist.z>ReachedTgtDisThreshold.z)){
+inputMoveSpeed.z=InputMaxMoveSpeed.z;
+}else{
+inputMoveSpeed.z=0;
+}
+if(_axisDist.y>ReachedTgtDisThreshold.y){
+if(_axisDiff.y<0){
+    Debug.LogWarning("down");
+inputMoveSpeed.y=-InputMaxMoveSpeed.y;
+}else{
+    Debug.LogWarning("up");
+inputMoveSpeed.y=InputMaxMoveSpeed.y;
+}
+}else{
+inputMoveSpeed.y=0;
+}
+#endregion
+
+
 }
 break;}
 #endregion

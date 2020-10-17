@@ -7,14 +7,15 @@ using static ActorManagementMentana;
 public class ALARM:_3DSprite{
 public override void InitAttributes(bool random=true){
 if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":init attributes");
-Attributes.FOR=mathrandom.Next(12,73);
+Attributes.STR=mathrandom.Next(12,73);
 Attributes.VIT=mathrandom.Next(12,25);
-    Attributes.BaseMaxStamina=Attributes.CurStamina=GetBaseMaxStamina();
 Attributes.INT=mathrandom.Next(1,25);
-    Attributes.BaseMaxFocus=Attributes.CurFocus=GetBaseMaxFocus();
 Attributes.AGI=mathrandom.Next(49,73);
 Attributes.DEX=mathrandom.Next(49,73);
-    Attributes.BaseAspd=GetBaseAspd();
+Attributes.LUK=mathrandom.Next(1,25);
+    Attributes.BaseMaxStamina=Attributes.CurStamina=GetBaseMaxStamina();
+       Attributes.BaseMaxFocus=Attributes.CurFocus=GetBaseMaxFocus();
+                    Attributes.BaseAspd=GetBaseAspd();
 ValidateAttributesSet(1);
 }
 [NonSerialized]public float TryIdleActionInterval=1f;[NonSerialized]float NextIdleActionTimer;[NonSerialized]public float Boredom;public enum CreativeIdleness:int{MOVE_RANDOM=0,RANDOM_SKILL=1,}[NonSerialized]readonly int CreativeIdlenessActionsCount=Enum.GetValues(typeof(CreativeIdleness)).Length;
@@ -99,9 +100,13 @@ STOP();
 MyState=State.IDLE_ST;
 return;
 }
+if(CurPathTgt!=null){
+STOP();
+}
 Attack(MyEnemy);
 if(!IsInAttackSight(MyEnemy)){
 if(LOG&&LOG_LEVEL<=-1)Debug.Log(GetType()+":chase",this);
+STOP(true);
 MyState=State.CHASE_ST;
 return;
 }
@@ -146,16 +151,16 @@ if(LOG&&LOG_LEVEL<=-10)Debug.Log("Me:"+this+"; MyEnemy:"+MyEnemy,MyEnemy);
 }
 }
 protected override bool IsInAttackSight(AI enemy){
-if(Vector3.Distance(transform.position,enemy.transform.position)-(BodyRange+enemy.BodyRange)<=MyAttackRange){
-return true;
+            return base.IsInAttackSight(enemy);
 }
-return false;}
 protected override void Attack(AI enemy){
+if(nextAttackTimer>0)return;
                    base.Attack(enemy);
 if(deadStance!=-1||hitStance!=-1)return;if(attackStance==-1){attackStance=0;curAnimTime=0;}
 }
 protected override void TakeDamage(AI fromEnemy){
                    base.TakeDamage(fromEnemy);
+if(damage<=0)return;
 if(deadStance!=-1)return;attackStance=-1;hitStance=0;curAnimTime=0;
 }
 protected override void Die(){

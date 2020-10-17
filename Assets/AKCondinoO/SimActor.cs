@@ -5,25 +5,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using static ActorManagementMentana;
 public class SimActor:SimObject{
+[NonSerialized]protected bool canFly_v;protected bool canFly{get{return canFly_v;}set{
+if(value){
+if(constantForce==null){constantForce=this.gameObject.AddComponent<ConstantForce>();}
+if(rigidbody!=null)constantForce.force=new Vector3(0,-(rigidbody.mass*Physics.gravity.y),0);
+}
+canFly_v=value;
+}}[NonSerialized]protected new ConstantForce constantForce=null;
 [SerializeField]public RolePlayingAttributes Attributes=new RolePlayingAttributes();
 [Serializable]public class RolePlayingAttributes{
-[SerializeField]public int FOR;
+[SerializeField]public int STR;
 [SerializeField]public int VIT;
-[SerializeField]public float BaseMaxStamina;[SerializeField]public float CurStamina;
 [SerializeField]public int INT;
-[SerializeField]public float BaseMaxFocus;[SerializeField]public float CurFocus;
 [SerializeField]public int AGI;
 [SerializeField]public int DEX;
+[SerializeField]public int LUK;
+[SerializeField]public float BaseMaxStamina;[SerializeField]public float CurStamina;
+[SerializeField]public float BaseMaxFocus;[SerializeField]public float CurFocus;
 [SerializeField]public float BaseAspd;public float Aspd{get{return BaseAspd;}}
 [SerializeField]public float BaseDEF;public float DEF{get{return BaseDEF;}}
 [SerializeField]public float BaseMDEF;public float MDEF{get{return BaseMDEF;}}
+[SerializeField]public float BaseATK;public float ATK{get{return BaseATK;}}
+[SerializeField]public float BaseMATK;public float MATK{get{return BaseMATK;}}
 }
 public virtual void InitAttributes(bool random=true){
 if(LOG&&LOG_LEVEL<=100)Debug.LogWarning(GetType()+":attributes were not set!");
 ValidateAttributesSet(0);
 }
 public virtual float GetBaseMaxStamina(){
-return(Attributes.VIT*100+Attributes.FOR*50);
+return(Attributes.VIT*100+Attributes.STR*50+Attributes.AGI*20);
 }
 public virtual float GetBaseMaxFocus(){
 return(Attributes.VIT*.5f+Attributes.INT*100);
@@ -31,9 +41,34 @@ return(Attributes.VIT*.5f+Attributes.INT*100);
 public virtual float GetBaseAspd(){
 return Mathf.Clamp(((Attributes.AGI/100f)+(Attributes.DEX*.5f/100f))/2f*1.5f,.5f,1f);
 }
+public virtual float GetBaseDEF(){
+return(Attributes.VIT*1.5f+Attributes.AGI*.5f);
+}
+public virtual float GetBaseMDEF(){
+return(Attributes.INT*1.5f+Attributes.LUK*.5f);
+}
+public virtual float GetBaseATK(){
+return(Attributes.STR*2.5f+Attributes.DEX*.5f+Attributes.AGI*.45f+Attributes.LUK*.05f);
+}
+public virtual float GetBaseMATK(){
+return(Attributes.INT*3.5f);
+}
 protected void ValidateAttributesSet(int version){
 if(version<=0){
 if(LOG&&LOG_LEVEL<=100)Debug.LogWarning(GetType()+":attributes are invalid! [0]");
+Attributes.STR=mathrandom.Next(1,100);
+Attributes.VIT=mathrandom.Next(1,100);
+Attributes.INT=mathrandom.Next(1,100);
+Attributes.AGI=mathrandom.Next(1,100);
+Attributes.DEX=mathrandom.Next(1,100);
+Attributes.LUK=mathrandom.Next(1,100);
+    Attributes.BaseMaxStamina=Attributes.CurStamina=GetBaseMaxStamina();
+       Attributes.BaseMaxFocus=Attributes.CurFocus=GetBaseMaxFocus();
+                    Attributes.BaseAspd=GetBaseAspd();
+}
+if(version<=1){
+Attributes.BaseDEF=GetBaseDEF();Attributes.BaseMDEF=GetBaseMDEF();
+Attributes.BaseATK=GetBaseATK();Attributes.BaseMATK=GetBaseMATK();
 }
 }
 protected override void Awake(){
@@ -64,13 +99,26 @@ stopHorizontalMovement();
         }
 moveSpeedToApplyToBody.x=moveSpeedRotated.x==0?rigidbody.velocity.x:moveSpeedRotated.x>0?(moveSpeedRotated.x>rigidbody.velocity.x?moveSpeedRotated.x:rigidbody.velocity.x):(moveSpeedRotated.x<rigidbody.velocity.x?moveSpeedRotated.x:rigidbody.velocity.x);
 moveSpeedToApplyToBody.z=moveSpeedRotated.z==0?rigidbody.velocity.z:moveSpeedRotated.z>0?(moveSpeedRotated.z>rigidbody.velocity.z?moveSpeedRotated.z:rigidbody.velocity.z):(moveSpeedRotated.z<rigidbody.velocity.z?moveSpeedRotated.z:rigidbody.velocity.z);
+if(!canFly){
 moveSpeedToApplyToBody.y=moveSpeedRotated.y>0&&moveSpeedRotated.y>rigidbody.velocity.y?moveSpeedRotated.y:rigidbody.velocity.y;
+}else{
+    //Debug.LogWarning("inputMoveSpeed.y:"+inputMoveSpeed.y+"; moveSpeedRotated.y:"+moveSpeedRotated.y);
+        if(inputMoveSpeed.y==0){
+stopVerticalMovement();
+        }
+moveSpeedToApplyToBody.y=moveSpeedRotated.y==0?rigidbody.velocity.y:moveSpeedRotated.y>0?(moveSpeedRotated.y>rigidbody.velocity.y?moveSpeedRotated.y:rigidbody.velocity.y):(moveSpeedRotated.y<rigidbody.velocity.y?moveSpeedRotated.y:rigidbody.velocity.y);
+}
 Jump=false;
         rigidbody.velocity=moveSpeedToApplyToBody;
 void stopHorizontalMovement(){
 stopMovement=rigidbody.velocity;
 stopMovement.x=0;
 stopMovement.z=0;
+    rigidbody.velocity=stopMovement;
+}
+void stopVerticalMovement(){
+stopMovement=rigidbody.velocity;
+stopMovement.y=0;
     rigidbody.velocity=stopMovement;
 }
 }
