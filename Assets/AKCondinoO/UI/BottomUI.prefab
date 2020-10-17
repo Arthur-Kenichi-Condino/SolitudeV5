@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 3375661840507534962}
   - component: {fileID: 3375661840507534961}
   m_Layer: 5
-  m_Name: F3Build
+  m_Name: ButtonF3Build
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -398,7 +398,7 @@ GameObject:
   - component: {fileID: 3375661841892458969}
   - component: {fileID: 3375661841892458968}
   m_Layer: 5
-  m_Name: F2Buy
+  m_Name: ButtonF2Buy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -518,7 +518,7 @@ GameObject:
   - component: {fileID: 3375661842028967911}
   - component: {fileID: 3375661842028967910}
   m_Layer: 5
-  m_Name: F1Sim
+  m_Name: ButtonF1Sim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -228,7 +228,7 @@ if(r==2){}
 }
 protected virtual int doAttackingMoveAway(){
 if(tracing||GoToQueue.Count>0)goto _End;
-if((MyMotion==Motions.MOTION_HIT||actorTouchingMe)&&MyEnemy.AttackRange+MyEnemy.BodyRadius<=MyAttackRange+BodyRadius&&sinceLastHitTimer<=0&&mathrandom.NextDouble()<.05){
+if((MyMotion==Motions.MOTION_HIT||actorTouchingMe)&&sinceLastHitTimer<=0&&MyEnemy.AttackRange+MyEnemy.BodyRadius<=MyAttackRange+BodyRadius&&mathrandom.NextDouble()<.05){
 STOP(true);
     sinceLastHitTimer=hitDetectionReactionTick;
     Debug.LogWarning("OnATTACK_ST: hitDetectionReactionTick:"+hitDetectionReactionTick);
