@@ -203,13 +203,14 @@ _skip:{}
 if(coord.x==0){break;}}}
 if(coord.y==0){break;}}}
 }
-public void Edit(Vector3 center,Vector3Int size,double density=0){
+public enum EditMode{Cube,}
+public void Edit(Vector3 center,Vector3Int size,double tgtDensity=0,MaterialId tgtMaterialId=MaterialId.Air,EditMode mode=EditMode.Cube){
     if(backgroundDataSet1.WaitOne(0)){
 Vector2Int cCoord1=PosToCoord(center);
 Vector2Int cnkRgn1=CoordToRgn(cCoord1);
 Vector3Int vCoord1=Chunk.PosToCoord(center);
 if(LOG&&LOG_LEVEL<=2)Debug.Log("edit at:"+center+"; cCoord1:"+cCoord1+"; vCoord1:"+vCoord1);
-var offset=new Vector3Int();
+var offset=new Vector3Int();float smoothValue;
 for(offset.x=-size.x;offset.x<=size.x;offset.x++){
 for(offset.z=-size.z;offset.z<=size.z;offset.z++){
 for(offset.y=-size.y;offset.y<=size.y;offset.y++){
@@ -223,8 +224,13 @@ if(vCoord2.x<0||vCoord2.x>=Chunk.Width||
 Chunk.ValidateCoord(ref cnkRgn2,ref vCoord2);cCoord2=RgnToCoord(cnkRgn2);
 }
 var cnkIdx2=GetIdx(cCoord2.x,cCoord2.y);if(Chunks.ContainsKey(cnkIdx2)){if((!(Chunks[cnkIdx2]is TerrainChunk cnk))||cnk.needsRebuild||!cnk.backgroundDataSet.WaitOne(0)){Cancel();goto _End;}}
-    if(!edtVxlsByCnkIdx.ContainsKey(cnkIdx2)){edtVxlsByCnkIdx.Add(cnkIdx2,new Dictionary<Vector3Int,(double density,MaterialId material)>());}
-    edtVxlsByCnkIdx[cnkIdx2].Add(vCoord2,(10,MaterialId.Air));
+    if(!edtVxlsByCnkIdx.ContainsKey(cnkIdx2)){edtVxlsByCnkIdx.Add(cnkIdx2,new Dictionary<Vector3Int,(double density,MaterialId materialId)>());}
+if(mode==EditMode.Cube){
+smoothValue=Mathf.Max(1-offset.x/size.x,1-offset.z/size.z,1-offset.y/size.y);
+}else{
+smoothValue=1f;
+}
+    edtVxlsByCnkIdx[cnkIdx2].Add(vCoord2,(tgtDensity,tgtMaterialId));
 }}}
             backgroundDataSet1.Reset();foregroundDataSet1.Set();
 _End:{}
@@ -240,7 +246,7 @@ edtVxlsByCnkIdx.Clear();
     }
 }
 [NonSerialized]readonly List<object>load_Syn=new List<object>();
-[NonSerialized]readonly Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId material)>>edtVxlsByCnkIdx=new Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId material)>>();[NonSerialized]readonly List<int>editedDirty=new List<int>();
+[NonSerialized]readonly Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId materialId)>>edtVxlsByCnkIdx=new Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId materialId)>>();[NonSerialized]readonly List<int>editedDirty=new List<int>();
 void BG1(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is System.Random random&&parameters[3]is string[]saveSubfolder){
         while(!Stop){foregroundDataSet1.WaitOne();if(Stop)goto _Stop;
@@ -252,6 +258,11 @@ int saveTries=60;bool saved=false;while(!saved){
 FileStream file=null;
 try{
 using(file=new FileStream(fileName,FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None)){
+
+
+
+
+
 if(file.Length>0){
 if(LOG&&LOG_LEVEL<=1)Debug.Log("file has data, load it to merge with new save data:fileName:"+fileName);  
 if(MessagePackSerializer.Deserialize(typeof(Dictionary<Vector3Int,(double density,MaterialId material)>),file)is Dictionary<Vector3Int,(double density,MaterialId material)>fileData){

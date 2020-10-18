@@ -734,6 +734,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ActorManagementMentana
       objectReference: {fileID: 0}
+    - target: {fileID: 7789522645625010537, guid: 10725eaf686bf0147b88fddfec998997,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10725eaf686bf0147b88fddfec998997, type: 3}
 --- !u!1001 &1307464130
@@ -1264,6 +1269,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CanvasBottomUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 3375661841515285933, guid: 96909be4a8ac81f44ab217c695070dfb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96909be4a8ac81f44ab217c695070dfb, type: 3}
