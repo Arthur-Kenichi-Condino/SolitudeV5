@@ -224,13 +224,19 @@ if(vCoord2.x<0||vCoord2.x>=Chunk.Width||
 Chunk.ValidateCoord(ref cnkRgn2,ref vCoord2);cCoord2=RgnToCoord(cnkRgn2);
 }
 var cnkIdx2=GetIdx(cCoord2.x,cCoord2.y);if(Chunks.ContainsKey(cnkIdx2)){if((!(Chunks[cnkIdx2]is TerrainChunk cnk))||cnk.needsRebuild||!cnk.backgroundDataSet.WaitOne(0)){Cancel();goto _End;}}
-    if(!edtVxlsByCnkIdx.ContainsKey(cnkIdx2)){edtVxlsByCnkIdx.Add(cnkIdx2,new Dictionary<Vector3Int,(double density,MaterialId materialId)>());}
-if(mode==EditMode.Cube){
+    if(!edtVxlsByCnkIdx.ContainsKey(cnkIdx2)){edtVxlsByCnkIdx.Add(cnkIdx2,new Dictionary<Vector3Int,(double density,MaterialId materialId)>());
+                                              edtDataByCnkIdx.Add(cnkIdx2,new Dictionary<Vector3Int,(Vector2Int cnkRgn2,float smoothValue)>());}
+
+
+switch(mode){
+default:{
 smoothValue=Mathf.Max(1-offset.x/size.x,1-offset.z/size.z,1-offset.y/size.y);
-}else{
-smoothValue=1f;
+    break;
 }
-    edtVxlsByCnkIdx[cnkIdx2].Add(vCoord2,(tgtDensity,tgtMaterialId));
+}
+
+
+    edtVxlsByCnkIdx[cnkIdx2].Add(vCoord2,(tgtDensity,tgtMaterialId));edtDataByCnkIdx[cnkIdx2].Add(vCoord2,(cnkRgn2,smoothValue));
 }}}
             backgroundDataSet1.Reset();foregroundDataSet1.Set();
 _End:{}
@@ -243,26 +249,29 @@ _End:{}
     void Cancel(){
 if(LOG&&LOG_LEVEL<=2)Debug.Log("cancel edit");
 edtVxlsByCnkIdx.Clear();
+edtDataByCnkIdx.Clear();
     }
 }
 [NonSerialized]readonly List<object>load_Syn=new List<object>();
-[NonSerialized]readonly Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId materialId)>>edtVxlsByCnkIdx=new Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId materialId)>>();[NonSerialized]readonly List<int>editedDirty=new List<int>();
+[NonSerialized]readonly Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId materialId)>>edtVxlsByCnkIdx=new Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId materialId)>>();[NonSerialized]readonly Dictionary<int,Dictionary<Vector3Int,(Vector2Int cnkRgn2,float smoothValue)>>edtDataByCnkIdx=new Dictionary<int,Dictionary<Vector3Int,(Vector2Int cnkRgn2,float smoothValue)>>();[NonSerialized]readonly List<int>editedDirty=new List<int>();
 void BG1(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is System.Random random&&parameters[3]is string[]saveSubfolder){
         while(!Stop){foregroundDataSet1.WaitOne();if(Stop)goto _Stop;
             foreach(var syn in load_Syn)Monitor.Enter(syn);try{
-foreach(var cnkIdxEdtsPair in edtVxlsByCnkIdx){
+foreach(var cnkIdxEdtsPair in edtVxlsByCnkIdx){var vxlData=cnkIdxEdtsPair.Value;var edtData=edtDataByCnkIdx[cnkIdxEdtsPair.Key];
 var fileName=string.Format(saveSubfolder[0],cnkIdxEdtsPair.Key);
 if(LOG&&LOG_LEVEL<=1)Debug.Log("save edits at: "+fileName);
+
+
+foreach(var edtDataToProcess in edtData){var cnkRgn2=edtDataToProcess.Value.cnkRgn2;var smoothValue=edtDataToProcess.Value.smoothValue;
+var v=vxlData[edtDataToProcess.Key];v.density=51;vxlData[edtDataToProcess.Key]=v;
+}
+
+
 int saveTries=60;bool saved=false;while(!saved){
 FileStream file=null;
 try{
 using(file=new FileStream(fileName,FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None)){
-
-
-
-
-
 if(file.Length>0){
 if(LOG&&LOG_LEVEL<=1)Debug.Log("file has data, load it to merge with new save data:fileName:"+fileName);  
 if(MessagePackSerializer.Deserialize(typeof(Dictionary<Vector3Int,(double density,MaterialId material)>),file)is Dictionary<Vector3Int,(double density,MaterialId material)>fileData){
@@ -310,6 +319,7 @@ Thread.Yield();Thread.Sleep(random.Next(100,501));
 
 
 edtVxlsByCnkIdx.Clear();
+edtDataByCnkIdx.Clear();
 backgroundDataSet1.Set();}
         _Stop:{
             CallGC();

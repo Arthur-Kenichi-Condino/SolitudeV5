@@ -115,7 +115,7 @@ protected override void GetTargets(){
 for(int k=AsAggroEnemies.Keys.Count-1;k>=0;k--){var i=AsAggroEnemies.Keys.ElementAt(k);
 var tuple=AsAggroEnemies[i];
     tuple.timeout-=Time.deltaTime;
-AsAggroEnemies[i]=tuple;if(AsAggroEnemies[i].timeout<=0||AsAggroEnemies[i].actor.OutOfSight){AsAggroEnemies.Remove(i);}
+AsAggroEnemies[i]=tuple;if(AsAggroEnemies[i].timeout<=0||AsAggroEnemies[i].actor.GetMotion==Motions.MOTION_DEAD||AsAggroEnemies[i].actor.OutOfSight){AsAggroEnemies.Remove(i);}
 }
 MyPossibleTargets.Clear();
 foreach(var kvp in MySight.IsInVisionSight){var i=kvp.Key;var v=kvp.Value.actor;bool detected=kvp.Value.directSight;

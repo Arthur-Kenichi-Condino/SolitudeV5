@@ -36,7 +36,7 @@ if(!(this is _3DSprite)){RangeMultiplier=1f;}
 colliderHalfExtents=collider.bounds.extents/2;
 colliderShortestExtent=Mathf.Min(collider.bounds.extents.x,collider.bounds.extents.y,collider.bounds.extents.z);
 BodyRange=BodyRadius=Mathf.Max(Mathf.Sqrt(Mathf.Pow(collider.bounds.extents.x,2)*2),
-                               Mathf.Sqrt(Mathf.Pow(collider.bounds.extents.z,2)*2))+.1f;
+                               Mathf.Sqrt(Mathf.Pow(collider.bounds.extents.z,2)*2));
 if(LOG&&LOG_LEVEL<=1)Debug.Log("BodyRadius:"+BodyRange+", name:"+name);
 }
 protected virtual void OnEnable(){}

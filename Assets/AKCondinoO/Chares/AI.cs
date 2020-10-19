@@ -107,7 +107,7 @@ protected virtual void GetTargets(){
 for(int k=GetEnemiesAttackingMe.Keys.Count-1;k>=0;k--){var i=GetEnemiesAttackingMe.Keys.ElementAt(k);
 var tuple=GetEnemiesAttackingMe[i];
     tuple.timeout-=Time.deltaTime;
-GetEnemiesAttackingMe[i]=tuple;if(GetEnemiesAttackingMe[i].timeout<=0||GetEnemiesAttackingMe[i].actor.OutOfSight){GetEnemiesAttackingMe.Remove(i);}
+GetEnemiesAttackingMe[i]=tuple;if(GetEnemiesAttackingMe[i].timeout<=0||GetEnemiesAttackingMe[i].actor.GetMotion==Motions.MOTION_DEAD||GetEnemiesAttackingMe[i].actor.OutOfSight){GetEnemiesAttackingMe.Remove(i);}
 }
 MyPossibleTargets.Clear();
 foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
@@ -284,7 +284,7 @@ Attack(MyEnemy);
 attackHitboxColliders=null;
 }
 protected virtual void OnSKILL_OBJECT_ST(){}
-[NonSerialized]protected float MyAttackRange=.1f;public float AttackRange{get{return MyAttackRange;}}
+[NonSerialized]protected float MyAttackRange=.2f;public float AttackRange{get{return MyAttackRange;}}
 protected virtual bool IsInAttackSight(AI enemy){
 if(Vector3.Distance(transform.position,enemy.transform.position)-(BodyRadius+enemy.BodyRadius)<=MyAttackRange){
 return true;
@@ -306,12 +306,13 @@ inputViewRotationEuler.y=Quaternion.LookRotation((enemy.transform.position-trans
 protected virtual void OverlappedCollidersOnAttack(){
 
     
-attackHitboxHalfSize.x=collider.bounds.extents.x;
+attackHitboxHalfSize.x=collider.bounds.extents.x+MyAttackRange;
 attackHitboxHalfSize.z=collider.bounds.extents.z+MyAttackRange;
-attackHitboxHalfSize.y=collider.bounds.extents.y;
+attackHitboxHalfSize.y=collider.bounds.extents.y+MyAttackRange;
 attackHitboxHalfSize*=RangeMultiplier;
-attackHitboxColliders=Physics.OverlapBox(transform.position+transform.forward*(collider.bounds.extents.z*RangeMultiplier+attackHitboxHalfSize.z),attackHitboxHalfSize,transform.rotation);
-Debug.DrawRay(transform.position,transform.forward*(collider.bounds.extents.z+attackHitboxHalfSize.z),Color.white,.1f);
+var dest=transform.forward*(collider.bounds.extents.z+attackHitboxHalfSize.z);
+attackHitboxColliders=Physics.OverlapBox(transform.position+dest,attackHitboxHalfSize,transform.rotation);
+Debug.DrawRay(transform.position,dest,Color.white,.1f);
 
 
 }
