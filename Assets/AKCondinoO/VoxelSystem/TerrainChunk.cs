@@ -582,6 +582,7 @@ if(weights.ContainsKey(1)){col.g=(weights[1]/(float)total);}
 if(weights.ContainsKey(2)){col.b=(weights[2]/(float)total);}
 if(weights.ContainsKey(3)){col.a=(weights[3]/(float)total);}
            v2.color=col;TempVer[idx[j]]=v2;
+if(LOG&&LOG_LEVEL<=-110){var s="[weights.Count:"+weights.Count+"]: \n";foreach(var weight in weights)s+=weight.Key+" -> "+weight.Value+" \n";Debug.Log(s);}
 }
 }}
 if(LOG&&LOG_LEVEL<=2)Debug.Log("job done "+watch.ElapsedMilliseconds+" ms ["+cnkRgn1);
