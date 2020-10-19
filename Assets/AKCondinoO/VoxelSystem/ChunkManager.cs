@@ -263,8 +263,24 @@ var fileName=string.Format(saveSubfolder[0],cnkIdxEdtsPair.Key);
 if(LOG&&LOG_LEVEL<=1)Debug.Log("save edits at: "+fileName);
 
 
+if(File.Exists(fileName)){
+}
+
+
+TerrainChunk.Voxel tmpVxl=new TerrainChunk.Voxel();double[]noiseCache=null;
 foreach(var edtDataToProcess in edtData){var cnkRgn2=edtDataToProcess.Value.cnkRgn2;var smoothValue=edtDataToProcess.Value.smoothValue;
-var v=vxlData[edtDataToProcess.Key];v.density=51;vxlData[edtDataToProcess.Key]=v;
+var v=vxlData[edtDataToProcess.Key];var vCoord2=edtDataToProcess.Key;
+        
+
+Vector3 noiseInput=vCoord2;noiseInput.x+=cnkRgn2.x;
+                           noiseInput.z+=cnkRgn2.y;
+biome.v(noiseInput,ref tmpVxl,ref noiseCache,vCoord2.z+vCoord2.x*Chunk.Depth);
+
+
+        v.density=tmpVxl.Density;v.materialId=tmpVxl.Material;
+
+
+vxlData[edtDataToProcess.Key]=v;
 }
 
 
