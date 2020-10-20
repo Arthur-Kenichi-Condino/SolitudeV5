@@ -276,8 +276,13 @@ Vector3 noiseInput=vCoord2;noiseInput.x+=cnkRgn2.x;
                            noiseInput.z+=cnkRgn2.y;
 biome.v(noiseInput,ref tmpVxl,ref noiseCache,vCoord2.z+vCoord2.x*Chunk.Depth);
 
+Debug.LogWarning("smoothValue:"+smoothValue);
 
-        v.density=tmpVxl.Density;v.materialId=tmpVxl.Material;
+var densityResult=tmpVxl.Density+(v.density-tmpVxl.Density)*smoothValue;//  Lerp
+MaterialId materialIdToSet=-densityResult>=TerrainChunk.IsoLevel?MaterialId.Air:(v.materialId==MaterialId.Air?(tmpVxl.Material==MaterialId.Air?MaterialId.Dirt:tmpVxl.Material):v.materialId);
+
+
+v.density=densityResult;v.materialId=materialIdToSet;
 
 
 vxlData[edtDataToProcess.Key]=v;

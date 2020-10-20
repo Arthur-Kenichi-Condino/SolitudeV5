@@ -67,6 +67,7 @@ double smoothingValue=Math.Abs(1.0-((noiseInput.y-(noiseValue1-smoothingHeightDe
        dValue=100;
 return dValue;}
 protected virtual MaterialId GetMaterial(Vector3 noiseInput,double density){
+if(-density>=IsoLevel){return MaterialId.Air;}
 return MaterialIdsPicking[0].Item1;}
 
 
