@@ -230,7 +230,12 @@ var cnkIdx2=GetIdx(cCoord2.x,cCoord2.y);if(Chunks.ContainsKey(cnkIdx2)){if((!(Ch
 
 switch(mode){
 default:{
-smoothValue=Mathf.Max(1-offset.x/size.x,1-offset.z/size.z,1-offset.y/size.y);
+//smoothValue=Mathf.Clamp01(1f-Vector3.Distance(vCoord2,vCoord1)/Mathf.Max(size.x,size.y,size.z));
+smoothValue=0;
+
+        //Debug.LogWarning("dis:"+Vector3.Distance(vCoord2,vCoord1)+" maxDis:"+Mathf.Max(size.x,size.y,size.z)+" smoothValue:"+smoothValue);
+
+
     break;
 }
 }
@@ -276,12 +281,12 @@ Vector3 noiseInput=vCoord2;noiseInput.x+=cnkRgn2.x;
                            noiseInput.z+=cnkRgn2.y;
 biome.v(noiseInput,ref tmpVxl,ref noiseCache,vCoord2.z+vCoord2.x*Chunk.Depth);
 
-Debug.LogWarning("smoothValue:"+smoothValue);
 
 var densityResult=tmpVxl.Density+(v.density-tmpVxl.Density)*smoothValue;//  Lerp
 MaterialId materialIdToSet=-densityResult>=TerrainChunk.IsoLevel?MaterialId.Air:(v.materialId==MaterialId.Air?(tmpVxl.Material==MaterialId.Air?MaterialId.Dirt:tmpVxl.Material):v.materialId);
 
 
+//Debug.LogWarning("smoothValue:"+smoothValue+"; curDensity:"+tmpVxl.Density+"; tgtDensity:"+v.density+"; densityResult:"+densityResult);
 v.density=densityResult;v.materialId=materialIdToSet;
 
 
