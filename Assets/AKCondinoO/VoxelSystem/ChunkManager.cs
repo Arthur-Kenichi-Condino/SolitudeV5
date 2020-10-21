@@ -130,7 +130,7 @@ Vector2Int nCoord1=cnk.Coord;nCoord1.x+=x;nCoord1.y+=z;int ngbIdx1=GetIdx(nCoord
 
 
 
-        if(DEBUG_EDIT){Edit(new Vector3(0,0,0),new Vector3Int(8,50,1));}
+        if(DEBUG_EDIT){Edit(new Vector3(0,0,0),new Vector3Int(8,8,1),0,MaterialId.Air,EditMode.Sphere);}
 
 
 
@@ -203,9 +203,29 @@ _skip:{}
 if(coord.x==0){break;}}}
 if(coord.y==0){break;}}}
 }
-public enum EditMode{Cube,}
+public enum EditMode{Cube,Sphere}
 public void Edit(Vector3 center,Vector3Int size,double tgtDensity=0,MaterialId tgtMaterialId=MaterialId.Air,EditMode mode=EditMode.Cube){
     if(backgroundDataSet1.WaitOne(0)){
+
+        
+switch(mode){
+case(EditMode.Sphere):{
+size.x=size.y=size.z=Mathf.Max(8,size.x,size.y,size.z);
+    break;
+}
+default:{
+
+
+size.x=Mathf.Max(8,size.x);
+size.y=Mathf.Max(8,size.y);
+size.z=Mathf.Max(8,size.z);
+
+
+    break;
+}
+}
+
+
 Vector2Int cCoord1=PosToCoord(center);
 Vector2Int cnkRgn1=CoordToRgn(cCoord1);
 Vector3Int vCoord1=Chunk.PosToCoord(center);
@@ -229,10 +249,38 @@ var cnkIdx2=GetIdx(cCoord2.x,cCoord2.y);if(Chunks.ContainsKey(cnkIdx2)){if((!(Ch
 
 
 switch(mode){
+case(EditMode.Sphere):{
+//smoothValue=Mathf.Clamp01(1f-Mathf.Abs(offset.x)/(float)size.x)*
+//            Mathf.Clamp01(1f-Mathf.Abs(offset.y)/(float)size.y)*
+//            Mathf.Clamp01(1f-Mathf.Abs(offset.z)/(float)size.z);
+
+
+//smoothValue=0f;
+smoothValue=1f-Mathf.Clamp01(Vector3.Distance(vCoord2,vCoord1)/size.x);
+//smoothValue=Mathf.Min(Mathf.Clamp01(1f-Mathf.Abs(offset.x)/(float)size.x),
+//                      Mathf.Clamp01(1f-Mathf.Abs(offset.y)/(float)size.y),
+//                      Mathf.Clamp01(1f-Mathf.Abs(offset.z)/(float)size.z));
+
+
+    break;
+}
 default:{
 //smoothValue=Mathf.Clamp01(1f-Vector3.Distance(vCoord2,vCoord1)/Mathf.Max(size.x,size.y,size.z));
-smoothValue=0;
+//smoothValue=Mathf.Min(1f-Mathf.Abs(vCoord2.x-vCoord1.x)/(float)size.x,
+//                      1f-Mathf.Abs(vCoord2.y-vCoord1.y)/(float)size.y,
+//                      1f-Mathf.Abs(vCoord2.z-vCoord1.z)/(float)size.z);
 
+
+//smoothValue=Mathf.Min(1f-Mathf.Abs(offset.x)/(float)size.x,
+//                      1f-Mathf.Abs(offset.y)/(float)size.y,
+//                      1f-Mathf.Abs(offset.z)/(float)size.z)*.25f;
+smoothValue=0f;
+
+
+//smoothValue=1f;
+//Debug.LogWarning(1f-Mathf.Abs(vCoord2.x-vCoord1.x)/(float)size.x);
+//Debug.LogWarning(1f-Mathf.Abs(vCoord2.y-vCoord1.y)/(float)size.y);
+//Debug.LogWarning(1f-Mathf.Abs(vCoord2.z-vCoord1.z)/(float)size.z);
         //Debug.LogWarning("dis:"+Vector3.Distance(vCoord2,vCoord1)+" maxDis:"+Mathf.Max(size.x,size.y,size.z)+" smoothValue:"+smoothValue);
 
 
