@@ -130,7 +130,7 @@ Vector2Int nCoord1=cnk.Coord;nCoord1.x+=x;nCoord1.y+=z;int ngbIdx1=GetIdx(nCoord
 
 
 
-        if(DEBUG_EDIT){Edit(new Vector3(0,0,0),new Vector3Int(8,8,1),0,MaterialId.Air,EditMode.Sphere);}
+        if(DEBUG_EDIT){Edit(new Vector3(0,0,0),new Vector3Int(8,8,1),0,MaterialId.Air,EditMode.Cube);}
 
 
 
@@ -274,7 +274,52 @@ default:{
 //smoothValue=Mathf.Min(1f-Mathf.Abs(offset.x)/(float)size.x,
 //                      1f-Mathf.Abs(offset.y)/(float)size.y,
 //                      1f-Mathf.Abs(offset.z)/(float)size.z)*.25f;
-smoothValue=0f;
+
+
+//smoothValue=(1f-Mathf.Clamp01((float)Mathf.Abs(vCoord2.x-vCoord1.x)/size.x)+
+//             1f-Mathf.Clamp01((float)Mathf.Abs(vCoord2.y-vCoord1.y)/size.y)+
+//             1f-Mathf.Clamp01((float)Mathf.Abs(vCoord2.z-vCoord1.z)/size.z))/3f;
+smoothValue=1f;
+
+
+//float smoothRadius=4f;
+
+
+Vector3 smoothByAxis=new Vector3(1f,1f,1f);
+
+
+float dis=Mathf.Abs(vCoord2.x-vCoord1.x);
+Debug.LogWarning(dis);
+if(dis>=size.x){
+smoothByAxis.x=.0295f;
+}else if(dis>=size.x-1f){
+smoothByAxis.x=.0915f;
+}else if(dis>=size.x-2f){
+smoothByAxis.x=.2115f;
+}else if(dis>=size.x-3f){
+smoothByAxis.x=.3510f;
+}else if(dis>=size.x-4f){
+smoothByAxis.x=.5105f;
+}
+
+
+smoothValue=smoothByAxis.x;
+//Vector3 smoothByAxis=new Vector3(1f,1f,1f);
+//float dis=Mathf.Abs(vCoord2.x-vCoord1.x);
+//if(dis>=size.x-smoothRadius){
+//smoothByAxis.x=(1f-(dis-1f)/size.x)*.5f;
+//Debug.LogWarning(dis+" "+smoothByAxis.x);
+//}
+////Debug.LogWarning((dis/size.x));
+////float dis;float smoothRadius=4f;Vector3 smoothByAxis=new Vector3();
+////if((dis=Mathf.Abs(offset.x-size.x))<=smoothRadius){
+////smoothByAxis.x=(smoothRadius-dis)/smoothRadius;
+////Debug.LogWarning(smoothByAxis.x);
+////}
+
+
+//smoothValue=smoothByAxis.x;
+//Debug.LogWarning(smoothValue);
 
 
 //smoothValue=1f;
