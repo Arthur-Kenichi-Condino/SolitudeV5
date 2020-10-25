@@ -279,7 +279,7 @@ default:{
 //smoothValue=(1f-Mathf.Clamp01((float)Mathf.Abs(vCoord2.x-vCoord1.x)/size.x)+
 //             1f-Mathf.Clamp01((float)Mathf.Abs(vCoord2.y-vCoord1.y)/size.y)+
 //             1f-Mathf.Clamp01((float)Mathf.Abs(vCoord2.z-vCoord1.z)/size.z))/3f;
-smoothValue=1f;
+//smoothValue=1f;
 
 
 //float smoothRadius=4f;
@@ -291,14 +291,16 @@ Vector3 smoothByAxis=new Vector3(1f,1f,1f);
 float dis=Mathf.Abs(vCoord2.x-vCoord1.x);
 Debug.LogWarning(dis);
 if(dis>=size.x){
-smoothByAxis.x=.0295f;
-}else if(dis>=size.x-1f){
-smoothByAxis.x=.0915f;
-}else if(dis>=size.x-2f){
+smoothByAxis.x=.0075f;
+}else if(dis>=size.x-1){
+smoothByAxis.x=.0395f;
+}else if(dis>=size.x-2){
+smoothByAxis.x=.1115f;
+}else if(dis>=size.x-3){
 smoothByAxis.x=.2115f;
-}else if(dis>=size.x-3f){
+}else if(dis>=size.x-4){
 smoothByAxis.x=.3510f;
-}else if(dis>=size.x-4f){
+}else if(dis>=size.x-5){
 smoothByAxis.x=.5105f;
 }
 
