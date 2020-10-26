@@ -207,7 +207,10 @@ public enum EditMode{Cube,Sphere}
 public void Edit(Vector3 center,Vector3Int size,double tgtDensity=0,MaterialId tgtMaterialId=MaterialId.Air,EditMode mode=EditMode.Cube){
     if(backgroundDataSet1.WaitOne(0)){
 
+     
+if(tgtMaterialId==MaterialId.Air){tgtDensity=0;}else{tgtDensity=Math.Max(tgtDensity,81f);tgtDensity=Math.Min(tgtDensity,100f);}
         
+
 switch(mode){
 case(EditMode.Sphere):{
 size.x=size.y=size.z=Mathf.Max(8,size.x,size.y,size.z);
@@ -279,7 +282,7 @@ default:{
 //smoothValue=(1f-Mathf.Clamp01((float)Mathf.Abs(vCoord2.x-vCoord1.x)/size.x)+
 //             1f-Mathf.Clamp01((float)Mathf.Abs(vCoord2.y-vCoord1.y)/size.y)+
 //             1f-Mathf.Clamp01((float)Mathf.Abs(vCoord2.z-vCoord1.z)/size.z))/3f;
-//smoothValue=1f;
+smoothValue=1f;
 
 
 //float smoothRadius=4f;
@@ -288,24 +291,73 @@ default:{
 Vector3 smoothByAxis=new Vector3(1f,1f,1f);
 
 
-float dis=Mathf.Abs(vCoord2.x-vCoord1.x);
-Debug.LogWarning(dis);
-if(dis>=size.x){
-smoothByAxis.x=.0075f;
-}else if(dis>=size.x-1){
-smoothByAxis.x=.0395f;
-}else if(dis>=size.x-2){
-smoothByAxis.x=.1115f;
-}else if(dis>=size.x-3){
-smoothByAxis.x=.2115f;
-}else if(dis>=size.x-4){
-smoothByAxis.x=.3510f;
-}else if(dis>=size.x-5){
-smoothByAxis.x=.5105f;
-}
+//float dis1=Vector3.Distance(vCoord2,vCoord1)/*=Mathf.Abs(vCoord2.x-vCoord1.x)*/;float perc1=1f;
 
 
-smoothValue=smoothByAxis.x;
+//float radius1;
+//if((radius1=size.x-dis1)<=4f){
+//perc1=radius1/4f;
+////smoothByAxis.x=;
+//}
+
+
+//Debug.LogWarning(dis1+" "+perc1);
+
+
+//float dis1=Mathf.Abs(vCoord2.x-vCoord1.x);
+//float dis2=Mathf.Lerp(dis1/10f,dis1,dis1/size.x);
+//smoothValue=Mathf.Lerp(.5f,.0125f,dis2/size.x);
+
+
+//float dis=Mathf.Abs(vCoord2.x-vCoord1.x);
+//Debug.LogWarning(dis);
+//if(dis>=size.x){
+//smoothByAxis.x=.0075f;
+//}else if(dis>=size.x-1){
+//smoothByAxis.x=.0395f;
+//}else if(dis>=size.x-2){
+//smoothByAxis.x=.1115f;
+//}else if(dis>=size.x-3){
+//smoothByAxis.x=.2115f;
+//}else if(dis>=size.x-4){
+//smoothByAxis.x=.3510f;
+//}else if(dis>=size.x-5){
+//smoothByAxis.x=.5105f;
+//}
+//dis=Mathf.Abs(vCoord2.z-vCoord1.z);
+//Debug.LogWarning(dis);
+//if(dis>=size.z){
+//smoothByAxis.z=.0075f;
+//}else if(dis>=size.z-1){
+//smoothByAxis.z=.0395f;
+//}else if(dis>=size.z-2){
+//smoothByAxis.z=.1115f;
+//}else if(dis>=size.z-3){
+//smoothByAxis.z=.2115f;
+//}else if(dis>=size.z-4){
+//smoothByAxis.z=.3510f;
+//}else if(dis>=size.z-5){
+//smoothByAxis.z=.5105f;
+//}
+//dis=Mathf.Abs(vCoord2.y-vCoord1.y);
+//Debug.LogWarning(dis);
+//if(dis>=size.y){
+//smoothByAxis.y=.0075f;
+//}else if(dis>=size.y-1){
+//smoothByAxis.y=.0395f;
+//}else if(dis>=size.y-2){
+//smoothByAxis.y=.1115f;
+//}else if(dis>=size.y-3){
+//smoothByAxis.y=.2115f;
+//}else if(dis>=size.y-4){
+//smoothByAxis.y=.3510f;
+//}else if(dis>=size.y-5){
+//smoothByAxis.y=.5105f;
+//}
+
+
+////smoothValue=Mathf.Min(smoothByAxis.x,smoothByAxis.z,smoothByAxis.y);
+//smoothValue=(smoothByAxis.x+smoothByAxis.z+smoothByAxis.y)/3f;//Mathf.Min(smoothByAxis.x,smoothByAxis.z,smoothByAxis.y);
 //Vector3 smoothByAxis=new Vector3(1f,1f,1f);
 //float dis=Mathf.Abs(vCoord2.x-vCoord1.x);
 //if(dis>=size.x-smoothRadius){
