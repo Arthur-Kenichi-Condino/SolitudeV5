@@ -211,10 +211,12 @@ public void Edit(Vector3 center,Vector3Int size,double tgtDensity=0,MaterialId t
 if(tgtMaterialId==MaterialId.Air){tgtDensity=0;}else{tgtDensity=Math.Max(tgtDensity,81f);tgtDensity=Math.Min(tgtDensity,100f);}
         
 
-//float radius=size.x;
+Vector3 cornerRadius;
+Vector3 cornerRadiusSmoothStep=new Vector3(1f,1f,1f);
 switch(mode){
 case(EditMode.Sphere):{
 size.x=size.y=size.z=Mathf.Max(8,size.x,size.y,size.z);
+cornerRadius=new Vector3(size.x,size.x,size.x);
     break;
 }
 default:{
@@ -224,7 +226,11 @@ default:{
 size.x=Mathf.Max(8,size.x);
 size.y=Mathf.Max(8,size.y);
 size.z=Mathf.Max(8,size.z);
-
+cornerRadius=new Vector3(Mathf.Sqrt(Mathf.Pow(size.x,2)+Mathf.Pow(size.y,2)),
+                         Mathf.Sqrt(Mathf.Pow(size.y,2)+Mathf.Pow(size.z,2)),
+                         Mathf.Sqrt(Mathf.Pow(size.z,2)+Mathf.Pow(size.x,2)));
+cornerRadiusSmoothStep.x=(cornerRadius.x-Mathf.Sqrt(Mathf.Pow(size.x-4f,2)+Mathf.Pow(size.y-4f,2)))/4f;
+Debug.LogWarning(cornerRadiusSmoothStep);
 
     break;
 }
@@ -293,39 +299,47 @@ smoothValue=1f;
 Vector3 smoothByAxis=new Vector3(1f,1f,1f);
 
 
-int dis=Mathf.Abs(vCoord2.x-vCoord1.x);
-if(dis>=size.x){
+int dis1=Mathf.Abs(vCoord2.x-vCoord1.x);
+if(dis1>=size.x){
 smoothByAxis.x=.004f;
-}else if(dis>=size.x-1){
+}else if(dis1>=size.x-1){
 smoothByAxis.x=.04f;
-}else if(dis>=size.x-2){
+}else if(dis1>=size.x-2){
 smoothByAxis.x=.12f;
-}else if(dis>=size.x-3){
+}else if(dis1>=size.x-3){
 smoothByAxis.x=.24f;
 }
-dis=Mathf.Abs(vCoord2.z-vCoord1.z);
-if(dis>=size.z){
+float dis2=Mathf.Abs(vCoord2.z-vCoord1.z);
+if(dis2>=size.z){
 smoothByAxis.z=.004f;
-}else if(dis>=size.z-1){
+}else if(dis2>=size.z-1){
 smoothByAxis.z=.04f;
-}else if(dis>=size.z-2){
+}else if(dis2>=size.z-2){
 smoothByAxis.z=.12f;
-}else if(dis>=size.z-3){
+}else if(dis2>=size.z-3){
 smoothByAxis.z=.24f;
 }
-dis=Mathf.Abs(vCoord2.y-vCoord1.y);
-if(dis>=size.y){
+float dis3=Mathf.Abs(vCoord2.y-vCoord1.y);
+if(dis3>=size.y){
 smoothByAxis.y=.004f;
-}else if(dis>=size.y-1){
+}else if(dis3>=size.y-1){
 smoothByAxis.y=.04f;
-}else if(dis>=size.y-2){
+}else if(dis3>=size.y-2){
 smoothByAxis.y=.12f;
-}else if(dis>=size.y-3){
+}else if(dis3>=size.y-3){
 smoothByAxis.y=.24f;
 }
 
 
-smoothValue=Mathf.Min(smoothByAxis.x,smoothByAxis.z,smoothByAxis.y);
+Vector3 roundCorner=new Vector3(1f,1f,1f);
+float dis4=Mathf.Sqrt(Mathf.Pow(dis1,2)+Mathf.Pow(dis2,2));
+Debug.LogWarning(dis4+"/"+cornerRadius.z);
+if(dis4>=cornerRadius.z){
+roundCorner.x=.008f;
+}
+
+
+smoothValue=Mathf.Max(Mathf.Min(smoothByAxis.x,smoothByAxis.z,smoothByAxis.y),Mathf.Min(roundCorner.x,roundCorner.z,roundCorner.y));
 
 
 //float dis1=Vector3.Distance(vCoord2,vCoord1)/*=Mathf.Abs(vCoord2.x-vCoord1.x)*/;float perc1=1f;
