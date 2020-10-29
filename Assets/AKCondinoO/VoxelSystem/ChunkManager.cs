@@ -230,6 +230,8 @@ cornerRadius=new Vector3(Mathf.Sqrt(Mathf.Pow(size.x,2)+Mathf.Pow(size.y,2)),
                          Mathf.Sqrt(Mathf.Pow(size.y,2)+Mathf.Pow(size.z,2)),
                          Mathf.Sqrt(Mathf.Pow(size.z,2)+Mathf.Pow(size.x,2)));
 cornerRadiusSmoothStep.x=(cornerRadius.x-Mathf.Sqrt(Mathf.Pow(size.x-4f,2)+Mathf.Pow(size.y-4f,2)))/4f;
+cornerRadiusSmoothStep.y=(cornerRadius.y-Mathf.Sqrt(Mathf.Pow(size.y-4f,2)+Mathf.Pow(size.z-4f,2)))/4f;
+cornerRadiusSmoothStep.z=(cornerRadius.z-Mathf.Sqrt(Mathf.Pow(size.z-4f,2)+Mathf.Pow(size.x-4f,2)))/4f;
 Debug.LogWarning(cornerRadiusSmoothStep);
 
     break;
@@ -334,12 +336,38 @@ smoothByAxis.y=.24f;
 Vector3 roundCorner=new Vector3(1f,1f,1f);
 float dis4=Mathf.Sqrt(Mathf.Pow(dis1,2)+Mathf.Pow(dis2,2));
 Debug.LogWarning(dis4+"/"+cornerRadius.z);
-if(dis4>=cornerRadius.z){
-roundCorner.x=.008f;
+if(dis4>=cornerRadius.z-cornerRadiusSmoothStep.z){
+roundCorner.x=.004f;
+}else if(dis4>=cornerRadius.z-cornerRadiusSmoothStep.z*2f){
+roundCorner.x=.04f;
+}else if(dis4>=cornerRadius.z-cornerRadiusSmoothStep.z*3f){
+roundCorner.x=.2f;
+}else if(dis4>=cornerRadius.z-cornerRadiusSmoothStep.z*4f){
+roundCorner.x=.4f;
+}
+float dis5=Mathf.Sqrt(Mathf.Pow(dis2,2)+Mathf.Pow(dis3,2));
+if(dis5>=cornerRadius.y-cornerRadiusSmoothStep.y){
+roundCorner.z=.004f;
+}else if(dis5>=cornerRadius.y-cornerRadiusSmoothStep.y*2f){
+roundCorner.z=.04f;
+}else if(dis5>=cornerRadius.y-cornerRadiusSmoothStep.y*3f){
+roundCorner.z=.2f;
+}else if(dis5>=cornerRadius.y-cornerRadiusSmoothStep.y*4f){
+roundCorner.z=.4f;
+}
+float dis6=Mathf.Sqrt(Mathf.Pow(dis3,2)+Mathf.Pow(dis1,2));
+if(dis6>=cornerRadius.x-cornerRadiusSmoothStep.x){
+roundCorner.y=.004f;
+}else if(dis6>=cornerRadius.x-cornerRadiusSmoothStep.x*2f){
+roundCorner.y=.04f;
+}else if(dis6>=cornerRadius.x-cornerRadiusSmoothStep.x*3f){
+roundCorner.y=.2f;
+}else if(dis6>=cornerRadius.x-cornerRadiusSmoothStep.x*4f){
+roundCorner.y=.4f;
 }
 
 
-smoothValue=Mathf.Max(Mathf.Min(smoothByAxis.x,smoothByAxis.z,smoothByAxis.y),Mathf.Min(roundCorner.x,roundCorner.z,roundCorner.y));
+smoothValue=Mathf.Min(Mathf.Min(smoothByAxis.x,smoothByAxis.z,smoothByAxis.y),Mathf.Min(roundCorner.x,roundCorner.z,roundCorner.y));
 
 
 //float dis1=Vector3.Distance(vCoord2,vCoord1)/*=Mathf.Abs(vCoord2.x-vCoord1.x)*/;float perc1=1f;
