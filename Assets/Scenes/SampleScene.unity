@@ -737,7 +737,7 @@ PrefabInstance:
     - target: {fileID: 7789522645625010537, guid: 10725eaf686bf0147b88fddfec998997,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10725eaf686bf0147b88fddfec998997, type: 3}
@@ -1145,6 +1145,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TerrainChunkManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 1803007530246161363, guid: cc3c67ef4cdea4f4d801375a258594ff,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4836057272321444418, guid: cc3c67ef4cdea4f4d801375a258594ff,
         type: 3}

@@ -134,6 +134,27 @@ var tuple=GetEnemiesAttackingMe[i];
     tuple.timeout=5f;
 GetEnemiesAttackingMe[i]=tuple;
 }
+}else if(v.Target!=null&&IsAllyTo(v.Target)){var ally=v.Target;
+Vector3 pos;float dis;
+if(TypeId.ActorType()==TypeIds._EIRA){
+
+
+Debug.LogWarning("ally in danger");
+addPossibleTarget();attackingAlly();
+
+
+}else if(MySight.IsInVisionSight.ContainsKey(ally.Id)&&MySight.IsInVisionSight[ally.Id].directSight){
+
+
+Debug.LogWarning("ally in danger");
+addPossibleTarget();attackingAlly();
+
+
+}
+void addPossibleTarget(){
+}
+void attackingAlly(){
+}
 }
 }
 }

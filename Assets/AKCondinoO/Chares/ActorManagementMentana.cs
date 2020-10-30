@@ -26,7 +26,7 @@ Actors.Add(id,aI);ActorsByTypeId[typeId].Add(aI);InactiveActorsByTypeId[typeId].
 }
 }
 }
-[SerializeField]int[]monsterTypeIds;[SerializeField]int[]homunculusTypeIds;
+[SerializeField]TypeIds[]monsterTypeIds;[SerializeField]TypeIds[]homunculusTypeIds;
 [NonSerialized]public static readonly Dictionary<int,AI>GetActors=new Dictionary<int,AI>();[NonSerialized]public static readonly Dictionary<int,LinkedList<AI>>InactiveActorsByTypeId=new Dictionary<int,LinkedList<AI>>();
 [NonSerialized]protected static Vector3 actPos,center,size,halfSize;public static Vector3 Center{get{return center;}}public static Vector3 Size{get{return size;}}public static Vector3 HalfSize{get{return halfSize;}}
 [NonSerialized]protected static Vector2Int actReg;
@@ -65,7 +65,7 @@ if(LOG&&LOG_LEVEL<=0)Debug.Log("do staging action:"+action);
 switch(action){
     case(CreativeIdleness.SpawnEnemy):{
 if(monsterTypeIds!=null){
-var typeId=(DEBUG_SPAWN_ENEMY!=-1&&monsterTypeIds.Contains(DEBUG_SPAWN_ENEMY))?DEBUG_SPAWN_ENEMY:monsterTypeIds[mathrandom.Next(0,monsterTypeIds.Length)];if(InactiveActorsByTypeId.ContainsKey(typeId)&&InactiveActorsByTypeId[typeId].Count>0){var actorCast=InactiveActorsByTypeId[typeId].First.Value;
+int typeId=(DEBUG_SPAWN_ENEMY!=-1&&monsterTypeIds.Contains(DEBUG_SPAWN_ENEMY.ActorType()))?DEBUG_SPAWN_ENEMY:monsterTypeIds[mathrandom.Next(0,monsterTypeIds.Length)].Id();if(InactiveActorsByTypeId.ContainsKey(typeId)&&InactiveActorsByTypeId[typeId].Count>0){var actorCast=InactiveActorsByTypeId[typeId].First.Value;
 
     
     Debug.LogWarning("actorCast:"+actorCast);
@@ -84,7 +84,7 @@ if(LOG&&LOG_LEVEL<=0)Debug.Log("spawn limit reached for monster of type id:"+typ
     break;}
     case(CreativeIdleness.CreateAlly):{
 if(homunculusTypeIds!=null){
-var typeId=homunculusTypeIds[mathrandom.Next(0,homunculusTypeIds.Length)];if(InactiveActorsByTypeId.ContainsKey(typeId)&&InactiveActorsByTypeId[typeId].Count>0){var actorCast=InactiveActorsByTypeId[typeId].First.Value;
+int typeId=homunculusTypeIds[mathrandom.Next(0,homunculusTypeIds.Length)].Id();if(InactiveActorsByTypeId.ContainsKey(typeId)&&InactiveActorsByTypeId[typeId].Count>0){var actorCast=InactiveActorsByTypeId[typeId].First.Value;
 
     
     Debug.LogWarning("actorCast:"+actorCast);
@@ -160,3 +160,7 @@ HumanPassive,
 HumanAggressive,
 }
 }
+public enum TypeIds:int{
+_ALARM=0,
+_BAYERI=1,_EIRA=2,
+}static class TypeUtil{public static int Id(this TypeIds type){return(int)type;}public static TypeIds ActorType(this int id){return(TypeIds)id;}}
