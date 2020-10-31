@@ -47,6 +47,7 @@ audioSource.Stop();
 }
 }
 public enum ActorSounds{
+_ATTACK=0,
 _IDLE=3,
 _MOVE=4,
 }

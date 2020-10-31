@@ -331,7 +331,7 @@ return false;}
 [NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}
 protected virtual void Attack(AI enemy){
 if(attackStance==-1){
-//if(sfx!=null)sfx.Play(sfx.sounds[0]);
+//if(sfx!=null){sfx.Play((int)ActorSounds._ATTACK,true);}
     Debug.LogWarning("new attack started: set to do damage next animation");
     didDamage=false;
     nextAttackTimer=attackInterval/Attributes.Aspd;
