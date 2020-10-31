@@ -136,7 +136,7 @@ GetEnemiesAttackingMe[i]=tuple;
 }
 }else if(v.Target!=null&&IsAllyTo(v.Target)){var ally=v.Target;
 Vector3 pos;float dis;
-if(TypeId.ActorType()==TypeIds._EIRA){
+if(TypeId.ActorType()==TypeIds._EIRA){pos=v.transform.position;
 
 
 Debug.LogWarning("ally in danger");
@@ -144,16 +144,25 @@ addPossibleTarget();attackingAlly();
 
 
 }else if(MySight.IsInVisionSight.ContainsKey(ally.Id)&&MySight.IsInVisionSight[ally.Id].directSight){
-
+if(MySight.IsInVisionSight.ContainsKey(i)&&MySight.IsInVisionSight[i].directSight){pos=MySight.IsInVisionSight[i].pos;
 
 Debug.LogWarning("ally in danger");
 addPossibleTarget();attackingAlly();
 
-
+}
 }
 void addPossibleTarget(){
+dis=Vector3.Distance(transform.position,pos);
+MyPossibleTargets.Add(i,(v,pos,dis));
 }
 void attackingAlly(){
+if(!GetEnemiesAttackingAlly.ContainsKey(i)){
+GetEnemiesAttackingAlly.Add(i,(v,-1,0));
+}
+var tuple=GetEnemiesAttackingAlly[i];
+    tuple.dis=dis;
+    tuple.timeout=5f;
+GetEnemiesAttackingAlly[i]=tuple;
 }
 }
 }
