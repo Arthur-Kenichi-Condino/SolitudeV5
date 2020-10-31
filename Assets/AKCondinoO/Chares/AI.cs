@@ -7,9 +7,11 @@ using static ActorManagementMentana;
 public class AI:Pathfinder{
 public int Id{get;internal set;}public int TypeId{get;internal set;}[SerializeField]public Roles Role;
 [NonSerialized]protected Sight MySight;
+[NonSerialized]protected CharSFX sfx;
 protected override void Awake(){
                    base.Awake();
 MySight=GetComponentInChildren<Sight>();
+    sfx=GetComponent<CharSFX>();
 }
 protected override void OnEnable(){
                    base.OnEnable();
@@ -43,6 +45,7 @@ setOutOfSight();
     Dying-=Time.deltaTime;
 }
 }
+
     
 #region Init    
 if(firstLoop&&!Contains(this)){
@@ -59,8 +62,12 @@ InactiveActorsByTypeId[TypeId].AddLast(this);
 if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("OutOfSight actor wasn't marked to be active so it should already be in its InactiveActorsByTypeId queue");
 }
     OutOfSight_disable=false;
+return;
 }
 #endregion
+
+
+if(sfx!=null)sfx.Play((int)ActorSounds._IDLE);
 
 
 if(DEBUG_ATTACK){Attack(null);}if(DEBUG_GETHIT){DEBUG_GETHIT=false;TakeDamage(null);}if(DEBUG_DIE){DEBUG_DIE=false;Die();}
@@ -324,6 +331,7 @@ return false;}
 [NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}
 protected virtual void Attack(AI enemy){
 if(attackStance==-1){
+//if(sfx!=null)sfx.Play(sfx.sounds[0]);
     Debug.LogWarning("new attack started: set to do damage next animation");
     didDamage=false;
     nextAttackTimer=attackInterval/Attributes.Aspd;

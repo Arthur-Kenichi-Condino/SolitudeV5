@@ -251,6 +251,7 @@
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\UMAGeneratorCoroutine.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\Scripts\UMAWardrobeRecipe.cs" />
     <Compile Include="Assets\UMA\Examples\HowTo Examples\Scripts\ConstructDCAFromAPrefab.cs" />
+    <Compile Include="Assets\AKCondinoO\Chares\CharDataUI.cs" />
     <Compile Include="Assets\UMA\Examples\Physics Examples\Scripts\SwayBone\SwayRootBone.cs" />
     <Compile Include="Assets\UMA\Examples\Legacy Examples\Scripts\EnvPresetChooser.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\UMAExpressionSet.cs" />
@@ -344,6 +345,7 @@
     <Compile Include="Assets\Scripts\Utf8Json\JsonSerializer.NonGeneric.cs" />
     <Compile Include="Assets\AKCondinoO\MainCamera.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Actors\FlexClothActor.cs" />
+    <Compile Include="Assets\AKCondinoO\Chares\_EIRA\EIRA.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Native\FlexUtils.cs" />
     <Compile Include="Assets\UMA\Examples\HowTo Examples\Scripts\ConstructDCAFromScratch.cs" />
     <Compile Include="Assets\UMA\Core\Scripts\DNAEvaluationGraph.cs" />
@@ -421,8 +423,7 @@
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\DNAConverterField.cs" />
     <Compile Include="Assets\UMA\Examples\Physics Examples\Scripts\ClothHelper.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\Scripts\DynamicDNAConverterBehaviour.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\_EIRA\EIRA.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\CharDataUI.cs" />
+    <Compile Include="Assets\AKCondinoO\Chares\CharSFX.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\UMA\Core\StandardAssets\UMA\Atlas\AtlasNormalShader32.shader" />
