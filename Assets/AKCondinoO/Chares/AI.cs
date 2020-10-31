@@ -67,7 +67,7 @@ return;
 #endregion
 
 
-if(sfx!=null)sfx.Play((int)ActorSounds._IDLE);
+if(sfx!=null){if(MyMotion==Motions.MOTION_STAND){sfx.Play((int)ActorSounds._IDLE);}else if(MyMotion==Motions.MOTION_MOVE){sfx.Play((int)ActorSounds._MOVE);}}
 
 
 if(DEBUG_ATTACK){Attack(null);}if(DEBUG_GETHIT){DEBUG_GETHIT=false;TakeDamage(null);}if(DEBUG_DIE){DEBUG_DIE=false;Die();}
