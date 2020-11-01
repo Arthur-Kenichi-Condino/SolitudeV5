@@ -67,7 +67,9 @@ return;
 #endregion
 
 
+if(this is _3DSprite){
 if(sfx!=null){if(MyMotion==Motions.MOTION_STAND){sfx.Play((int)ActorSounds._IDLE);}else if(MyMotion==Motions.MOTION_MOVE){sfx.Play((int)ActorSounds._MOVE);}}
+}
 
 
 if(DEBUG_ATTACK){Attack(null);}if(DEBUG_GETHIT){DEBUG_GETHIT=false;TakeDamage(null);}if(DEBUG_DIE){DEBUG_DIE=false;Die();}
@@ -331,7 +333,6 @@ return false;}
 [NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}
 protected virtual void Attack(AI enemy){
 if(attackStance==-1){
-if(sfx!=null){sfx.Play((int)ActorSounds._ATTACK,true);}
     Debug.LogWarning("new attack started: set to do damage next animation");
     didDamage=false;
     nextAttackTimer=attackInterval/Attributes.Aspd+attackWaitForSoundTime;
@@ -369,7 +370,7 @@ if(attackHitboxColliders!=null){
     Debug.LogWarning("attackHitboxColliders.Length:"+attackHitboxColliders.Length);
 for(int i=0;i<attackHitboxColliders.Length;i++){var collider=attackHitboxColliders[i];
 AI enemy;
-if(collider.CompareTag("Player")&&(enemy=collider.GetComponent<AI>())!=null){
+if(collider.CompareTag("Player")&&(enemy=collider.GetComponent<AI>())!=this&&enemy!=null){
     Debug.LogWarning("collider hit:"+collider.name+"; tag:"+collider.tag,this);
     enemy.TakeDamage(this);
 }
@@ -384,7 +385,7 @@ attackHitboxColliders=null;
 [NonSerialized]protected float damage;
 protected virtual void TakeDamage(AI fromEnemy){
 damage=fromEnemy.Attributes.ATK-Attributes.DEF;
-if(damage<=0)damage=0;Attributes.CurStamina-=damage;if(Attributes.CurStamina<=0){Attributes.CurStamina=0;Die();}
+if(damage<=0)damage=0;Attributes.CurStamina-=damage;if(Attributes.CurStamina<=0){Attributes.CurStamina=0;Die();}else if(damage>0){}
 }
 protected virtual void Die(){
 if(deadStance==-1){Dying=DeadForGoodDelay;}

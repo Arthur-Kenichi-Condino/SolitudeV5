@@ -156,15 +156,20 @@ protected override bool IsInAttackSight(AI enemy){
 protected override void Attack(AI enemy){
 if(nextAttackTimer>0)return;
                    base.Attack(enemy);
-if(deadStance!=-1||hitStance!=-1)return;if(attackStance==-1){attackStance=0;curAnimTime=0;}
+if(deadStance!=-1||hitStance!=-1)return;if(attackStance==-1){attackStance=0;curAnimTime=0;
+if(sfx!=null){sfx.Play((int)ActorSounds._ATTACK,true);}
+}
 }
 protected override void TakeDamage(AI fromEnemy){
                    base.TakeDamage(fromEnemy);
 if(damage<=0)return;
 if(deadStance!=-1)return;attackStance=-1;hitStance=0;curAnimTime=0;
+if(sfx!=null){sfx.Play((int)ActorSounds._HIT,true);}
 }
 protected override void Die(){
                    base.Die();
-attackStance=-1;hitStance=-1;if(deadStance==-1){deadStance=0;curAnimTime=0;}
+attackStance=-1;hitStance=-1;if(deadStance==-1){deadStance=0;curAnimTime=0;
+if(sfx!=null){sfx.Play((int)ActorSounds._DEAD,true);}
+}
 }
 }
