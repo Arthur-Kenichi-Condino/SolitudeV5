@@ -10,9 +10,9 @@ actor=GetComponentInChildren<AI>();audioSource=GetComponent<AudioSource>();
 }
 void OnDisable(){    
     Debug.LogWarning("reset lastSound");
-lastSound=null;
+lastSound=null;lastSoundPriority=-1;
 }
-public AudioClip[]sounds;public bool[]loop;public float[]pitch;[NonSerialized]AudioClip lastSound=null;
+public AudioClip[]sounds;public bool[]loop;public float[]pitch;public int[]priority;[NonSerialized]AudioClip lastSound=null;[NonSerialized]int lastSoundPriority=-1;
 public void Play(int sound,bool restart=false){
 if(sound>=sounds.Length){Stop();return;}
 Play(sounds[sound],restart);
@@ -20,8 +20,9 @@ Play(sounds[sound],restart);
 public void Play(AudioClip sound,bool restart=false){
 if(sound==null){Stop();return;}
 if(sound==lastSound&&!restart)return;
-lastSound=sound;
-int pitchidx,loopidx=pitchidx=Array.IndexOf(sounds,sound);
+int priorityidx,pitchidx,loopidx=pitchidx=priorityidx=Array.IndexOf(sounds,sound);int importance=priorityidx==-1||priorityidx>=priority.Length?-1:priority[priorityidx];
+if(importance<lastSoundPriority&&audioSource.clip!=null&&audioSource.isPlaying)return;
+lastSound=sound;lastSoundPriority=importance;
 StartCoroutine(CR_FadeToSound(sound,loopidx==-1||loopidx>=loop.Length?false:loop[loopidx],pitchidx==-1||pitchidx>=pitch.Length?1f:pitch[pitchidx]));
 }
 readonly WaitForSeconds CR_FadeToSound_waitForSeconds=new WaitForSeconds(0.05f);
@@ -34,7 +35,7 @@ audioSource.pitch=pitch;
 audioSource.Play();
 }
 public void Stop(){
-lastSound=null;
+lastSound=null;lastSoundPriority=-1;
 StartCoroutine(CR_FadeToStop());
 }
 public IEnumerator CR_FadeToStop(){

@@ -327,14 +327,14 @@ if(Vector3.Distance(transform.position,enemy.transform.position)-(BodyRadius+ene
 return true;
 }
 return false;}
-[NonSerialized]protected float attackInterval=.25f;[NonSerialized]protected float nextAttackTimer=0;
+[NonSerialized]protected float attackInterval=.25f;[SerializeField]protected float attackWaitForSoundTime=0;[NonSerialized]protected float nextAttackTimer=0;
 [NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}
 protected virtual void Attack(AI enemy){
 if(attackStance==-1){
-//if(sfx!=null){sfx.Play((int)ActorSounds._ATTACK,true);}
+if(sfx!=null){sfx.Play((int)ActorSounds._ATTACK,true);}
     Debug.LogWarning("new attack started: set to do damage next animation");
     didDamage=false;
-    nextAttackTimer=attackInterval/Attributes.Aspd;
+    nextAttackTimer=attackInterval/Attributes.Aspd+attackWaitForSoundTime;
 }
 if(enemy!=null){
 inputViewRotationEuler.y=Quaternion.LookRotation((enemy.transform.position-transform.position).normalized).eulerAngles.y-transform.eulerAngles.y;
