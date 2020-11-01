@@ -737,7 +737,7 @@ PrefabInstance:
     - target: {fileID: 7789522645625010537, guid: 10725eaf686bf0147b88fddfec998997,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10725eaf686bf0147b88fddfec998997, type: 3}
@@ -1096,6 +1096,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3375661840507534962, guid: 96909be4a8ac81f44ab217c695070dfb,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: d5dbf96ffb08ec343814108466ed25e6,
+        type: 3}
     - target: {fileID: 3375661841515285921, guid: 96909be4a8ac81f44ab217c695070dfb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1206,11 +1212,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: CanvasBottomUI
       objectReference: {fileID: 0}
-    - target: {fileID: 3375661841515285933, guid: 96909be4a8ac81f44ab217c695070dfb,
+    - target: {fileID: 3375661841892458969, guid: 96909be4a8ac81f44ab217c695070dfb,
         type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 4a10d3c54a5c70248bd3c949a81759fe,
+        type: 3}
+    - target: {fileID: 3375661842028967911, guid: 96909be4a8ac81f44ab217c695070dfb,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ad067e6b1a7964e45bb11c6b2c5dc6b1,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96909be4a8ac81f44ab217c695070dfb, type: 3}
 --- !u!1001 &3434281321626767718
