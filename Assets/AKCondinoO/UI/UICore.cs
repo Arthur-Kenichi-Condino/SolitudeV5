@@ -25,4 +25,8 @@ for(int i=0;i<BottonUIPanels.Length;i++){var panel=BottonUIPanels[i];
                                }
 }
 }
+public GameObject[]F3BuildPanels;
+public void OnF3BuildTerrainClick(){
+    Debug.LogWarning("OnF3BuildTerrainClick");
+}
 }

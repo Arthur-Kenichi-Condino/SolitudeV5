@@ -48,6 +48,8 @@ MonoBehaviour:
   - {fileID: 7060688777753042257}
   - {fileID: 6043198226523742116}
   - {fileID: 4724335407735242883}
+  F3BuildPanels:
+  - {fileID: 5150090740170566387}
 --- !u!1001 &7060688777223708906
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -55,6 +57,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5702781467609456347}
     m_Modifications:
+    - target: {fileID: 2155963698282018273, guid: 96909be4a8ac81f44ab217c695070dfb,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 6954995771053991615}
     - target: {fileID: 3375661840507534961, guid: 96909be4a8ac81f44ab217c695070dfb,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -185,6 +192,12 @@ PrefabInstance:
 --- !u!224 &5702781468629904715 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3375661841515285921, guid: 96909be4a8ac81f44ab217c695070dfb,
+    type: 3}
+  m_PrefabInstance: {fileID: 7060688777223708906}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5150090740170566387 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2775439156801997337, guid: 96909be4a8ac81f44ab217c695070dfb,
     type: 3}
   m_PrefabInstance: {fileID: 7060688777223708906}
   m_PrefabAsset: {fileID: 0}
