@@ -26,11 +26,21 @@ if(i==active){if(panel!=null){panel.SetActive( true);}if(subpanels!=null){subpan
 }
 }
 }
-public GameObject[]F3BuildPanels;
 public void OnF3BuildTerrainClick(){
     Debug.LogWarning("OnF3BuildTerrainClick");
      SetActiveF3BuildPanel(0);
 }
-void SetActiveF3BuildPanel(int active){
+public void OnF3BuildGardenClick(){
+    Debug.LogWarning("OnF3BuildGardenClick");
+     SetActiveF3BuildPanel(1);
+}
+public GameObject[]F3BuildPanels;
+void SetActiveF3BuildPanel(int active){if(F3BuildPanels==null)return;
+for(int i=0;i<F3BuildPanels.Length;i++){
+                             var subpanel=F3BuildPanels[i];
+if(i==active){if(subpanel!=null){subpanel.SetActive( true);}
+}else{        if(subpanel!=null){subpanel.SetActive(false);}
+}
+}
 }
 }
