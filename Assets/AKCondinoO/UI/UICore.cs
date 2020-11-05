@@ -17,16 +17,20 @@ public void OnF3BuildClick(){
     Debug.LogWarning("OnF3BuildClick");
      SetActiveBottonUIPanel(2);
 }
-public GameObject[]BottonUIPanels;
-void SetActiveBottonUIPanel(int active){if(BottonUIPanels==null)return;
-for(int i=0;i<BottonUIPanels.Length;i++){var panel=BottonUIPanels[i];
-                               if(i==active){panel.SetActive( true);
-                               }else{        panel.SetActive(false);
-                               }
+public GameObject[]BottonUIPanels;public GameObject[]BottonUISubpanels;
+void SetActiveBottonUIPanel(int active){if(BottonUIPanels==null||BottonUISubpanels==null)return;
+for(int i=0;i<BottonUIPanels.Length&&i<BottonUISubpanels.Length;i++){
+                          var panel=BottonUIPanels[i];                var subpanels=BottonUISubpanels[i];
+if(i==active){if(panel!=null){panel.SetActive( true);}if(subpanels!=null){subpanels.SetActive( true);}
+}else{        if(panel!=null){panel.SetActive(false);}if(subpanels!=null){subpanels.SetActive(false);}
+}
 }
 }
 public GameObject[]F3BuildPanels;
 public void OnF3BuildTerrainClick(){
     Debug.LogWarning("OnF3BuildTerrainClick");
+     SetActiveF3BuildPanel(0);
+}
+void SetActiveF3BuildPanel(int active){
 }
 }

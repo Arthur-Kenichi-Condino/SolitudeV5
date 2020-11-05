@@ -48,6 +48,10 @@ MonoBehaviour:
   - {fileID: 7060688777753042257}
   - {fileID: 6043198226523742116}
   - {fileID: 4724335407735242883}
+  BottonUISubpanels:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 8100446787327134473}
   F3BuildPanels:
   - {fileID: 5150090740170566387}
 --- !u!1001 &7060688777223708906
@@ -195,12 +199,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 7060688777223708906}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5150090740170566387 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2775439156801997337, guid: 96909be4a8ac81f44ab217c695070dfb,
-    type: 3}
-  m_PrefabInstance: {fileID: 7060688777223708906}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7060688777753042257 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1737440699, guid: 96909be4a8ac81f44ab217c695070dfb,
@@ -216,6 +214,18 @@ GameObject:
 --- !u!1 &4724335407735242883 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2336432580022083689, guid: 96909be4a8ac81f44ab217c695070dfb,
+    type: 3}
+  m_PrefabInstance: {fileID: 7060688777223708906}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8100446787327134473 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1267211785947524067, guid: 96909be4a8ac81f44ab217c695070dfb,
+    type: 3}
+  m_PrefabInstance: {fileID: 7060688777223708906}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5150090740170566387 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2775439156801997337, guid: 96909be4a8ac81f44ab217c695070dfb,
     type: 3}
   m_PrefabInstance: {fileID: 7060688777223708906}
   m_PrefabAsset: {fileID: 0}
