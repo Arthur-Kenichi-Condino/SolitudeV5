@@ -83,7 +83,7 @@ inputMoveSpeed=Vector3.zero;
                    base.Update();
 }
 #region UI-to-Command translating
-public enum GameModeTools{
+public enum SelectedGameModeTool{
 TerrainCarveCube,
 TerrainCarveSphere,
 }
