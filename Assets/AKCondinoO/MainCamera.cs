@@ -82,6 +82,16 @@ inputMoveSpeed=Vector3.zero;
 }
                    base.Update();
 }
+#region UI-to-Command translating
+public enum GameModeTools{
+TerrainCarveCube,
+TerrainCarveSphere,
+}
+
+
+
+
+#endregion
 [NonSerialized]string _name;[NonSerialized]object[]_command;[NonSerialized]bool[]_state;
 void UpdateCommandState(KeyValuePair<string,object[]>command){_name=command.Key;_command=command.Value;_state=AllStates[_name];
 _state[1]=_state[0];
