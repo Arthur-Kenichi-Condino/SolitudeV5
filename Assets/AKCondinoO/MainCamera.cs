@@ -25,6 +25,11 @@ AllStates.Add(field.Name,state);
 private void OnApplicationFocus(bool focus){Focus=focus;}
 [NonSerialized]public bool Escape;
 protected override void Update(){
+
+
+ProcessGameCommands();
+
+
 Escape=Input.GetKey(KeyCode.Escape)||Input.GetKeyDown(KeyCode.Escape)||Input.GetKeyUp(KeyCode.Escape);
 foreach(var command in AllCommands){UpdateCommandState(command);}
 Enabled.PAUSE[0]=Enabled.PAUSE[0]||Escape||!Focus;
@@ -87,9 +92,41 @@ public enum SelectedGameModeTool:int{
 CommandSim=0,
 TerrainCarveCube=1,
 TerrainCarveSphere=2,
-}[NonSerialized]public SelectedGameModeTool CurrentTool=SelectedGameModeTool.CommandSim;
+}[NonSerialized]public SelectedGameModeTool CurrentTool=SelectedGameModeTool.CommandSim;[NonSerialized]SelectedGameModeTool LastTool=SelectedGameModeTool.CommandSim;
 
 
+void ProcessGameCommands(){
+if(CurrentTool!=LastTool){
+SwitchTool(LastTool,CurrentTool);
+LastTool=CurrentTool;
+}
+Ray ray=Camera.main.ScreenPointToRay(Input.mousePosition);
+Debug.DrawRay(ray.origin,ray.direction*1000f);
+switch(CurrentTool){
+case(SelectedGameModeTool.TerrainCarveCube):{
+    break;
+}
+}
+}
+public GameObject[]TerrainCarveCubeIndicators;
+void SwitchTool(SelectedGameModeTool LastTool,SelectedGameModeTool CurrentTool){
+switch(LastTool){
+case(SelectedGameModeTool.TerrainCarveCube):{
+foreach(var indicator in TerrainCarveCubeIndicators){
+indicator.SetActive(false);
+}
+    break;
+}
+}
+switch(CurrentTool){
+case(SelectedGameModeTool.TerrainCarveCube):{
+foreach(var indicator in TerrainCarveCubeIndicators){
+indicator.SetActive(true);
+}
+    break;
+}
+}
+}
 
 
 #endregion

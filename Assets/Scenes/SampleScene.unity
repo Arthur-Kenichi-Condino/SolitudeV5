@@ -1308,6 +1308,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6990748707152753096, guid: 308505865f108054d8842526f737165c,
+        type: 3}
+      propertyPath: TerrainCarveCubeIndicators.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6990748707152753096, guid: 308505865f108054d8842526f737165c,
+        type: 3}
+      propertyPath: TerrainCarveCubeIndicators.Array.data[0]
+      value: 
+      objectReference: {fileID: 6990748707267632318}
     - target: {fileID: 6990748707152753097, guid: 308505865f108054d8842526f737165c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1370,3 +1380,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 308505865f108054d8842526f737165c, type: 3}
+--- !u!1 &6990748707267632318 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8405799851733501910, guid: 308505865f108054d8842526f737165c,
+    type: 3}
+  m_PrefabInstance: {fileID: 6990748707267632317}
+  m_PrefabAsset: {fileID: 0}
