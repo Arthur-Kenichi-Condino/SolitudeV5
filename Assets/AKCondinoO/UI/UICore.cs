@@ -46,4 +46,8 @@ if(i==active){if(subpanel!=null){subpanel.SetActive( true);}
 }
 }
 }
+public void SetCurrentTool(int tool){
+gameState.CurrentTool=(MainCamera.SelectedGameModeTool)tool;
+    Debug.LogWarning(gameState.CurrentTool);
+}
 }
