@@ -98,6 +98,14 @@ TerrainCarveSphere=2,
 
 
 void ProcessGameCommands(){
+
+
+UICore.DetectMouseOnUI();
+
+
+    Debug.LogWarning("UICore.UIReceivedInput:"+UICore.UIReceivedInput);
+
+
 if(CurrentTool!=LastTool){
 SwitchTool(LastTool,CurrentTool);
 LastTool=CurrentTool;
@@ -124,15 +132,29 @@ Vector3 previewPos=vCoord+_coordToSignedCoord;
         previewPos.x+=cnkRgn.x;
         previewPos.z+=cnkRgn.y;
     //Debug.LogWarning(previewPos);
+
+
 if(TerrainCarveCubeIndicators[0]!=null){TerrainCarveCubeIndicators[0].transform.position=previewPos+Vector3.Scale(_adjToCenter,TerrainCarveCubeIndicators[0].transform.lossyScale);TerrainCarveCubeIndicators[0].transform.rotation=Quaternion.identity;}
 if(hitTerrain){
-if((bool)Enabled.ACTION_1[0]&&(bool)Enabled.ACTION_1[0]!=(bool)Enabled.ACTION_1[1]){
-    Debug.LogWarning("Edit Action "+Enabled.ACTION_1[0]+" "+Enabled.ACTION_1[1]);
+if(!UICore.UIReceivedInput&&!(bool)Enabled.ACTION_1[0]&&(bool)Enabled.ACTION_1[0]!=(bool)Enabled.ACTION_1[1]){
+
+    Debug.LogWarning("action Edit at "+previewPos+"; ..."+Enabled.ACTION_1[0]+"!="+Enabled.ACTION_1[1]);
 //ChunkManager.main.Edit(previewPos,new Vector3Int(1,1,1),51,MaterialId.Dirt,ChunkManager.EditMode.Cube);
+
 }
 }
     break;
 }
+}
+
+   
+if((bool)Enabled.ACTION_1[0]&&(bool)Enabled.ACTION_1[0]!=(bool)Enabled.ACTION_1[1]){
+    Debug.LogWarning("ResetMouseCheck");
+    
+
+UICore.ResetMouseCheck();
+
+
 }
 }
 public GameObject[]TerrainCarveCubeIndicators;

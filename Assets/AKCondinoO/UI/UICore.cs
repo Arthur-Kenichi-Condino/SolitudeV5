@@ -8,15 +8,30 @@ void OnEnable(){
 gameState=Camera.main.GetComponent<MainCamera>();
      SetActiveBottonUIPanel(-1);
 }
+[SerializeField]RectTransform[]elementsOnScreen;
+public static bool UIReceivedInput{get;private set;}
+public static void DetectMouseOnUI(){
+
+
+//RectTransformUtility.
+
+
+}
+public static void ResetMouseCheck(){
+UIReceivedInput=false;
+}
 public void OnF1SimClick(){
+UIReceivedInput=true;
     Debug.LogWarning("OnF1SimClick");
      SetActiveBottonUIPanel(0);
 }
 public void OnF2BuyClick(){
+UIReceivedInput=true;
     Debug.LogWarning("OnF2BuyClick");
      SetActiveBottonUIPanel(1);
 }
 public void OnF3BuildClick(){
+UIReceivedInput=true;
     Debug.LogWarning("OnF3BuildClick");
      SetActiveBottonUIPanel(2);
 }
@@ -30,10 +45,12 @@ if(i==active){if(panel!=null){panel.SetActive( true);}if(subpanels!=null){subpan
 }
 }
 public void OnF3BuildTerrainClick(){
+UIReceivedInput=true;
     Debug.LogWarning("OnF3BuildTerrainClick");
      SetActiveF3BuildPanel(0);
 }
 public void OnF3BuildGardenClick(){
+UIReceivedInput=true;
     Debug.LogWarning("OnF3BuildGardenClick");
      SetActiveF3BuildPanel(1);
 }
@@ -47,6 +64,7 @@ if(i==active){if(subpanel!=null){subpanel.SetActive( true);}
 }
 }
 public void SetCurrentTool(int tool){
+UIReceivedInput=true;
 gameState.CurrentTool=(MainCamera.SelectedGameModeTool)tool;
     Debug.LogWarning(gameState.CurrentTool);
 }
