@@ -110,6 +110,7 @@
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\UMAEvents.cs" />
     <Compile Include="Assets\AKCondinoO\UI\Buttons.cs" />
     <Compile Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Assets\Resources\Scene1\DNASliderHandler.cs" />
+    <Compile Include="Assets\AKCondinoO\UI\F2Buy.cs" />
     <Compile Include="Assets\UMA\Examples\Expressions Examples\Scripts\ActiveObjectSwitcher.cs" />
     <Compile Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Scripts\Scene2and3\CSLoadableItem.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Native\Flex.cs" />
@@ -387,6 +388,7 @@
     <Compile Include="Assets\UMA\Core\Scripts\UMATextRecipe.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\GeometrySelector.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\UMASimpleLOD.cs" />
+    <Compile Include="Assets\AKCondinoO\UI\UICore.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\Extensions\DynamicCharacterSystem\Scripts\UMAExtendedAvatar.cs" />
     <Compile Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Assets\SkyCar\Scripts\OptionsGUI.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\UMAAssetBundleManager\WebServer.cs" />
@@ -424,8 +426,7 @@
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\DNAConverterField.cs" />
     <Compile Include="Assets\UMA\Examples\Physics Examples\Scripts\ClothHelper.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\Scripts\DynamicDNAConverterBehaviour.cs" />
-    <Compile Include="Assets\AKCondinoO\UI\UICore.cs" />
-    <Compile Include="Assets\AKCondinoO\UI\F2Buy.cs" />
+    <Compile Include="Assets\AKCondinoO\Chares\BoxCollider\BoxColliderSlotScript.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\UMA\Core\StandardAssets\UMA\Atlas\AtlasNormalShader32.shader" />
