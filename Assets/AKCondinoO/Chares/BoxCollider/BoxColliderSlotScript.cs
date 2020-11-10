@@ -21,18 +21,31 @@ namespace UMA
 
 			if(umaData.umaRecipe.raceData.umaTarget == RaceData.UMATarget.Humanoid)
 			{
-				if (capsule == null)
+				if (box == null)
 				{
-					capsule = umaData.gameObject.AddComponent<CapsuleCollider>();
+					box = umaData.gameObject.AddComponent<BoxCollider>();
 				}
-				if( box != null )
+				if(capsule != null)
 				{
-					Destroy(box);
+					Destroy(capsule);
 				}
-
-				capsule.radius = umaData.characterRadius;
-				capsule.height = umaData.characterHeight;
-				capsule.center = new Vector3(0, capsule.height / 2, 0);
+				//if (capsule == null)
+				//{
+				//	capsule = umaData.gameObject.AddComponent<CapsuleCollider>();
+				//}
+				//if( box != null )
+				//{
+				//	Destroy(box);
+				//}
+				
+					box.size = new Vector3(
+						umaData.characterRadius*1.5f,
+						umaData.characterHeight*.95f,
+						umaData.characterRadius*1.5f);
+					box.center = new Vector3(0, box.size.y / 2, 0);
+				//capsule.radius = umaData.characterRadius;
+				//capsule.height = umaData.characterHeight;
+				//capsule.center = new Vector3(0, capsule.height / 2, 0);
 			}
 			else
 			{
