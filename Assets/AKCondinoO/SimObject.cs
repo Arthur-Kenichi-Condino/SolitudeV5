@@ -7,7 +7,7 @@ using UMA;
 using UnityEngine;
 public class SimObject:MonoBehaviour{[NonSerialized]protected System.Random mathrandom=new System.Random();
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
-[NonSerialized]public new Collider collider=null;[NonSerialized]public new Rigidbody rigidbody=null;
+[NonSerialized]public new Collider collider=null;[NonSerialized]public new Rigidbody rigidbody=null;[NonSerialized]public new Renderer renderer;
 protected virtual void Awake(){
 collider=GetComponent<Collider>();rigidbody=GetComponent<Rigidbody>();
 
@@ -21,25 +21,31 @@ GetColliderData();
 }
 pos=pos_Pre=transform.position;
 }
-public void OnCharacterCompleted(UMAData umaData){
-CapsuleCollider capsule=umaData.gameObject.GetComponent<CapsuleCollider>();BoxCollider box=umaData.gameObject.GetComponent<BoxCollider>();
+[NonSerialized]protected bool IsUMA=false;
+public void OnCharacterCompleted(UMAData umaData){IsUMA=true;
+CapsuleCollider capsule=umaData.transform.root.gameObject.GetComponent<CapsuleCollider>();BoxCollider box=umaData.transform.root.gameObject.GetComponent<BoxCollider>();
 if(capsule!=null||box!=null){
 
 
-SimObject simObject=umaData.GetComponentInChildren<SimObject>();
+SimObject simObject=umaData.transform.root.gameObject.GetComponent<SimObject>();
 if(simObject!=null){
 
 
     Debug.LogWarning(simObject.gameObject+" simObject.collider:"+simObject.collider);
 
 
-Destroy(simObject.GetComponent<Collider>());Destroy(simObject.GetComponent<Rigidbody>());
 //if(collider==GetComponent<Collider>()||(collider=GetComponent<Collider>())!=null){Destroy(collider);}if(rigidbody==GetComponent<Rigidbody>()||(rigidbody=GetComponent<Rigidbody>())!=null){Destroy(rigidbody);}
 
 
-simObject.collider=capsule!=null?capsule as Collider:box as Collider;simObject.rigidbody=umaData.gameObject.GetComponent<Rigidbody>();
+simObject.collider=box!=null?box as Collider:capsule as Collider;simObject.rigidbody=umaData.transform.root.gameObject.GetComponent<Rigidbody>();
 simObject.colliderDefaultSize=simObject.collider.bounds.size;
 simObject.GetColliderData();
+
+
+simObject.renderer=simObject.GetComponentInChildren<Renderer>();
+
+
+Debug.LogWarning("simObject.renderer:"+simObject.renderer,simObject.renderer);
 }
 }
 

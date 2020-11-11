@@ -8,22 +8,23 @@ namespace UMA
 	{
 		public void OnDnaApplied(UMAData umaData)
 		{
-			var rigid = umaData.gameObject.GetComponent<Rigidbody>();
+//Destroy(umaData.transform.parent.GetComponent<Collider>());Destroy(umaData.transform.parent.GetComponent<Rigidbody>());
+			var rigid = umaData.transform.root.gameObject.GetComponent<Rigidbody>();
 			if (rigid == null)
 			{
-				rigid = umaData.gameObject.AddComponent<Rigidbody>();
+				rigid = umaData.transform.root.gameObject.AddComponent<Rigidbody>();
 			}
 			rigid.constraints = RigidbodyConstraints.FreezeRotation;
 			rigid.mass = umaData.characterMass;
 
-			CapsuleCollider capsule = umaData.gameObject.GetComponent<CapsuleCollider>();
-			BoxCollider box = umaData.gameObject.GetComponent<BoxCollider>();
+			CapsuleCollider capsule = umaData.transform.root.gameObject.GetComponent<CapsuleCollider>();
+			BoxCollider box = umaData.transform.root.gameObject.GetComponent<BoxCollider>();
 
 			if(umaData.umaRecipe.raceData.umaTarget == RaceData.UMATarget.Humanoid)
 			{
 				if (box == null)
 				{
-					box = umaData.gameObject.AddComponent<BoxCollider>();
+					box = umaData.transform.root.gameObject.AddComponent<BoxCollider>();
 				}
 				if(capsule != null)
 				{
@@ -51,7 +52,7 @@ namespace UMA
 			{
 				if (box == null)
 				{
-					box = umaData.gameObject.AddComponent<BoxCollider>();
+					box = umaData.transform.root.gameObject.AddComponent<BoxCollider>();
 				}
 				if(capsule != null)
 				{

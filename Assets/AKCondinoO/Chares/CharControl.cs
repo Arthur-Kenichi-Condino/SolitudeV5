@@ -52,8 +52,11 @@ inputMoveSpeed.y=0;
 }
 }
                    base.ProcessMovementInput();
+}
+protected override void LateUpdate(){
+                   base.LateUpdate();
 if(BeingCamFollowed){
-_camPos=drawPos;
+_camPos=renderer!=null?renderer.transform.position:transform.position;
 _camPos.y+=CamOffset.y;
 _camPos+=headDrawRotation*Vector3.Scale(_camRotatedOffset,CamOffset);
     //CamPosition=drawPos+(headDrawRotation*CamOffset);

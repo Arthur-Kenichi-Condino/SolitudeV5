@@ -169,6 +169,7 @@ if(rigidbody==null){
             tgtRot+=inputViewRotationEuler;
             inputViewRotationEuler=Vector3.zero;
         }
+if(Lerp){
         if(goToTgtRotTimer==0){
             if(tgtRot!=tgtRot_Pre){
 if(LOG&&LOG_LEVEL<=-20)Debug.Log("input rotation detected:start rotating to tgtRot:"+tgtRot);
@@ -197,11 +198,15 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtRot:"+tgtRot+";don't need to lerp a
                 }
             }
         }
+}else{
+            transform.rotation=Quaternion.Euler(tgtRot);
+}
 #endregion
 #region POSITION LERP
         if(inputMoveSpeed!=Vector3.zero){
             tgtPos+=transform.rotation*inputMoveSpeed;
         }
+if(Lerp){
         if(goToTgtPosTimer==0){
             if(tgtPos!=tgtPos_Pre){
 if(LOG&&LOG_LEVEL<=-20)Debug.Log("input movement detected:start going to tgtPos:"+tgtPos);
@@ -229,6 +234,10 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
                 }
             }
         }
+}else{
+    //Debug.LogWarning(this);
+            transform.position=tgtPos;
+}
 #endregion
 }else{
     headTgtRot=headEulerAngles;
@@ -306,6 +315,15 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
             }
         }
     }
+}
+}
+#endregion
+#region
+protected override void LateUpdate(){
+                   base.LateUpdate();
+if(renderer!=null){
+    Debug.LogWarning("renderer:"+renderer,renderer);
+if(IsUMA){renderer.transform.parent.position=drawPos;}
 }
 }
 #endregion
