@@ -111,7 +111,7 @@ MonoBehaviour:
       - HumanFemaleDCS
       - HumanFemale
   raceAnimationControllers:
-    defaultAnimationController: {fileID: 9100000, guid: eb280940c811fab4a9e3ddf09381c343,
+    defaultAnimationController: {fileID: 9100000, guid: 57cf0c4ab016c6b4ba5d2b8292c0d601,
       type: 2}
     animators:
     - raceName: ToonFemale
