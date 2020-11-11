@@ -427,6 +427,8 @@
     <Compile Include="Assets\UMA\Examples\Physics Examples\Scripts\ClothHelper.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\Scripts\DynamicDNAConverterBehaviour.cs" />
     <Compile Include="Assets\AKCondinoO\Chares\BoxCollider\BoxColliderSlotScript.cs" />
+    <Compile Include="Assets\AKCondinoO\Chares\_LIBRARIAN\LIBRARIAN.cs" />
+    <Compile Include="Assets\AKCondinoO\Chares\_THE_PERFECTIONIST\THE_PERFECTIONIST.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\UMA\Core\StandardAssets\UMA\Atlas\AtlasNormalShader32.shader" />

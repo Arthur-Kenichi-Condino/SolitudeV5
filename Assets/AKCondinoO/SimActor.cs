@@ -291,6 +291,11 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
         }
     }
     tgtPos=transform.position;
+
+
+    //Debug.LogWarning("tgtPos:"+tgtPos);
+
+
     if(goToTgtPosTimer==0){
         if(tgtPos!=tgtPos_Pre){
             moveLerpVal=0;
@@ -321,10 +326,16 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
 #region
 protected override void LateUpdate(){
                    base.LateUpdate();
-if(renderer!=null){
-    Debug.LogWarning("renderer:"+renderer,renderer);
-if(IsUMA){renderer.transform.parent.position=drawPos;}
+//if(renderer!=null){
+if(IsUMA){
+//    Debug.LogWarning("renderer:"+renderer+" renderer.transform.parent:"+renderer.transform.parent.gameObject,renderer);
+//renderer.transform.parent.parent.rotation=drawRotation;
+//renderer.transform.parent.parent.localPosition=drawPos;
+umaData.transform.rotation=drawRotation;
+umaData.transform.position=drawPos;
+    Debug.LogWarning("umaData.transform.position:"+umaData.transform.position);
 }
+//}
 }
 #endregion
 #if UNITY_EDITOR

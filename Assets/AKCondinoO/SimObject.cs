@@ -21,14 +21,14 @@ GetColliderData();
 }
 pos=pos_Pre=transform.position;
 }
-[NonSerialized]protected bool IsUMA=false;
-public void OnCharacterCompleted(UMAData umaData){IsUMA=true;
+[NonSerialized]protected bool IsUMA=false;[NonSerialized]protected UMAData umaData;
+public void OnCharacterCompleted(UMAData umaData){
 CapsuleCollider capsule=umaData.transform.root.gameObject.GetComponent<CapsuleCollider>();BoxCollider box=umaData.transform.root.gameObject.GetComponent<BoxCollider>();
 if(capsule!=null||box!=null){
 
 
 SimObject simObject=umaData.transform.root.gameObject.GetComponent<SimObject>();
-if(simObject!=null){
+if(simObject!=null){simObject.IsUMA=true;simObject.umaData=umaData;
 
 
     Debug.LogWarning(simObject.gameObject+" simObject.collider:"+simObject.collider);
