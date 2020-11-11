@@ -9,6 +9,7 @@ public int Id{get;internal set;}public int TypeId{get;internal set;}[SerializeFi
 [NonSerialized]protected Sight MySight;
 [NonSerialized]protected CharSFX sfx;
 protected override void Awake(){
+if(manager==null){OutOfSight_v=false;}
                    base.Awake();
 MySight=GetComponentInChildren<Sight>();
     sfx=GetComponent<CharSFX>();
@@ -54,7 +55,7 @@ if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("unregistered actor id detected processe
 #endregion
 #region OutOfSight response
 if(OutOfSight_disable){
-gameObject.SetActive(false);
+gameObject.transform.root.gameObject.SetActive(false);
 if(GetActors.ContainsKey(Id)){GetActors.Remove(Id);
 if(LOG&&LOG_LEVEL<=0)Debug.Log("disable OutOfSight actor and add to inactive queue");
 InactiveActorsByTypeId[TypeId].AddLast(this);

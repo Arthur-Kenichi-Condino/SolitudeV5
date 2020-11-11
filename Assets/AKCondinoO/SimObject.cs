@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UMA;
 using UnityEngine;
 public class SimObject:MonoBehaviour{[NonSerialized]protected System.Random mathrandom=new System.Random();
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
@@ -19,6 +20,30 @@ colliderDefaultSize=collider.bounds.size;
 GetColliderData();
 }
 pos=pos_Pre=transform.position;
+}
+public void OnCharacterCompleted(UMAData umaData){
+CapsuleCollider capsule=umaData.gameObject.GetComponent<CapsuleCollider>();BoxCollider box=umaData.gameObject.GetComponent<BoxCollider>();
+if(capsule!=null||box!=null){
+
+
+SimObject simObject=umaData.GetComponentInChildren<SimObject>();
+if(simObject!=null){
+
+
+    Debug.LogWarning(simObject.gameObject+" simObject.collider:"+simObject.collider);
+
+
+Destroy(simObject.GetComponent<Collider>());Destroy(simObject.GetComponent<Rigidbody>());
+//if(collider==GetComponent<Collider>()||(collider=GetComponent<Collider>())!=null){Destroy(collider);}if(rigidbody==GetComponent<Rigidbody>()||(rigidbody=GetComponent<Rigidbody>())!=null){Destroy(rigidbody);}
+
+
+simObject.collider=capsule!=null?capsule as Collider:box as Collider;simObject.rigidbody=umaData.gameObject.GetComponent<Rigidbody>();
+simObject.colliderDefaultSize=simObject.collider.bounds.size;
+simObject.GetColliderData();
+}
+}
+
+
 }
 [NonSerialized]protected Vector3 colliderDefaultSize;
 [NonSerialized]protected Vector3 colliderHalfExtents_v;protected Vector3 colliderHalfExtents{get{return colliderHalfExtents_v*RangeMultiplier;}set{colliderHalfExtents_v=value;}}
@@ -103,7 +128,7 @@ pos=transform.position;
 if(pos!=pos_Pre){
 OutOfSight=false;
 coord=ChunkManager.PosToCoord(pos);idx=ChunkManager.GetIdx(coord.x,coord.y);
-    if(pos.y<-128||!ChunkManager.main.Chunks.TryGetValue(idx,out chunk)||!chunk.Built){
+    if(pos.y<-128||(ChunkManager.main!=null&&(!ChunkManager.main.Chunks.TryGetValue(idx,out chunk)||!chunk.Built))){
 setOutOfSight();
     }
     pos_Pre=pos;

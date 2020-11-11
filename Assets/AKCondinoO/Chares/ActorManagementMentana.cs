@@ -17,7 +17,7 @@ TypeToTypeId.Add(prefab.GetType(),i);ActorsByTypeId.Add(i,new List<AI>(amount));
 var typeId=i;var id=nextActorId++;
 var aI=Instantiate(prefab);
     aI.Id=id;aI.TypeId=typeId;
-var gO=aI.gameObject;gO.name=prefab.name+"("+typeId+":"+id+")";if(gO.activeSelf){gO.SetActive(false);if(LOG&&LOG_LEVEL<=1)Debug.Log("set as inactive in instantiation");}
+var gO=aI.gameObject;gO.name=prefab.name+"("+typeId+":"+id+")";if(gO.activeInHierarchy){gO.transform.root.gameObject.SetActive(false);if(LOG&&LOG_LEVEL<=1)Debug.Log("set as inactive in instantiation");}
 Actors.Add(id,aI);ActorsByTypeId[typeId].Add(aI);InactiveActorsByTypeId[typeId].AddLast(aI);
 
     Debug.LogWarning(InactiveActorsByTypeId[typeId].Last.Value);
@@ -43,7 +43,7 @@ if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("register actor of type:"+unregistered[u
 var typeId=i;var id=nextActorId++;
 var aI=unregistered[u];
     aI.Id=id;aI.TypeId=typeId;
-var gO=aI.gameObject;gO.name=prefab.name+"("+typeId+":"+id+")";if(gO.activeSelf){gO.SetActive(false);}
+var gO=aI.gameObject;gO.name=prefab.name+"("+typeId+":"+id+")";if(gO.activeInHierarchy){gO.transform.root.gameObject.SetActive(false);}
 Actors.Add(id,aI);ActorsByTypeId[typeId].Add(aI);InactiveActorsByTypeId[typeId].AddLast(aI);
 unregistered.RemoveAt(u);goto _continue;}}
 var toDestroy=unregistered[u].gameObject;
@@ -121,7 +121,7 @@ void StageActor(AI actor,RaycastHit hitInfo,Vector3 pos){
     Debug.DrawRay(hitInfo.point,hitInfo.normal,Color.white,5);
 var angle=Vector3.Angle(Vector3.up,hitInfo.normal);var tan=Mathf.Tan(Mathf.Deg2Rad*angle);
     Debug.LogWarning("staging actor "+actor.Id+" of type:"+actor.GetType()+"[angle:"+angle+";tan:"+tan);
-pos.y+=actor.collider.bounds.extents.y+tan*actor.BodyRange+.1f;actor.transform.position=pos;actor.OutOfSight=false;GetActors.Add(actor.Id,actor);actor.InitAttributes();actor.gameObject.SetActive(true);
+pos.y+=actor.collider.bounds.extents.y+tan*actor.BodyRange+.1f;actor.transform.position=pos;actor.OutOfSight=false;GetActors.Add(actor.Id,actor);actor.InitAttributes();actor.gameObject.transform.root.gameObject.SetActive(true);
 }    
 bool GetValidRandomPos(AI actor,out RaycastHit hitInfo,out Vector3 pos){
 var c=center+new Vector3((float)(mathrandom.NextDouble()*2f-1)*(size.x*.5f),size.y*.5f,
