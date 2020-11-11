@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class CharControl:AI,iCamFollowable{
@@ -13,6 +14,7 @@ protected override void Awake(){
                    base.Awake();
 CamFollowableNode=MainCamera.CamFollowables.AddLast(this);
 }
+[NonSerialized]Vector3 _camPos=new Vector3();[NonSerialized]Vector3 _camRotatedOffset=new Vector3(1,0,1);
 protected override void ProcessMovementInput(){
 if(!(bool)Enabled.PAUSE[0]){
 if(BeingCamFollowed){
@@ -51,9 +53,14 @@ inputMoveSpeed.y=0;
 }
                    base.ProcessMovementInput();
 if(BeingCamFollowed){
-    CamPosition=drawPos+(headDrawRotation*CamOffset);
+_camPos=drawPos;
+_camPos.y+=CamOffset.y;
+_camPos+=headDrawRotation*Vector3.Scale(_camRotatedOffset,CamOffset);
+    //CamPosition=drawPos+(headDrawRotation*CamOffset);
+    CamPosition=_camPos;
     CamLookAtForward=((headDrawRotation*(Vector3.forward*1000))-CamPosition).normalized;
-    CamLookAtUp=transform.up;
+    //CamLookAtUp=transform.up;
+    CamLookAtUp=Vector3.Cross(CamLookAtForward,headDrawRotation*Vector3.right).normalized;
 }
 }
 #if UNITY_EDITOR
