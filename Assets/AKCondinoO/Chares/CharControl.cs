@@ -56,7 +56,7 @@ inputMoveSpeed.y=0;
 protected override void LateUpdate(){
                    base.LateUpdate();
 if(BeingCamFollowed){
-_camPos=renderer!=null?renderer.transform.position:transform.position;
+_camPos=renderer!=null?renderer.transform.position:drawPos;
 _camPos.y+=CamOffset.y;
 _camPos+=headDrawRotation*Vector3.Scale(_camRotatedOffset,CamOffset);
     //CamPosition=drawPos+(headDrawRotation*CamOffset);
