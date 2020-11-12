@@ -333,7 +333,7 @@ if(IsUMA){
 //renderer.transform.parent.parent.localPosition=drawPos;
 umaData.transform.rotation=drawRotation;
 umaData.transform.position=drawPos;
-    Debug.LogWarning("umaData.transform.position:"+umaData.transform.position);
+    //Debug.LogWarning("umaData.transform.position:"+umaData.transform.position);
 }
 //}
 }

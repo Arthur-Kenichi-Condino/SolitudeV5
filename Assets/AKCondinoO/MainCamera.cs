@@ -105,7 +105,7 @@ void ProcessGameCommands(){
 UICore.DetectMouseOnUI();
 
 
-    Debug.LogWarning("UICore.UIReceivedInput:"+UICore.UIReceivedInput);
+    //Debug.LogWarning("UICore.UIReceivedInput:"+UICore.UIReceivedInput);
 
 
 if(CurrentTool!=LastTool){

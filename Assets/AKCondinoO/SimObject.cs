@@ -21,7 +21,7 @@ GetColliderData();
 }
 pos=pos_Pre=transform.position;
 }
-[NonSerialized]protected bool IsUMA=false;[NonSerialized]protected UMAData umaData;
+[NonSerialized]public bool IsUMA=false;[NonSerialized]protected UMAData umaData;
 public void OnCharacterCompleted(UMAData umaData){
 CapsuleCollider capsule=umaData.transform.root.gameObject.GetComponent<CapsuleCollider>();BoxCollider box=umaData.transform.root.gameObject.GetComponent<BoxCollider>();
 if(capsule!=null||box!=null){
