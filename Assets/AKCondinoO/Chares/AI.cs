@@ -458,7 +458,7 @@ inputMoveSpeed.x=0;
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
    _axisDist.z>ReachedTgtDisThreshold.z)){
-inputMoveSpeed.z=-InputMaxMoveSpeed.z;
+inputMoveSpeed.z=-InputMaxMoveSpeed.z*MaxMoveSpeedBackwardMultiplier;
 }else{
 inputMoveSpeed.z=0;
 }
