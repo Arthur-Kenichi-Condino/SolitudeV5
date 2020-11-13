@@ -11,10 +11,10 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{5214F820-C0AF-B5CC-BA6D-5BEB91C88587}</ProjectGuid>
+    <ProjectGuid>{E8B279AC-D97F-8CB5-3F43-E025AD77A2FA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Assembly-CSharp-firstpass</AssemblyName>
+    <AssemblyName>Unity.Collections</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>.</BaseDirectory>
@@ -55,249 +55,47 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Blend.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Min.cs" />
-     <Compile Include="Assets\Standard Assets\ParticleSystems\Scripts\ExtinguishableParticleSystem.cs" />
-     <Compile Include="Assets\Standard Assets\ParticleSystems\Scripts\ParticleSystemMultiplier.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Exponent.cs" />
-     <Compile Include="Assets\Standard Assets\Characters\ThirdPersonCharacter\Scripts\AICharacterControl.cs" />
-     <Compile Include="Assets\Standard Assets\Characters\FirstPersonCharacter\Scripts\FirstPersonController.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Clamp.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Multiply.cs" />
-     <Compile Include="Assets\Standard Assets\ParticleSystems\Scripts\ExplosionPhysicsForce.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Displace.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Car\Scripts\Suspension.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Car\Scripts\BrakeLight.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Utils.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\EventSystemChecker.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Car\Scripts\SkidTrail.cs" />
-     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\VirtualInput.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Aircraft\Scripts\AeroplaneUserControl4Axis.cs" />
-     <Compile Include="Assets\Standard Assets\ParticleSystems\Scripts\Hose.cs" />
-     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\TiltInput.cs" />
-     <Compile Include="Assets\Standard Assets\Environment\Water\Water\Scripts\WaterBase.cs" />
-     <Compile Include="Assets\Standard Assets\Characters\RollerBall\Scripts\BallUserControl.cs" />
-     <Compile Include="Assets\Standard Assets\Cameras\Scripts\AutoCam.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Power.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Generator\Perlin.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Turbulence.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\TimedObjectActivator.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Car\Scripts\WheelEffects.cs" />
-     <Compile Include="Assets\Standard Assets\Cameras\Scripts\ProtectCameraFromWallClip.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\WaypointProgressTracker.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Select.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Car\Scripts\CarUserControl.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\ParticleSystemDestroyer.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\SimpleMouseRotator.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Aircraft\Scripts\AeroplaneAudio.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\CurveControlledBob.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Aircraft\Scripts\AeroplaneController.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\DragRigidbody.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\GradientPresets.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Cache.cs" />
-     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\Joystick.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\CameraRefocus.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\PlatformSpecificContent.cs" />
-     <Compile Include="Assets\Standard Assets\Characters\ThirdPersonCharacter\Scripts\ThirdPersonCharacter.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\ModuleBase.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\ActivateTrigger.cs" />
-     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\InputAxisScrollbar.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Aircraft\Scripts\AeroplaneAiControl.cs" />
-     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\AxisTouchButton.cs" />
-     <Compile Include="Assets\Standard Assets\2D\Scripts\CameraFollow.cs" />
-     <Compile Include="Assets\Standard Assets\Cameras\Scripts\LookatTarget.cs" />
-     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\ButtonHandler.cs" />
-     <Compile Include="Assets\Standard Assets\Characters\FirstPersonCharacter\Scripts\HeadBob.cs" />
-     <Compile Include="Assets\Standard Assets\Characters\ThirdPersonCharacter\Scripts\ThirdPersonUserControl.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\AutoMoveAndRotate.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\ForcedReset.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\SmoothFollow.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Rotate.cs" />
-     <Compile Include="Assets\Standard Assets\Environment\Water\Water\Scripts\PlanarReflection.cs" />
-     <Compile Include="Assets\Standard Assets\Environment\Water\Water\Scripts\Displace.cs" />
-     <Compile Include="Assets\Standard Assets\Characters\FirstPersonCharacter\Scripts\MouseLook.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Aircraft\Scripts\LandingGear.cs" />
-     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\MobileControlRig.cs" />
-     <Compile Include="Assets\Standard Assets\Environment\Water\Water\Scripts\MeshContainer.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\ObjectResetter.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Generator\Voronoi.cs" />
-     <Compile Include="Assets\Standard Assets\ParticleSystems\Scripts\AfterburnerPhysicsForce.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Car\Scripts\CarController.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Terrace.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Car\Scripts\CarAIControl.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Car\Scripts\CarSelfRighting.cs" />
-     <Compile Include="Assets\Standard Assets\Environment\Water (Basic)\Scripts\WaterBasic.cs" />
-     <Compile Include="Assets\Standard Assets\ParticleSystems\Scripts\FireLight.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Generator\Const.cs" />
-     <Compile Include="Assets\Standard Assets\Cameras\Scripts\AbstractTargetFollower.cs" />
-     <Compile Include="Assets\Standard Assets\Cameras\Scripts\FreeLookCam.cs" />
-     <Compile Include="Assets\Standard Assets\ParticleSystems\Scripts\ExplosionFireAndDebris.cs" />
-     <Compile Include="Assets\Standard Assets\2D\Scripts\Restarter.cs" />
-     <Compile Include="Assets\Standard Assets\Environment\Water\Water\Scripts\SpecularLighting.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\WaypointCircuit.cs" />
-     <Compile Include="Assets\Standard Assets\Cameras\Scripts\TargetFieldOfView.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Translate.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Add.cs" />
-     <Compile Include="Assets\Standard Assets\Environment\Water\Water\Scripts\Water.cs" />
-     <Compile Include="Assets\Standard Assets\2D\Scripts\Platformer2DUserControl.cs" />
-     <Compile Include="Assets\Standard Assets\Characters\FirstPersonCharacter\Scripts\RigidbodyFirstPersonController.cs" />
-     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\CrossPlatformInputManager.cs" />
-     <Compile Include="Assets\Standard Assets\Cameras\Scripts\HandHeldCam.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Aircraft\Scripts\AeroplanePropellerAnimator.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Properties\AssemblyInfo.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\AlphaButtonClickMask.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Noise2D.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Invert.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\ScaleBias.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\DynamicShadowSettings.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Aircraft\Scripts\JetParticleEffect.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\SimpleActivatorMenu.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Car\Scripts\Mudguard.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Generator\Checker.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Aircraft\Scripts\AeroplaneControlSurfaceAnimator.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Car\Scripts\CarAudio.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\LerpControlledBob.cs" />
-     <Compile Include="Assets\Standard Assets\Vehicles\Aircraft\Scripts\AeroplaneUserControl2Axis.cs" />
-     <Compile Include="Assets\Standard Assets\ParticleSystems\Scripts\WaterHoseParticles.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Subtract.cs" />
-     <Compile Include="Assets\Standard Assets\ParticleSystems\Scripts\SmokeParticles.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Generator\RidgedMultifractal.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\FollowTarget.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Generator\Spheres.cs" />
-     <Compile Include="Assets\Standard Assets\2D\Scripts\Camera2DFollow.cs" />
-     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\TouchPad.cs" />
-     <Compile Include="Assets\Standard Assets\Characters\RollerBall\Scripts\Ball.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\TimedObjectDestructor.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Curve.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Generator\Billow.cs" />
-     <Compile Include="Assets\Standard Assets\Environment\Water\Water\Scripts\GerstnerDisplace.cs" />
-     <Compile Include="Assets\Standard Assets\ParticleSystems\Scripts\Explosive.cs" />
-     <Compile Include="Assets\Standard Assets\Environment\Water\Water\Scripts\WaterTile.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Scale.cs" />
-     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\PlatformSpecific\MobileInput.cs" />
-     <Compile Include="Assets\Standard Assets\Cameras\Scripts\PivotBasedCameraRig.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Generator\Cylinders.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\FPSCounter.cs" />
-     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\PlatformSpecific\StandaloneInput.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Abs.cs" />
-     <Compile Include="Assets\Plugins\LibNoise.Unity\Operator\Max.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\FOVKick.cs" />
-     <Compile Include="Assets\Standard Assets\2D\Scripts\PlatformerCharacter2D.cs" />
-     <Compile Include="Assets\Standard Assets\Utility\AutoMobileShaderSwitch.cs" />
-     <None Include="Assets\Standard Assets\Prototyping\Shaders\WorldCoordDiffuse.shader" />
-     <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorLight.shader" />
-     <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorMultiply.shader" />
-     <None Include="Assets\Standard Assets\Effects\Projectors\Guidelines.txt" />
-     <None Include="Assets\Plugins\LibNoise.Unity\COPYING.txt" />
-     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
-     <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />
-     <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLitOutline.shader" />
-     <None Include="Assets\Plugins\LibNoise.Unity\COPYING.LESSER.txt" />
-     <None Include="Assets\Standard Assets\Vehicles\Car\CarGuidelines.txt" />
-     <None Include="Assets\Standard Assets\Vehicles\Aircraft\AircraftGuidelines.txt" />
-     <None Include="Assets\Standard Assets\Cameras\CameraGuidelines.txt" />
-     <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
-     <None Include="Assets\Standard Assets\Vehicles\Car\Shaders\ReflectiveDiffuseSpecTransp.shader" />
-     <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />
-     <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLit.shader" />
-     <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasic.shader" />
-     <None Include="Assets\Standard Assets\ParticleSystems\ParticleSystemsGuidelines.txt" />
-     <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularSmooth.shader" />
-     <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAddSoft.shader" />
-     <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularDisplacement.shader" />
-     <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
-     <None Include="Assets\Standard Assets\Effects\ImageEffects\Readme.txt" />
-     <None Include="Assets\Standard Assets\Characters\RollerBall\RollerBallGuidelines.txt" />
-     <None Include="Assets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
-     <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAdd.shader" />
-     <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
-     <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
-     <None Include="Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAlpha.shader" />
-     <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
-     <None Include="Assets\Standard Assets\Vehicles\Car\Shaders\DiffuseReflectiveShader.shader" />
-     <None Include="Assets\Standard Assets\Characters\ThirdPersonCharacter\ThirdPersonCharacterGuidelines.txt" />
-     <None Include="Assets\Standard Assets\Vehicles\Car\Shaders\ReflectiveDiffuseSpec.shader" />
-     <None Include="Assets\Standard Assets\Fonts\OpenSans\License!.txt" />
- <Reference Include="Unity.Timeline.Editor">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.Monetization">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/UnityEngine.Monetization.dll</HintPath>
- </Reference>
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\NativeArrayExtensions.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\UnsafeAtomicCounter.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\UnsafeScratchAllocator.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\NativeQueue.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\FixedString.gen.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\AllocatorManager.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\NativeStream.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\DebugView.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\NativeList.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\CollectionHelper.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\UnsafeList.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\NativeBitArray.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\BitField.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\JetBrains.Annotations.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\Unicode.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\AssemblyInfo.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\UnsafeHashMap.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\NativeSort.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\UnsafeRingQueue.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\FixedList.gen.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\UnsafeBitArray.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\UnsafeStream.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\NativeHashMap.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\UnsafeAppendBuffer.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\ListExtensions.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\NativeString.gen.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\NativeArraySOA.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\NativeStringExtensions.gen.cs" />
+     <Compile Include="Packages\com.unity.collections\Unity.Collections\UnsafeUtilityEx.cs" />
+     <None Include="Packages\com.unity.collections\Unity.Collections\Unity.Collections.asmdef" />
  <Reference Include="Unity.Burst">
  <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/Unity.Burst.dll</HintPath>
- </Reference>
- <Reference Include="com.unity.multiplayer-hlapi.Editor">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Unity.VSCode.Editor">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Burst.Editor">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/Unity.Burst.Editor.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.Advertisements">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/UnityEngine.Advertisements.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.Purchasing">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/UnityEngine.Purchasing.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.Purchasing">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/UnityEditor.Purchasing.dll</HintPath>
- </Reference>
- <Reference Include="Unity.TextMeshPro.Editor">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.UI">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Timeline">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
- </Reference>
- <Reference Include="com.unity.multiplayer-weaver.Editor">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/com.unity.multiplayer-weaver.Editor.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.XR.LegacyInputHelpers">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/UnityEngine.XR.LegacyInputHelpers.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Rider.Editor">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Mathematics">
  <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/Unity.Mathematics.dll</HintPath>
  </Reference>
- <Reference Include="Unity.2D.Sprite.Editor">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Unity.2D.Tilemap.Editor">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/Unity.2D.Tilemap.Editor.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.SpatialTracking">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/UnityEditor.SpatialTracking.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.SpatialTracking">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/UnityEngine.SpatialTracking.dll</HintPath>
- </Reference>
- <Reference Include="Unity.VisualStudio.Editor">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/Unity.VisualStudio.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Mathematics.Editor">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/Unity.Mathematics.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Unity.TextMeshPro">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Analytics.DataPrivacy">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.XR.LegacyInputHelpers">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/UnityEditor.XR.LegacyInputHelpers.dll</HintPath>
- </Reference>
  <Reference Include="UnityEditor.UI">
  <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
  </Reference>
- <Reference Include="com.unity.multiplayer-hlapi.Runtime">
- <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Runtime.dll</HintPath>
+ <Reference Include="UnityEngine.UI">
+ <HintPath>D:/Projects/GitHub/SolitudeV5.1/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.AIModule">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.1.7f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -481,6 +279,15 @@
  </Reference>
  <Reference Include="UnityEngine.XRModule">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.1.7f1/Editor/Data/Managed/UnityEngine/UnityEngine.XRModule.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.Graphs">
+ <HintPath>C:/Program Files/Unity/Hub/Editor/2020.1.7f1/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.WindowsStandalone.Extensions">
+ <HintPath>C:/Program Files/Unity/Hub/Editor/2020.1.7f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+ </Reference>
+ <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
+ <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/16.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
  </Reference>
  <Reference Include="MessagePack.System.Threading.Tasks.Extensions">
  <HintPath>D:/Projects/GitHub/SolitudeV5.1/Assets/Plugins/MessagePack.System.Threading.Tasks.Extensions.dll</HintPath>
@@ -851,16 +658,6 @@
  <Reference Include="System.Xml.XPath.XDocument">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.1.7f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Xml.XPath.XDocument.dll</HintPath>
  </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Unity.Collections.csproj">
-      <Project>{65D215BC-CDA9-FD47-1D53-3285183F0601}</Project>
-      <Name>Unity.Collections</Name>
-    </ProjectReference>
-    <ProjectReference Include="MessagePack.csproj">
-      <Project>{46B45C18-47F0-3EFE-602F-C4A8C2FC7C8C}</Project>
-      <Name>MessagePack</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
