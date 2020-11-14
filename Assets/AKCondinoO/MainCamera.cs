@@ -93,10 +93,12 @@ inputMoveSpeed=Vector3.zero;
 #region UI-to-Command translating
 Vector3 _coordToSignedCoord{get;}=new Vector3(-Chunk.Width/2f,-Chunk.Height/2f,-Chunk.Depth/2f);Vector3 _adjToCenter{get;}=new Vector3(-.5f,-.5f,-.5f);
 public enum SelectedGameModeTool:int{
-CommandSim=0,
+None=-1,
+SimInteractionWheel=0,
 TerrainCarveCube=1,
 TerrainCarveSphere=2,
-}[NonSerialized]public SelectedGameModeTool CurrentTool=SelectedGameModeTool.CommandSim;[NonSerialized]SelectedGameModeTool LastTool=SelectedGameModeTool.CommandSim;
+Hand=3,
+}[NonSerialized]public SelectedGameModeTool CurrentTool=SelectedGameModeTool.SimInteractionWheel;[NonSerialized]SelectedGameModeTool LastTool=SelectedGameModeTool.SimInteractionWheel;
 
 
 void ProcessGameCommands(){

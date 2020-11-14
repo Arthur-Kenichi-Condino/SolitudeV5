@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b3071aeea220cd4da3fb7e541507214, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  elementsOnScreen: []
   BottonUIPanels:
   - {fileID: 7060688777753042257}
   - {fileID: 6043198226523742116}
@@ -79,7 +80,7 @@ PrefabInstance:
     - target: {fileID: 1271541486831885867, guid: 96909be4a8ac81f44ab217c695070dfb,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetCurrentTool
+      value: OnSetCurrentToolClick
       objectReference: {fileID: 0}
     - target: {fileID: 1271541486831885867, guid: 96909be4a8ac81f44ab217c695070dfb,
         type: 3}
@@ -254,7 +255,7 @@ PrefabInstance:
     - target: {fileID: 7660320508831323114, guid: 96909be4a8ac81f44ab217c695070dfb,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetCurrentTool
+      value: OnSetCurrentToolClick
       objectReference: {fileID: 0}
     - target: {fileID: 7660320508831323114, guid: 96909be4a8ac81f44ab217c695070dfb,
         type: 3}

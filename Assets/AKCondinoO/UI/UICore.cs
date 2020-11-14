@@ -23,17 +23,26 @@ UIReceivedInput=false;
 public void OnF1SimClick(){
 UIReceivedInput=true;
     Debug.LogWarning("OnF1SimClick");
-     SetActiveBottonUIPanel(0);
+     SetF1Sim();
+}
+void SetF1Sim(){
+     SetActiveBottonUIPanel(0);SetTool(0);
 }
 public void OnF2BuyClick(){
 UIReceivedInput=true;
     Debug.LogWarning("OnF2BuyClick");
-     SetActiveBottonUIPanel(1);
+     SetF2Buy();
+}
+void SetF2Buy(){
+     SetActiveBottonUIPanel(1);SetTool(3);
 }
 public void OnF3BuildClick(){
 UIReceivedInput=true;
     Debug.LogWarning("OnF3BuildClick");
-     SetActiveBottonUIPanel(2);
+     SetF3Build();
+}
+void SetF3Build(){
+     SetActiveBottonUIPanel(2);SetTool(3);
 }
 public GameObject[]BottonUIPanels;public GameObject[]BottonUISubpanels;
 void SetActiveBottonUIPanel(int active){if(BottonUIPanels==null||BottonUISubpanels==null)return;
@@ -63,8 +72,11 @@ if(i==active){if(subpanel!=null){subpanel.SetActive( true);}
 }
 }
 }
-public void SetCurrentTool(int tool){
+public void OnSetCurrentToolClick(int tool){
 UIReceivedInput=true;
+     SetTool(tool);
+}
+void SetTool(int tool){
 gameState.CurrentTool=(MainCamera.SelectedGameModeTool)tool;
     Debug.LogWarning(gameState.CurrentTool);
 }
