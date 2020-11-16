@@ -98,6 +98,7 @@ SimInteractionWheel=0,
 TerrainCarveCube=1,
 TerrainCarveSphere=2,
 Hand=3,
+Water=4,
 }[NonSerialized]public SelectedGameModeTool CurrentTool=SelectedGameModeTool.SimInteractionWheel;[NonSerialized]SelectedGameModeTool LastTool=SelectedGameModeTool.SimInteractionWheel;
 
 

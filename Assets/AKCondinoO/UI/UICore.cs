@@ -76,6 +76,14 @@ public void OnSetCurrentToolClick(int tool){
 UIReceivedInput=true;
      SetTool(tool);
 }
+public void OnSetCurrentToolSizeValueChanged(string size){
+UIReceivedInput=true;
+    Debug.LogWarning("OnSetCurrentToolSizeValueChanged:"+size);
+}
+public void OnSetCurrentToolSizeEndEdit(string size){
+UIReceivedInput=true;
+    Debug.LogWarning("OnSetCurrentToolSizeEndEdit:"+size);
+}
 void SetTool(int tool){
 gameState.CurrentTool=(MainCamera.SelectedGameModeTool)tool;
     Debug.LogWarning(gameState.CurrentTool);
