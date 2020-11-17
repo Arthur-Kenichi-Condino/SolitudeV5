@@ -46,7 +46,13 @@ var aI=unregistered[u];
     aI.Id=id;aI.TypeId=typeId;
 var gO=aI.gameObject;gO.name=prefab.name+"("+typeId+":"+id+")";if(gO.activeInHierarchy){gO.transform.root.gameObject.SetActive(false);}
 Actors.Add(id,aI);ActorsByTypeId[typeId].Add(aI);InactiveActorsByTypeId[typeId].AddLast(aI);
-unregistered.RemoveAt(u);goto _continue;}}
+unregistered.RemoveAt(u);
+
+
+
+    
+    
+goto _continue;}}
 var toDestroy=unregistered[u].gameObject;
 if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("destroy unavailable actor of type:"+unregistered[u].GetType());
 unregistered.RemoveAt(u);Destroy(toDestroy);
