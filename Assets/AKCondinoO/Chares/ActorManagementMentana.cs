@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 public class ActorManagementMentana:MonoBehaviour{[NonSerialized]protected System.Random mathrandom=new System.Random();
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
+public bool AutoStagingEnabled=true;public bool KeepUnregisteredActive=true;
 public static bool Contains(AI actor){if(!Actors.ContainsKey(actor.Id)||Actors[actor.Id]!=actor){unregistered.Add(actor);return(false);}return(true);}[NonSerialized]static readonly List<AI>unregistered=new List<AI>();[NonSerialized]public static readonly Dictionary<int,AI>Actors=new Dictionary<int,AI>();[NonSerialized]public static readonly Dictionary<int,List<AI>>ActorsByTypeId=new Dictionary<int,List<AI>>();[NonSerialized]public static readonly Dictionary<Type,int>TypeToTypeId=new Dictionary<Type,int>();
 [SerializeField]AI[]actorsPrefabs;[SerializeField]int[]actorsMaxInstantiations;[NonSerialized]int nextActorId;
 public static ActorManagementMentana manager{get;private set;}
@@ -35,7 +36,7 @@ if(firstLoop||actPos!=Camera.main.transform.position){
     actPos=Camera.main.transform.position;
     actReg=ChunkManager.PosToRgn(actPos);
 if(LOG&&LOG_LEVEL<=-10)Debug.Log(actPos+" "+actReg);
-    center=new Vector3(actReg.x,0,actReg.y);size=new Vector3(Chunk.Width*(ChunkManager.main.instantiationDistance.x*2+1)-Chunk.Width,Chunk.Height,Chunk.Depth*(ChunkManager.main.instantiationDistance.y*2+1)-Chunk.Depth);halfSize=size*.5f;
+    center=new Vector3(actReg.x,0,actReg.y);size=new Vector3(Chunk.Width*((ChunkManager.main!=null?ChunkManager.main.instantiationDistance.x:1)*2+1)-Chunk.Width,Chunk.Height,Chunk.Depth*((ChunkManager.main!=null?ChunkManager.main.instantiationDistance.y:1)*2+1)-Chunk.Depth);halfSize=size*.5f;
 }
 #region register the unregistered
 for(int u=unregistered.Count-1;u>=0;u--){for(int i=0;i<actorsPrefabs.Length;i++){if(actorsPrefabs[i].GetType()==unregistered[u].GetType()){var prefab=actorsPrefabs[i];    
@@ -58,6 +59,7 @@ NextActorStagingTimer=0;ChanceToStage=1;
 
 
 
+if(AutoStagingEnabled){
 if(NextActorStagingTimer<=0){
 if(mathrandom.NextDouble()<=ChanceToStage){    
 var action=DEBUG_SPAWN_ENEMY!=-1?CreativeIdleness.SpawnEnemy:(CreativeIdleness)mathrandom.Next(0,CreativeIdlenessActionsCount);
@@ -110,6 +112,7 @@ ChanceToStage+=0.1f;
     NextActorStagingTimer=TryActorStagingInterval;
 }else{
     NextActorStagingTimer-=Time.deltaTime;
+}
 }
 DEBUG_SPAWN_ENEMY=-1;
 
