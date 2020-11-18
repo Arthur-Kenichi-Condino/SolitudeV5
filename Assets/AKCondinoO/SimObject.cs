@@ -73,7 +73,7 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("BodyRadius:"+BodyRange+", name:"+name);
 protected virtual void OnEnable(){}
 protected virtual void OnDisable(){}
 protected virtual void OnDestroy(){}
-protected bool IsGrounded;protected bool HittingWall;
+protected bool IsGrounded;public bool OnGround{get{return IsGrounded;}}protected bool HittingWall;
 protected virtual void FixedUpdate(){
 if(rigidbody!=null){
 IsGrounded=false;HittingWall=false;
