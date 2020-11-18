@@ -126,7 +126,7 @@ stopMovement.y=0;
 protected override void Update(){
 ProcessMovementInput();
                    base.Update();
-if(!OutOfSight_v&&manager!=null&&
+if(!OutOfSight_v&&manager!=null&&manager.RemoveFarAwayActors&&
    (Mathf.Abs(Center.x-transform.position.x)>HalfSize.x||
     Mathf.Abs(Center.z-transform.position.z)>HalfSize.z)){
 setOutOfSight();

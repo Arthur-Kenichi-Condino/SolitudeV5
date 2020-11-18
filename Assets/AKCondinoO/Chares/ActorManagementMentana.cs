@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEngine;
 public class ActorManagementMentana:MonoBehaviour{[NonSerialized]protected System.Random mathrandom=new System.Random();
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
-public bool AutoStagingEnabled=true;public bool KeepUnregisteredActive=true;
+public bool AutoStagingEnabled=true;public bool RemoveFarAwayActors=true;public bool KeepUnregisteredActive=true;[NonSerialized]readonly Queue<(int TypeId,Vector3 Pos)>ToReactivate=new Queue<(int TypeId,Vector3 Pos)>();
 public static bool Contains(AI actor){if(!Actors.ContainsKey(actor.Id)||Actors[actor.Id]!=actor){unregistered.Add(actor);return(false);}return(true);}[NonSerialized]static readonly List<AI>unregistered=new List<AI>();[NonSerialized]public static readonly Dictionary<int,AI>Actors=new Dictionary<int,AI>();[NonSerialized]public static readonly Dictionary<int,List<AI>>ActorsByTypeId=new Dictionary<int,List<AI>>();[NonSerialized]public static readonly Dictionary<Type,int>TypeToTypeId=new Dictionary<Type,int>();
 [SerializeField]AI[]actorsPrefabs;[SerializeField]int[]actorsMaxInstantiations;[NonSerialized]int nextActorId;
 public static ActorManagementMentana manager{get;private set;}
@@ -49,7 +49,7 @@ Actors.Add(id,aI);ActorsByTypeId[typeId].Add(aI);InactiveActorsByTypeId[typeId].
 unregistered.RemoveAt(u);
 
 
-
+if(KeepUnregisteredActive){ToReactivate.Enqueue((typeId,aI.transform.position));}
     
     
 goto _continue;}}
@@ -60,6 +60,24 @@ _continue:{}}
 #endregion
 if(DEBUG_SPAWN_ENEMY!=-1){
 NextActorStagingTimer=0;ChanceToStage=1;
+}
+if(KeepUnregisteredActive){
+while(ToReactivate.Count>0){var actorData=ToReactivate.Dequeue();var typeId=actorData.TypeId;if(InactiveActorsByTypeId.ContainsKey(typeId)&&InactiveActorsByTypeId[typeId].Count>0){var actorCast=InactiveActorsByTypeId[typeId].First.Value;
+
+
+    Debug.LogWarning("ToReactivate actorData:"+actorData);
+
+
+actorCast.transform.position=actorData.Pos;
+if(FindValidPos(actorCast,out RaycastHit hitInfo,out Vector3 pos)){
+if(LOG&&LOG_LEVEL<=0)Debug.Log("reactivate actor of type id:"+typeId);
+InactiveActorsByTypeId[typeId].RemoveFirst();StageActor(actorCast,hitInfo,pos);
+}else{
+if(LOG&&LOG_LEVEL<=0)Debug.Log("no valid position found for actor of type id:"+typeId);
+}
+
+
+}}
 }
 
 
@@ -79,7 +97,7 @@ int typeId=(DEBUG_SPAWN_ENEMY!=-1&&monsterTypeIds.Contains(DEBUG_SPAWN_ENEMY.Act
     Debug.LogWarning("actorCast:"+actorCast);
 
 
-    if(GetValidRandomPos(actorCast,out RaycastHit hitInfo,out Vector3 pos)){
+    if(FindValidRandomPos(actorCast,out RaycastHit hitInfo,out Vector3 pos)){
 if(LOG&&LOG_LEVEL<=0)Debug.Log("spawn monster of type id:"+typeId);
 InactiveActorsByTypeId[typeId].RemoveFirst();StageActor(actorCast,hitInfo,pos);
     }else{
@@ -98,7 +116,7 @@ int typeId=homunculusTypeIds[mathrandom.Next(0,homunculusTypeIds.Length)].Id();i
     Debug.LogWarning("actorCast:"+actorCast);
 
 
-    if(GetValidRandomPos(actorCast,out RaycastHit hitInfo,out Vector3 pos)){
+    if(FindValidRandomPos(actorCast,out RaycastHit hitInfo,out Vector3 pos)){
 if(LOG&&LOG_LEVEL<=0)Debug.Log("create homunculus of type id:"+typeId);
 InactiveActorsByTypeId[typeId].RemoveFirst();StageActor(actorCast,hitInfo,pos);
     }else{
@@ -132,13 +150,20 @@ var angle=Vector3.Angle(Vector3.up,hitInfo.normal);var tan=Mathf.Tan(Mathf.Deg2R
     Debug.LogWarning("staging actor "+actor.Id+" of type:"+actor.GetType()+"[angle:"+angle+";tan:"+tan);
 pos.y+=actor.collider.bounds.extents.y+tan*actor.BodyRange+.1f;actor.transform.position=pos;actor.OutOfSight=false;GetActors.Add(actor.Id,actor);actor.InitAttributes();actor.gameObject.transform.root.gameObject.SetActive(true);
 }    
-bool GetValidRandomPos(AI actor,out RaycastHit hitInfo,out Vector3 pos){
+bool FindValidRandomPos(AI actor,out RaycastHit hitInfo,out Vector3 pos){
 var c=center+new Vector3((float)(mathrandom.NextDouble()*2f-1)*(size.x*.5f),size.y*.5f,
                          (float)(mathrandom.NextDouble()*2f-1)*(size.z*.5f));
 
     
     Debug.LogWarning("actor:"+actor+"; actor.collider:"+actor.collider);
 
+
+    Debug.DrawRay(c,Vector3.down*Chunk.Height,Color.white,1f);
+bool result=Physics.BoxCast(c,actor.collider.bounds.extents,Vector3.down,out hitInfo,Quaternion.identity,size.y);
+pos=hitInfo.point+hitInfo.normal*actor.BodyRange;
+return result;}
+bool FindValidPos(AI actor,out RaycastHit hitInfo,out Vector3 pos){
+var c=actor.transform.position;
 
     Debug.DrawRay(c,Vector3.down*Chunk.Height,Color.white,1f);
 bool result=Physics.BoxCast(c,actor.collider.bounds.extents,Vector3.down,out hitInfo,Quaternion.identity,size.y);
