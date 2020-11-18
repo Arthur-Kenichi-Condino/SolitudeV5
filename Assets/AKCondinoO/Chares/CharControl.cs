@@ -44,8 +44,16 @@ inputViewRotationEuler.x=inputViewRotationEuler.x%360;
 inputViewRotationEuler.y=inputViewRotationEuler.y%360;
 if(Enabled.MOUSE_ROTATION_DELTA_Y[0]!=0||Enabled.MOUSE_ROTATION_DELTA_X[0]!=0)Autonomous=AutonomyDelayAfterControl;
 #endregion
+
+
+//Debug.LogWarning((bool)Enabled.JUMP[0]+" "+IsGrounded);
 if(IsGrounded&&(Jump||(Jump=(bool)Enabled.JUMP[0]!=(bool)Enabled.JUMP[1]))){
 inputMoveSpeed.y=InputMoveAcceleration.y;Autonomous=AutonomyDelayAfterControl;
+
+
+//Debug.LogWarning(inputMoveSpeed.y);
+
+
 }else{
 inputMoveSpeed.y=0;
 }

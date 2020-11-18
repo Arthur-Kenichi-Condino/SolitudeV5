@@ -315,6 +315,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &306088406 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8857167122812051077, guid: e55fd222ce86ba84db8c3db9c6747227,
+    type: 3}
+  m_PrefabInstance: {fileID: 1504691510570888959}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb969506c532214597c6a89bee5ce98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &412054496
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,6 +488,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BAYERI
+      objectReference: {fileID: 0}
+    - target: {fileID: 2924836144484334124, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66788a3051bc6d548b32495287c01c2e, type: 3}
@@ -830,6 +847,36 @@ PrefabInstance:
       propertyPath: RemoveFarAwayActors
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
+        type: 3}
+      propertyPath: actorsPrefabs.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
+        type: 3}
+      propertyPath: actorsPrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 306088406}
+    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
+        type: 3}
+      propertyPath: charactersTypeIds.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
+        type: 3}
+      propertyPath: charactersTypeIds.Array.data[0]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
+        type: 3}
+      propertyPath: actorsMaxInstantiations.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
+        type: 3}
+      propertyPath: actorsMaxInstantiations.Array.data[3]
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10725eaf686bf0147b88fddfec998997, type: 3}
 --- !u!1001 &1323898211
@@ -843,6 +890,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ALARM
+      objectReference: {fileID: 0}
+    - target: {fileID: 1234469548589373247, guid: 26af6aa4ce237114d81c539a3b07373c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8043709400278367053, guid: 26af6aa4ce237114d81c539a3b07373c,
         type: 3}
@@ -1062,6 +1114,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EIRA
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084756828422216613, guid: a78a72d1aba87cb45b934bfcac199524,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a78a72d1aba87cb45b934bfcac199524, type: 3}

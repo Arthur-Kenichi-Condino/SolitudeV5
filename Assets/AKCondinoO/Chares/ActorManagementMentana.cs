@@ -27,7 +27,7 @@ Actors.Add(id,aI);ActorsByTypeId[typeId].Add(aI);InactiveActorsByTypeId[typeId].
 }
 }
 }
-[SerializeField]TypeIds[]monsterTypeIds;[SerializeField]TypeIds[]homunculusTypeIds;
+[SerializeField]TypeIds[]monsterTypeIds;[SerializeField]TypeIds[]homunculusTypeIds;[SerializeField]TypeIds[]charactersTypeIds;
 [NonSerialized]public static readonly Dictionary<int,AI>GetActors=new Dictionary<int,AI>();[NonSerialized]public static readonly Dictionary<int,LinkedList<AI>>InactiveActorsByTypeId=new Dictionary<int,LinkedList<AI>>();
 [NonSerialized]protected static Vector3 actPos,center,size,halfSize;public static Vector3 Center{get{return center;}}public static Vector3 Size{get{return size;}}public static Vector3 HalfSize{get{return halfSize;}}
 [NonSerialized]protected static Vector2Int actReg;
@@ -197,4 +197,5 @@ HumanAggressive,
 public enum TypeIds:int{
 _ALARM=0,
 _BAYERI=1,_EIRA=2,
+_PLAYER=3,
 }static class TypeUtil{public static int Id(this TypeIds type){return(int)type;}public static TypeIds ActorType(this int id){return(TypeIds)id;}}

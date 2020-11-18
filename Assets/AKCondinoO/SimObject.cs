@@ -82,9 +82,13 @@ foreach(var collision in collisions){
 for(int i=0;i<collision.Value.Count;i++){var contact=collision.Value[i];if(contact.normal==Vector3.zero)break;
 
 
-IsGrounded=IsGrounded||(Vector3.Angle(contact.normal,Vector3.up)<=60&&contact.point.y<=transform.position.y-collider.bounds.extents.y+.1f);HittingWall=HittingWall||Vector3.Angle(contact.normal,Vector3.up)>60;
+IsGrounded=IsGrounded||(Vector3.Angle(contact.normal,Vector3.up)<=60&&contact.point.y<=transform.position.y-collider.bounds.center.y-collider.bounds.extents.y+.1f);HittingWall=HittingWall||Vector3.Angle(contact.normal,Vector3.up)>60;
 //Debug.LogWarning(Vector3.Angle(contact.normal,Vector3.up));
-
+//Debug.LogWarning(contact.point.y);
+//Debug.LogWarning(transform.position.y);
+//Debug.LogWarning(collider.bounds.center.y);
+//Debug.LogWarning(collider.bounds.extents.y);
+//Debug.LogWarning((contact.point.y<=transform.position.y-collider.bounds.extents.y+.1f));
 
 }
 dirtyCollisions[collision.Key]=true;}
