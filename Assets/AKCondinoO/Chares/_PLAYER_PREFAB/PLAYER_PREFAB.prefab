@@ -68,9 +68,9 @@ MonoBehaviour:
     BaseMATK: 0
   Lerp: 1
   MoveLerpSpeed: 0.0625
-  InputMoveAcceleration: {x: 3, y: 3, z: 9}
-  InputMaxMoveSpeed: {x: 3, y: 3, z: 9}
-  MaxMoveSpeedBackwardMultiplier: 0.33333334
+  InputMoveAcceleration: {x: 3, y: 3, z: 6}
+  InputMaxMoveSpeed: {x: 3, y: 3, z: 6}
+  MaxMoveSpeedBackwardMultiplier: 0.5
   GetNewTgtPosCdTime: 0.05
   RotationLerpSpeed: 0.125
   HeadRotationLerpSpeed: 0.125
