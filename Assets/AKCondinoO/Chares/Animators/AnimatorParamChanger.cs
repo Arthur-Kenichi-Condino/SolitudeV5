@@ -20,6 +20,9 @@ _horizontalMoveSpeed=actor.rigidbody.velocity;
 _horizontalMoveSpeed.y=0;
 animator.SetFloat("Forward",_horizontalMoveSpeed.magnitude*(backwardAvailable&&Vector3.Angle(actor.rigidbody.transform.forward,actor.rigidbody.velocity.normalized)>90?-1:1)*horizontalMoveSensibility,0.1f,Time.deltaTime);
 animator.SetBool("OnGround",actor.OnGround);
+            
+            Debug.LogWarning("actor.OnGround:"+actor.OnGround);
+
 animator.SetFloat("Jump",actor.rigidbody.velocity.y);
 }
 }

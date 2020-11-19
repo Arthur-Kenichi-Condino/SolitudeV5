@@ -73,7 +73,7 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("BodyRadius:"+BodyRange+", name:"+name);
 protected virtual void OnEnable(){}
 protected virtual void OnDisable(){}
 protected virtual void OnDestroy(){}
-protected bool IsGrounded;public bool OnGround{get{return IsGrounded;}}protected bool HittingWall;
+[NonSerialized]protected bool IsGrounded;public bool OnGround{get{return IsGrounded;}}[NonSerialized]protected bool HittingWall;
 protected virtual void FixedUpdate(){
 if(rigidbody!=null){
 IsGrounded=false;HittingWall=false;
@@ -90,8 +90,10 @@ IsGrounded=IsGrounded||(Vector3.Angle(contact.normal,Vector3.up)<=60&&contact.po
 //Debug.LogWarning(collider.bounds.extents.y);
 //Debug.LogWarning((contact.point.y<=transform.position.y-collider.bounds.extents.y+.1f));
 
+
 }
 dirtyCollisions[collision.Key]=true;}
+Debug.LogWarning("IsGrounded:"+IsGrounded);
 }
 }
 [NonSerialized]protected readonly Dictionary<Collider,List<ContactPoint>>collisions=new Dictionary<Collider,List<ContactPoint>>();[NonSerialized]readonly Dictionary<Collider,bool>dirtyCollisions=new Dictionary<Collider,bool>();[NonSerialized]readonly List<ContactPoint>contacts=new List<ContactPoint>();
