@@ -7,6 +7,8 @@ using UMA;
 using UnityEngine;
 public class SimObject:MonoBehaviour{[NonSerialized]protected System.Random mathrandom=new System.Random();
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
+protected Vector3 _half_y{get;}=new Vector3(1,.5f,1);
+protected Vector3 _half_xyz{get;}=new Vector3(.5f,.5f,.5f);
 [NonSerialized]public new Collider collider=null;[NonSerialized]public new Rigidbody rigidbody=null;[NonSerialized]public new Renderer renderer;
 protected virtual void Awake(){
 collider=GetComponent<Collider>();rigidbody=GetComponent<Rigidbody>();
@@ -16,8 +18,13 @@ collider=GetComponent<Collider>();rigidbody=GetComponent<Rigidbody>();
 
 
 if(collider!=null){
-colliderDefaultSize=collider.bounds.size;
+colliderDefaultSize=collider.bounds.size;colliderDefaultCenter=transform.InverseTransformPoint(collider.bounds.center);
 GetColliderData();
+
+
+//Debug.LogWarning(colliderDefaultSize+" "+colliderDefaultCenter);
+
+
 }
 pos=pos_Pre=transform.position;
 }
@@ -38,8 +45,11 @@ if(simObject!=null){simObject.IsUMA=true;simObject.umaData=umaData;
 
 
 simObject.collider=box!=null?box as Collider:capsule as Collider;simObject.rigidbody=umaData.transform.root.gameObject.GetComponent<Rigidbody>();
-simObject.colliderDefaultSize=simObject.collider.bounds.size;
+simObject.colliderDefaultSize=simObject.collider.bounds.size;simObject.colliderDefaultCenter=simObject.transform.InverseTransformPoint(simObject.collider.bounds.center);
 simObject.GetColliderData();
+
+
+Debug.LogWarning(simObject.colliderDefaultSize+" "+simObject.colliderDefaultCenter);
 
 
 simObject.renderer=simObject.GetComponentInChildren<Renderer>();
@@ -51,7 +61,7 @@ Debug.LogWarning("simObject.renderer:"+simObject.renderer,simObject.renderer);
 
 
 }
-[NonSerialized]protected Vector3 colliderDefaultSize;
+[NonSerialized]protected Vector3 colliderDefaultSize;[NonSerialized]protected Vector3 colliderDefaultCenter;
 [NonSerialized]protected Vector3 colliderHalfExtents_v;protected Vector3 colliderHalfExtents{get{return colliderHalfExtents_v*RangeMultiplier;}set{colliderHalfExtents_v=value;}}
 [NonSerialized]protected float colliderShortestExtent;
 [NonSerialized]protected float BodyRadius;
@@ -73,7 +83,7 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("BodyRadius:"+BodyRange+", name:"+name);
 protected virtual void OnEnable(){}
 protected virtual void OnDisable(){}
 protected virtual void OnDestroy(){}
-[NonSerialized]protected bool IsGrounded;public bool OnGround{get{return IsGrounded;}}[NonSerialized]protected bool HittingWall;
+[NonSerialized]protected bool IsGrounded;public bool OnGround{get{return IsGrounded;}}[NonSerialized]protected bool HittingWall;[NonSerialized]protected bool IsHalf=false;
 protected virtual void FixedUpdate(){
 if(rigidbody!=null){
 IsGrounded=false;HittingWall=false;
@@ -94,6 +104,26 @@ IsGrounded=IsGrounded||(Vector3.Angle(contact.normal,Vector3.up)<=60&&contact.po
 }
 dirtyCollisions[collision.Key]=true;}
 Debug.LogWarning("IsGrounded:"+IsGrounded);
+if(IsGrounded){
+if(IsHalf){
+Debug.LogWarning("disable IsHalf");
+if(collider is BoxCollider box){
+box.size=colliderDefaultSize;box.center=(transform.TransformPoint(colliderDefaultCenter)-transform.position);
+//rigidbody.position=new Vector3(rigidbody.position.x,rigidbody.position.y+colliderDefaultSize.y*_half_y.y,rigidbody.position.z);
+//Debug.LogWarning();
+//Debug.LogWarning(collider.bounds.center+" "+colliderDefaultCenter);
+}
+IsHalf=false;
+}
+}else{
+if(!IsHalf){
+Debug.LogWarning("enable IsHalf");
+if(collider is BoxCollider box){
+//box.size=Vector3.Scale(colliderDefaultSize,_half_y);//box.center=Vector3.Scale(box.size,Vector3.up*.5f);
+}
+IsHalf=true;
+}
+}
 }
 }
 [NonSerialized]protected readonly Dictionary<Collider,List<ContactPoint>>collisions=new Dictionary<Collider,List<ContactPoint>>();[NonSerialized]readonly Dictionary<Collider,bool>dirtyCollisions=new Dictionary<Collider,bool>();[NonSerialized]readonly List<ContactPoint>contacts=new List<ContactPoint>();
