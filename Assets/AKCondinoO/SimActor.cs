@@ -82,6 +82,11 @@ drawPos=transform.position;drawRotation=headDrawRotation=transform.rotation;
 protected override void FixedUpdate(){
                    base.FixedUpdate();
 if(rigidbody!=null){
+if(!canFly){
+        if(inputMoveSpeed.y>0&&!IsGrounded){
+            inputMoveSpeed.y=0;
+        }
+}
         if(inputViewRotationEuler!=Vector3.zero){
 headEulerAngles+=inputViewRotationEuler;
             inputViewRotationEuler=Vector3.zero;
@@ -108,6 +113,11 @@ stopVerticalMovement();
         }
 moveSpeedToApplyToBody.y=moveSpeedRotated.y==0?rigidbody.velocity.y:moveSpeedRotated.y>0?(moveSpeedRotated.y>rigidbody.velocity.y?moveSpeedRotated.y:rigidbody.velocity.y):(moveSpeedRotated.y<rigidbody.velocity.y?moveSpeedRotated.y:rigidbody.velocity.y);
 }
+
+
+Debug.LogWarning(inputMoveSpeed.y+" "+moveSpeedRotated.y);
+
+
 Jump=false;
         rigidbody.velocity=moveSpeedToApplyToBody;
 void stopHorizontalMovement(){

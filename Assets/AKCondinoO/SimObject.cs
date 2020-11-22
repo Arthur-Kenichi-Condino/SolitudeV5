@@ -7,8 +7,8 @@ using UMA;
 using UnityEngine;
 public class SimObject:MonoBehaviour{[NonSerialized]protected System.Random mathrandom=new System.Random();
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
-protected Vector3 _half_y{get;}=new Vector3(1,.5f,1);
-protected Vector3 _half_xyz{get;}=new Vector3(.5f,.5f,.5f);
+protected static Vector3 _half_y{get;}=new Vector3(1,.5f,1);
+protected static Vector3 _half_xyz{get;}=new Vector3(.5f,.5f,.5f);
 [NonSerialized]public new Collider collider=null;[NonSerialized]public new Rigidbody rigidbody=null;[NonSerialized]public new Renderer renderer;
 protected virtual void Awake(){
 collider=GetComponent<Collider>();rigidbody=GetComponent<Rigidbody>();
@@ -83,7 +83,7 @@ if(LOG&&LOG_LEVEL<=1)Debug.Log("BodyRadius:"+BodyRange+", name:"+name);
 protected virtual void OnEnable(){}
 protected virtual void OnDisable(){}
 protected virtual void OnDestroy(){}
-[NonSerialized]protected bool IsGrounded;public bool OnGround{get{return IsGrounded;}}[NonSerialized]protected bool HittingWall;[NonSerialized]protected bool IsHalf=false;
+[NonSerialized]protected bool IsGrounded;public bool OnGround{get{return IsGrounded;}}[NonSerialized]protected bool HittingWall;public bool CanCrouch=false;[NonSerialized]protected bool IsHalf=false;[NonSerialized]protected float ToggleIsHalfTimer=0;[NonSerialized]protected float ToggleIsHalfDelay=.5f;[NonSerialized]protected Vector3 CrouchingScale=new Vector3(1,.5f,1);[NonSerialized]protected Vector3 CrouchingCenterOffset=new Vector3(0,.5f,0);
 protected virtual void FixedUpdate(){
 if(rigidbody!=null){
 IsGrounded=false;HittingWall=false;
@@ -104,26 +104,43 @@ IsGrounded=IsGrounded||(Vector3.Angle(contact.normal,Vector3.up)<=60&&contact.po
 }
 dirtyCollisions[collision.Key]=true;}
 Debug.LogWarning("IsGrounded:"+IsGrounded);
+
+if(CanCrouch){
+if(ToggleIsHalfTimer>0){
+    ToggleIsHalfTimer-=Time.deltaTime;
+}else{
 if(IsGrounded){
 if(IsHalf){
 Debug.LogWarning("disable IsHalf");
 if(collider is BoxCollider box){
+var centerOld=box.center;
 box.size=colliderDefaultSize;box.center=(transform.TransformPoint(colliderDefaultCenter)-transform.position);
-//rigidbody.position=new Vector3(rigidbody.position.x,rigidbody.position.y+colliderDefaultSize.y*_half_y.y,rigidbody.position.z);
+var centerChangeOffset=box.center-centerOld;
+Debug.LogWarning("centerChangeOffset:"+centerChangeOffset);
+rigidbody.position=new Vector3(
+    rigidbody.position.x,
+    rigidbody.position.y-centerChangeOffset.y*2f,
+    rigidbody.position.z
+);
 //Debug.LogWarning();
 //Debug.LogWarning(collider.bounds.center+" "+colliderDefaultCenter);
 }
+    ToggleIsHalfTimer=ToggleIsHalfDelay;
 IsHalf=false;
 }
 }else{
 if(!IsHalf){
 Debug.LogWarning("enable IsHalf");
 if(collider is BoxCollider box){
-//box.size=Vector3.Scale(colliderDefaultSize,_half_y);//box.center=Vector3.Scale(box.size,Vector3.up*.5f);
+box.size=Vector3.Scale(colliderDefaultSize,CrouchingScale);box.center=(transform.TransformPoint(colliderDefaultCenter+CrouchingCenterOffset)-transform.position);//box.center=Vector3.Scale(box.size,Vector3.up*.5f);
 }
+    ToggleIsHalfTimer=ToggleIsHalfDelay;
 IsHalf=true;
 }
 }
+}
+}
+
 }
 }
 [NonSerialized]protected readonly Dictionary<Collider,List<ContactPoint>>collisions=new Dictionary<Collider,List<ContactPoint>>();[NonSerialized]readonly Dictionary<Collider,bool>dirtyCollisions=new Dictionary<Collider,bool>();[NonSerialized]readonly List<ContactPoint>contacts=new List<ContactPoint>();

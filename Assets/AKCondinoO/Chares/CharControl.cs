@@ -37,18 +37,11 @@ if(IsGrounded||!HittingWall){
 inputMoveSpeed.x=0;
 inputMoveSpeed.z=0;
 }
-#region ROTATE
-inputViewRotationEuler.x+=-Enabled.MOUSE_ROTATION_DELTA_Y[0]*InputViewRotationIncreaseSpeed;
-inputViewRotationEuler.y+= Enabled.MOUSE_ROTATION_DELTA_X[0]*InputViewRotationIncreaseSpeed;
-inputViewRotationEuler.x=inputViewRotationEuler.x%360;
-inputViewRotationEuler.y=inputViewRotationEuler.y%360;
-if(Enabled.MOUSE_ROTATION_DELTA_Y[0]!=0||Enabled.MOUSE_ROTATION_DELTA_X[0]!=0)Autonomous=AutonomyDelayAfterControl;
-#endregion
 
 
-//Debug.LogWarning((bool)Enabled.JUMP[0]+" "+IsGrounded);
+Debug.LogWarning((bool)Enabled.JUMP[0]+" "+IsGrounded);
 if(IsGrounded&&(Jump||(Jump=(bool)Enabled.JUMP[0]!=(bool)Enabled.JUMP[1]))){
-inputMoveSpeed.y=InputMoveAcceleration.y;Autonomous=AutonomyDelayAfterControl;
+inputMoveSpeed.y=InputMaxMoveSpeed.y;Autonomous=AutonomyDelayAfterControl;
 
 
 //Debug.LogWarning(inputMoveSpeed.y);
@@ -57,6 +50,15 @@ inputMoveSpeed.y=InputMoveAcceleration.y;Autonomous=AutonomyDelayAfterControl;
 }else{
 inputMoveSpeed.y=0;
 }
+
+
+#region ROTATE
+inputViewRotationEuler.x+=-Enabled.MOUSE_ROTATION_DELTA_Y[0]*InputViewRotationIncreaseSpeed;
+inputViewRotationEuler.y+= Enabled.MOUSE_ROTATION_DELTA_X[0]*InputViewRotationIncreaseSpeed;
+inputViewRotationEuler.x=inputViewRotationEuler.x%360;
+inputViewRotationEuler.y=inputViewRotationEuler.y%360;
+if(Enabled.MOUSE_ROTATION_DELTA_Y[0]!=0||Enabled.MOUSE_ROTATION_DELTA_X[0]!=0)Autonomous=AutonomyDelayAfterControl;
+#endregion
 }
 }
                    base.ProcessMovementInput();

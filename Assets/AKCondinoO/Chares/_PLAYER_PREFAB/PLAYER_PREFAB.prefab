@@ -50,6 +50,7 @@ MonoBehaviour:
   LOG: 1
   LOG_LEVEL: 1
   DRAW_LEVEL: -100
+  CanCrouch: 1
   Attributes:
     STR: 0
     VIT: 0
