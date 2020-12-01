@@ -27,9 +27,9 @@ Debug.LogWarning("play "+sound.name+"; lastSound=="+lastSound);
 lastSound=sound;lastSoundPriority=importance;
 changingSound=StartCoroutine(CR_FadeToSound(sound,loopidx==-1||loopidx>=loop.Length?false:loop[loopidx],pitchidx==-1||pitchidx>=pitch.Length?1f:pitch[pitchidx],timeidx==-1||timeidx>=time.Length?0f:time[timeidx]));
 }
-readonly WaitForSeconds CR_FadeToSound_waitForSeconds=new WaitForSeconds(0.05f);[NonSerialized]Coroutine changingSound=null;
-public IEnumerator CR_FadeToSound(AudioClip sound,bool loop=false,float pitch=1f,float time=0f){
-yield return StartCoroutine(CR_FadeToStop());
+readonly WaitForSeconds CR_FadeToSound_waitForSeconds=new WaitForSeconds(0.01f);[NonSerialized]Coroutine changingSound=null;
+public IEnumerator CR_FadeToSound(AudioClip sound,bool loop=false,float pitch=1f,float time=0f,bool skipFade=false){
+if(!skipFade)yield return StartCoroutine(CR_FadeToStop());
 audioSource.clip=sound;
 audioSource.volume=1;
 audioSource.loop=loop;

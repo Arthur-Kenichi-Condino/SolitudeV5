@@ -417,7 +417,7 @@ ReachedTgtDisThreshold.z=colliderHalfExtents.z*.25f;
 _axisDiff.y=CurPathTgt.Value.pos.y-transform.position.y;_axisDist.y=Mathf.Abs(_axisDiff.y);
 _axisDiff.x=CurPathTgt.Value.pos.x-transform.position.x;_axisDist.x=Mathf.Abs(_axisDiff.x);
 _axisDiff.z=CurPathTgt.Value.pos.z-transform.position.z;_axisDist.z=Mathf.Abs(_axisDiff.z);      
-_dir=_axisDiff.normalized;if(doingAttackMoveAway){_dir=-_dir;}
+_dir=_axisDiff.normalized;
 if(_axisDist.y<=ReachedTgtDisThreshold.y&&
    _axisDist.x<=ReachedTgtDisThreshold.x&&
    _axisDist.z<=ReachedTgtDisThreshold.z){    
@@ -533,7 +533,7 @@ inputMoveSpeed.y=0;
 }
 break;}
 #endregion
-#region none
+#region none [not stuck]
 default:{
 if(_axisDist.y>ReachedTgtDisThreshold.y&&
    _axisDist.x<=ReachedTgtDisThreshold.x&&
@@ -550,6 +550,7 @@ if(transform.position.y>=CurPathTgt.Value.pos.y+.1f){
     }
 }
 }
+if(doingAttackMoveAway){_dir=-_dir;}
 if(_axisDist.x>float.Epsilon||
    _axisDist.z>float.Epsilon){
 inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.eulerAngles.y;
@@ -571,7 +572,7 @@ inputMoveSpeed.y=0;
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
    _axisDist.z>ReachedTgtDisThreshold.z)){
-inputMoveSpeed.z=InputMaxMoveSpeed.z;
+inputMoveSpeed.z=InputMaxMoveSpeed.z;if(doingAttackMoveAway){inputMoveSpeed.z=-inputMoveSpeed.z;}
 }else{
 inputMoveSpeed.z=0;
 }
@@ -586,7 +587,7 @@ inputMoveSpeed.y=0;
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
    _axisDist.z>ReachedTgtDisThreshold.z)){
-inputMoveSpeed.z=InputMaxMoveSpeed.z;
+inputMoveSpeed.z=InputMaxMoveSpeed.z;if(doingAttackMoveAway){inputMoveSpeed.z=-inputMoveSpeed.z;}
 }else{
 inputMoveSpeed.z=0;
 }
