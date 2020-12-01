@@ -832,51 +832,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ActorManagementMentana
       objectReference: {fileID: 0}
-    - target: {fileID: 7789522645625010537, guid: 10725eaf686bf0147b88fddfec998997,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
-        type: 3}
-      propertyPath: AutoStagingEnabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
-        type: 3}
-      propertyPath: RemoveFarAwayActors
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
-        type: 3}
-      propertyPath: actorsPrefabs.Array.size
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
         type: 3}
       propertyPath: actorsPrefabs.Array.data[3]
       value: 
       objectReference: {fileID: 306088406}
-    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
-        type: 3}
-      propertyPath: charactersTypeIds.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
-        type: 3}
-      propertyPath: charactersTypeIds.Array.data[0]
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
-        type: 3}
-      propertyPath: actorsMaxInstantiations.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8924636969434559993, guid: 10725eaf686bf0147b88fddfec998997,
-        type: 3}
-      propertyPath: actorsMaxInstantiations.Array.data[3]
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10725eaf686bf0147b88fddfec998997, type: 3}
 --- !u!1001 &1323898211
@@ -904,7 +864,7 @@ PrefabInstance:
     - target: {fileID: 8043709400278367053, guid: 26af6aa4ce237114d81c539a3b07373c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 1.76
       objectReference: {fileID: 0}
     - target: {fileID: 8043709400278367053, guid: 26af6aa4ce237114d81c539a3b07373c,
         type: 3}
@@ -914,7 +874,7 @@ PrefabInstance:
     - target: {fileID: 8043709400278367053, guid: 26af6aa4ce237114d81c539a3b07373c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 11.55
+      value: 0.37
       objectReference: {fileID: 0}
     - target: {fileID: 8043709400278367053, guid: 26af6aa4ce237114d81c539a3b07373c,
         type: 3}
@@ -1114,11 +1074,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EIRA
-      objectReference: {fileID: 0}
-    - target: {fileID: 1084756828422216613, guid: a78a72d1aba87cb45b934bfcac199524,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a78a72d1aba87cb45b934bfcac199524, type: 3}
@@ -1358,6 +1313,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PLAYER_PREFAB
       objectReference: {fileID: 0}
+    - target: {fileID: 6179044444179792751, guid: e55fd222ce86ba84db8c3db9c6747227,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7899130204184459693, guid: e55fd222ce86ba84db8c3db9c6747227,
         type: 3}
       propertyPath: context
@@ -1435,7 +1395,7 @@ PrefabInstance:
     - target: {fileID: 1803007530246161363, guid: cc3c67ef4cdea4f4d801375a258594ff,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4836057272321444418, guid: cc3c67ef4cdea4f4d801375a258594ff,
         type: 3}

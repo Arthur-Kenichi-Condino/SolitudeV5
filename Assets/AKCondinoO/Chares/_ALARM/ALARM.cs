@@ -18,6 +18,10 @@ Attributes.LUK=mathrandom.Next(1,25);
                     Attributes.BaseAspd=GetBaseAspd();
 ValidateAttributesSet(1);
 }
+protected override void Awake(){
+    //Debug.LogWarning("here");
+                   base.Awake();   
+}
 [NonSerialized]public float TryIdleActionInterval=1f;[NonSerialized]float NextIdleActionTimer;[NonSerialized]public float Boredom;public enum CreativeIdleness:int{MOVE_RANDOM=0,RANDOM_SKILL=1,}[NonSerialized]readonly int CreativeIdlenessActionsCount=Enum.GetValues(typeof(CreativeIdleness)).Length;
 protected override void OnIDLE_ST(){
 if(MyEnemy!=null){

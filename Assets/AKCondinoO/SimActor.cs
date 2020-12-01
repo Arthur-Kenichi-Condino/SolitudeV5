@@ -72,6 +72,7 @@ Attributes.BaseATK=GetBaseATK();Attributes.BaseMATK=GetBaseMATK();
 }
 }
 protected override void Awake(){
+    //Debug.LogWarning("here");
                    base.Awake();
 tgtPos=tgtPos_Pre=transform.position;
 tgtRot=tgtRot_Pre=transform.eulerAngles;headTgtRot=headTgtRot_Pre=tgtRot;

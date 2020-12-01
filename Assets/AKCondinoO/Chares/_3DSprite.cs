@@ -5,6 +5,7 @@ using UnityEngine;
 public class _3DSprite:AI{
 [NonSerialized]protected Animator animator;[NonSerialized]protected new SpriteRenderer renderer;[NonSerialized]protected Vector3 spritePosAdj=new Vector3(0,-.05f,0);
 protected override void Awake(){
+    //Debug.LogWarning("here");
                    base.Awake();
 animator=GetComponentInChildren<Animator>();renderer=GetComponentInChildren<SpriteRenderer>();
 }

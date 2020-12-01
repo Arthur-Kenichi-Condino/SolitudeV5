@@ -11,6 +11,7 @@ using UnityEngine;
 public class Pathfinder:SimActor{
 [NonSerialized]Vector2Int AStarDistance;[NonSerialized]int AStarVerticalHits;[NonSerialized]Vector2Int gridResolution;[NonSerialized]Node[]Nodes;[NonSerialized]Node originNode;[NonSerialized]Node targetNode;
 protected override void Awake(){
+    //Debug.LogWarning("here");
                    base.Awake();
 waitUntil2=new WaitUntil(()=>backgroundDataSet2.WaitOne(0));
 waitUntil3a=new WaitUntil(()=>backgroundDataSet3a.WaitOne(0));

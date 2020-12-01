@@ -13,7 +13,7 @@ void OnDisable(){
 lastSound=null;lastSoundPriority=-1;
 changingSound=null;
 }
-public AudioClip[]sounds;public bool[]loop;public float[]pitch;public int[]priority;[NonSerialized]AudioClip lastSound=null;[NonSerialized]int lastSoundPriority=-1;
+public AudioClip[]sounds;public bool[]loop;public float[]pitch;public int[]priority;public float[]time;[NonSerialized]AudioClip lastSound=null;[NonSerialized]int lastSoundPriority=-1;
 public void Play(int sound,bool restart=false){
 if(sound>=sounds.Length){Stop();return;}
 Play(sounds[sound],restart);
@@ -21,19 +21,20 @@ Play(sounds[sound],restart);
 public void Play(AudioClip sound,bool restart=false){
 if(sound==null){Stop();return;}
 if(sound==lastSound&&!restart)return;
-int priorityidx,pitchidx,loopidx=pitchidx=priorityidx=Array.IndexOf(sounds,sound);int importance=priorityidx==-1||priorityidx>=priority.Length?-1:priority[priorityidx];
+int timeidx,priorityidx,pitchidx,loopidx=pitchidx=priorityidx=timeidx=Array.IndexOf(sounds,sound);int importance=priorityidx==-1||priorityidx>=priority.Length?-1:priority[priorityidx];
 if(importance<lastSoundPriority&&((audioSource.clip!=null&&audioSource.isPlaying)||changingSound!=null))return;
 Debug.LogWarning("play "+sound.name+"; lastSound=="+lastSound);
 lastSound=sound;lastSoundPriority=importance;
-changingSound=StartCoroutine(CR_FadeToSound(sound,loopidx==-1||loopidx>=loop.Length?false:loop[loopidx],pitchidx==-1||pitchidx>=pitch.Length?1f:pitch[pitchidx]));
+changingSound=StartCoroutine(CR_FadeToSound(sound,loopidx==-1||loopidx>=loop.Length?false:loop[loopidx],pitchidx==-1||pitchidx>=pitch.Length?1f:pitch[pitchidx],timeidx==-1||timeidx>=time.Length?0f:time[timeidx]));
 }
 readonly WaitForSeconds CR_FadeToSound_waitForSeconds=new WaitForSeconds(0.05f);[NonSerialized]Coroutine changingSound=null;
-public IEnumerator CR_FadeToSound(AudioClip sound,bool loop=false,float pitch=1f){
+public IEnumerator CR_FadeToSound(AudioClip sound,bool loop=false,float pitch=1f,float time=0f){
 yield return StartCoroutine(CR_FadeToStop());
 audioSource.clip=sound;
 audioSource.volume=1;
 audioSource.loop=loop;
 audioSource.pitch=pitch;
+audioSource.time=time;
 audioSource.Play();
 changingSound=null;
 }

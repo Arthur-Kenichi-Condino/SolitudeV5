@@ -52,6 +52,7 @@ MonoBehaviour:
   LOG: 1
   LOG_LEVEL: 1
   DRAW_LEVEL: 1
+  CanCrouch: 0
   Attributes:
     STR: 0
     VIT: 0
@@ -85,7 +86,7 @@ MonoBehaviour:
   attackStanceDamageTime: 0.5
   hitStanceRhythmMultiplier: 2
   deadStanceRhythmMultiplier: 1
-  attackWaitForSoundTime: 1.225
+  attackWaitForSoundTime: 0.4
   DEBUG_ATTACK: 0
   DEBUG_GETHIT: 0
   DEBUG_DIE: 0
@@ -145,6 +146,12 @@ MonoBehaviour:
   - 2.798561
   - 2.798561
   priority: 0200000004000000020000000000000000000000
+  time:
+  - 0.2
+  - 0
+  - 0
+  - 0
+  - 0
 --- !u!82 &2846679131453787701
 AudioSource:
   m_ObjectHideFlags: 0

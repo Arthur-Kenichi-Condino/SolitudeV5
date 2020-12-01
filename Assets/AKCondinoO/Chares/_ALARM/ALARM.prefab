@@ -53,6 +53,7 @@ MonoBehaviour:
   LOG: 0
   LOG_LEVEL: 1
   DRAW_LEVEL: 1
+  CanCrouch: 0
   Attributes:
     STR: 0
     VIT: 0
@@ -146,6 +147,12 @@ MonoBehaviour:
   - 2
   - 2.3
   priority: 0200000004000000020000000000000000000000
+  time:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
 --- !u!82 &6866297281333546752
 AudioSource:
   m_ObjectHideFlags: 0

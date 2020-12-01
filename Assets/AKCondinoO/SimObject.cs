@@ -27,6 +27,7 @@ GetColliderData();
 
 }
 pos=pos_Pre=transform.position;
+    //Debug.LogWarning("here");
 }
 [NonSerialized]public bool IsUMA=false;[NonSerialized]protected UMAData umaData;
 public void OnCharacterCompleted(UMAData umaData){

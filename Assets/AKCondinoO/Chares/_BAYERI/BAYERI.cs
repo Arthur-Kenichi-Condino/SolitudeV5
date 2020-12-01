@@ -18,6 +18,9 @@ Attributes.LUK=mathrandom.Next(1,100);
                     Attributes.BaseAspd=GetBaseAspd();
 ValidateAttributesSet(1);
 }
+protected override void Awake(){
+                   base.Awake();   
+}
 protected override void Attack(AI enemy){
 if(nextAttackTimer>0)return;
                    base.Attack(enemy);

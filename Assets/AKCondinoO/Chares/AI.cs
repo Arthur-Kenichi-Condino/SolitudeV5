@@ -10,6 +10,7 @@ public int Id{get;internal set;}public int TypeId{get;internal set;}[SerializeFi
 [NonSerialized]protected CharSFX sfx;
 protected override void Awake(){
 if(manager==null){OutOfSight_v=false;}
+    //Debug.LogWarning("here");
                    base.Awake();
 MySight=GetComponentInChildren<Sight>();
     sfx=GetComponent<CharSFX>();
@@ -91,6 +92,7 @@ enemyTouchingMe=true;
 if(actorTouchingMe&&enemyTouchingMe)break;//  Break when all checks are true, so only on O(n) operation is processed for any needed check
 }}
 
+Debug.LogWarning("nextAttackTimer:"+nextAttackTimer);
 if(nextAttackTimer>0){
     nextAttackTimer-=Time.deltaTime;
 }
@@ -98,6 +100,7 @@ if(Autonomous<=0){
 WALK_PATH();
 
     
+doingAttackMoveAway=false;
 if(MyState==State.EXCUSE_ST){OnEXCUSE_ST();}
 if(MyState==State.FOLLOW_ST){OnFOLLOW_ST();}
 if(MyState==State.IDLE_ST){OnIDLE_ST();}
@@ -266,7 +269,7 @@ if(r==2){}
 
 
 }
-protected virtual int doAttackingMoveAway(){
+[NonSerialized]bool doingAttackMoveAway;protected virtual int doAttackingMoveAway(){
 if(tracing||GoToQueue.Count>0)goto _End;
 if((MyMotion==Motions.MOTION_HIT||actorTouchingMe)&&sinceLastHitTimer<=0&&MyEnemy.AttackRange+MyEnemy.BodyRadius<=MyAttackRange+BodyRadius&&mathrandom.NextDouble()<.05){
 STOP(true);
@@ -283,6 +286,7 @@ return 0;
 if(CurPathTgt==null){
 return 0;
 }
+doingAttackMoveAway=true;
 return 1;
 }
 if(!destSet||sinceLastHitTimer==hitDetectionReactionTick){
@@ -290,6 +294,7 @@ if(!destSet||sinceLastHitTimer==hitDetectionReactionTick){
     MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)(mathrandom.NextDouble()*2-1)*90,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRange*2+BodyRange*2);
 Debug.DrawLine(transform.position,MyDest,Color.blue,1f);
 GoTo(new Ray(MyDest,Vector3.down));
+doingAttackMoveAway=true;
 return 2;}
 _End:{}
 if(CurPathTgt!=null){
@@ -333,10 +338,12 @@ return false;}
 [NonSerialized]protected float attackInterval=.25f;[SerializeField]protected float attackWaitForSoundTime=0;[NonSerialized]protected float nextAttackTimer=0;
 [NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}
 protected virtual void Attack(AI enemy){
+    Debug.LogWarning("attack stance requested");
 if(attackStance==-1){
     Debug.LogWarning("new attack started: set to do damage next animation");
     didDamage=false;
-    nextAttackTimer=attackInterval/Attributes.Aspd+attackWaitForSoundTime;
+    nextAttackTimer=(attackInterval/Attributes.Aspd)+attackWaitForSoundTime;
+    Debug.LogWarning("nextAttackTimer:"+nextAttackTimer+";attackInterval:"+attackInterval+";Attributes.Aspd:"+Attributes.Aspd+";attackWaitForSoundTime:"+attackWaitForSoundTime);
 }
 if(enemy!=null){
 inputViewRotationEuler.y=Quaternion.LookRotation((enemy.transform.position-transform.position).normalized).eulerAngles.y-transform.eulerAngles.y;
@@ -410,7 +417,7 @@ ReachedTgtDisThreshold.z=colliderHalfExtents.z*.25f;
 _axisDiff.y=CurPathTgt.Value.pos.y-transform.position.y;_axisDist.y=Mathf.Abs(_axisDiff.y);
 _axisDiff.x=CurPathTgt.Value.pos.x-transform.position.x;_axisDist.x=Mathf.Abs(_axisDiff.x);
 _axisDiff.z=CurPathTgt.Value.pos.z-transform.position.z;_axisDist.z=Mathf.Abs(_axisDiff.z);      
-_dir=_axisDiff.normalized;
+_dir=_axisDiff.normalized;if(doingAttackMoveAway){_dir=-_dir;}
 if(_axisDist.y<=ReachedTgtDisThreshold.y&&
    _axisDist.x<=ReachedTgtDisThreshold.x&&
    _axisDist.z<=ReachedTgtDisThreshold.z){    

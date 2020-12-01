@@ -25,7 +25,9 @@ canFly=true;
 protected override void Attack(AI enemy){
 if(nextAttackTimer>0)return;
                    base.Attack(enemy);
-if(deadStance!=-1||hitStance!=-1)return;if(attackStance==-1){attackStance=mathrandom.Next(0,2);curAnimTime=0;}
+if(deadStance!=-1||hitStance!=-1)return;if(attackStance==-1){attackStance=mathrandom.Next(0,2);curAnimTime=0;
+if(sfx!=null){sfx.Play((int)ActorSounds._ATTACK,true);}
+}
 }
 protected override void TakeDamage(AI fromEnemy){
                    base.TakeDamage(fromEnemy);

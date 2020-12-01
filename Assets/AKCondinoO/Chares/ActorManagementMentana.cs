@@ -16,6 +16,7 @@ if(actorsPrefabs!=null&&actorsMaxInstantiations!=null){
 for(int i=0;i<actorsPrefabs.Length;i++){if(i>=actorsMaxInstantiations.Length){break;}var prefab=actorsPrefabs[i];if(prefab==null){break;}var amount=actorsMaxInstantiations[i];
 TypeToTypeId.Add(prefab.GetType(),i);ActorsByTypeId.Add(i,new List<AI>(amount));InactiveActorsByTypeId.Add(i,new LinkedList<AI>());for(int j=0;j<amount;j++){
 var typeId=i;var id=nextActorId++;
+//  keep prefabs enabled!! [https://answers.unity.com/questions/826877/awake-called-after-i-activate-object-not-after-ins.html]
 var aI=Instantiate(prefab);
     aI.Id=id;aI.TypeId=typeId;
 var gO=aI.gameObject;gO.name=prefab.name+"("+typeId+":"+id+")";if(gO.activeInHierarchy){gO.transform.root.gameObject.SetActive(false);if(LOG&&LOG_LEVEL<=1)Debug.Log("set as inactive in instantiation");}
@@ -166,6 +167,10 @@ bool FindValidPos(AI actor,out RaycastHit hitInfo,out Vector3 pos){
 var c=actor.transform.position;
 
     Debug.DrawRay(c,Vector3.down*Chunk.Height,Color.white,1f);
+    
+if(actor.collider==null){
+    Debug.LogWarning(actor.collider);
+hitInfo=default(RaycastHit);pos=actor.transform.position;return false;}
 bool result=Physics.BoxCast(c,actor.collider.bounds.extents,Vector3.down,out hitInfo,Quaternion.identity,size.y);
 pos=hitInfo.point+hitInfo.normal*actor.BodyRange;
 return result;}
