@@ -92,9 +92,10 @@ enemyTouchingMe=true;
 if(actorTouchingMe&&enemyTouchingMe)break;//  Break when all checks are true, so only on O(n) operation is processed for any needed check
 }}
 
-Debug.LogWarning("nextAttackTimer:"+nextAttackTimer);
+//Debug.LogWarning("nextAttackTimer:"+nextAttackTimer);
 if(nextAttackTimer>0){
     nextAttackTimer-=Time.deltaTime;
+    Debug.LogWarning("waiting for nextAttackTimer to get to zero ["+this);
 }
 if(Autonomous<=0){
 WALK_PATH();
@@ -338,12 +339,14 @@ return false;}
 [NonSerialized]protected float attackInterval=.25f;[SerializeField]protected float attackWaitForSoundTime=0;[NonSerialized]protected float nextAttackTimer=0;
 [NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}
 protected virtual void Attack(AI enemy){
-    Debug.LogWarning("attack stance requested");
+    Debug.LogWarning("trying attack stance ["+this);
 if(attackStance==-1){
+if(deadStance!=-1||hitStance!=-1){}else{
     Debug.LogWarning("new attack started: set to do damage next animation");
     didDamage=false;
     nextAttackTimer=(attackInterval/Attributes.Aspd)+attackWaitForSoundTime;
     Debug.LogWarning("nextAttackTimer:"+nextAttackTimer+";attackInterval:"+attackInterval+";Attributes.Aspd:"+Attributes.Aspd+";attackWaitForSoundTime:"+attackWaitForSoundTime);
+}
 }
 if(enemy!=null){
 inputViewRotationEuler.y=Quaternion.LookRotation((enemy.transform.position-transform.position).normalized).eulerAngles.y-transform.eulerAngles.y;
@@ -393,7 +396,8 @@ attackHitboxColliders=null;
 [NonSerialized]protected float damage;
 protected virtual void TakeDamage(AI fromEnemy){
 damage=fromEnemy.Attributes.ATK-Attributes.DEF;
-if(damage<=0)damage=0;Attributes.CurStamina-=damage;if(Attributes.CurStamina<=0){Attributes.CurStamina=0;Die();}else if(damage>0){
+if(damage<=1)damage=1;Attributes.CurStamina-=damage;if(Attributes.CurStamina<=0){Attributes.CurStamina=0;Die();}else if(damage>0){
+    Debug.LogWarning("reset nextAttackTimer for ["+this);
     nextAttackTimer=0;
 }
 }
