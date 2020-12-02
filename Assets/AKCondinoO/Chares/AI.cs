@@ -393,7 +393,9 @@ attackHitboxColliders=null;
 [NonSerialized]protected float damage;
 protected virtual void TakeDamage(AI fromEnemy){
 damage=fromEnemy.Attributes.ATK-Attributes.DEF;
-if(damage<=0)damage=0;Attributes.CurStamina-=damage;if(Attributes.CurStamina<=0){Attributes.CurStamina=0;Die();}else if(damage>0){}
+if(damage<=0)damage=0;Attributes.CurStamina-=damage;if(Attributes.CurStamina<=0){Attributes.CurStamina=0;Die();}else if(damage>0){
+    nextAttackTimer=0;
+}
 }
 protected virtual void Die(){
 if(deadStance==-1){Dying=DeadForGoodDelay;}
