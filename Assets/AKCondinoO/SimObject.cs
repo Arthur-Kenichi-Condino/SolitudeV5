@@ -12,55 +12,30 @@ protected static Vector3 _half_xyz{get;}=new Vector3(.5f,.5f,.5f);
 [NonSerialized]public new Collider collider=null;[NonSerialized]public new Rigidbody rigidbody=null;[NonSerialized]public new Renderer renderer;
 protected virtual void Awake(){
 collider=GetComponent<Collider>();rigidbody=GetComponent<Rigidbody>();
-
-
-    Debug.LogWarning(this.gameObject+" collider:"+collider);
-
-
+if(LOG&&LOG_LEVEL<=-1)Debug.Log(this.gameObject+" has the collider:"+collider,this);
 if(collider!=null){
 colliderDefaultSize=collider.bounds.size;colliderDefaultCenter=transform.InverseTransformPoint(collider.bounds.center);
 GetColliderData();
-
-
-//Debug.LogWarning(colliderDefaultSize+" "+colliderDefaultCenter);
-
-
+if(LOG&&LOG_LEVEL<=-1)Debug.Log("collider not null, so:colliderDefaultSize:"+colliderDefaultSize+";colliderDefaultCenter:"+colliderDefaultCenter,this);
 }
 pos=pos_Pre=transform.position;
-    //Debug.LogWarning("here");
 }
 [NonSerialized]public bool IsUMA=false;[NonSerialized]protected UMAData umaData;
 public void OnCharacterCompleted(UMAData umaData){
+if(LOG&&LOG_LEVEL<=1)Debug.LogWarning("[UMAData] the following is an event-called function:do not use 'this' keyword:'this' will refer to the Prefab asset:use the 'simObject' refered from 'UMAData umaData'",umaData);
 CapsuleCollider capsule=umaData.transform.root.gameObject.GetComponent<CapsuleCollider>();BoxCollider box=umaData.transform.root.gameObject.GetComponent<BoxCollider>();
 if(capsule!=null||box!=null){
-
-
 SimObject simObject=umaData.transform.root.gameObject.GetComponent<SimObject>();
 if(simObject!=null){simObject.IsUMA=true;simObject.umaData=umaData;
-
-
-    Debug.LogWarning(simObject.gameObject+" simObject.collider:"+simObject.collider);
-
-
-//if(collider==GetComponent<Collider>()||(collider=GetComponent<Collider>())!=null){Destroy(collider);}if(rigidbody==GetComponent<Rigidbody>()||(rigidbody=GetComponent<Rigidbody>())!=null){Destroy(rigidbody);}
-
-
+if(LOG&&LOG_LEVEL<=-1)Debug.Log(simObject.gameObject+" has the simObject.collider:"+simObject.collider,simObject);
 simObject.collider=box!=null?box as Collider:capsule as Collider;simObject.rigidbody=umaData.transform.root.gameObject.GetComponent<Rigidbody>();
 simObject.colliderDefaultSize=simObject.collider.bounds.size;simObject.colliderDefaultCenter=simObject.transform.InverseTransformPoint(simObject.collider.bounds.center);
 simObject.GetColliderData();
-
-
-Debug.LogWarning(simObject.colliderDefaultSize+" "+simObject.colliderDefaultCenter);
-
-
+if(LOG&&LOG_LEVEL<=-1)Debug.Log("simObject.collider not null, so:simObject.colliderDefaultSize:"+simObject.colliderDefaultSize+";simObject.colliderDefaultCenter:"+simObject.colliderDefaultCenter,simObject);
 simObject.renderer=simObject.GetComponentInChildren<Renderer>();
-
-
-Debug.LogWarning("simObject.renderer:"+simObject.renderer,simObject.renderer);
+if(LOG&&LOG_LEVEL<=-1)Debug.Log("simObject.renderer:"+simObject.renderer,simObject);
 }
 }
-
-
 }
 [NonSerialized]protected Vector3 colliderDefaultSize;[NonSerialized]protected Vector3 colliderDefaultCenter;
 [NonSerialized]protected Vector3 colliderHalfExtents_v;protected Vector3 colliderHalfExtents{get{return colliderHalfExtents_v*RangeMultiplier;}set{colliderHalfExtents_v=value;}}
@@ -69,12 +44,9 @@ Debug.LogWarning("simObject.renderer:"+simObject.renderer,simObject.renderer);
 [NonSerialized]protected float BodyRange_v;public float BodyRange{get{return BodyRange_v*RangeMultiplier;}set{BodyRange_v=value;}}
 [NonSerialized]protected float RangeMultiplier=2f;
 protected void GetColliderData(){
-
-
-    Debug.LogWarning("this is _3DSprite:"+(this is _3DSprite));
-if(!(this is _3DSprite)){RangeMultiplier=1f;}
-
-
+if(!(this is _3DSprite)){RangeMultiplier=1f;}else{
+if(LOG&&LOG_LEVEL<=1)Debug.Log("this is _3DSprite:"+(this is _3DSprite),this);
+}
 colliderHalfExtents=collider.bounds.extents/2;
 colliderShortestExtent=Mathf.Min(collider.bounds.extents.x,collider.bounds.extents.y,collider.bounds.extents.z);
 BodyRange=BodyRadius=Mathf.Max(Mathf.Sqrt(Mathf.Pow(collider.bounds.extents.x,2)*2),
@@ -88,31 +60,20 @@ protected virtual void OnDestroy(){}
 protected virtual void FixedUpdate(){
 if(rigidbody!=null){
 IsGrounded=false;HittingWall=false;
-if(LOG&&LOG_LEVEL<=0)Debug.Log("collisions.Count:"+collisions.Count+";dirtyCollisions.Count:"+dirtyCollisions.Count);
+if(LOG&&LOG_LEVEL<=0)Debug.Log("collisions.Count:"+collisions.Count+";dirtyCollisions.Count:"+dirtyCollisions.Count,this);
 foreach(var collision in collisions){
 for(int i=0;i<collision.Value.Count;i++){var contact=collision.Value[i];if(contact.normal==Vector3.zero)break;
-
-
 IsGrounded=IsGrounded||(Vector3.Angle(contact.normal,Vector3.up)<=60&&contact.point.y<=transform.position.y-collider.bounds.center.y-collider.bounds.extents.y+.1f);HittingWall=HittingWall||Vector3.Angle(contact.normal,Vector3.up)>60;
-//Debug.LogWarning(Vector3.Angle(contact.normal,Vector3.up));
-//Debug.LogWarning(contact.point.y);
-//Debug.LogWarning(transform.position.y);
-//Debug.LogWarning(collider.bounds.center.y);
-//Debug.LogWarning(collider.bounds.extents.y);
-//Debug.LogWarning((contact.point.y<=transform.position.y-collider.bounds.extents.y+.1f));
-
-
 }
 dirtyCollisions[collision.Key]=true;}
-Debug.LogWarning("IsGrounded:"+IsGrounded);
-
+if(LOG&&LOG_LEVEL<=-100)Debug.Log("IsGrounded:"+IsGrounded,this);
 if(CanCrouch){
 if(ToggleIsHalfTimer>0){
     ToggleIsHalfTimer-=Time.deltaTime;
 }else{
 if(IsGrounded){
 if(IsHalf){
-Debug.LogWarning("disable IsHalf");
+if(LOG&&LOG_LEVEL<=0)Debug.Log("IsGrounded and not Crouching:disable IsHalf");
 if(collider is BoxCollider box){
 var centerOld=box.center;
 box.size=colliderDefaultSize;box.center=(transform.TransformPoint(colliderDefaultCenter)-transform.position);

@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 public class CharSFX:MonoBehaviour{
+public bool LOG=false;public int LOG_LEVEL=1;
 [NonSerialized]public AI actor;[NonSerialized]public AudioSource audioSource;
 void Awake(){
 actor=GetComponentInChildren<AI>();audioSource=GetComponent<AudioSource>();
 }
 void OnDisable(){    
-    Debug.LogWarning("reset lastSound");
+if(LOG&&LOG_LEVEL<=10)Debug.Log("CharSFX OnDisable():reset",this);
 lastSound=null;lastSoundPriority=-1;
 changingSound=null;
 }
@@ -23,7 +24,7 @@ if(sound==null){Stop();return;}
 if(sound==lastSound&&!restart)return;
 int timeidx,priorityidx,pitchidx,loopidx=pitchidx=priorityidx=timeidx=Array.IndexOf(sounds,sound);int importance=priorityidx==-1||priorityidx>=priority.Length?-1:priority[priorityidx];
 if(importance<lastSoundPriority&&((audioSource.clip!=null&&audioSource.isPlaying)||changingSound!=null))return;
-Debug.LogWarning("play "+sound.name+"; lastSound=="+lastSound);
+if(LOG&&LOG_LEVEL<=-1)Debug.Log(actor.name+":play "+sound.name+"; lastSound=="+lastSound,this);
 lastSound=sound;lastSoundPriority=importance;
 changingSound=StartCoroutine(CR_FadeToSound(sound,loopidx==-1||loopidx>=loop.Length?false:loop[loopidx],pitchidx==-1||pitchidx>=pitch.Length?1f:pitch[pitchidx],timeidx==-1||timeidx>=time.Length?0f:time[timeidx]));
 }
