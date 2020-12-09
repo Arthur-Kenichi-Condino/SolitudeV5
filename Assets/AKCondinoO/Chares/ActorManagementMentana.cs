@@ -17,6 +17,7 @@ for(int i=0;i<actorsPrefabs.Length;i++){if(i>=actorsMaxInstantiations.Length){br
 TypeToTypeId.Add(prefab.GetType(),i);ActorsByTypeId.Add(i,new List<AI>(amount));InactiveActorsByTypeId.Add(i,new LinkedList<AI>());for(int j=0;j<amount;j++){
 var typeId=i;var id=nextActorId++;
 //  keep prefabs enabled!! [https://answers.unity.com/questions/826877/awake-called-after-i-activate-object-not-after-ins.html]
+                    //Debug.LogWarning(prefab.gameObject.activeInHierarchy);
 var aI=Instantiate(prefab);
     aI.Id=id;aI.TypeId=typeId;
 var gO=aI.gameObject;gO.name=prefab.name+"("+typeId+":"+id+")";if(gO.activeInHierarchy){gO.transform.root.gameObject.SetActive(false);if(LOG&&LOG_LEVEL<=1)Debug.Log("set as inactive in instantiation");}
