@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using TreeEditor;
+//using TreeEditor;
 using UnityEngine;
 namespace AKCondinoO.Species.Plants{
 public class Plant:MonoBehaviour{
 [NonSerialized]public static readonly Common common=new Common();
 [NonSerialized]protected Tree tree;
-[NonSerialized]protected TreeData data;
+//[NonSerialized]protected TreeData data;
 protected virtual void Awake(){
 if(common.Random[0]==null){
 common.Seed=0;
@@ -17,7 +17,7 @@ common.Seed=0;
             Debug.LogWarning("common.Seed:"+common.Seed);
 
 
-tree=GetComponent<Tree>();data=tree.data as TreeData;
+tree=GetComponent<Tree>();//data=tree.data as TreeData;
 
 
 //data.root.seed=common.Random[0].Next(0,1000000);
