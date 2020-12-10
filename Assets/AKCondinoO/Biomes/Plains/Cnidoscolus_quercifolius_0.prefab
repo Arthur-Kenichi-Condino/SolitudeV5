@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4994955616202349638}
   - component: {fileID: 8781515238663023486}
   m_Layer: 0
-  m_Name: Cnidoscolus_quercifolius
+  m_Name: Cnidoscolus_quercifolius_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82,8 +82,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -5108480111265779184}
-  - {fileID: -698020419286268536}
+  - {fileID: 2100000, guid: f9bae22289ad8c340acec8d75c27ae17, type: 2}
+  - {fileID: 2100000, guid: d7519539442f05a40b32dbfe4c3174b7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -96,7 +96,7 @@ MeshRenderer:
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
   m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
