@@ -1,5 +1,49 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &855100589
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 855100590}
+  - component: {fileID: 855100591}
+  m_Layer: 0
+  m_Name: Collider0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &855100590
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 855100589}
+  m_LocalRotation: {x: 0.018047733, y: -0.015773773, z: -0.015329774, w: 0.99959517}
+  m_LocalPosition: {x: 0.002, y: 2.312, z: 0.33}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1220002504197393427}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 2.04, y: -1.84, z: -1.79}
+--- !u!65 &855100591
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 855100589}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2.64, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1531042842304908503
 GameObject:
   m_ObjectHideFlags: 0
@@ -10,6 +54,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1220002504197393427}
   - component: {fileID: -5178230985641194714}
+  - component: {fileID: 6976215393545728368}
+  - component: {fileID: 5740875775356182220}
   - component: {fileID: 2328267800785911888}
   - component: {fileID: 4994955616202349638}
   - component: {fileID: 8781515238663023486}
@@ -30,7 +76,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 855100590}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -46,6 +93,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1173d6bd0f456ee489b13243d028748d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LOG: 1
+  LOG_LEVEL: 0
+  DRAW_LEVEL: -100
+  CanCrouch: 0
+  Poisonous: 1
+--- !u!54 &6976215393545728368
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531042842304908503}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0.05
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
+--- !u!65 &5740875775356182220
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531042842304908503}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0.6, z: 0.08}
 --- !u!193 &2328267800785911888
 Tree:
   m_ObjectHideFlags: 0

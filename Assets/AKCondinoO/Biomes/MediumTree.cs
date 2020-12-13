@@ -2,6 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 namespace AKCondinoO.Species.Plants{
-public class Cnidoscolus_quercifolius:MediumFruitTree{
+public class MediumTree:Plant{
 }
 }

@@ -1,4 +1,5 @@
-﻿using AKCondinoO.Voxels;
+﻿using AKCondinoO.Species.Plants;
+using AKCondinoO.Voxels;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ protected static Vector3 _half_y{get;}=new Vector3(1,.5f,1);
 protected static Vector3 _half_xyz{get;}=new Vector3(.5f,.5f,.5f);
 [NonSerialized]public new Collider collider=null;[NonSerialized]public new Rigidbody rigidbody=null;[NonSerialized]public new Renderer renderer;
 protected virtual void Awake(){
-collider=GetComponent<Collider>();rigidbody=GetComponent<Rigidbody>();
+collider=GetComponent<Collider>();rigidbody=GetComponent<Rigidbody>();if(rigidbody!=null){rigidbody.sleepThreshold=0;}
 if(LOG&&LOG_LEVEL<=-1)Debug.Log(this.gameObject+" has the collider:"+collider,this);
 if(collider!=null){
 colliderDefaultSize=collider.bounds.size;colliderDefaultCenter=transform.InverseTransformPoint(collider.bounds.center);
@@ -62,8 +63,8 @@ if(rigidbody!=null){
 IsGrounded=false;HittingWall=false;
 if(LOG&&LOG_LEVEL<=0)Debug.Log("collisions.Count:"+collisions.Count+";dirtyCollisions.Count:"+dirtyCollisions.Count,this);
 foreach(var collision in collisions){
-for(int i=0;i<collision.Value.Count;i++){var contact=collision.Value[i];if(contact.normal==Vector3.zero)break;
-IsGrounded=IsGrounded||(Vector3.Angle(contact.normal,Vector3.up)<=60&&contact.point.y<=transform.position.y-collider.bounds.center.y-collider.bounds.extents.y+.1f);HittingWall=HittingWall||Vector3.Angle(contact.normal,Vector3.up)>60;
+if(collision.Key.transform.root.gameObject!=transform.root.gameObject)for(int i=0;i<collision.Value.Count;i++){var contact=collision.Value[i];if(contact.normal==Vector3.zero)break;
+IsGrounded=IsGrounded||(this is Plant)||(Vector3.Angle(contact.normal,Vector3.up)<=60&&contact.point.y<=transform.position.y-colliderDefaultCenter.y-collider.bounds.extents.y+.1f);HittingWall=HittingWall||Vector3.Angle(contact.normal,Vector3.up)>60;
 }
 dirtyCollisions[collision.Key]=true;}
 if(LOG&&LOG_LEVEL<=-100)Debug.Log("IsGrounded:"+IsGrounded,this);
@@ -102,7 +103,6 @@ IsHalf=true;
 }
 }
 }
-
 }
 }
 [NonSerialized]protected readonly Dictionary<Collider,List<ContactPoint>>collisions=new Dictionary<Collider,List<ContactPoint>>();[NonSerialized]readonly Dictionary<Collider,bool>dirtyCollisions=new Dictionary<Collider,bool>();[NonSerialized]readonly List<ContactPoint>contacts=new List<ContactPoint>();

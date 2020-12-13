@@ -468,6 +468,8 @@
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\Scripts\DynamicDNAConverterBehaviour.cs" />
     <Compile Include="Assets\AKCondinoO\Biomes\Plains\Cnidoscolus_quercifolius.cs" />
     <Compile Include="Assets\AKCondinoO\Biomes\Plant.cs" />
+    <Compile Include="Assets\AKCondinoO\Biomes\MediumTree.cs" />
+    <Compile Include="Assets\AKCondinoO\Biomes\MediumFruitTree.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\UMA\Core\StandardAssets\UMA\Atlas\AtlasNormalShader32.shader" />

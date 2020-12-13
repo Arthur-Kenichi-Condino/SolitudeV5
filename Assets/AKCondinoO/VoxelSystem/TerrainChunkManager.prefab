@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1217083138258430213
 Transform:
   m_ObjectHideFlags: 0
@@ -47,3 +47,13 @@ MonoBehaviour:
   LOG_LEVEL: 1
   ChunkPrefab: {fileID: 161398686494138294, guid: cc50d30d720285d4da9a73386c1fa768,
     type: 3}
+  averageFramerateRefreshTime: 1
+  biomePrefabs:
+  - Name: Biome
+    Plants: []
+    Frequency: 
+  - Name: Plains
+    Plants:
+    - {fileID: -5178230985641194714, guid: c7ed13057a094ac48b72600972aa1182, type: 3}
+    Frequency: 01000000
+  DEBUG_EDIT: 0
