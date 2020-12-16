@@ -64,7 +64,7 @@ IsGrounded=false;HittingWall=false;
 if(LOG&&LOG_LEVEL<=0)Debug.Log("collisions.Count:"+collisions.Count+";dirtyCollisions.Count:"+dirtyCollisions.Count,this);
 foreach(var collision in collisions){
 if(collision.Key.transform.root.gameObject!=transform.root.gameObject)for(int i=0;i<collision.Value.Count;i++){var contact=collision.Value[i];if(contact.normal==Vector3.zero)break;
-IsGrounded=IsGrounded||((this is Plant)?(true):(Vector3.Angle(contact.normal,Vector3.up)<=60&&contact.point.y<=transform.position.y-colliderDefaultCenter.y-collider.bounds.extents.y+.1f));HittingWall=HittingWall||Vector3.Angle(contact.normal,Vector3.up)>60;
+IsGrounded=IsGrounded||((this is Plant)?(collider.bounds.Contains(contact.point)&&Vector3.Angle(contact.normal,transform.up)<=60):(Vector3.Angle(contact.normal,Vector3.up)<=60&&contact.point.y<=transform.position.y-colliderDefaultCenter.y-collider.bounds.extents.y+.1f));HittingWall=HittingWall||Vector3.Angle(contact.normal,Vector3.up)>60;
 }
 dirtyCollisions[collision.Key]=true;}
 if(LOG&&LOG_LEVEL<=-100)Debug.Log("IsGrounded:"+IsGrounded,this);
