@@ -396,6 +396,11 @@ attackHitboxColliders=null;
 [NonSerialized]protected float damage;
 protected virtual void TakeDamage(AI fromEnemy){
 damage=fromEnemy.Attributes.ATK-Attributes.DEF;
+
+
+var skill=Skill.GetBest(this,Skill.When.onWillTakeDamage);if(skill!=null){Debug.LogWarning(skill);}
+
+
 if(damage<=1)damage=1;Attributes.CurStamina-=damage;if(Attributes.CurStamina<=0){Attributes.CurStamina=0;Die();}else if(damage>0){
     Debug.LogWarning("reset nextAttackTimer for ["+this);
     nextAttackTimer=0;

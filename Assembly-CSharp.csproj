@@ -219,6 +219,7 @@
     <Compile Include="Assets\Scripts\Utf8Json\Formatters\DateTimeFormatter.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Internal\Emit\MetaType.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\TextureProcessBaseCoroutine.cs" />
+    <Compile Include="Assets\AKCondinoO\Biomes\MediumTree.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\SlotLibraryBase.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Internal\BinaryUtil.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\UMAAssetBundleManager\AssetBundleLoadOperation.cs" />
@@ -308,6 +309,7 @@
     <Compile Include="Assets\Scripts\Utf8Json\Formatters\MultiDimentionalArrayFormatter.cs" />
     <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Core\SuperMath.cs" />
     <Compile Include="Assets\AKCondinoO\FileInfoExtensions.cs" />
+    <Compile Include="Assets\AKCondinoO\Biomes\MediumFruitTree.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\DynamicDNAConverterBehaviourBase.cs" />
     <Compile Include="Assets\ExplosiveLLC\RPG Character Animation Pack FREE\Code\GUIControlsFREE.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\UMAAssetBundleManager\UMAEncryptedBundle.cs" />
@@ -345,6 +347,7 @@
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\Scripts\pAssetBundleIndex.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Formatters\StandardClassLibraryFormatters.cs" />
     <Compile Include="Assets\AKCondinoO\Chares\Pathfinder.cs" />
+    <Compile Include="Assets\AKCondinoO\Biomes\Plant.cs" />
     <Compile Include="Assets\UMA\Core\Scripts\DNAPlugins\BlendshapeDNAConverterPlugin.cs" />
     <Compile Include="Assets\UMA\Examples\Legacy Examples\Scripts\EnvPreset.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Actors\FlexActor.cs" />
@@ -399,6 +402,7 @@
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\DynamicUMADnaAsset.cs" />
     <Compile Include="Assets\UMA\Examples\ExampleScripts\MouseOrbitImproved.cs" />
     <Compile Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Scripts\Scene2and3\LogToText.cs" />
+    <Compile Include="Assets\AKCondinoO\Biomes\Plains\Cnidoscolus_quercifolius.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\Scripts\DynamicDNAConverterCustomizer.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\SkinnedMeshAligner.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\Timeline\UmaWardrobe\UmaWardrobeClip.cs" />
@@ -466,10 +470,7 @@
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\DNAConverterField.cs" />
     <Compile Include="Assets\UMA\Examples\Physics Examples\Scripts\ClothHelper.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\Scripts\DynamicDNAConverterBehaviour.cs" />
-    <Compile Include="Assets\AKCondinoO\Biomes\Plains\Cnidoscolus_quercifolius.cs" />
-    <Compile Include="Assets\AKCondinoO\Biomes\Plant.cs" />
-    <Compile Include="Assets\AKCondinoO\Biomes\MediumTree.cs" />
-    <Compile Include="Assets\AKCondinoO\Biomes\MediumFruitTree.cs" />
+    <Compile Include="Assets\AKCondinoO\Chares\Skills\_EVADE.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\UMA\Core\StandardAssets\UMA\Atlas\AtlasNormalShader32.shader" />

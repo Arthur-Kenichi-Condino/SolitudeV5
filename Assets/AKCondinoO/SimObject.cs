@@ -162,6 +162,14 @@ protected void setOutOfSight(){
         pos=transform.position=pos_Pre;
 OutOfSight=true;
 }
+public virtual void Teleport(Quaternion rotation,Vector3 position){
+if(rigidbody!=null){
+        rigidbody.velocity=Vector3.zero;
+        rigidbody.angularVelocity=Vector3.zero;
+}
+        transform.rotation=            rotation;
+        transform.position=pos=pos_Pre=position;
+}
 protected virtual void LateUpdate(){}
 #if UNITY_EDITOR
 protected virtual void OnDrawGizmos(){

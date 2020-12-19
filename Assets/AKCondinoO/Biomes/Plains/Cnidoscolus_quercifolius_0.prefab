@@ -95,8 +95,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LOG: 1
-  LOG_LEVEL: 0
-  DRAW_LEVEL: -100
+  LOG_LEVEL: 1
+  DRAW_LEVEL: 1
   CanCrouch: 0
   Poisonous: 1
 --- !u!54 &6976215393545728368

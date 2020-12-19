@@ -71,12 +71,23 @@ Attributes.BaseDEF=GetBaseDEF();Attributes.BaseMDEF=GetBaseMDEF();
 Attributes.BaseATK=GetBaseATK();Attributes.BaseMATK=GetBaseMATK();
 }
 }
+[SerializeField]public SkillIds[]onWillTakeDamageSkills;public readonly Dictionary<SkillIds,Skill>Skills=new Dictionary<SkillIds,Skill>();
 protected override void Awake(){
     //Debug.LogWarning("here");
                    base.Awake();
 tgtPos=tgtPos_Pre=transform.position;
 tgtRot=tgtRot_Pre=transform.eulerAngles;headTgtRot=headTgtRot_Pre=tgtRot;
 drawPos=transform.position;drawRotation=headDrawRotation=transform.rotation;
+
+
+        foreach(var skillId in onWillTakeDamageSkills){
+            switch(skillId){
+                case(SkillIds._EVADE):{if(!Skills.ContainsKey(SkillIds._EVADE)){Skills.Add(SkillIds._EVADE,new _EVADE());}
+                break;}
+            }
+        }
+
+
 }
 [NonSerialized]protected bool Jump;
 [NonSerialized]Vector3 eulerAngles,headEulerAngles;[NonSerialized]float angleBetweenBodyAndHead;[NonSerialized]Vector3 stopMovement,moveSpeedRotated,moveSpeedToApplyToBody;
@@ -116,7 +127,7 @@ moveSpeedToApplyToBody.y=moveSpeedRotated.y==0?rigidbody.velocity.y:moveSpeedRot
 }
 
 
-Debug.LogWarning(inputMoveSpeed.y+" "+moveSpeedRotated.y);
+//Debug.LogWarning(inputMoveSpeed.y+" "+moveSpeedRotated.y);
 
 
 Jump=false;
