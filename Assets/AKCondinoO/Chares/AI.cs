@@ -397,11 +397,25 @@ attackHitboxColliders=null;
 protected virtual void TakeDamage(AI fromEnemy){
 damage=fromEnemy.Attributes.ATK-Attributes.DEF;
 
+        
+bool evaded=false;
+var skill=Skill.GetBest(this,Skill.When.onWillTakeDamage);if(skill!=null){
 
-var skill=Skill.GetBest(this,Skill.When.onWillTakeDamage);if(skill!=null){Debug.LogWarning(skill);}
+
+    Debug.LogWarning(skill);
+if(skill is _EVADE evade){evaded=evade.DoSkill(this,fromEnemy);
+
+                
+    Debug.LogWarning("evaded:"+evaded+";evade.Result:"+evade.Result);
 
 
-if(damage<=1)damage=1;Attributes.CurStamina-=damage;if(Attributes.CurStamina<=0){Attributes.CurStamina=0;Die();}else if(damage>0){
+}
+
+
+}
+
+
+if(evaded)damage=0;else if(damage<=1)damage=1;Attributes.CurStamina-=damage;if(Attributes.CurStamina<=0){Attributes.CurStamina=0;Die();}else if(damage>0){
     Debug.LogWarning("reset nextAttackTimer for ["+this);
     nextAttackTimer=0;
 }

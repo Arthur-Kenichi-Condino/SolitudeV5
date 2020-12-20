@@ -1,14 +1,22 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class _EVADE:Passive{
-public override bool DoSkill(AI actor,AI target){
+public class _EVADE:Passive{[NonSerialized]readonly System.Random mathrandom=new System.Random();
+public override bool DoSkill(AI actor,AI target){Result=-1;
 
 
         Debug.LogWarning("DoSkill");
-        //Vector3.Distance();
-        //actor.Teleport();
+float evasionChance=1-Mathf.Clamp01(target.Attributes.Hit-actor.Attributes.Flee);if(evasionChance>mathrandom.NextDouble()){
+    float dis=Vector3.Distance(actor.transform.position,target.transform.position);
+        float reposAngle=((float)(mathrandom.NextDouble())*2f-1f)*15f;if(reposAngle<0){reposAngle-=5f;}else{reposAngle+=5f;}Vector3 forward=(actor.transform.position-target.transform.position).normalized;Vector3 repos=target.transform.position+((Quaternion.AngleAxis(reposAngle,Vector3.up)*forward)*dis);
+        actor.Teleport(Quaternion.LookRotation((target.transform.position-actor.transform.position).normalized,actor.transform.up),repos);
+        Debug.LogWarning("evaded!");
+Result=0;
+         return(true);
+}
 
 
          return base.DoSkill(actor,target);}
+public int Result=-1;
 }

@@ -23,6 +23,8 @@ canFly_v=value;
 [SerializeField]public float BaseMaxStamina;[SerializeField]public float CurStamina;
 [SerializeField]public float BaseMaxFocus;[SerializeField]public float CurFocus;
 [SerializeField]public float BaseAspd;public float Aspd{get{return BaseAspd;}}
+[SerializeField]public float BaseHit;public float Hit{get{return BaseHit;}}
+[SerializeField]public float BaseFlee;public float Flee{get{return BaseFlee;}}
 [SerializeField]public float BaseDEF;public float DEF{get{return BaseDEF;}}
 [SerializeField]public float BaseMDEF;public float MDEF{get{return BaseMDEF;}}
 [SerializeField]public float BaseATK;public float ATK{get{return BaseATK;}}
@@ -39,7 +41,13 @@ public virtual float GetBaseMaxFocus(){
 return(Attributes.VIT*.5f+Attributes.INT*100);
 }
 public virtual float GetBaseAspd(){
-return Mathf.Clamp(((Attributes.AGI/100f)+(Attributes.DEX*.5f/100f))/2f*1.5f,.5f,1f);
+return Mathf.Clamp((Attributes.AGI/100f+Attributes.DEX*.5f/100f)/2f*1.5f,.5f,1f);
+}
+public virtual float GetBaseHit(){
+return(Attributes.DEX/100f+Attributes.LUK*.5f/100f)/1.5f;
+}
+public virtual float GetBaseFlee(){
+return(Attributes.AGI/100f+Attributes.LUK*.5f/100f)/1.5f;
 }
 public virtual float GetBaseDEF(){
 return(Attributes.VIT*1.5f+Attributes.AGI*.5f);
@@ -69,6 +77,9 @@ Attributes.LUK=mathrandom.Next(1,100);
 if(version<=1){
 Attributes.BaseDEF=GetBaseDEF();Attributes.BaseMDEF=GetBaseMDEF();
 Attributes.BaseATK=GetBaseATK();Attributes.BaseMATK=GetBaseMATK();
+}
+if(version<=2){
+Attributes.BaseHit=GetBaseHit();Attributes.BaseFlee=GetBaseFlee();
 }
 }
 [SerializeField]public SkillIds[]onWillTakeDamageSkills;public readonly Dictionary<SkillIds,Skill>Skills=new Dictionary<SkillIds,Skill>();
@@ -345,6 +356,12 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
 }
 }
 #endregion
+public override void Teleport(Quaternion rotation,Vector3 position){
+        //Debug.LogWarning(rotation*transform.forward);
+                base.Teleport(rotation,position);
+        headEulerAngles=rotation.eulerAngles;
+        //tgtRot=tgtRot_Pre=rotation.eulerAngles;
+}
 #region
 protected override void LateUpdate(){
                    base.LateUpdate();

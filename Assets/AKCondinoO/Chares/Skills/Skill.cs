@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 public class Skill{
 public virtual bool DoSkill(AI actor,AI target){
-return(true);}
+return(false);}
 public static Skill GetBest(AI actor,When moment){Skill result=null;
 switch(moment){
 case(When.onWillTakeDamage):{

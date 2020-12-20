@@ -69,6 +69,7 @@ MonoBehaviour:
     BaseMDEF: 0
     BaseATK: 0
     BaseMATK: 0
+  onWillTakeDamageSkills: 00000000
   Lerp: 1
   MoveLerpSpeed: 0.125
   InputMoveAcceleration: {x: 3, y: 3, z: 3}
@@ -132,6 +133,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3717d3325513f1641b544a0f2b1659c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LOG: 0
+  LOG_LEVEL: 1
   sounds:
   - {fileID: 8300000, guid: b009b676e8b1394489f054525cff6e8f, type: 3}
   - {fileID: 0}
