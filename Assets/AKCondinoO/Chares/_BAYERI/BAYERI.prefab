@@ -63,6 +63,8 @@ MonoBehaviour:
     BaseMaxFocus: 0
     CurFocus: 0
     BaseAspd: 0
+    BaseHit: 0
+    BaseFlee: 0
     BaseDEF: 0
     BaseMDEF: 0
     BaseATK: 0
@@ -85,7 +87,7 @@ MonoBehaviour:
   attackStanceDamageTime: 0.5
   hitStanceRhythmMultiplier: 2
   deadStanceRhythmMultiplier: 1
-  attackWaitForSoundTime: 1.225
+  attackWaitForSoundTime: 0.6
   DEBUG_ATTACK: 0
   DEBUG_GETHIT: 0
   DEBUG_DIE: 0

@@ -95,7 +95,7 @@ if(actorTouchingMe&&enemyTouchingMe)break;//  Break when all checks are true, so
 //Debug.LogWarning("nextAttackTimer:"+nextAttackTimer);
 if(nextAttackTimer>0){
     nextAttackTimer-=Time.deltaTime;
-    Debug.LogWarning("waiting for nextAttackTimer to get to zero ["+this);
+if(LOG&&LOG_LEVEL<=-110)Debug.Log("waiting for nextAttackTimer to get to zero ["+this,this);
 }
 if(Autonomous<=0){
 WALK_PATH();
@@ -395,7 +395,9 @@ attackHitboxColliders=null;
 }
 [NonSerialized]protected float damage;
 protected virtual void TakeDamage(AI fromEnemy){
+if(fromEnemy!=null){
 damage=fromEnemy.Attributes.ATK-Attributes.DEF;
+}
 
         
 bool evaded=false;
@@ -403,7 +405,7 @@ var skill=Skill.GetBest(this,Skill.When.onWillTakeDamage);if(skill!=null){
 
 
     Debug.LogWarning(skill);
-if(skill is _EVADE evade){evaded=evade.DoSkill(this,fromEnemy);
+if(skill is _EVADE evade&&fromEnemy!=null){evaded=evade.DoSkill(this,fromEnemy);
 
                 
     Debug.LogWarning("evaded:"+evaded+";evade.Result:"+evade.Result);
