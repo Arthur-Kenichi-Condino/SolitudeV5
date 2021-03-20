@@ -31,7 +31,7 @@ tree=GetComponent<Tree>();//data=tree.data as TreeData;
                                                       base.Update();
 
 
-            Debug.LogWarning("collisions.Count:"+collisions.Count+";IsGrounded:"+IsGrounded);
+            //Debug.LogWarning("collisions.Count:"+collisions.Count+";IsGrounded:"+IsGrounded);
 
 
 }

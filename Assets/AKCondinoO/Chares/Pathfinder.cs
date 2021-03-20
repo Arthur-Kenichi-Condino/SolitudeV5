@@ -643,6 +643,13 @@ if(!neighbour.node.Walkable){
 continue;}
 if(!current.neighbourCanBeReached[n].yes){
 continue;}
+
+
+if(neighbour.node.Position.y-current.Position.y<-NodeSize.y){
+        Debug.LogWarning("too high!");
+}
+
+
 bool inOpenNodes;var G_NewCost=current.G+GetDistance(current,neighbour.node);if(!(inOpenNodes=OpenNodes.Contains(neighbour.node))||G_NewCost<neighbour.node.G){
 neighbour.node.G=G_NewCost;//  Vizinho válido para avaliação de encontrar caminho
 neighbour.node.H=GetDistance(neighbour.node,targetNode);
