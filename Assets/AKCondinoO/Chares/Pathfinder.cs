@@ -647,7 +647,7 @@ continue;}
 
 if(neighbour.node.Position.y-current.Position.y<-NodeSize.y){
         Debug.LogWarning("too high!");
-}
+continue;}
 
 
 bool inOpenNodes;var G_NewCost=current.G+GetDistance(current,neighbour.node);if(!(inOpenNodes=OpenNodes.Contains(neighbour.node))||G_NewCost<neighbour.node.G){

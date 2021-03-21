@@ -162,10 +162,15 @@ protected void setOutOfSight(){
         pos=transform.position=pos_Pre;
 OutOfSight=true;
 }
-public virtual void Teleport(Quaternion rotation,Vector3 position){
+public virtual void Teleport(Quaternion rotation,Vector3 position,bool goThroughWalls=true){
 if(rigidbody!=null){
         rigidbody.velocity=Vector3.zero;
         rigidbody.angularVelocity=Vector3.zero;
+}
+if(!goThroughWalls){
+if(Physics.Raycast(new Ray(transform.position,(position-transform.position).normalized),out RaycastHit hitInfo,Vector3.Distance(position,transform.position))){
+                Debug.LogWarning("wall hit while teleporting");
+}
 }
         transform.rotation=            rotation;
         transform.position=pos=pos_Pre=position;
