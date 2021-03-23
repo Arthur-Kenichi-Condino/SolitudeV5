@@ -6,7 +6,7 @@ using System.Reflection;
 using UnityEngine;
 public class MainCamera:SimActor{
 public static Dictionary<string,object[]>AllCommands=new Dictionary<string,object[]>();public static Dictionary<string,object[]>AllStates=new Dictionary<string,object[]>();
-public static readonly LinkedList<iCamFollowable>CamFollowables=new LinkedList<iCamFollowable>();public iCamFollowable CamFollowing=null;
+public static readonly LinkedList<iCamFollowable>CamFollowables=new LinkedList<iCamFollowable>();public iCamFollowable CamFollowing=null;public SimActor CamControlled=null;
 protected override void Awake(){
                    base.Awake();
 foreach(FieldInfo field in typeof(Commands).GetFields(BindingFlags.Public|BindingFlags.Static)){
@@ -45,6 +45,18 @@ Cursor.lockState=CursorLockMode.Locked;
 }
 Enabled.MOUSE_ROTATION_DELTA_X[1]=Enabled.MOUSE_ROTATION_DELTA_X[0];Enabled.MOUSE_ROTATION_DELTA_X[0]=Commands.ROTATION_SENSITIVITY_X*Input.GetAxis("Mouse X");
 Enabled.MOUSE_ROTATION_DELTA_Y[1]=Enabled.MOUSE_ROTATION_DELTA_Y[0];Enabled.MOUSE_ROTATION_DELTA_Y[0]=Commands.ROTATION_SENSITIVITY_Y*Input.GetAxis("Mouse Y");
+
+
+//if(CamControlled==null){
+//}else if(CamFollowing is SimActor followed&&followed!=CamControlled){
+//}
+//if(CamControlled==null){
+//if(CamFollowing!=null&&CamFollowing is SimActor followed){
+//}else if(CamFollowables.Count>0){
+//}
+//}
+
+
 if(!(bool)Enabled.PAUSE[0]){
 if((bool)Enabled.SWITCH_CAMERA_MODE[0]!=(bool)Enabled.SWITCH_CAMERA_MODE[1]){
 if((bool)Enabled.SWITCH_CAMERA_MODE[0]){
@@ -59,7 +71,47 @@ if(CamFollowing!=null)CamFollowing.BeingCamFollowed=false;
 CamFollowing=null;
 Lerp=true;
 }
+
+
+if(!(CamFollowing is SimActor followed)){
+                    Debug.LogWarning("followed is invalid to be cam controlled character");
+CamControlled=null;
+}else if(followed!=CamControlled){
+                    Debug.LogWarning("set followed["+followed+"] as new cam controlled character");
+CamControlled=followed;
 }
+
+
+}
+
+
+if(CamControlled==null&&!(CamFollowing is SimActor)){
+foreach(var followable in CamFollowables){
+if(followable is SimActor actor){
+
+
+
+
+
+break;}
+}
+}
+//if(CamControlled==null&&CamFollowing==null){
+//                    Debug.LogWarning("get new cam controlled character");
+//if(CamFollowables.Count>0){
+//foreach(var followable in CamFollowables){
+//if(followable is SimActor actor){
+
+
+
+
+
+//}
+//}
+//}
+//}
+
+
 if(CamFollowing==null){
 #region FORWARD BACKWARD
     if((bool)Enabled.FORWARD [0]){inputMoveSpeed.z+=InputMoveAcceleration.z;} 
@@ -128,6 +180,9 @@ hitPoint=ray.origin+ray.direction*1000f;
 
 Debug.DrawLine(ray.origin,hitPoint);
 switch(CurrentTool){
+case(SelectedGameModeTool.SimInteractionWheel):{
+    break;
+}
 case(SelectedGameModeTool.TerrainCarveCube):{
 
 

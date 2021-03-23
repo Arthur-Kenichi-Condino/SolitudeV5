@@ -131,7 +131,7 @@ Vector2Int nCoord1=cnk.Coord;nCoord1.x+=x;nCoord1.y+=z;int ngbIdx1=GetIdx(nCoord
 
 
 
-        if(DEBUG_EDIT){Edit(new Vector3(0,10,0),new Vector3Int(8,8,1),51,MaterialId.Dirt,EditMode.Cube);}
+        if(DEBUG_EDIT){Edit(new Vector3(0,10,0),new Vector3Int(8,8,1),51,MaterialId.Dirt,EditMode.Sphere);}
 
 
 

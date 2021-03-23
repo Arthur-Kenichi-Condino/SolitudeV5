@@ -358,7 +358,7 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
 #endregion
 public override void Teleport(Quaternion rotation,Vector3 position,bool goThroughWalls=true){
         //Debug.LogWarning(rotation*transform.forward);
-                base.Teleport(rotation,position);
+                base.Teleport(rotation,position,goThroughWalls);
         headEulerAngles=rotation.eulerAngles;
         //tgtRot=tgtRot_Pre=rotation.eulerAngles;
 }

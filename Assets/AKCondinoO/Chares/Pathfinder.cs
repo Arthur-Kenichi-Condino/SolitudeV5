@@ -105,6 +105,12 @@ return null;}
 protected void MoveToRandom(System.Random mathrandom){
     GoTo(new Ray(transform.position+new Vector3(mathrandom.Next(-16,17),16,mathrandom.Next(-16,17)),Vector3.down));
 }
+
+
+public void MoveTo(Ray tgt,float maxRayDis=1000,float height=1){
+}
+
+
 [NonSerialized]readonly protected Queue<(Vector3 pos,Node.PreferredReachableMode mode)>CurPath=new Queue<(Vector3,Node.PreferredReachableMode)>();[NonSerialized]protected(Vector3 pos,Node.PreferredReachableMode mode)?CurPathTgt=null;[NonSerialized]protected float CurPathValidTimeout;[NonSerialized]protected float PathIsValidTime=5f;
 [NonSerialized]readonly protected LinkedList<RaycastHit>GoToQueue=new LinkedList<RaycastHit>();[NonSerialized]protected bool tracing;
 protected override void Update(){
