@@ -127,7 +127,7 @@ if(i!=this.Id&&v.GetMotion!=Motions.MOTION_DEAD&&!v.OutOfSight){
 if(detected){Vector3 pos=kvp.Value.pos;
 if(v.HasPassiveRole()){    
 if(LOG&&LOG_LEVEL<=-20)Debug.Log("me "+this.Id+", my TypeId:"+TypeToTypeId[GetType()]+"; possible target "+i+", TypeId:"+TypeToTypeId[v.GetType()],v);
-var dis=Vector3.Distance(transform.position,pos);
+var dis=Vector3.Distance(collider.bounds.center,pos);
 MyPossibleTargets.Add(i,(v,pos,dis));
 if(!AsAggroEnemies.ContainsKey(i)){
 AsAggroEnemies.Add(i,(v,-1,0));

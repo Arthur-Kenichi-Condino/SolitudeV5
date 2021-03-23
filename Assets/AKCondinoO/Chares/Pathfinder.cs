@@ -108,6 +108,7 @@ protected void MoveToRandom(System.Random mathrandom){
 
 
 public void MoveTo(Ray tgt,float maxRayDis=1000,float height=1){
+    GoTo(tgt);
 }
 
 
@@ -651,7 +652,7 @@ if(!current.neighbourCanBeReached[n].yes){
 continue;}
 
 
-if(neighbour.node.Position.y-current.Position.y<-NodeSize.y){
+if(!canFly&&neighbour.node.Position.y-current.Position.y<-NodeSize.y){
         Debug.LogWarning("too high!");
 continue;}
 

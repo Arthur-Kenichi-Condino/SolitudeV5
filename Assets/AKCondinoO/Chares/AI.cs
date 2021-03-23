@@ -128,7 +128,7 @@ foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
 if(i!=this.Id&&v.GetMotion!=Motions.MOTION_DEAD&&!v.OutOfSight){
 if(v.Target==this){//  This following mode of detecting targets does not take into consideration the stealth status of enemies
 Vector3 pos;float dis;
-if(MyMotion==Motions.MOTION_HIT){pos=v.transform.position;
+if(MyMotion==Motions.MOTION_HIT){pos=v.collider.bounds.center;
 addPossibleTarget();attackingMe();
 if(LOG&&LOG_LEVEL<=-10)Debug.Log(GetType()+":I'm under attack",this);
 }else if(MySight.IsInVisionSight.ContainsKey(i)&&MySight.IsInVisionSight[i].directSight){pos=MySight.IsInVisionSight[i].pos;
@@ -136,7 +136,7 @@ addPossibleTarget();attackingMe();
 if(LOG&&LOG_LEVEL<=-10)Debug.Log(GetType()+":enemy approaching my position",this);
 }
 void addPossibleTarget(){
-dis=Vector3.Distance(transform.position,pos);
+dis=Vector3.Distance(collider.bounds.center,pos);
 MyPossibleTargets.Add(i,(v,pos,dis));
 }
 void attackingMe(){
@@ -150,7 +150,7 @@ GetEnemiesAttackingMe[i]=tuple;
 }
 }else if(v.Target!=null&&IsAllyTo(v.Target)){var ally=v.Target;
 Vector3 pos;float dis;
-if(TypeId.ActorType()==TypeIds._EIRA){pos=v.transform.position;
+if(TypeId.ActorType()==TypeIds._EIRA){pos=v.collider.bounds.center;
 
 
 Debug.LogWarning("ally in danger");
@@ -166,7 +166,7 @@ addPossibleTarget();attackingAlly();
 }
 }
 void addPossibleTarget(){
-dis=Vector3.Distance(transform.position,pos);
+dis=Vector3.Distance(collider.bounds.center,pos);
 MyPossibleTargets.Add(i,(v,pos,dis));
 }
 void attackingAlly(){
@@ -227,21 +227,21 @@ doChase();
 }
 protected virtual void doChase(){
 if(tracing||GoToQueue.Count>0)return;
-if(!destSet||CurPathTgt==null||Vector3.Distance(MyDest,MyEnemy.transform.position)>MyAttackRange){
-    if(!actorTouchingMe&&Vector3.Distance(MyEnemy.transform.position,transform.position)>BodyRange){
-    MyDest=MyEnemy.transform.position;
+if(!destSet||CurPathTgt==null||Vector3.Distance(MyDest,MyEnemy.collider.bounds.center)>MyAttackRange){
+    if(!actorTouchingMe&&Vector3.Distance(MyEnemy.collider.bounds.center,collider.bounds.center)>BodyRange){
+    MyDest=MyEnemy.collider.bounds.center;
     }else{
-    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRange+BodyRange+MyAttackRange);
+    MyDest=MyEnemy.collider.bounds.center;var dir=collider.bounds.center-MyEnemy.collider.bounds.center;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRange+BodyRange+MyAttackRange);
     }
-if(DRAW_LEVEL<=0)Debug.DrawLine(transform.position,MyDest,Color.blue,1f);
+if(DRAW_LEVEL<=0)Debug.DrawLine(collider.bounds.center,MyDest,Color.blue,1f);
 GoTo(new Ray(MyDest,Vector3.down));
 }
 }
 protected virtual void doChasingMoveAway(){
 if(tracing||GoToQueue.Count>0)return;
 if(!destSet||CurPathTgt==null){
-    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRange+BodyRange);
-if(DRAW_LEVEL<=0)Debug.DrawLine(transform.position,MyDest,Color.blue,1f);
+    MyDest=MyEnemy.collider.bounds.center;var dir=collider.bounds.center-MyEnemy.collider.bounds.center;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRange+BodyRange);
+if(DRAW_LEVEL<=0)Debug.DrawLine(collider.bounds.center,MyDest,Color.blue,1f);
 GoTo(new Ray(MyDest,Vector3.down));
 }
 }
@@ -292,8 +292,8 @@ return 1;
 }
 if(!destSet||sinceLastHitTimer==hitDetectionReactionTick){
     Debug.LogWarning("OnATTACK_ST: move away GoTo");
-    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)(mathrandom.NextDouble()*2-1)*90,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRange*2+BodyRange*2);
-Debug.DrawLine(transform.position,MyDest,Color.blue,1f);
+    MyDest=MyEnemy.collider.bounds.center;var dir=collider.bounds.center-MyEnemy.collider.bounds.center;dir.y=0;dir=Quaternion.Euler(0,(float)(mathrandom.NextDouble()*2-1)*90,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRange*2+BodyRange*2);
+Debug.DrawLine(collider.bounds.center,MyDest,Color.blue,1f);
 GoTo(new Ray(MyDest,Vector3.down));
 doingAttackMoveAway=true;
 return 2;}
@@ -332,7 +332,7 @@ attackHitboxColliders=null;
 protected virtual void OnSKILL_OBJECT_ST(){}
 [NonSerialized]protected float MyAttackRange=.2f;public float AttackRange{get{return MyAttackRange;}}
 protected virtual bool IsInAttackSight(AI enemy){
-if(Vector3.Distance(transform.position,enemy.transform.position)-(BodyRadius+enemy.BodyRadius)<=MyAttackRange){
+if(Vector3.Distance(collider.bounds.center,enemy.collider.bounds.center)-(BodyRadius+enemy.BodyRadius)<=MyAttackRange){
 return true;
 }
 return false;}
@@ -349,7 +349,7 @@ if(deadStance!=-1||hitStance!=-1){}else{
 }
 }
 if(enemy!=null){
-inputViewRotationEuler.y=Quaternion.LookRotation((enemy.transform.position-transform.position).normalized).eulerAngles.y-transform.eulerAngles.y;
+inputViewRotationEuler.y=Quaternion.LookRotation((enemy.collider.bounds.center-collider.bounds.center).normalized).eulerAngles.y-transform.eulerAngles.y;
 }
 }
 [NonSerialized]Vector3 attackHitboxHalfSize;[NonSerialized]protected Collider[]attackHitboxColliders=null;
@@ -361,8 +361,8 @@ attackHitboxHalfSize.z=collider.bounds.extents.z+MyAttackRange;
 attackHitboxHalfSize.y=collider.bounds.extents.y+MyAttackRange;
 attackHitboxHalfSize*=RangeMultiplier;
 var dest=transform.forward*(collider.bounds.extents.z+attackHitboxHalfSize.z);
-attackHitboxColliders=Physics.OverlapBox(transform.position+dest,attackHitboxHalfSize,transform.rotation);
-Debug.DrawRay(transform.position,dest,Color.white,.1f);
+attackHitboxColliders=Physics.OverlapBox(collider.bounds.center+dest,attackHitboxHalfSize,transform.rotation);
+Debug.DrawRay(collider.bounds.center,dest,Color.white,.1f);
 
 
 }
@@ -438,12 +438,12 @@ if(LOG&&LOG_LEVEL<=0)Debug.Log("WALK_PATH new dest:"+CurPathTgt.Value.pos+","+Cu
 _movementWasDetectedTimer=NoMovementDetectionTime*(float)(mathrandom.NextDouble()+.5f);_noMovementGetUnstuckAction=GetUnstuckActions.none;
 }
 if(CurPathTgt.HasValue){
-ReachedTgtDisThreshold.y=colliderHalfExtents.y*.25f;
-ReachedTgtDisThreshold.x=colliderHalfExtents.x*.25f;
-ReachedTgtDisThreshold.z=colliderHalfExtents.z*.25f;
-_axisDiff.y=CurPathTgt.Value.pos.y-transform.position.y;_axisDist.y=Mathf.Abs(_axisDiff.y);
-_axisDiff.x=CurPathTgt.Value.pos.x-transform.position.x;_axisDist.x=Mathf.Abs(_axisDiff.x);
-_axisDiff.z=CurPathTgt.Value.pos.z-transform.position.z;_axisDist.z=Mathf.Abs(_axisDiff.z);      
+ReachedTgtDisThreshold.y=colliderHalfExtents.y;
+ReachedTgtDisThreshold.x=colliderHalfExtents.x;
+ReachedTgtDisThreshold.z=colliderHalfExtents.z;
+_axisDiff.y=CurPathTgt.Value.pos.y-collider.bounds.center.y;_axisDist.y=Mathf.Abs(_axisDiff.y);
+_axisDiff.x=CurPathTgt.Value.pos.x-collider.bounds.center.x;_axisDist.x=Mathf.Abs(_axisDiff.x);
+_axisDiff.z=CurPathTgt.Value.pos.z-collider.bounds.center.z;_axisDist.z=Mathf.Abs(_axisDiff.z);      
 _dir=_axisDiff.normalized;
 if(_axisDist.y<=ReachedTgtDisThreshold.y&&
    _axisDist.x<=ReachedTgtDisThreshold.x&&
@@ -457,15 +457,15 @@ void renew_movementWasDetectedTimer(){_movementWasDetectedTimer=NoMovementDetect
 _movementWasDetectedTimer-=Time.deltaTime;
 if(_movementSnapshotTimer<=0){
 if(LOG&&LOG_LEVEL<=0)Debug.Log("movement snapshot");
-    if(Mathf.Abs(transform.position.y-_movementSnapshotPos.y)>.1f||
-       Mathf.Abs(transform.position.x-_movementSnapshotPos.x)>.1f||
-       Mathf.Abs(transform.position.z-_movementSnapshotPos.z)>.1f){
+    if(Mathf.Abs(collider.bounds.center.y-_movementSnapshotPos.y)>.1f||
+       Mathf.Abs(collider.bounds.center.x-_movementSnapshotPos.x)>.1f||
+       Mathf.Abs(collider.bounds.center.z-_movementSnapshotPos.z)>.1f){
 if(LOG&&LOG_LEVEL<=0)Debug.Log("normal movement detected");
 renew_movementWasDetectedTimer();
     }else{
 if(LOG&&LOG_LEVEL<=0)Debug.Log("I am stuck in this position!");
     }
-_movementSnapshotPos=transform.position;_movementSnapshotTimer=DoMovementSnapshotTime*(float)(mathrandom.NextDouble()+.5f);
+_movementSnapshotPos=collider.bounds.center;_movementSnapshotTimer=DoMovementSnapshotTime*(float)(mathrandom.NextDouble()+.5f);
 }else{
 _movementSnapshotTimer-=Time.deltaTime;
 }
@@ -565,12 +565,12 @@ default:{
 if(_axisDist.y>ReachedTgtDisThreshold.y&&
    _axisDist.x<=ReachedTgtDisThreshold.x&&
    _axisDist.z<=ReachedTgtDisThreshold.z){   
-if(transform.position.y>=CurPathTgt.Value.pos.y+.1f){
+if(collider.bounds.center.y>=CurPathTgt.Value.pos.y+.1f){
     if(CurPathTgt.Value.mode!=Node.PreferredReachableMode.fall){
     var cur=CurPathTgt.Value;cur.mode=Node.PreferredReachableMode.fall;
     CurPathTgt=cur;
     }
-}else if(transform.position.y<CurPathTgt.Value.pos.y+.1f||rigidbody.velocity.y<=float.Epsilon){
+}else if(collider.bounds.center.y<CurPathTgt.Value.pos.y+.1f||rigidbody.velocity.y<=float.Epsilon){
     if(CurPathTgt.Value.mode!=Node.PreferredReachableMode.jump){
     var cur=CurPathTgt.Value;cur.mode=Node.PreferredReachableMode.jump;
     CurPathTgt=cur;
@@ -584,7 +584,7 @@ inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.e
 }
 inputMoveSpeed.x=0;
 if(!canFly){
-if(CurPathTgt.Value.mode==Node.PreferredReachableMode.jump&&transform.position.y<CurPathTgt.Value.pos.y+.1f){
+if(CurPathTgt.Value.mode==Node.PreferredReachableMode.jump&&collider.bounds.center.y<CurPathTgt.Value.pos.y+.1f){
 #region necessário pular
 inputMoveSpeed.z=0;
 if(IsGrounded){

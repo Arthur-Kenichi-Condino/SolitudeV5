@@ -89,8 +89,9 @@ if(CamControlled==null&&!(CamFollowing is SimActor)){
 foreach(var followable in CamFollowables){
 if(followable is SimActor actor){
 
-
-
+                        
+                    Debug.LogWarning("validate cam controlled:set actor["+actor+"] as new cam controlled character");
+CamControlled=actor;
 
 
 break;}
@@ -181,6 +182,26 @@ hitPoint=ray.origin+ray.direction*1000f;
 Debug.DrawLine(ray.origin,hitPoint);
 switch(CurrentTool){
 case(SelectedGameModeTool.SimInteractionWheel):{
+
+        
+if(hit.normal!=Vector3.zero){
+
+                        
+if(!UICore.UIReceivedInput&&!(bool)Enabled.ACTION_1[0]&&(bool)Enabled.ACTION_1[0]!=(bool)Enabled.ACTION_1[1]){
+    Debug.LogWarning("action SimInteractionWheel");
+
+
+if(CamControlled is AI controllable){
+controllable.MoveTo(tgt:ray);
+}
+
+
+}
+
+
+}
+
+
     break;
 }
 case(SelectedGameModeTool.TerrainCarveCube):{
