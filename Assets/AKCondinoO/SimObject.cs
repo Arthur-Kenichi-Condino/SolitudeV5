@@ -19,6 +19,13 @@ colliderDefaultSize=collider.bounds.size;colliderDefaultCenter=transform.Inverse
 GetColliderData();
 if(LOG&&LOG_LEVEL<=-1)Debug.Log("collider not null, so:colliderDefaultSize:"+colliderDefaultSize+";colliderDefaultCenter:"+colliderDefaultCenter,this);
 }
+if(renderer==null){renderer=GetComponentInChildren<Renderer>();
+if(LOG&&LOG_LEVEL<=-1)Debug.Log("renderer registered");
+}
+if(renderer!=null){
+GetRendererData();
+if(LOG&&LOG_LEVEL<=-1)Debug.Log("renderer not null:"+renderer,this);
+}
 pos=pos_Pre=transform.position;
 }
 [NonSerialized]public bool IsUMA=false;[NonSerialized]protected UMAData umaData;
@@ -34,7 +41,8 @@ simObject.colliderDefaultSize=simObject.collider.bounds.size;simObject.colliderD
 simObject.GetColliderData();
 if(LOG&&LOG_LEVEL<=-1)Debug.Log("simObject.collider not null, so:simObject.colliderDefaultSize:"+simObject.colliderDefaultSize+";simObject.colliderDefaultCenter:"+simObject.colliderDefaultCenter,simObject);
 simObject.renderer=simObject.GetComponentInChildren<Renderer>();
-if(LOG&&LOG_LEVEL<=-1)Debug.Log("simObject.renderer:"+simObject.renderer,simObject);
+simObject.GetRendererData();
+if(LOG&&LOG_LEVEL<=-1)Debug.Log("simObject.renderer not null:"+simObject.renderer,simObject);
 }
 }
 }
@@ -53,6 +61,13 @@ colliderShortestExtent=Mathf.Min(collider.bounds.extents.x,collider.bounds.exten
 BodyRange=BodyRadius=Mathf.Max(Mathf.Sqrt(Mathf.Pow(collider.bounds.extents.x,2)*2),
                                Mathf.Sqrt(Mathf.Pow(collider.bounds.extents.z,2)*2));
 if(LOG&&LOG_LEVEL<=1)Debug.Log("BodyRadius:"+BodyRange+", name:"+name);
+}
+protected void GetRendererData(){
+if(this is _3DSprite){
+if(LOG&&LOG_LEVEL<=1)Debug.Log("this is _3DSprite:"+(this is _3DSprite),this);
+renderer.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.On;
+renderer.receiveShadows=true;
+}
 }
 protected virtual void OnEnable(){}
 protected virtual void OnDisable(){}
@@ -187,6 +202,13 @@ if(rigidbody!=null){
 if(!goThroughWalls){
 if(Physics.Raycast(new Ray(transform.position,(position-transform.position).normalized),out RaycastHit hitInfo,Vector3.Distance(position,transform.position))){
                 Debug.LogWarning("wall hit while teleporting");
+
+
+var safePos=hitInfo.point;
+//if(){
+//}
+
+
 }
 }
         transform.rotation=            rotation;

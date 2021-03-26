@@ -53,6 +53,7 @@ MonoBehaviour:
   LOG_LEVEL: 1
   DRAW_LEVEL: 1
   CanCrouch: 0
+  DEBUG_TELEPORT: 0
   Attributes:
     STR: 0
     VIT: 0
@@ -280,6 +281,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -74577582058598035, guid: 6f00ff49b62611046ba1c7dcaced9fe8,
         type: 3}
+    - target: {fileID: 4624965802017645441, guid: 34ed58caa0373c248a7a34077c57adbc,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 66ffa1d54abaab546938139996453b91, type: 2}
     - target: {fileID: 5767008672092236405, guid: 34ed58caa0373c248a7a34077c57adbc,
         type: 3}
       propertyPath: m_LocalScale.x

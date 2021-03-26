@@ -10,6 +10,21 @@ animator=GetComponentInChildren<Animator>();renderer=GetComponentInChildren<Spri
 }
 public float motionRhythm=0.0245f;[NonSerialized]protected float curAnimTime=-1;[NonSerialized]float curAnimTime_normalized;
 [NonSerialized]Vector3 _forward,_cameraForward,_forwardFromCameraToSprite;[NonSerialized]bool _back;[NonSerialized]bool _flipX;
+protected override void Update(){
+                   base.Update();
+
+
+if(DEBUG_SNAPSHOT_SHADOWED){DEBUG_SNAPSHOT_SHADOWED=false;
+    Debug.DrawRay(renderer.transform.position,renderer.transform.forward,Color.blue,5);
+}
+
+
+}
+
+    
+[SerializeField]internal bool DEBUG_SNAPSHOT_SHADOWED=false;
+
+
 protected override void LateUpdate(){
                    base.LateUpdate();
 animator.transform.position=drawPos+spritePosAdj;

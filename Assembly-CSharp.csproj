@@ -477,6 +477,7 @@
      <None Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Assets\Resources\CharacterRecipes\HumanMaleChallenger.txt" />
      <None Include="Assets\UMA\Core\StandardAssets\UMA\Atlas\AtlasShader.shader" />
      <None Include="Assets\NVIDIA\Flex\Resources\Shaders\FlexDrawFluid.shader" />
+     <None Include="Assets\AKCondinoO\Chares\_3DSpriteShader.shader" />
      <None Include="Assets\NVIDIA\Flex\Native\Plugins\Win64\nvToolsExt64_1.dll" />
      <None Include="Assets\NVIDIA\Flex\Native\Plugins\Win64\NvFlexReleaseCUDA_x64.dll" />
      <None Include="Assets\AKCondinoO\VoxelSystem\TerrainAtlasShader.shader" />
