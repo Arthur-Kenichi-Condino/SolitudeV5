@@ -28,7 +28,7 @@ if(DEBUG_SNAPSHOT_SHADOWED){DEBUG_SNAPSHOT_SHADOWED=false;
 protected override void LateUpdate(){
                    base.LateUpdate();
 animator.transform.position=drawPos+spritePosAdj;
-animator.transform.rotation=Quaternion.LookRotation((Camera.main.transform.position-animator.transform.position).normalized,Vector3.up);
+animator.transform.rotation=Quaternion.LookRotation(-(Camera.main.transform.position-animator.transform.position).normalized,Vector3.up);
 _forward=Vector3.Scale(drawRotation.eulerAngles,Vector3.up);
 _forward=Quaternion.Euler(_forward)*Vector3.forward;
 _cameraForward=Vector3.Scale(Camera.main.transform.eulerAngles,Vector3.up);
