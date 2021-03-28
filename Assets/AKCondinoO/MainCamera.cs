@@ -25,7 +25,13 @@ AllStates.Add(field.Name,state);
 [NonSerialized]public bool Focus=true;
 private void OnApplicationFocus(bool focus){Focus=focus;}
 [NonSerialized]public bool Escape;
+public const float _30FPSdeltaTime=1f/30f;
 protected override void Update(){
+
+
+Debug.LogWarning("Time.deltaTime:"+Time.deltaTime+";_30FPSdeltaTime:"+_30FPSdeltaTime);
+
+
 
 
 ProcessGameCommands();
