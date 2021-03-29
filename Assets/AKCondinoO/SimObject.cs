@@ -49,7 +49,7 @@ if(LOG&&LOG_LEVEL<=-1)Debug.Log("simObject.renderer not null:"+simObject.rendere
 [NonSerialized]protected Vector3 colliderDefaultSize;[NonSerialized]protected Vector3 colliderDefaultCenter;
 [NonSerialized]protected Vector3 colliderHalfExtents_v;protected Vector3 colliderHalfExtents{get{return colliderHalfExtents_v*RangeMultiplier;}set{colliderHalfExtents_v=value;}}
 [NonSerialized]protected float colliderShortestExtent;
-[NonSerialized]protected float BodyRadius;
+[NonSerialized]public float BodyRadius;
 [NonSerialized]protected float BodyRange_v;public float BodyRange{get{return BodyRange_v*RangeMultiplier;}set{BodyRange_v=value;}}
 [NonSerialized]protected float RangeMultiplier=2f;
 protected void GetColliderData(){
@@ -82,7 +82,7 @@ if(collision.Key.transform.root.gameObject!=transform.root.gameObject)for(int i=
 IsGrounded=IsGrounded||((this is Plant)?(collider.bounds.Contains(contact.point)&&Vector3.Angle(contact.normal,transform.up)<=60):(Vector3.Angle(contact.normal,Vector3.up)<=60&&contact.point.y<=collider.bounds.center.y-collider.bounds.extents.y+.1f/*transform.position.y*//*-(collider.bounds.extents.y/2)*//*-colliderDefaultCenter.y-collider.bounds.extents.y+.1f*/));HittingWall=HittingWall||Vector3.Angle(contact.normal,Vector3.up)>60;
 
 
-                        Debug.LogWarning(contact.point.y+" "+(collider.bounds.center.y-collider.bounds.extents.y+.1f)+" "+collider.bounds.center.y+" "+collider.bounds.extents.y);
+if(LOG&&LOG_LEVEL<=-110)Debug.Log("contact.point.y:"+contact.point.y+" (collider.bounds.center.y-collider.bounds.extents.y+.1f):"+(collider.bounds.center.y-collider.bounds.extents.y+.1f)+" collider.bounds.center.y:"+collider.bounds.center.y+" collider.bounds.extents.y:"+collider.bounds.extents.y);
 
 
 }

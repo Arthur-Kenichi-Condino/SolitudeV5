@@ -51,6 +51,7 @@ MonoBehaviour:
   LOG_LEVEL: 1
   DRAW_LEVEL: -100
   CanCrouch: 1
+  DEBUG_TELEPORT: 0
   Attributes:
     STR: 0
     VIT: 0
@@ -63,10 +64,13 @@ MonoBehaviour:
     BaseMaxFocus: 0
     CurFocus: 0
     BaseAspd: 0
+    BaseHit: 0
+    BaseFlee: 0
     BaseDEF: 0
     BaseMDEF: 0
     BaseATK: 0
     BaseMATK: 0
+  onWillTakeDamageSkills: 
   Lerp: 1
   MoveLerpSpeed: 0.0625
   InputMoveAcceleration: {x: 3, y: 3, z: 6}
@@ -251,6 +255,10 @@ PrefabInstance:
     - target: {fileID: 11453600, guid: 5c80fc4442f8349969abea6c1a0f1faa, type: 3}
       propertyPath: context
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11453600, guid: 5c80fc4442f8349969abea6c1a0f1faa, type: 3}
+      propertyPath: loadPathType
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11453600, guid: 5c80fc4442f8349969abea6c1a0f1faa, type: 3}
       propertyPath: raceAnimationControllers.defaultAnimationController

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using AKCondinoO.Voxels;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UMA.CharacterSystem;
 using UnityEngine;
 public class CharControl:AI,iCamFollowable{
 public string ObjName{get{return gameObject.name;}}
@@ -10,9 +12,23 @@ public Vector3 CamLookAtUp{get;set;}
 public Vector3 CamLookAtForward{get;set;}
 public Vector3 CamPosition{get;set;}
 public Vector3 CamOffset;
+[NonSerialized]public DynamicCharacterAvatar avatar;
 protected override void Awake(){
                    base.Awake();
 CamFollowableNode=MainCamera.CamFollowables.AddLast(this);
+
+
+Debug.LogWarning(ChunkManager.saveFolder+" "+this.name);
+
+
+avatar=GetComponent<DynamicCharacterAvatar>();
+if(avatar!=null){
+Debug.LogWarning("avatar:"+avatar);
+
+
+}
+
+
 }
 [NonSerialized]Vector3 _camPos=new Vector3();[NonSerialized]Vector3 _camRotatedOffset=new Vector3(1,0,1);
 protected override void ProcessMovementInput(){

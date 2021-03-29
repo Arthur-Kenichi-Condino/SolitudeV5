@@ -729,7 +729,7 @@ PrefabInstance:
     - target: {fileID: 2643936908788119338, guid: 66788a3051bc6d548b32495287c01c2e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.03
+      value: 7.077
       objectReference: {fileID: 0}
     - target: {fileID: 2643936908788119338, guid: 66788a3051bc6d548b32495287c01c2e,
         type: 3}
@@ -774,7 +774,32 @@ PrefabInstance:
     - target: {fileID: 2924836144484334124, guid: 66788a3051bc6d548b32495287c01c2e,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6428776620020958361, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.07584902
+      objectReference: {fileID: 0}
+    - target: {fileID: 6428776620020958361, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6428776620020958361, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.9971193
+      objectReference: {fileID: 0}
+    - target: {fileID: 6428776620020958361, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6428776620020958361, guid: 66788a3051bc6d548b32495287c01c2e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -171.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66788a3051bc6d548b32495287c01c2e, type: 3}
@@ -1795,21 +1820,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PLAYER_PREFAB
       objectReference: {fileID: 0}
-    - target: {fileID: 6179044444179792751, guid: e55fd222ce86ba84db8c3db9c6747227,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7899130204184459693, guid: e55fd222ce86ba84db8c3db9c6747227,
         type: 3}
       propertyPath: context
       value: 
       objectReference: {fileID: 803672317}
-    - target: {fileID: 8857167122812051077, guid: e55fd222ce86ba84db8c3db9c6747227,
-        type: 3}
-      propertyPath: LOG_LEVEL
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e55fd222ce86ba84db8c3db9c6747227, type: 3}
 --- !u!1001 &2645000807840181472
