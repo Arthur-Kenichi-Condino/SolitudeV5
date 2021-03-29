@@ -21,7 +21,7 @@ CamFollowableNode=MainCamera.CamFollowables.AddLast(this);
 Debug.LogWarning(ChunkManager.saveFolder+" "+this.name);
 
 
-avatar=GetComponent<DynamicCharacterAvatar>();
+avatar=GetComponentInChildren<DynamicCharacterAvatar>();
 if(avatar!=null){
 Debug.LogWarning("avatar:"+avatar);
 
