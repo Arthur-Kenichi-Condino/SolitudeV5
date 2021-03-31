@@ -24,8 +24,10 @@ Debug.LogWarning(ChunkManager.saveFolder+" "+this.name);
 avatar=GetComponentInChildren<DynamicCharacterAvatar>();
 if(avatar!=null){
 Debug.LogWarning("avatar:"+avatar);
-
-
+//SetLoadFilename string replace (Clone)
+//DoSave on disable
+//avatar.savePathType=DynamicCharacterAvatar.savePathTypes.FileSystem;
+//avatar.loadPathType=DynamicCharacterAvatar.loadPathTypes.FileSystem;
 }
 
 
