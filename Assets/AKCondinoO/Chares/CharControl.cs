@@ -1,4 +1,4 @@
-﻿using AKCondinoO.Voxels;
+﻿//using AKCondinoO.Voxels;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,12 +18,13 @@ protected override void Awake(){
 CamFollowableNode=MainCamera.CamFollowables.AddLast(this);
 
 
-Debug.LogWarning(ChunkManager.saveFolder+" "+this.name);
+//Debug.LogWarning(ChunkManager.saveFolder+" "+this.name);
 
 
 avatar=GetComponentInChildren<DynamicCharacterAvatar>();
 if(avatar!=null){
 Debug.LogWarning("avatar:"+avatar);
+//avatar.SetLoadFilename();
 //SetLoadFilename string replace (Clone)
 //DoSave on disable
 //avatar.savePathType=DynamicCharacterAvatar.savePathTypes.FileSystem;
