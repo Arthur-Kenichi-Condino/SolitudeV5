@@ -24,6 +24,7 @@ CamFollowableNode=MainCamera.CamFollowables.AddLast(this);
 //Debug.LogWarning(saveFolder+this.name.Replace("(Clone)","").ToString());
 
 
+if(avatar==null){
 avatar=GetComponentInChildren<DynamicCharacterAvatar>();
 if(avatar!=null){
 Debug.LogWarning("avatar:"+avatar);
@@ -50,7 +51,7 @@ if(File.Exists(saveSubfolder[0])){avatar.SetLoadFilename(saveSubfolder[0],Dynami
 
 //SetLoadFilename string replace (Clone)
 //avatar.loadPathType=DynamicCharacterAvatar.loadPathTypes.FileSystem;
-}
+}}
 
 
 }
