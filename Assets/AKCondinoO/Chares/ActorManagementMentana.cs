@@ -7,7 +7,7 @@ using System.Linq;
 using UnityEngine;
 public class ActorManagementMentana:MonoBehaviour{[NonSerialized]protected System.Random mathrandom=new System.Random();
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
-[NonSerialized]public static readonly string saveFolder=Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).Replace("\\","/").ToString()+"/Solitude/";
+[NonSerialized]public static readonly string saveFolder=Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).Replace("\\","/").ToString()+"/Solitude/CharacterRecipes/";
 public bool AutoStagingEnabled=true;public bool RemoveFarAwayActors=true;public bool KeepUnregisteredActive=true;[NonSerialized]readonly Queue<(int TypeId,Vector3 Pos)>ToReactivate=new Queue<(int TypeId,Vector3 Pos)>();
 public static bool Contains(AI actor){if(!Actors.ContainsKey(actor.Id)||Actors[actor.Id]!=actor){unregistered.Add(actor);return(false);}return(true);}[NonSerialized]static readonly List<AI>unregistered=new List<AI>();[NonSerialized]public static readonly Dictionary<int,AI>Actors=new Dictionary<int,AI>();[NonSerialized]public static readonly Dictionary<int,List<AI>>ActorsByTypeId=new Dictionary<int,List<AI>>();[NonSerialized]public static readonly Dictionary<Type,int>TypeToTypeId=new Dictionary<Type,int>();
 [SerializeField]AI[]actorsPrefabs;[SerializeField]int[]actorsMaxInstantiations;[NonSerialized]int nextActorId;
@@ -16,7 +16,7 @@ void Awake(){
 manager=this;
 
 
-Directory.CreateDirectory(saveFolder+"CharacterRecipes/");
+Directory.CreateDirectory(saveFolder);
 
 
 if(actorsPrefabs!=null&&actorsMaxInstantiations!=null){
