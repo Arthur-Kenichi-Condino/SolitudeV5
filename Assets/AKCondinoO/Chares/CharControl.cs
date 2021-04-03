@@ -16,7 +16,7 @@ public Vector3 CamLookAtUp{get;set;}
 public Vector3 CamLookAtForward{get;set;}
 public Vector3 CamPosition{get;set;}
 public Vector3 CamOffset;
-public int uniqueId=-1;public string prefabName;
+[NonSerialized]public string prefabName;[NonSerialized]public int idForPrefabName=-1;
 [NonSerialized]public DynamicCharacterAvatar avatar;[NonSerialized]public Dictionary<string,DnaSetter>dna;
 protected override void Awake(){
                    base.Awake();
@@ -26,7 +26,7 @@ CamFollowableNode=MainCamera.CamFollowables.AddLast(this);
 if(avatar==null){
 avatar=GetComponentInChildren<DynamicCharacterAvatar>();
 if(avatar!=null){
-dna=avatar.GetDNA();
+//dna=avatar.GetDNA();
 }}
 
 
@@ -65,9 +65,23 @@ dna=avatar.GetDNA();
 
 }
 protected override void Update(){
-if(!loaded){
 
 
+        Debug.LogWarning("string.IsNullOrEmpty(prefabName):"+string.IsNullOrEmpty(prefabName));
+
+
+if(!loaded&&!string.IsNullOrEmpty(prefabName)){
+
+
+if(avatar!=null){
+dna=avatar.GetDNA();
+
+
+avatar.savePathType=DynamicCharacterAvatar.savePathTypes.FileSystem;
+Directory.CreateDirectory(avatar.savePath=saveSubfolder[0]=saveFolder+prefabName+"_"+idForPrefabName.ToString()+"/");saveSubfolder[0]+=(avatar.saveFilename="recipe")+".txt";
+
+
+}
 
 
 loaded=true;}

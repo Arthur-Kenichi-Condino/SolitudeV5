@@ -10,7 +10,7 @@ public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
 [NonSerialized]public static readonly string saveFolder=Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).Replace("\\","/").ToString()+"/Solitude/CharacterRecipes/";
 
 
-int uniqueIds{get{return nextActorId;}set{nextActorId=value;}}[NonSerialized]int UMANPCUniqueIds=0;[NonSerialized]int UMAPlayerUniqueIds=0;
+[NonSerialized]int UMAnpcUniqueIds=0;[NonSerialized]int UMAplayerUniqueIds=0;
 
 
 public bool AutoStagingEnabled=true;public bool RemoveFarAwayActors=true;public bool KeepUnregisteredActive=true;[NonSerialized]readonly Queue<(int TypeId,Vector3 Pos)>ToReactivate=new Queue<(int TypeId,Vector3 Pos)>();
@@ -34,7 +34,7 @@ var aI=Instantiate(prefab);
     aI.Id=id;aI.TypeId=typeId;
 
 
-
+setPrefabNameAndId(aI,prefab);
 
 
 var gO=aI.gameObject;gO.name=prefab.name+"("+typeId+":"+id+")";if(gO.activeInHierarchy){gO.transform.root.gameObject.SetActive(false);if(LOG&&LOG_LEVEL<=1)Debug.Log("set as inactive in instantiation");}
@@ -46,6 +46,15 @@ Actors.Add(id,aI);ActorsByTypeId[typeId].Add(aI);InactiveActorsByTypeId[typeId].
 }
 }
 }
+
+
+void setPrefabNameAndId(AI aI,AI prefab){
+if(aI is CharControl npc){
+npc.prefabName=prefab.name;npc.idForPrefabName=UMAnpcUniqueIds++;
+}
+}
+
+
 [SerializeField]TypeIds[]monsterTypeIds;[SerializeField]TypeIds[]homunculusTypeIds;[SerializeField]TypeIds[]charactersTypeIds;
 [NonSerialized]public static readonly Dictionary<int,AI>GetActors=new Dictionary<int,AI>();[NonSerialized]public static readonly Dictionary<int,LinkedList<AI>>InactiveActorsByTypeId=new Dictionary<int,LinkedList<AI>>();
 [NonSerialized]protected static Vector3 actPos,center,size,halfSize;public static Vector3 Center{get{return center;}}public static Vector3 Size{get{return size;}}public static Vector3 HalfSize{get{return halfSize;}}
@@ -63,6 +72,11 @@ if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("register actor of type:"+unregistered[u
 var typeId=i;var id=nextActorId++;
 var aI=unregistered[u];
     aI.Id=id;aI.TypeId=typeId;
+
+
+setPrefabNameAndId(aI,prefab);
+
+
 var gO=aI.gameObject;gO.name=prefab.name+"("+typeId+":"+id+")";if(gO.activeInHierarchy){gO.transform.root.gameObject.SetActive(false);}
 Actors.Add(id,aI);ActorsByTypeId[typeId].Add(aI);InactiveActorsByTypeId[typeId].AddLast(aI);
 unregistered.RemoveAt(u);
