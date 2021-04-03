@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UMA;
 using UMA.CharacterSystem;
 using UnityEngine;
 using static ActorManagementMentana;
@@ -15,55 +16,71 @@ public Vector3 CamLookAtUp{get;set;}
 public Vector3 CamLookAtForward{get;set;}
 public Vector3 CamPosition{get;set;}
 public Vector3 CamOffset;
-[NonSerialized]public DynamicCharacterAvatar avatar;
+public int uniqueId=-1;public string prefabName;
+[NonSerialized]public DynamicCharacterAvatar avatar;[NonSerialized]public Dictionary<string,DnaSetter>dna;
 protected override void Awake(){
                    base.Awake();
 CamFollowableNode=MainCamera.CamFollowables.AddLast(this);
 
 
-//Debug.LogWarning(saveFolder+this.name.Replace("(Clone)","").ToString());
-
-
 if(avatar==null){
 avatar=GetComponentInChildren<DynamicCharacterAvatar>();
 if(avatar!=null){
-Debug.LogWarning("avatar:"+avatar);
-avatar.savePathType=DynamicCharacterAvatar.savePathTypes.FileSystem;
-Directory.CreateDirectory(avatar.savePath=saveSubfolder[0]=saveFolder+this.name.Replace("(Clone)","").ToString()+"/");saveSubfolder[0]+=(avatar.saveFilename="recipe")+".txt";
-Debug.LogWarning("saveSubfolder[0]:"+saveSubfolder[0]);
+dna=avatar.GetDNA();
+}}
 
 
-//file exists
+//Debug.LogWarning(saveFolder+this.name.Replace("(Clone)","").ToString());
 
 
-if(File.Exists(saveSubfolder[0])){avatar.SetLoadFilename(saveSubfolder[0],DynamicCharacterAvatar.loadPathTypes.FileSystem);}
+//if(avatar==null){
+//avatar=GetComponentInChildren<DynamicCharacterAvatar>();
+//if(avatar!=null){
+//Debug.LogWarning("avatar:"+avatar);
+//avatar.savePathType=DynamicCharacterAvatar.savePathTypes.FileSystem;
+//Directory.CreateDirectory(avatar.savePath=saveSubfolder[0]=saveFolder+this.name.Replace("(Clone)","").ToString()+"/");saveSubfolder[0]+=(avatar.saveFilename="recipe")+".txt";
+//Debug.LogWarning("saveSubfolder[0]:"+saveSubfolder[0]);
+
+
+////file exists
+
+
+//if(File.Exists(saveSubfolder[0])){avatar.SetLoadFilename(saveSubfolder[0],DynamicCharacterAvatar.loadPathTypes.FileSystem);}
 
     
 
-//DoSave on disable
-//;
+////DoSave on disable
+////;
             
 
 
 
-//avatar.SetLoadFilename(saveSubfolder[0],DynamicCharacterAvatar.loadPathTypes.FileSystem);
+////avatar.SetLoadFilename(saveSubfolder[0],DynamicCharacterAvatar.loadPathTypes.FileSystem);
 
 
-//SetLoadFilename string replace (Clone)
-//avatar.loadPathType=DynamicCharacterAvatar.loadPathTypes.FileSystem;
-}}
+////SetLoadFilename string replace (Clone)
+////avatar.loadPathType=DynamicCharacterAvatar.loadPathTypes.FileSystem;
+//}}
 
 
 }
 protected override void Update(){
-if(!initialized){initialized=true;
-if(avatar!=null&&!File.Exists(saveSubfolder[0])){
-avatar.DoSave();
-avatar.SetLoadFilename(saveSubfolder[0],DynamicCharacterAvatar.loadPathTypes.FileSystem);
-}
-}
+if(!loaded){
+
+
+
+
+loaded=true;}
+
+
+//if(!initialized){initialized=true;
+//if(avatar!=null&&!File.Exists(saveSubfolder[0])){
+//avatar.DoSave();
+//avatar.SetLoadFilename(saveSubfolder[0],DynamicCharacterAvatar.loadPathTypes.FileSystem);
+//}
+//}
                    base.Update();
-}[NonSerialized]bool initialized=false;
+}[NonSerialized]protected bool loaded=false;//[NonSerialized]bool initialized=false;
 [NonSerialized]Vector3 _camPos=new Vector3();[NonSerialized]Vector3 _camRotatedOffset=new Vector3(1,0,1);
 protected override void ProcessMovementInput(){
 if(!(bool)Enabled.PAUSE[0]){
