@@ -7,7 +7,7 @@ using UMA;
 using UMA.CharacterSystem;
 using UnityEngine;
 using static ActorManagementMentana;
-public class CharControl:AI,iCamFollowable{
+public class CharControl:AI,iCamFollowable{[NonSerialized]public System.Random dnaRandom=null;
 [NonSerialized]public static string[]saveSubfolder=new string[1];
 public string ObjName{get{return gameObject.name;}}
 public LinkedListNode<iCamFollowable>CamFollowableNode{get;set;}
@@ -64,27 +64,66 @@ if(avatar!=null){
 
 
 }
+protected override void OnDisable(){
+                   base.OnDisable();
+if(loaded){
+if(avatar!=null){
+avatar.DoSave();
+}
+}
+}
 protected override void Update(){
 
 
-        Debug.LogWarning("string.IsNullOrEmpty(prefabName):"+string.IsNullOrEmpty(prefabName));
+        //Debug.LogWarning("string.IsNullOrEmpty(prefabName):"+string.IsNullOrEmpty(prefabName));
 
 
 if(!loaded&&!string.IsNullOrEmpty(prefabName)){
 
 
-if(avatar!=null){
+if(avatar==null){
+loaded=true;
+}else if(IsUMA){
 dna=avatar.GetDNA();
+if(dna!=null&&dna.Count>0){
 
 
 avatar.savePathType=DynamicCharacterAvatar.savePathTypes.FileSystem;
 Directory.CreateDirectory(avatar.savePath=saveSubfolder[0]=saveFolder+prefabName+"_"+idForPrefabName.ToString()+"/");saveSubfolder[0]+=(avatar.saveFilename="recipe")+".txt";
+avatar.loadPathType=DynamicCharacterAvatar.loadPathTypes.FileSystem;
+avatar.loadFilename=saveSubfolder[0];
 
 
+if(File.Exists(saveSubfolder[0])){
+avatar.DoLoad();
+}else{
+
+
+if(dnaRandom!=null){
+                        Debug.LogWarning("dnaRandom:"+dnaRandom);
+}
+
+
+avatar.DoSave();
 }
 
 
 loaded=true;}
+}
+
+
+}
+if(loaded){
+if(avatar!=null){
+
+                
+if(dna!=null){
+                Debug.LogWarning("IsUMA:"+IsUMA+";dna.Count:"+dna.Count);
+}
+
+
+}
+}
 
 
 //if(!initialized){initialized=true;

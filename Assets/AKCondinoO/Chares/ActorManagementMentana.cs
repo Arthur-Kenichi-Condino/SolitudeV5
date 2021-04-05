@@ -10,7 +10,7 @@ public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
 [NonSerialized]public static readonly string saveFolder=Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).Replace("\\","/").ToString()+"/Solitude/CharacterRecipes/";
 
 
-[NonSerialized]int UMAnpcUniqueIds=0;[NonSerialized]int UMAplayerUniqueIds=0;
+[NonSerialized]int UMAnpcUniqueIds=0;[NonSerialized]int UMAplayerUniqueIds=0;[NonSerialized]public static int UMAseed=0;[NonSerialized]public static System.Random UMArandom;
 
 
 public bool AutoStagingEnabled=true;public bool RemoveFarAwayActors=true;public bool KeepUnregisteredActive=true;[NonSerialized]readonly Queue<(int TypeId,Vector3 Pos)>ToReactivate=new Queue<(int TypeId,Vector3 Pos)>();
@@ -18,7 +18,7 @@ public static bool Contains(AI actor){if(!Actors.ContainsKey(actor.Id)||Actors[a
 [SerializeField]AI[]actorsPrefabs;[SerializeField]int[]actorsMaxInstantiations;[NonSerialized]int nextActorId;
 public static ActorManagementMentana manager{get;private set;}
 void Awake(){
-manager=this;
+manager=this;UMArandom=new System.Random(UMAseed);
 
 
 Directory.CreateDirectory(saveFolder);
@@ -50,7 +50,7 @@ Actors.Add(id,aI);ActorsByTypeId[typeId].Add(aI);InactiveActorsByTypeId[typeId].
 
 void setPrefabNameAndId(AI aI,AI prefab){
 if(aI is CharControl npc){
-npc.prefabName=prefab.name;npc.idForPrefabName=UMAnpcUniqueIds++;
+npc.prefabName=prefab.name;npc.idForPrefabName=UMAnpcUniqueIds++;npc.dnaRandom=new System.Random(UMAseed+npc.idForPrefabName);
 }
 }
 
