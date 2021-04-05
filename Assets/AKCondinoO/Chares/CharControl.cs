@@ -100,7 +100,16 @@ avatar.DoLoad();
 
 
 if(dnaRandom!=null){
+
+
                         Debug.LogWarning("dnaRandom:"+dnaRandom);
+foreach(var dnaSetter in dna){
+                        Debug.LogWarning("dnaSetter.Key:"+dnaSetter.Key+"=>dnaSetter.Value:"+dnaSetter.Value);
+//dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble());
+}
+avatar.BuildCharacter();
+
+
 }
 
 
