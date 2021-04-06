@@ -228,6 +228,7 @@ if(!UICore.UIReceivedInput&&!(bool)Enabled.ACTION_1[0]&&(bool)Enabled.ACTION_1[0
 
     Debug.LogWarning("action Edit at "+previewPos+"; ..."+Enabled.ACTION_1[0]+"!="+Enabled.ACTION_1[1]);
 //ChunkManager.main.Edit(previewPos,new Vector3Int(1,1,1),51,MaterialId.Dirt,ChunkManager.EditMode.Cube);
+if(ChunkManager.main!=null){ChunkManager.main.Edit(previewPos,new Vector3Int(8,8,1),51,MaterialId.Dirt,ChunkManager.EditMode.Cube);}
 
 }
 }

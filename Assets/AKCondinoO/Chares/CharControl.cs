@@ -7,7 +7,7 @@ using UMA;
 using UMA.CharacterSystem;
 using UnityEngine;
 using static ActorManagementMentana;
-public class CharControl:AI,iCamFollowable{[NonSerialized]public System.Random dnaRandom=null;
+public class CharControl:AI,iCamFollowable{[NonSerialized]public System.Random dnaRandom=null;//  Não usar DoSave em momento algum se não for um NPC aleatório; a não ser que seja um jogador customizando o personagem
 [NonSerialized]public static string[]saveSubfolder=new string[1];
 public string ObjName{get{return gameObject.name;}}
 public LinkedListNode<iCamFollowable>CamFollowableNode{get;set;}
@@ -99,6 +99,7 @@ avatar.DoLoad();
 }else{
 
 
+#region random NPC
 if(dnaRandom!=null){
 
 
@@ -111,6 +112,7 @@ avatar.BuildCharacter();
 
 
 }
+#endregion
 
 
 avatar.DoSave();
@@ -127,7 +129,7 @@ if(avatar!=null){
 
                 
 if(dna!=null){
-                Debug.LogWarning("IsUMA:"+IsUMA+";dna.Count:"+dna.Count);
+                //Debug.LogWarning("IsUMA:"+IsUMA+";dna.Count:"+dna.Count);
 }
 
 

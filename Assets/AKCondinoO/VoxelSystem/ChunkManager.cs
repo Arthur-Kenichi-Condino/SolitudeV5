@@ -495,18 +495,62 @@ var fileName=string.Format(saveSubfolder[0],cnkIdxEdtsPair.Key);
 if(LOG&&LOG_LEVEL<=1)Debug.Log("save edits at: "+fileName);
 
 
+TerrainChunk.Voxel[]toMerge=new TerrainChunk.Voxel[Chunk.VoxelsPerChunk];bool[]hasMergeData=new bool[Chunk.VoxelsPerChunk];
 if(File.Exists(fileName)){
+int loadTries=30;bool loaded=false;while(!loaded){
+FileStream file=null;
+
+
+try{
+
+
+using(file=new FileStream(fileName,FileMode.Open,FileAccess.Read,FileShare.Read)){
+if(file.Length>0){
+if(LOG&&LOG_LEVEL<=1)Debug.Log("file has data, loading it to merge edits:fileName:"+fileName);
+if(MessagePackSerializer.Deserialize(typeof(Dictionary<Vector3Int,(double density,MaterialId material)>),file)is Dictionary<Vector3Int,(double density,MaterialId material)>fileData){
+                                                        
+foreach(var voxelData in fileData){
+int vxlIdx=Chunk.GetIdx(voxelData.Key.x,voxelData.Key.y,voxelData.Key.z);toMerge[vxlIdx]=new TerrainChunk.Voxel(voxelData.Value.density,Vector3.zero,voxelData.Value.material);hasMergeData[vxlIdx]=true;
+}
+
+}}
+}
+loaded=true;
+if(LOG&&LOG_LEVEL<=1)Debug.Log("successfully loaded edits from:"+fileName);
+
+
+}catch(IOException e){Debug.LogWarning("file access failed:try load again after delay:fileName:"+fileName+"\n"+e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);
+}catch(Exception e1){Debug.LogError("unknown error:ignore the file that may be broken:fileName:"+fileName+"\n"+e1?.Message+"\n"+e1?.StackTrace+"\n"+e1?.Source);
+break;
+}finally{
+dispose();
+}
+void dispose(){
+try{
+if(file!=null)
+   file.Dispose();
+}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}
+}
+
+
+if(!loaded){if(--loadTries<=0||Main.Stop){if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("failed to load from: "+fileName);break;}else{
+Thread.Yield();Thread.Sleep(random.Next(500,1001));
+}}}
 }
 
 
 TerrainChunk.Voxel tmpVxl=new TerrainChunk.Voxel();double[]noiseCache=null;
 foreach(var edtDataToProcess in edtData){var cnkRgn2=edtDataToProcess.Value.cnkRgn2;var smoothValue=edtDataToProcess.Value.smoothValue;
-var v=vxlData[edtDataToProcess.Key];var vCoord2=edtDataToProcess.Key;
+var v=vxlData[edtDataToProcess.Key];var vCoord2=edtDataToProcess.Key;int vxlIdx2=Chunk.GetIdx(vCoord2.x,vCoord2.y,vCoord2.z);
         
 
+if(hasMergeData[vxlIdx2]){var mergeData=toMerge[vxlIdx2];
+tmpVxl.Density=mergeData.Density;tmpVxl.Material=mergeData.Material;tmpVxl.Normal=Vector3.zero;
+}else{
 Vector3 noiseInput=vCoord2;noiseInput.x+=cnkRgn2.x;
                            noiseInput.z+=cnkRgn2.y;
 biome.v(noiseInput,ref tmpVxl,ref noiseCache,vCoord2.z+vCoord2.x*Chunk.Depth);
+}
 
 
 var densityResult=tmpVxl.Density+(v.density-tmpVxl.Density)*smoothValue;//  Lerp
