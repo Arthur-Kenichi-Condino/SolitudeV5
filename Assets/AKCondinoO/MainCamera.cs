@@ -151,7 +151,7 @@ inputMoveSpeed=Vector3.zero;
                    base.Update();
 }
 #region UI-to-Command translating
-Vector3 _coordToSignedCoord{get;}=new Vector3(-Chunk.Width/2f,-Chunk.Height/2f,-Chunk.Depth/2f);Vector3 _adjToCenter{get;}=new Vector3(-.5f,-.5f,-.5f);
+Vector3 _coordToSignedCoord{get;}=new Vector3(-Chunk.Width/2f,-Chunk.Height/2f,-Chunk.Depth/2f);Vector3 _adjToCenter{get;}=new Vector3(-.0f,-.0f,-.0f);
 public enum SelectedGameModeTool:int{
 None=-1,
 SimInteractionWheel=0,
@@ -159,7 +159,7 @@ TerrainCarveCube=1,
 TerrainCarveSphere=2,
 Hand=3,
 Water=4,
-}[NonSerialized]public SelectedGameModeTool CurrentTool=SelectedGameModeTool.SimInteractionWheel;[NonSerialized]SelectedGameModeTool LastTool=SelectedGameModeTool.SimInteractionWheel;
+}[NonSerialized]public SelectedGameModeTool CurrentTool=SelectedGameModeTool.SimInteractionWheel;[NonSerialized]SelectedGameModeTool LastTool=SelectedGameModeTool.SimInteractionWheel;[NonSerialized]public int CurrentToolSize=1;
 
 
 void ProcessGameCommands(){
@@ -174,6 +174,12 @@ UICore.DetectMouseOnUI();
 if(CurrentTool!=LastTool){
 SwitchTool(LastTool,CurrentTool);
 LastTool=CurrentTool;
+}
+switch(CurrentTool){
+case(SelectedGameModeTool.TerrainCarveCube):{
+CurrentToolSize=Mathf.Clamp(CurrentToolSize,2,16);
+    break;
+}
 }
 Ray ray=Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -228,7 +234,7 @@ if(!UICore.UIReceivedInput&&!(bool)Enabled.ACTION_1[0]&&(bool)Enabled.ACTION_1[0
 
     Debug.LogWarning("action Edit at "+previewPos+"; ..."+Enabled.ACTION_1[0]+"!="+Enabled.ACTION_1[1]);
 //ChunkManager.main.Edit(previewPos,new Vector3Int(1,1,1),51,MaterialId.Dirt,ChunkManager.EditMode.Cube);
-if(ChunkManager.main!=null){ChunkManager.main.Edit(previewPos,new Vector3Int(8,8,1),51,MaterialId.Dirt,ChunkManager.EditMode.Cube);}
+if(ChunkManager.main!=null){ChunkManager.main.Edit(previewPos,new Vector3Int(1,1,1),51,MaterialId.Dirt,ChunkManager.EditMode.Cube);}
 
 }
 }

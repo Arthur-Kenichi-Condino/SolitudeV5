@@ -216,7 +216,7 @@ Vector3 cornerRadius;
 Vector3 cornerRadiusSmoothStep=new Vector3(1f,1f,1f);
 switch(mode){
 case(EditMode.Sphere):{
-size.x=size.y=size.z=Mathf.Max(8,size.x,size.y,size.z);
+size.x=size.y=size.z=Mathf.Max(2,size.x,size.y,size.z);
 cornerRadius=new Vector3(size.x,size.x,size.x);
     break;
 }
@@ -224,9 +224,9 @@ default:{
 
 
 //radius=Mathf.Sqrt();
-size.x=Mathf.Max(8,size.x);
-size.y=Mathf.Max(8,size.y);
-size.z=Mathf.Max(8,size.z);
+size.x=Mathf.Max(2,size.x);//  Troquei o valor de 8 para 2 e funcionou bem, mas não entendi o porquê
+size.y=Mathf.Max(2,size.y);//
+size.z=Mathf.Max(2,size.z);//
 cornerRadius=new Vector3(Mathf.Sqrt(Mathf.Pow(size.x,2)+Mathf.Pow(size.y,2)),
                          Mathf.Sqrt(Mathf.Pow(size.y,2)+Mathf.Pow(size.z,2)),
                          Mathf.Sqrt(Mathf.Pow(size.z,2)+Mathf.Pow(size.x,2)));
