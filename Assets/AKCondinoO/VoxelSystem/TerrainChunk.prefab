@@ -49,6 +49,7 @@ MonoBehaviour:
   LOG: 0
   LOG_LEVEL: 1
   DRAW_LEVEL: 1
+  DISABLE: 0
 --- !u!33 &-9060336033833968481
 MeshFilter:
   m_ObjectHideFlags: 0

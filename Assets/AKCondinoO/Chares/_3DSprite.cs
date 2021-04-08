@@ -10,16 +10,31 @@ animator=GetComponentInChildren<Animator>();renderer=GetComponentInChildren<Spri
 }
 public float motionRhythm=0.0245f;[NonSerialized]protected float curAnimTime=-1;[NonSerialized]float curAnimTime_normalized;
 [NonSerialized]Vector3 _forward,_cameraForward,_forwardFromCameraToSprite;[NonSerialized]bool _back;[NonSerialized]bool _flipX;
+protected override void Update(){
+                   base.Update();
+
+
+if(DEBUG_SNAPSHOT_SHADOWED){DEBUG_SNAPSHOT_SHADOWED=false;
+    Debug.DrawRay(renderer.transform.position,renderer.transform.forward,Color.blue,5);
+}
+
+
+}
+
+    
+[SerializeField]internal bool DEBUG_SNAPSHOT_SHADOWED=false;
+
+
 protected override void LateUpdate(){
                    base.LateUpdate();
 animator.transform.position=drawPos+spritePosAdj;
-animator.transform.rotation=Quaternion.LookRotation((Camera.main.transform.position-animator.transform.position).normalized,Vector3.up);
+animator.transform.rotation=Quaternion.LookRotation(-(Camera.main.transform.position-animator.transform.position).normalized,Vector3.up);
 _forward=Vector3.Scale(drawRotation.eulerAngles,Vector3.up);
 _forward=Quaternion.Euler(_forward)*Vector3.forward;
 _cameraForward=Vector3.Scale(Camera.main.transform.eulerAngles,Vector3.up);
 _cameraForward=Quaternion.Euler(_cameraForward)*Vector3.forward;
 _forwardFromCameraToSprite=(drawPos-Camera.main.transform.position).normalized;
-_flipX=Vector3.SignedAngle(_forward,_forwardFromCameraToSprite,Vector3.up)>=0;renderer.flipX=_flipX;
+_flipX=!(Vector3.SignedAngle(_forward,_forwardFromCameraToSprite,Vector3.up)>=0);renderer.flipX=_flipX;
 _back=Vector3.Angle(_forward,_forwardFromCameraToSprite)<=90;animator.SetBool("back",_back);
 
     
@@ -56,7 +71,7 @@ animator.SetBool("MOTION_ATTACK2",MyMotion==Motions.MOTION_ATTACK2);
 animator.SetBool("MOTION_DEAD"   ,MyMotion==Motions.MOTION_DEAD   );
 
 
-if(curAnimTime!=-1){curAnimTime+=motionRhythm*(attackStance!=-1?((Attributes.Aspd+1f)*attackStanceRhythmMultiplier):hitStance!=-1?hitStanceRhythmMultiplier:deadStanceRhythmMultiplier)*animator.GetCurrentAnimatorStateInfo(0).speed*animator.GetCurrentAnimatorStateInfo(0).length;
+if(curAnimTime!=-1){curAnimTime+=(motionRhythm*(attackStance!=-1?((Attributes.Aspd+1f)*attackStanceRhythmMultiplier):hitStance!=-1?hitStanceRhythmMultiplier:deadStanceRhythmMultiplier)*animator.GetCurrentAnimatorStateInfo(0).speed*animator.GetCurrentAnimatorStateInfo(0).length)*(Time.deltaTime/MainCamera._60FPSdeltaTime);
 if(Attributes.Aspd==0){
 if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("Attributes.Aspd==0;some animations may bug");
 }

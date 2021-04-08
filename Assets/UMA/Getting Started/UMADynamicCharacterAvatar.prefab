@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 487678}
+  - component: {fileID: 2017191414919377246}
   - component: {fileID: 11453600}
   - component: {fileID: 114399585086637844}
   m_Layer: 0
@@ -25,13 +26,25 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 153068}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: -0.00000016292068}
+  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
+--- !u!114 &2017191414919377246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 153068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a68124cbbfdb384d988a7a60972c9de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11453600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46,9 +59,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   context: {fileID: 0}
   umaData: {fileID: 0}
+  defaultRendererAsset: {fileID: 0}
   umaRecipe: {fileID: 0}
   umaAdditionalRecipes:
-  - {fileID: 11400000, guid: 1f292487d7383514f97c491cadfb0442, type: 2}
+  - {fileID: 11400000, guid: ba3fa3085251a33418859033832e36e4, type: 2}
   umaGenerator: {fileID: 0}
   animationController: {fileID: 0}
   CharacterCreated:
@@ -58,6 +72,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
         m_MethodName: RandomHead
         m_Mode: 1
         m_Arguments:
@@ -75,6 +90,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   CharacterDnaUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  AnimatorStateSaved:
+    m_PersistentCalls:
+      m_Calls: []
+  AnimatorStateRestored:
     m_PersistentCalls:
       m_Calls: []
   DelayUnload: 2
@@ -103,7 +124,7 @@ MonoBehaviour:
       - HumanFemaleDCS
       - HumanFemale
   raceAnimationControllers:
-    defaultAnimationController: {fileID: 9100000, guid: eb280940c811fab4a9e3ddf09381c343,
+    defaultAnimationController: {fileID: 9100000, guid: 57cf0c4ab016c6b4ba5d2b8292c0d601,
       type: 2}
     animators:
     - raceName: ToonFemale
@@ -206,7 +227,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 153068}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1862395651, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Delegates:
@@ -215,6 +236,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: 
           m_MethodName: SetActive
           m_Mode: 6
           m_Arguments:
@@ -226,6 +248,7 @@ MonoBehaviour:
             m_BoolArgument: 1
           m_CallState: 2
         - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: 
           m_MethodName: SetActive
           m_Mode: 6
           m_Arguments:
@@ -237,6 +260,7 @@ MonoBehaviour:
             m_BoolArgument: 1
           m_CallState: 2
         - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: 
           m_MethodName: SetAvatar
           m_Mode: 2
           m_Arguments:
@@ -248,6 +272,7 @@ MonoBehaviour:
             m_BoolArgument: 1
           m_CallState: 2
         - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: 
           m_MethodName: SetActive
           m_Mode: 6
           m_Arguments:
@@ -259,6 +284,7 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: 
           m_MethodName: SetActive
           m_Mode: 6
           m_Arguments:
@@ -269,4 +295,3 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-  delegates: []

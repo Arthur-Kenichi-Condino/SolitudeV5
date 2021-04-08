@@ -11,6 +11,7 @@ using UnityEngine;
 public class Pathfinder:SimActor{
 [NonSerialized]Vector2Int AStarDistance;[NonSerialized]int AStarVerticalHits;[NonSerialized]Vector2Int gridResolution;[NonSerialized]Node[]Nodes;[NonSerialized]Node originNode;[NonSerialized]Node targetNode;
 protected override void Awake(){
+    //Debug.LogWarning("here");
                    base.Awake();
 waitUntil2=new WaitUntil(()=>backgroundDataSet2.WaitOne(0));
 waitUntil3a=new WaitUntil(()=>backgroundDataSet3a.WaitOne(0));
@@ -104,6 +105,13 @@ return null;}
 protected void MoveToRandom(System.Random mathrandom){
     GoTo(new Ray(transform.position+new Vector3(mathrandom.Next(-16,17),16,mathrandom.Next(-16,17)),Vector3.down));
 }
+
+
+public void MoveTo(Ray tgt,float maxRayDis=1000,float height=1){
+    GoTo(tgt);
+}
+
+
 [NonSerialized]readonly protected Queue<(Vector3 pos,Node.PreferredReachableMode mode)>CurPath=new Queue<(Vector3,Node.PreferredReachableMode)>();[NonSerialized]protected(Vector3 pos,Node.PreferredReachableMode mode)?CurPathTgt=null;[NonSerialized]protected float CurPathValidTimeout;[NonSerialized]protected float PathIsValidTime=5f;
 [NonSerialized]readonly protected LinkedList<RaycastHit>GoToQueue=new LinkedList<RaycastHit>();[NonSerialized]protected bool tracing;
 protected override void Update(){
@@ -642,6 +650,13 @@ if(!neighbour.node.Walkable){
 continue;}
 if(!current.neighbourCanBeReached[n].yes){
 continue;}
+
+
+if(!canFly&&neighbour.node.Position.y-current.Position.y<-NodeSize.y){
+        Debug.LogWarning("too high!");
+continue;}
+
+
 bool inOpenNodes;var G_NewCost=current.G+GetDistance(current,neighbour.node);if(!(inOpenNodes=OpenNodes.Contains(neighbour.node))||G_NewCost<neighbour.node.G){
 neighbour.node.G=G_NewCost;//  Vizinho válido para avaliação de encontrar caminho
 neighbour.node.H=GetDistance(neighbour.node,targetNode);

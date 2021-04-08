@@ -7,9 +7,13 @@ using static ActorManagementMentana;
 public class AI:Pathfinder{
 public int Id{get;internal set;}public int TypeId{get;internal set;}[SerializeField]public Roles Role;
 [NonSerialized]protected Sight MySight;
+[NonSerialized]protected CharSFX sfx;
 protected override void Awake(){
+if(manager==null){OutOfSight_v=false;}
+    //Debug.LogWarning("here");
                    base.Awake();
 MySight=GetComponentInChildren<Sight>();
+    sfx=GetComponent<CharSFX>();
 }
 protected override void OnEnable(){
                    base.OnEnable();
@@ -43,6 +47,7 @@ setOutOfSight();
     Dying-=Time.deltaTime;
 }
 }
+
     
 #region Init    
 if(firstLoop&&!Contains(this)){
@@ -51,7 +56,7 @@ if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("unregistered actor id detected processe
 #endregion
 #region OutOfSight response
 if(OutOfSight_disable){
-gameObject.SetActive(false);
+gameObject.transform.root.gameObject.SetActive(false);
 if(GetActors.ContainsKey(Id)){GetActors.Remove(Id);
 if(LOG&&LOG_LEVEL<=0)Debug.Log("disable OutOfSight actor and add to inactive queue");
 InactiveActorsByTypeId[TypeId].AddLast(this);
@@ -59,8 +64,14 @@ InactiveActorsByTypeId[TypeId].AddLast(this);
 if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("OutOfSight actor wasn't marked to be active so it should already be in its InactiveActorsByTypeId queue");
 }
     OutOfSight_disable=false;
+return;
 }
 #endregion
+
+
+if(this is _3DSprite){
+if(sfx!=null){if(MyMotion==Motions.MOTION_STAND){sfx.Play((int)ActorSounds._IDLE);}else if(MyMotion==Motions.MOTION_MOVE){sfx.Play((int)ActorSounds._MOVE);}}
+}
 
 
 if(DEBUG_ATTACK){Attack(null);}if(DEBUG_GETHIT){DEBUG_GETHIT=false;TakeDamage(null);}if(DEBUG_DIE){DEBUG_DIE=false;Die();}
@@ -81,13 +92,16 @@ enemyTouchingMe=true;
 if(actorTouchingMe&&enemyTouchingMe)break;//  Break when all checks are true, so only on O(n) operation is processed for any needed check
 }}
 
+//Debug.LogWarning("nextAttackTimer:"+nextAttackTimer);
 if(nextAttackTimer>0){
     nextAttackTimer-=Time.deltaTime;
+if(LOG&&LOG_LEVEL<=-110)Debug.Log("waiting for nextAttackTimer to get to zero ["+this,this);
 }
 if(Autonomous<=0){
 WALK_PATH();
 
     
+doingAttackMoveAway=false;
 if(MyState==State.EXCUSE_ST){OnEXCUSE_ST();}
 if(MyState==State.FOLLOW_ST){OnFOLLOW_ST();}
 if(MyState==State.IDLE_ST){OnIDLE_ST();}
@@ -107,14 +121,14 @@ protected virtual void GetTargets(){
 for(int k=GetEnemiesAttackingMe.Keys.Count-1;k>=0;k--){var i=GetEnemiesAttackingMe.Keys.ElementAt(k);
 var tuple=GetEnemiesAttackingMe[i];
     tuple.timeout-=Time.deltaTime;
-GetEnemiesAttackingMe[i]=tuple;if(GetEnemiesAttackingMe[i].timeout<=0||GetEnemiesAttackingMe[i].actor.OutOfSight){GetEnemiesAttackingMe.Remove(i);}
+GetEnemiesAttackingMe[i]=tuple;if(GetEnemiesAttackingMe[i].timeout<=0||GetEnemiesAttackingMe[i].actor.GetMotion==Motions.MOTION_DEAD||GetEnemiesAttackingMe[i].actor.OutOfSight){GetEnemiesAttackingMe.Remove(i);}
 }
 MyPossibleTargets.Clear();
 foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
 if(i!=this.Id&&v.GetMotion!=Motions.MOTION_DEAD&&!v.OutOfSight){
 if(v.Target==this){//  This following mode of detecting targets does not take into consideration the stealth status of enemies
 Vector3 pos;float dis;
-if(MyMotion==Motions.MOTION_HIT){pos=v.transform.position;
+if(MyMotion==Motions.MOTION_HIT){pos=v.collider.bounds.center;
 addPossibleTarget();attackingMe();
 if(LOG&&LOG_LEVEL<=-10)Debug.Log(GetType()+":I'm under attack",this);
 }else if(MySight.IsInVisionSight.ContainsKey(i)&&MySight.IsInVisionSight[i].directSight){pos=MySight.IsInVisionSight[i].pos;
@@ -122,7 +136,7 @@ addPossibleTarget();attackingMe();
 if(LOG&&LOG_LEVEL<=-10)Debug.Log(GetType()+":enemy approaching my position",this);
 }
 void addPossibleTarget(){
-dis=Vector3.Distance(transform.position,pos);
+dis=Vector3.Distance(collider.bounds.center,pos);
 MyPossibleTargets.Add(i,(v,pos,dis));
 }
 void attackingMe(){
@@ -133,6 +147,36 @@ var tuple=GetEnemiesAttackingMe[i];
     tuple.dis=dis;
     tuple.timeout=5f;
 GetEnemiesAttackingMe[i]=tuple;
+}
+}else if(v.Target!=null&&IsAllyTo(v.Target)){var ally=v.Target;
+Vector3 pos;float dis;
+if(TypeId.ActorType()==TypeIds._EIRA){pos=v.collider.bounds.center;
+
+
+Debug.LogWarning("ally in danger");
+addPossibleTarget();attackingAlly();
+
+
+}else if(MySight.IsInVisionSight.ContainsKey(ally.Id)&&MySight.IsInVisionSight[ally.Id].directSight){
+if(MySight.IsInVisionSight.ContainsKey(i)&&MySight.IsInVisionSight[i].directSight){pos=MySight.IsInVisionSight[i].pos;
+
+Debug.LogWarning("ally in danger");
+addPossibleTarget();attackingAlly();
+
+}
+}
+void addPossibleTarget(){
+dis=Vector3.Distance(collider.bounds.center,pos);
+MyPossibleTargets.Add(i,(v,pos,dis));
+}
+void attackingAlly(){
+if(!GetEnemiesAttackingAlly.ContainsKey(i)){
+GetEnemiesAttackingAlly.Add(i,(v,-1,0));
+}
+var tuple=GetEnemiesAttackingAlly[i];
+    tuple.dis=dis;
+    tuple.timeout=5f;
+GetEnemiesAttackingAlly[i]=tuple;
 }
 }
 }
@@ -183,21 +227,21 @@ doChase();
 }
 protected virtual void doChase(){
 if(tracing||GoToQueue.Count>0)return;
-if(!destSet||CurPathTgt==null||Vector3.Distance(MyDest,MyEnemy.transform.position)>MyAttackRange){
-    if(!actorTouchingMe&&Vector3.Distance(MyEnemy.transform.position,transform.position)>BodyRange){
-    MyDest=MyEnemy.transform.position;
+if(!destSet||CurPathTgt==null||Vector3.Distance(MyDest,MyEnemy.collider.bounds.center)>MyAttackRange){
+    if(!actorTouchingMe&&Vector3.Distance(MyEnemy.collider.bounds.center,collider.bounds.center)>BodyRange){
+    MyDest=MyEnemy.collider.bounds.center;
     }else{
-    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRange+BodyRange+MyAttackRange);
+    MyDest=MyEnemy.collider.bounds.center;var dir=collider.bounds.center-MyEnemy.collider.bounds.center;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRange+BodyRange+MyAttackRange);
     }
-if(DRAW_LEVEL<=0)Debug.DrawLine(transform.position,MyDest,Color.blue,1f);
+if(DRAW_LEVEL<=0)Debug.DrawLine(collider.bounds.center,MyDest,Color.blue,1f);
 GoTo(new Ray(MyDest,Vector3.down));
 }
 }
 protected virtual void doChasingMoveAway(){
 if(tracing||GoToQueue.Count>0)return;
 if(!destSet||CurPathTgt==null){
-    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRange+BodyRange);
-if(DRAW_LEVEL<=0)Debug.DrawLine(transform.position,MyDest,Color.blue,1f);
+    MyDest=MyEnemy.collider.bounds.center;var dir=collider.bounds.center-MyEnemy.collider.bounds.center;dir.y=0;dir=Quaternion.Euler(0,(float)mathrandom.NextDouble()*360,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRange+BodyRange);
+if(DRAW_LEVEL<=0)Debug.DrawLine(collider.bounds.center,MyDest,Color.blue,1f);
 GoTo(new Ray(MyDest,Vector3.down));
 }
 }
@@ -226,7 +270,7 @@ if(r==2){}
 
 
 }
-protected virtual int doAttackingMoveAway(){
+[NonSerialized]bool doingAttackMoveAway;protected virtual int doAttackingMoveAway(){
 if(tracing||GoToQueue.Count>0)goto _End;
 if((MyMotion==Motions.MOTION_HIT||actorTouchingMe)&&sinceLastHitTimer<=0&&MyEnemy.AttackRange+MyEnemy.BodyRadius<=MyAttackRange+BodyRadius&&mathrandom.NextDouble()<.05){
 STOP(true);
@@ -243,13 +287,15 @@ return 0;
 if(CurPathTgt==null){
 return 0;
 }
+doingAttackMoveAway=true;
 return 1;
 }
 if(!destSet||sinceLastHitTimer==hitDetectionReactionTick){
     Debug.LogWarning("OnATTACK_ST: move away GoTo");
-    MyDest=MyEnemy.transform.position;var dir=transform.position-MyEnemy.transform.position;dir.y=0;dir=Quaternion.Euler(0,(float)(mathrandom.NextDouble()*2-1)*90,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRange*2+BodyRange*2);
-Debug.DrawLine(transform.position,MyDest,Color.blue,1f);
+    MyDest=MyEnemy.collider.bounds.center;var dir=collider.bounds.center-MyEnemy.collider.bounds.center;dir.y=0;dir=Quaternion.Euler(0,(float)(mathrandom.NextDouble()*2-1)*90,0)*dir.normalized;MyDest+=dir*(MyEnemy.BodyRange*2+BodyRange*2);
+Debug.DrawLine(collider.bounds.center,MyDest,Color.blue,1f);
 GoTo(new Ray(MyDest,Vector3.down));
+doingAttackMoveAway=true;
 return 2;}
 _End:{}
 if(CurPathTgt!=null){
@@ -284,34 +330,39 @@ Attack(MyEnemy);
 attackHitboxColliders=null;
 }
 protected virtual void OnSKILL_OBJECT_ST(){}
-[NonSerialized]protected float MyAttackRange=.1f;public float AttackRange{get{return MyAttackRange;}}
+[NonSerialized]protected float MyAttackRange=.2f;public float AttackRange{get{return MyAttackRange;}}
 protected virtual bool IsInAttackSight(AI enemy){
-if(Vector3.Distance(transform.position,enemy.transform.position)-(BodyRadius+enemy.BodyRadius)<=MyAttackRange){
+if(Vector3.Distance(collider.bounds.center,enemy.collider.bounds.center)-(BodyRadius+enemy.BodyRadius)<=MyAttackRange){
 return true;
 }
 return false;}
-[NonSerialized]protected float attackInterval=.25f;[NonSerialized]protected float nextAttackTimer=0;
+[NonSerialized]protected float attackInterval=.25f;[SerializeField]protected float attackWaitForSoundTime=0;[NonSerialized]protected float nextAttackTimer=0;
 [NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}
 protected virtual void Attack(AI enemy){
+    Debug.LogWarning("trying attack stance ["+this);
 if(attackStance==-1){
+if(deadStance!=-1||hitStance!=-1){}else{
     Debug.LogWarning("new attack started: set to do damage next animation");
     didDamage=false;
-    nextAttackTimer=attackInterval/Attributes.Aspd;
+    nextAttackTimer=(attackInterval/Attributes.Aspd)+attackWaitForSoundTime;
+    Debug.LogWarning("nextAttackTimer:"+nextAttackTimer+";attackInterval:"+attackInterval+";Attributes.Aspd:"+Attributes.Aspd+";attackWaitForSoundTime:"+attackWaitForSoundTime);
+}
 }
 if(enemy!=null){
-inputViewRotationEuler.y=Quaternion.LookRotation((enemy.transform.position-transform.position).normalized).eulerAngles.y-transform.eulerAngles.y;
+inputViewRotationEuler.y=Quaternion.LookRotation((enemy.collider.bounds.center-collider.bounds.center).normalized).eulerAngles.y-transform.eulerAngles.y;
 }
 }
 [NonSerialized]Vector3 attackHitboxHalfSize;[NonSerialized]protected Collider[]attackHitboxColliders=null;
 protected virtual void OverlappedCollidersOnAttack(){
 
     
-attackHitboxHalfSize.x=collider.bounds.extents.x;
+attackHitboxHalfSize.x=collider.bounds.extents.x+MyAttackRange;
 attackHitboxHalfSize.z=collider.bounds.extents.z+MyAttackRange;
-attackHitboxHalfSize.y=collider.bounds.extents.y;
+attackHitboxHalfSize.y=collider.bounds.extents.y+MyAttackRange;
 attackHitboxHalfSize*=RangeMultiplier;
-attackHitboxColliders=Physics.OverlapBox(transform.position+transform.forward*(collider.bounds.extents.z*RangeMultiplier+attackHitboxHalfSize.z),attackHitboxHalfSize,transform.rotation);
-Debug.DrawRay(transform.position,transform.forward*(collider.bounds.extents.z+attackHitboxHalfSize.z),Color.white,.1f);
+var dest=transform.forward*(collider.bounds.extents.z+attackHitboxHalfSize.z);
+attackHitboxColliders=Physics.OverlapBox(collider.bounds.center+dest,attackHitboxHalfSize,transform.rotation);
+Debug.DrawRay(collider.bounds.center,dest,Color.white,.1f);
 
 
 }
@@ -330,7 +381,7 @@ if(attackHitboxColliders!=null){
     Debug.LogWarning("attackHitboxColliders.Length:"+attackHitboxColliders.Length);
 for(int i=0;i<attackHitboxColliders.Length;i++){var collider=attackHitboxColliders[i];
 AI enemy;
-if(collider.CompareTag("Player")&&(enemy=collider.GetComponent<AI>())!=null){
+if(collider.CompareTag("Player")&&(enemy=collider.GetComponent<AI>())!=this&&enemy!=null){
     Debug.LogWarning("collider hit:"+collider.name+"; tag:"+collider.tag,this);
     enemy.TakeDamage(this);
 }
@@ -344,8 +395,32 @@ attackHitboxColliders=null;
 }
 [NonSerialized]protected float damage;
 protected virtual void TakeDamage(AI fromEnemy){
+if(fromEnemy!=null){
 damage=fromEnemy.Attributes.ATK-Attributes.DEF;
-if(damage<=0)damage=0;Attributes.CurStamina-=damage;if(Attributes.CurStamina<=0){Attributes.CurStamina=0;Die();}
+}
+
+        
+bool evaded=false;
+var skill=Skill.GetBest(this,Skill.When.onWillTakeDamage);if(skill!=null){
+
+
+    Debug.LogWarning(skill);
+if(skill is _EVADE evade&&fromEnemy!=null){evaded=evade.DoSkill(this,fromEnemy);
+
+                
+    Debug.LogWarning("evaded:"+evaded+";evade.Result:"+evade.Result);
+
+
+}
+
+
+}
+
+
+if(evaded)damage=0;else if(damage<=1)damage=1;Attributes.CurStamina-=damage;if(Attributes.CurStamina<=0){Attributes.CurStamina=0;Die();}else if(damage>0){
+    Debug.LogWarning("reset nextAttackTimer for ["+this);
+    nextAttackTimer=0;
+}
 }
 protected virtual void Die(){
 if(deadStance==-1){Dying=DeadForGoodDelay;}
@@ -363,12 +438,12 @@ if(LOG&&LOG_LEVEL<=0)Debug.Log("WALK_PATH new dest:"+CurPathTgt.Value.pos+","+Cu
 _movementWasDetectedTimer=NoMovementDetectionTime*(float)(mathrandom.NextDouble()+.5f);_noMovementGetUnstuckAction=GetUnstuckActions.none;
 }
 if(CurPathTgt.HasValue){
-ReachedTgtDisThreshold.y=colliderHalfExtents.y*.25f;
-ReachedTgtDisThreshold.x=colliderHalfExtents.x*.25f;
-ReachedTgtDisThreshold.z=colliderHalfExtents.z*.25f;
-_axisDiff.y=CurPathTgt.Value.pos.y-transform.position.y;_axisDist.y=Mathf.Abs(_axisDiff.y);
-_axisDiff.x=CurPathTgt.Value.pos.x-transform.position.x;_axisDist.x=Mathf.Abs(_axisDiff.x);
-_axisDiff.z=CurPathTgt.Value.pos.z-transform.position.z;_axisDist.z=Mathf.Abs(_axisDiff.z);      
+ReachedTgtDisThreshold.y=colliderHalfExtents.y;
+ReachedTgtDisThreshold.x=colliderHalfExtents.x;
+ReachedTgtDisThreshold.z=colliderHalfExtents.z;
+_axisDiff.y=CurPathTgt.Value.pos.y-collider.bounds.center.y;_axisDist.y=Mathf.Abs(_axisDiff.y);
+_axisDiff.x=CurPathTgt.Value.pos.x-collider.bounds.center.x;_axisDist.x=Mathf.Abs(_axisDiff.x);
+_axisDiff.z=CurPathTgt.Value.pos.z-collider.bounds.center.z;_axisDist.z=Mathf.Abs(_axisDiff.z);      
 _dir=_axisDiff.normalized;
 if(_axisDist.y<=ReachedTgtDisThreshold.y&&
    _axisDist.x<=ReachedTgtDisThreshold.x&&
@@ -382,15 +457,15 @@ void renew_movementWasDetectedTimer(){_movementWasDetectedTimer=NoMovementDetect
 _movementWasDetectedTimer-=Time.deltaTime;
 if(_movementSnapshotTimer<=0){
 if(LOG&&LOG_LEVEL<=0)Debug.Log("movement snapshot");
-    if(Mathf.Abs(transform.position.y-_movementSnapshotPos.y)>.1f||
-       Mathf.Abs(transform.position.x-_movementSnapshotPos.x)>.1f||
-       Mathf.Abs(transform.position.z-_movementSnapshotPos.z)>.1f){
+    if(Mathf.Abs(collider.bounds.center.y-_movementSnapshotPos.y)>.1f||
+       Mathf.Abs(collider.bounds.center.x-_movementSnapshotPos.x)>.1f||
+       Mathf.Abs(collider.bounds.center.z-_movementSnapshotPos.z)>.1f){
 if(LOG&&LOG_LEVEL<=0)Debug.Log("normal movement detected");
 renew_movementWasDetectedTimer();
     }else{
 if(LOG&&LOG_LEVEL<=0)Debug.Log("I am stuck in this position!");
     }
-_movementSnapshotPos=transform.position;_movementSnapshotTimer=DoMovementSnapshotTime*(float)(mathrandom.NextDouble()+.5f);
+_movementSnapshotPos=collider.bounds.center;_movementSnapshotTimer=DoMovementSnapshotTime*(float)(mathrandom.NextDouble()+.5f);
 }else{
 _movementSnapshotTimer-=Time.deltaTime;
 }
@@ -417,7 +492,7 @@ inputMoveSpeed.x=0;
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
    _axisDist.z>ReachedTgtDisThreshold.z)){
-inputMoveSpeed.z=-InputMaxMoveSpeed.z;
+inputMoveSpeed.z=-InputMaxMoveSpeed.z*MaxMoveSpeedBackwardMultiplier;
 }else{
 inputMoveSpeed.z=0;
 }
@@ -485,30 +560,31 @@ inputMoveSpeed.y=0;
 }
 break;}
 #endregion
-#region none
+#region none [not stuck]
 default:{
 if(_axisDist.y>ReachedTgtDisThreshold.y&&
    _axisDist.x<=ReachedTgtDisThreshold.x&&
    _axisDist.z<=ReachedTgtDisThreshold.z){   
-if(transform.position.y>=CurPathTgt.Value.pos.y+.1f){
+if(collider.bounds.center.y>=CurPathTgt.Value.pos.y+.1f){
     if(CurPathTgt.Value.mode!=Node.PreferredReachableMode.fall){
     var cur=CurPathTgt.Value;cur.mode=Node.PreferredReachableMode.fall;
     CurPathTgt=cur;
     }
-}else if(transform.position.y<CurPathTgt.Value.pos.y+.1f||rigidbody.velocity.y<=float.Epsilon){
+}else if(collider.bounds.center.y<CurPathTgt.Value.pos.y+.1f||rigidbody.velocity.y<=float.Epsilon){
     if(CurPathTgt.Value.mode!=Node.PreferredReachableMode.jump){
     var cur=CurPathTgt.Value;cur.mode=Node.PreferredReachableMode.jump;
     CurPathTgt=cur;
     }
 }
 }
+if(doingAttackMoveAway){_dir=-_dir;}
 if(_axisDist.x>float.Epsilon||
    _axisDist.z>float.Epsilon){
 inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.eulerAngles.y;
 }
 inputMoveSpeed.x=0;
 if(!canFly){
-if(CurPathTgt.Value.mode==Node.PreferredReachableMode.jump&&transform.position.y<CurPathTgt.Value.pos.y+.1f){
+if(CurPathTgt.Value.mode==Node.PreferredReachableMode.jump&&collider.bounds.center.y<CurPathTgt.Value.pos.y+.1f){
 #region necessário pular
 inputMoveSpeed.z=0;
 if(IsGrounded){
@@ -523,7 +599,7 @@ inputMoveSpeed.y=0;
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
    _axisDist.z>ReachedTgtDisThreshold.z)){
-inputMoveSpeed.z=InputMaxMoveSpeed.z;
+inputMoveSpeed.z=InputMaxMoveSpeed.z;if(doingAttackMoveAway){inputMoveSpeed.z=-inputMoveSpeed.z;}
 }else{
 inputMoveSpeed.z=0;
 }
@@ -538,7 +614,7 @@ inputMoveSpeed.y=0;
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
    _axisDist.z>ReachedTgtDisThreshold.z)){
-inputMoveSpeed.z=InputMaxMoveSpeed.z;
+inputMoveSpeed.z=InputMaxMoveSpeed.z;if(doingAttackMoveAway){inputMoveSpeed.z=-inputMoveSpeed.z;}
 }else{
 inputMoveSpeed.z=0;
 }

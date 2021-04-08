@@ -23,6 +23,8 @@ canFly_v=value;
 [SerializeField]public float BaseMaxStamina;[SerializeField]public float CurStamina;
 [SerializeField]public float BaseMaxFocus;[SerializeField]public float CurFocus;
 [SerializeField]public float BaseAspd;public float Aspd{get{return BaseAspd;}}
+[SerializeField]public float BaseHit;public float Hit{get{return BaseHit;}}
+[SerializeField]public float BaseFlee;public float Flee{get{return BaseFlee;}}
 [SerializeField]public float BaseDEF;public float DEF{get{return BaseDEF;}}
 [SerializeField]public float BaseMDEF;public float MDEF{get{return BaseMDEF;}}
 [SerializeField]public float BaseATK;public float ATK{get{return BaseATK;}}
@@ -39,7 +41,13 @@ public virtual float GetBaseMaxFocus(){
 return(Attributes.VIT*.5f+Attributes.INT*100);
 }
 public virtual float GetBaseAspd(){
-return Mathf.Clamp(((Attributes.AGI/100f)+(Attributes.DEX*.5f/100f))/2f*1.5f,.5f,1f);
+return Mathf.Clamp((Attributes.AGI/100f+Attributes.DEX*.5f/100f)/2f*1.5f,.5f,1f);
+}
+public virtual float GetBaseHit(){
+return(Attributes.DEX/100f+Attributes.LUK*.5f/100f)/1.5f;
+}
+public virtual float GetBaseFlee(){
+return(Attributes.AGI/100f+Attributes.LUK*.5f/100f)/1.5f;
 }
 public virtual float GetBaseDEF(){
 return(Attributes.VIT*1.5f+Attributes.AGI*.5f);
@@ -70,18 +78,38 @@ if(version<=1){
 Attributes.BaseDEF=GetBaseDEF();Attributes.BaseMDEF=GetBaseMDEF();
 Attributes.BaseATK=GetBaseATK();Attributes.BaseMATK=GetBaseMATK();
 }
+if(version<=2){
+Attributes.BaseHit=GetBaseHit();Attributes.BaseFlee=GetBaseFlee();
 }
+}
+[SerializeField]public SkillIds[]onWillTakeDamageSkills;public readonly Dictionary<SkillIds,Skill>Skills=new Dictionary<SkillIds,Skill>();
 protected override void Awake(){
+    //Debug.LogWarning("here");
                    base.Awake();
 tgtPos=tgtPos_Pre=transform.position;
 tgtRot=tgtRot_Pre=transform.eulerAngles;headTgtRot=headTgtRot_Pre=tgtRot;
 drawPos=transform.position;drawRotation=headDrawRotation=transform.rotation;
+
+
+        foreach(var skillId in onWillTakeDamageSkills){
+            switch(skillId){
+                case(SkillIds._EVADE):{if(!Skills.ContainsKey(SkillIds._EVADE)){Skills.Add(SkillIds._EVADE,new _EVADE());}
+                break;}
+            }
+        }
+
+
 }
 [NonSerialized]protected bool Jump;
 [NonSerialized]Vector3 eulerAngles,headEulerAngles;[NonSerialized]float angleBetweenBodyAndHead;[NonSerialized]Vector3 stopMovement,moveSpeedRotated,moveSpeedToApplyToBody;
 protected override void FixedUpdate(){
                    base.FixedUpdate();
 if(rigidbody!=null){
+if(!canFly){
+        if(inputMoveSpeed.y>0&&!IsGrounded){
+            inputMoveSpeed.y=0;
+        }
+}
         if(inputViewRotationEuler!=Vector3.zero){
 headEulerAngles+=inputViewRotationEuler;
             inputViewRotationEuler=Vector3.zero;
@@ -108,6 +136,11 @@ stopVerticalMovement();
         }
 moveSpeedToApplyToBody.y=moveSpeedRotated.y==0?rigidbody.velocity.y:moveSpeedRotated.y>0?(moveSpeedRotated.y>rigidbody.velocity.y?moveSpeedRotated.y:rigidbody.velocity.y):(moveSpeedRotated.y<rigidbody.velocity.y?moveSpeedRotated.y:rigidbody.velocity.y);
 }
+
+
+//Debug.LogWarning(inputMoveSpeed.y+" "+moveSpeedRotated.y);
+
+
 Jump=false;
         rigidbody.velocity=moveSpeedToApplyToBody;
 void stopHorizontalMovement(){
@@ -126,7 +159,7 @@ stopMovement.y=0;
 protected override void Update(){
 ProcessMovementInput();
                    base.Update();
-if(!OutOfSight_v&&
+if(!OutOfSight_v&&manager!=null&&manager.RemoveFarAwayActors&&
    (Mathf.Abs(Center.x-transform.position.x)>HalfSize.x||
     Mathf.Abs(Center.z-transform.position.z)>HalfSize.z)){
 setOutOfSight();
@@ -139,7 +172,7 @@ protected float moveLerpVal;
 protected Vector3 moveLerpA;
 protected Vector3 moveLerpB;
 public Vector3 InputMoveAcceleration;
-public Vector3 InputMaxMoveSpeed;
+public Vector3 InputMaxMoveSpeed;public float MaxMoveSpeedBackwardMultiplier=1f;
 protected Vector3 inputMoveSpeed;
 #region Position
 public float GetNewTgtPosCdTime=.05f;
@@ -169,6 +202,7 @@ if(rigidbody==null){
             tgtRot+=inputViewRotationEuler;
             inputViewRotationEuler=Vector3.zero;
         }
+if(Lerp){
         if(goToTgtRotTimer==0){
             if(tgtRot!=tgtRot_Pre){
 if(LOG&&LOG_LEVEL<=-20)Debug.Log("input rotation detected:start rotating to tgtRot:"+tgtRot);
@@ -197,11 +231,15 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtRot:"+tgtRot+";don't need to lerp a
                 }
             }
         }
+}else{
+            transform.rotation=Quaternion.Euler(tgtRot);
+}
 #endregion
 #region POSITION LERP
         if(inputMoveSpeed!=Vector3.zero){
-            tgtPos+=transform.rotation*inputMoveSpeed;
+            tgtPos+=(transform.rotation*inputMoveSpeed)/**(spfControl-Time.deltaTime)*//**(Time.deltaTime)*/*(Time.deltaTime/MainCamera._30FPSdeltaTime);
         }
+if(Lerp){
         if(goToTgtPosTimer==0){
             if(tgtPos!=tgtPos_Pre){
 if(LOG&&LOG_LEVEL<=-20)Debug.Log("input movement detected:start going to tgtPos:"+tgtPos);
@@ -229,6 +267,10 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
                 }
             }
         }
+}else{
+    //Debug.LogWarning(this);
+            transform.position=tgtPos;
+}
 #endregion
 }else{
     headTgtRot=headEulerAngles;
@@ -282,6 +324,11 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
         }
     }
     tgtPos=transform.position;
+
+
+    //Debug.LogWarning("tgtPos:"+tgtPos);
+
+
     if(goToTgtPosTimer==0){
         if(tgtPos!=tgtPos_Pre){
             moveLerpVal=0;
@@ -307,6 +354,27 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
         }
     }
 }
+}
+#endregion
+public override void Teleport(Quaternion rotation,Vector3 position,bool goThroughWalls=false){
+        //Debug.LogWarning(rotation*transform.forward);
+                base.Teleport(rotation,position,goThroughWalls);
+        headEulerAngles=rotation.eulerAngles;
+        //tgtRot=tgtRot_Pre=rotation.eulerAngles;
+}
+#region
+protected override void LateUpdate(){
+                   base.LateUpdate();
+//if(renderer!=null){
+if(IsUMA){
+//    Debug.LogWarning("renderer:"+renderer+" renderer.transform.parent:"+renderer.transform.parent.gameObject,renderer);
+//renderer.transform.parent.parent.rotation=drawRotation;
+//renderer.transform.parent.parent.localPosition=drawPos;
+umaData.transform.rotation=drawRotation;
+umaData.transform.position=drawPos;
+    //Debug.LogWarning("umaData.transform.position:"+umaData.transform.position);
+}
+//}
 }
 #endregion
 #if UNITY_EDITOR

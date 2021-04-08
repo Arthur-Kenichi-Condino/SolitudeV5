@@ -4,6 +4,7 @@ using LibNoise.Operator;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static AKCondinoO.Voxels.TerrainChunk;
 namespace AKCondinoO.Voxels{public class Plains:Biome{
 public override int IdxForRnd{get{return 1;}}
 public override int IdxForHgt{get{return 5;}}//  Base Height Result Module
@@ -39,6 +40,7 @@ MaterialSelectors[0]=(Select)module4b;
 Modules.Add(module4c);
 }
 protected override MaterialId GetMaterial(Vector3 noiseInput,double density){
+if(-density>=IsoLevel){return MaterialId.Air;}
 double min=MaterialSelectors[0].Minimum;
 double max=MaterialSelectors[0].Maximum;
 double fallOff=MaterialSelectors[0].FallOff*.5;

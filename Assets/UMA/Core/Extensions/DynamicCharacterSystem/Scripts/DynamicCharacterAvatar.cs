@@ -2291,7 +2291,7 @@ namespace UMA.CharacterSystem
             _wardrobeCollections = wcCache;
         }
 
-        string GetSavePath(string extension)
+        string GetSavePath(string extension,bool saveFilePanel=false)
         {
             string path = "";
             string filePath = "";
@@ -2304,8 +2304,13 @@ namespace UMA.CharacterSystem
 #endif
             if (savePathType == savePathTypes.FileSystem)
             {
+
+                
+Debug.LogWarning("savePath:"+savePath+";saveFilename:"+saveFilename);
+
+
 #if UNITY_EDITOR
-                if (Application.isEditor)
+                if (saveFilePanel&&Application.isEditor)
                 {
                     path = EditorUtility.SaveFilePanel("Save Avatar", Application.dataPath, (saveFilename != "" ? saveFilename : ""), extension);
                     if (path == "")
@@ -2316,7 +2321,18 @@ namespace UMA.CharacterSystem
                 }
                 else
 #endif
+                if(string.IsNullOrEmpty(savePath)||string.IsNullOrEmpty(saveFilename)){
                     savePathType = savePathTypes.persistentDataPath;
+                    savePath="CharacterRecipes";
+                    saveFilename="";
+                }else{
+
+                    
+Debug.LogWarning("save UMA avatar");
+
+
+                    path=savePath+saveFilename+"."+extension;
+                }
 
             }
             //I dont think we can save anywhere but persistentDataPath on most platforms
@@ -2705,7 +2721,7 @@ namespace UMA.CharacterSystem
                 Debug.LogWarning("Asset '" + Name + "' Not found in Global Index");
         }
 
-        void GetRecipeStringToLoad()
+        void GetRecipeStringToLoad(bool openFilePanel=false)
         {
             string path = "";
             string recipeString = "";
@@ -2744,8 +2760,14 @@ namespace UMA.CharacterSystem
             }
             if (loadPathType == loadPathTypes.FileSystem)
             {
+
+                
+Debug.LogWarning("loadFilename:"+loadFilename);
+
+
+                bool fileExists=File.Exists(loadFilename);
 #if UNITY_EDITOR
-                if (Application.isEditor)
+                if (openFilePanel&&Application.isEditor&&!fileExists)
                 {
                     path = EditorUtility.OpenFilePanel("Load saved Avatar", Application.dataPath, "txt");
                     if (string.IsNullOrEmpty(path))
@@ -2757,7 +2779,21 @@ namespace UMA.CharacterSystem
                 }
                 else
 #endif
+                if(!fileExists){
                     loadPathType = loadPathTypes.persistentDataPath;
+                    loadPath="CharacterRecipes";
+                    loadFilename="";
+                }else{
+
+                    
+Debug.LogWarning("load UMA avatar");
+
+
+                    path=loadFilename;
+                    recipeString = FileUtils.ReadAllText(path);
+                    path = "";
+                }
+
             }
             if (loadPathType == loadPathTypes.persistentDataPath)
             {

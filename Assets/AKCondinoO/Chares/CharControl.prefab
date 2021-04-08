@@ -49,18 +49,23 @@ MonoBehaviour:
   LOG_LEVEL: 1
   DRAW_LEVEL: -100
   Attributes:
-    FOR: 0
+    STR: 0
     VIT: 0
-    MaxStamina: 0
-    Stamina: 0
     INT: 0
-    MaxFocus: 0
-    Focus: 0
     AGI: 0
     DEX: 0
+    LUK: 0
+    BaseMaxStamina: 0
+    CurStamina: 0
+    BaseMaxFocus: 0
+    CurFocus: 0
     BaseAspd: 0
+    BaseDEF: 0
+    BaseMDEF: 0
+    BaseATK: 0
+    BaseMATK: 0
   Lerp: 1
-  MoveLerpSpeed: 0.125
+  MoveLerpSpeed: 0.0625
   InputMoveAcceleration: {x: 3, y: 3, z: 3}
   InputMaxMoveSpeed: {x: 3, y: 3, z: 3}
   GetNewTgtPosCdTime: 0.05
@@ -75,10 +80,11 @@ MonoBehaviour:
   attackStanceDamageTime: 0.5
   hitStanceRhythmMultiplier: 2
   deadStanceRhythmMultiplier: 1
+  attackWaitForSoundTime: 0
   DEBUG_ATTACK: 0
   DEBUG_GETHIT: 0
   DEBUG_DIE: 0
-  CamOffset: {x: 0.4, y: 0.4, z: -2.15}
+  CamOffset: {x: 0.4, y: 1.7, z: -0.65}
 --- !u!65 &4550411354643971414
 BoxCollider:
   m_ObjectHideFlags: 0

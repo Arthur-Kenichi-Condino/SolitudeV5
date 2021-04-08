@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using AKCondinoO.Species.Plants;
+using MessagePack;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -130,7 +131,7 @@ Vector2Int nCoord1=cnk.Coord;nCoord1.x+=x;nCoord1.y+=z;int ngbIdx1=GetIdx(nCoord
 
 
 
-        if(DEBUG_EDIT){Edit(new Vector3(0,0,0),new Vector3Int(8,50,1));}
+        if(DEBUG_EDIT){Edit(new Vector3(0,10,0),new Vector3Int(8,8,1),51,MaterialId.Dirt,EditMode.Sphere);}
 
 
 
@@ -203,13 +204,47 @@ _skip:{}
 if(coord.x==0){break;}}}
 if(coord.y==0){break;}}}
 }
-public void Edit(Vector3 center,Vector3Int size,double density=0){
+public enum EditMode{Cube,Sphere}
+public void Edit(Vector3 center,Vector3Int size,double tgtDensity=0,MaterialId tgtMaterialId=MaterialId.Air,EditMode mode=EditMode.Cube){
     if(backgroundDataSet1.WaitOne(0)){
+
+     
+if(tgtMaterialId==MaterialId.Air){tgtDensity=0;}else{tgtDensity=Math.Max(tgtDensity,81f);tgtDensity=Math.Min(tgtDensity,100f);}
+        
+
+Vector3 cornerRadius;
+Vector3 cornerRadiusSmoothStep=new Vector3(1f,1f,1f);
+switch(mode){
+case(EditMode.Sphere):{
+size.x=size.y=size.z=Mathf.Max(2,size.x,size.y,size.z);
+cornerRadius=new Vector3(size.x,size.x,size.x);
+    break;
+}
+default:{
+
+
+//radius=Mathf.Sqrt();
+size.x=Mathf.Max(2,size.x);//  Troquei o valor de 8 para 2 e funcionou bem, mas não entendi o porquê
+size.y=Mathf.Max(2,size.y);//
+size.z=Mathf.Max(2,size.z);//
+cornerRadius=new Vector3(Mathf.Sqrt(Mathf.Pow(size.x,2)+Mathf.Pow(size.y,2)),
+                         Mathf.Sqrt(Mathf.Pow(size.y,2)+Mathf.Pow(size.z,2)),
+                         Mathf.Sqrt(Mathf.Pow(size.z,2)+Mathf.Pow(size.x,2)));
+cornerRadiusSmoothStep.x=(cornerRadius.x-Mathf.Sqrt(Mathf.Pow(size.x-4f,2)+Mathf.Pow(size.y-4f,2)))/4f;
+cornerRadiusSmoothStep.y=(cornerRadius.y-Mathf.Sqrt(Mathf.Pow(size.y-4f,2)+Mathf.Pow(size.z-4f,2)))/4f;
+cornerRadiusSmoothStep.z=(cornerRadius.z-Mathf.Sqrt(Mathf.Pow(size.z-4f,2)+Mathf.Pow(size.x-4f,2)))/4f;
+Debug.LogWarning(cornerRadiusSmoothStep);
+
+    break;
+}
+}
+
+
 Vector2Int cCoord1=PosToCoord(center);
 Vector2Int cnkRgn1=CoordToRgn(cCoord1);
 Vector3Int vCoord1=Chunk.PosToCoord(center);
 if(LOG&&LOG_LEVEL<=2)Debug.Log("edit at:"+center+"; cCoord1:"+cCoord1+"; vCoord1:"+vCoord1);
-var offset=new Vector3Int();
+var offset=new Vector3Int();float smoothValue;
 for(offset.x=-size.x;offset.x<=size.x;offset.x++){
 for(offset.z=-size.z;offset.z<=size.z;offset.z++){
 for(offset.y=-size.y;offset.y<=size.y;offset.y++){
@@ -223,8 +258,217 @@ if(vCoord2.x<0||vCoord2.x>=Chunk.Width||
 Chunk.ValidateCoord(ref cnkRgn2,ref vCoord2);cCoord2=RgnToCoord(cnkRgn2);
 }
 var cnkIdx2=GetIdx(cCoord2.x,cCoord2.y);if(Chunks.ContainsKey(cnkIdx2)){if((!(Chunks[cnkIdx2]is TerrainChunk cnk))||cnk.needsRebuild||!cnk.backgroundDataSet.WaitOne(0)){Cancel();goto _End;}}
-    if(!edtVxlsByCnkIdx.ContainsKey(cnkIdx2)){edtVxlsByCnkIdx.Add(cnkIdx2,new Dictionary<Vector3Int,(double density,MaterialId material)>());}
-    edtVxlsByCnkIdx[cnkIdx2].Add(vCoord2,(10,MaterialId.Air));
+    if(!edtVxlsByCnkIdx.ContainsKey(cnkIdx2)){edtVxlsByCnkIdx.Add(cnkIdx2,new Dictionary<Vector3Int,(double density,MaterialId materialId)>());
+                                              edtDataByCnkIdx.Add(cnkIdx2,new Dictionary<Vector3Int,(Vector2Int cnkRgn2,float smoothValue)>());}
+
+
+switch(mode){
+case(EditMode.Sphere):{
+//smoothValue=Mathf.Clamp01(1f-Mathf.Abs(offset.x)/(float)size.x)*
+//            Mathf.Clamp01(1f-Mathf.Abs(offset.y)/(float)size.y)*
+//            Mathf.Clamp01(1f-Mathf.Abs(offset.z)/(float)size.z);
+
+
+//smoothValue=0f;
+smoothValue=1f-Mathf.Clamp01(Vector3.Distance(vCoord2,vCoord1)/size.x);
+//smoothValue=Mathf.Min(Mathf.Clamp01(1f-Mathf.Abs(offset.x)/(float)size.x),
+//                      Mathf.Clamp01(1f-Mathf.Abs(offset.y)/(float)size.y),
+//                      Mathf.Clamp01(1f-Mathf.Abs(offset.z)/(float)size.z));
+
+
+    break;
+}
+default:{
+//smoothValue=Mathf.Clamp01(1f-Vector3.Distance(vCoord2,vCoord1)/Mathf.Max(size.x,size.y,size.z));
+//smoothValue=Mathf.Min(1f-Mathf.Abs(vCoord2.x-vCoord1.x)/(float)size.x,
+//                      1f-Mathf.Abs(vCoord2.y-vCoord1.y)/(float)size.y,
+//                      1f-Mathf.Abs(vCoord2.z-vCoord1.z)/(float)size.z);
+
+
+//smoothValue=Mathf.Min(1f-Mathf.Abs(offset.x)/(float)size.x,
+//                      1f-Mathf.Abs(offset.y)/(float)size.y,
+//                      1f-Mathf.Abs(offset.z)/(float)size.z)*.25f;
+
+
+//smoothValue=(1f-Mathf.Clamp01((float)Mathf.Abs(vCoord2.x-vCoord1.x)/size.x)+
+//             1f-Mathf.Clamp01((float)Mathf.Abs(vCoord2.y-vCoord1.y)/size.y)+
+//             1f-Mathf.Clamp01((float)Mathf.Abs(vCoord2.z-vCoord1.z)/size.z))/3f;
+smoothValue=1f;
+
+
+//float smoothRadius=4f;
+
+
+Vector3 smoothByAxis=new Vector3(1f,1f,1f);
+
+
+int dis1=Mathf.Abs(vCoord2.x-vCoord1.x);
+if(dis1>=size.x){
+smoothByAxis.x=.004f;
+}else if(dis1>=size.x-1){
+smoothByAxis.x=.04f;
+}else if(dis1>=size.x-2){
+smoothByAxis.x=.12f;
+}else if(dis1>=size.x-3){
+smoothByAxis.x=.24f;
+}
+float dis2=Mathf.Abs(vCoord2.z-vCoord1.z);
+if(dis2>=size.z){
+smoothByAxis.z=.004f;
+}else if(dis2>=size.z-1){
+smoothByAxis.z=.04f;
+}else if(dis2>=size.z-2){
+smoothByAxis.z=.12f;
+}else if(dis2>=size.z-3){
+smoothByAxis.z=.24f;
+}
+float dis3=Mathf.Abs(vCoord2.y-vCoord1.y);
+if(dis3>=size.y){
+smoothByAxis.y=.004f;
+}else if(dis3>=size.y-1){
+smoothByAxis.y=.04f;
+}else if(dis3>=size.y-2){
+smoothByAxis.y=.12f;
+}else if(dis3>=size.y-3){
+smoothByAxis.y=.24f;
+}
+
+
+Vector3 roundCorner=new Vector3(1f,1f,1f);
+float dis4=Mathf.Sqrt(Mathf.Pow(dis1,2)+Mathf.Pow(dis2,2));
+Debug.LogWarning(dis4+"/"+cornerRadius.z);
+if(dis4>=cornerRadius.z-cornerRadiusSmoothStep.z){
+roundCorner.x=.004f;
+}else if(dis4>=cornerRadius.z-cornerRadiusSmoothStep.z*2f){
+roundCorner.x=.04f;
+}else if(dis4>=cornerRadius.z-cornerRadiusSmoothStep.z*3f){
+roundCorner.x=.2f;
+}else if(dis4>=cornerRadius.z-cornerRadiusSmoothStep.z*4f){
+roundCorner.x=.4f;
+}
+float dis5=Mathf.Sqrt(Mathf.Pow(dis2,2)+Mathf.Pow(dis3,2));
+if(dis5>=cornerRadius.y-cornerRadiusSmoothStep.y){
+roundCorner.z=.004f;
+}else if(dis5>=cornerRadius.y-cornerRadiusSmoothStep.y*2f){
+roundCorner.z=.04f;
+}else if(dis5>=cornerRadius.y-cornerRadiusSmoothStep.y*3f){
+roundCorner.z=.2f;
+}else if(dis5>=cornerRadius.y-cornerRadiusSmoothStep.y*4f){
+roundCorner.z=.4f;
+}
+float dis6=Mathf.Sqrt(Mathf.Pow(dis3,2)+Mathf.Pow(dis1,2));
+if(dis6>=cornerRadius.x-cornerRadiusSmoothStep.x){
+roundCorner.y=.004f;
+}else if(dis6>=cornerRadius.x-cornerRadiusSmoothStep.x*2f){
+roundCorner.y=.04f;
+}else if(dis6>=cornerRadius.x-cornerRadiusSmoothStep.x*3f){
+roundCorner.y=.2f;
+}else if(dis6>=cornerRadius.x-cornerRadiusSmoothStep.x*4f){
+roundCorner.y=.4f;
+}
+
+
+smoothValue=Mathf.Min(Mathf.Min(smoothByAxis.x,smoothByAxis.z,smoothByAxis.y),Mathf.Min(roundCorner.x,roundCorner.z,roundCorner.y));
+
+
+//float dis1=Vector3.Distance(vCoord2,vCoord1)/*=Mathf.Abs(vCoord2.x-vCoord1.x)*/;float perc1=1f;
+
+
+//float radius1;
+//if((radius1=size.x-dis1)<=4f){
+//perc1=radius1/4f;
+////smoothByAxis.x=;
+//}
+
+
+//Debug.LogWarning(dis1+" "+perc1);
+
+
+//float dis1=Mathf.Abs(vCoord2.x-vCoord1.x);
+//float dis2=Mathf.Lerp(dis1/10f,dis1,dis1/size.x);
+//smoothValue=Mathf.Lerp(.5f,.0125f,dis2/size.x);
+
+
+//float dis=Mathf.Abs(vCoord2.x-vCoord1.x);
+//Debug.LogWarning(dis);
+//if(dis>=size.x){
+//smoothByAxis.x=.0075f;
+//}else if(dis>=size.x-1){
+//smoothByAxis.x=.0395f;
+//}else if(dis>=size.x-2){
+//smoothByAxis.x=.1115f;
+//}else if(dis>=size.x-3){
+//smoothByAxis.x=.2115f;
+//}else if(dis>=size.x-4){
+//smoothByAxis.x=.3510f;
+//}else if(dis>=size.x-5){
+//smoothByAxis.x=.5105f;
+//}
+//dis=Mathf.Abs(vCoord2.z-vCoord1.z);
+//Debug.LogWarning(dis);
+//if(dis>=size.z){
+//smoothByAxis.z=.0075f;
+//}else if(dis>=size.z-1){
+//smoothByAxis.z=.0395f;
+//}else if(dis>=size.z-2){
+//smoothByAxis.z=.1115f;
+//}else if(dis>=size.z-3){
+//smoothByAxis.z=.2115f;
+//}else if(dis>=size.z-4){
+//smoothByAxis.z=.3510f;
+//}else if(dis>=size.z-5){
+//smoothByAxis.z=.5105f;
+//}
+//dis=Mathf.Abs(vCoord2.y-vCoord1.y);
+//Debug.LogWarning(dis);
+//if(dis>=size.y){
+//smoothByAxis.y=.0075f;
+//}else if(dis>=size.y-1){
+//smoothByAxis.y=.0395f;
+//}else if(dis>=size.y-2){
+//smoothByAxis.y=.1115f;
+//}else if(dis>=size.y-3){
+//smoothByAxis.y=.2115f;
+//}else if(dis>=size.y-4){
+//smoothByAxis.y=.3510f;
+//}else if(dis>=size.y-5){
+//smoothByAxis.y=.5105f;
+//}
+
+
+////smoothValue=Mathf.Min(smoothByAxis.x,smoothByAxis.z,smoothByAxis.y);
+//smoothValue=(smoothByAxis.x+smoothByAxis.z+smoothByAxis.y)/3f;//Mathf.Min(smoothByAxis.x,smoothByAxis.z,smoothByAxis.y);
+//Vector3 smoothByAxis=new Vector3(1f,1f,1f);
+//float dis=Mathf.Abs(vCoord2.x-vCoord1.x);
+//if(dis>=size.x-smoothRadius){
+//smoothByAxis.x=(1f-(dis-1f)/size.x)*.5f;
+//Debug.LogWarning(dis+" "+smoothByAxis.x);
+//}
+////Debug.LogWarning((dis/size.x));
+////float dis;float smoothRadius=4f;Vector3 smoothByAxis=new Vector3();
+////if((dis=Mathf.Abs(offset.x-size.x))<=smoothRadius){
+////smoothByAxis.x=(smoothRadius-dis)/smoothRadius;
+////Debug.LogWarning(smoothByAxis.x);
+////}
+
+
+//smoothValue=smoothByAxis.x;
+//Debug.LogWarning(smoothValue);
+
+
+//smoothValue=1f;
+//Debug.LogWarning(1f-Mathf.Abs(vCoord2.x-vCoord1.x)/(float)size.x);
+//Debug.LogWarning(1f-Mathf.Abs(vCoord2.y-vCoord1.y)/(float)size.y);
+//Debug.LogWarning(1f-Mathf.Abs(vCoord2.z-vCoord1.z)/(float)size.z);
+        //Debug.LogWarning("dis:"+Vector3.Distance(vCoord2,vCoord1)+" maxDis:"+Mathf.Max(size.x,size.y,size.z)+" smoothValue:"+smoothValue);
+
+
+    break;
+}
+}
+
+
+    edtVxlsByCnkIdx[cnkIdx2].Add(vCoord2,(tgtDensity,tgtMaterialId));edtDataByCnkIdx[cnkIdx2].Add(vCoord2,(cnkRgn2,smoothValue));
 }}}
             backgroundDataSet1.Reset();foregroundDataSet1.Set();
 _End:{}
@@ -237,17 +481,90 @@ _End:{}
     void Cancel(){
 if(LOG&&LOG_LEVEL<=2)Debug.Log("cancel edit");
 edtVxlsByCnkIdx.Clear();
+edtDataByCnkIdx.Clear();
     }
 }
 [NonSerialized]readonly List<object>load_Syn=new List<object>();
-[NonSerialized]readonly Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId material)>>edtVxlsByCnkIdx=new Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId material)>>();[NonSerialized]readonly List<int>editedDirty=new List<int>();
+[NonSerialized]readonly Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId materialId)>>edtVxlsByCnkIdx=new Dictionary<int,Dictionary<Vector3Int,(double density,MaterialId materialId)>>();[NonSerialized]readonly Dictionary<int,Dictionary<Vector3Int,(Vector2Int cnkRgn2,float smoothValue)>>edtDataByCnkIdx=new Dictionary<int,Dictionary<Vector3Int,(Vector2Int cnkRgn2,float smoothValue)>>();[NonSerialized]readonly List<int>editedDirty=new List<int>();
 void BG1(object state){Thread.CurrentThread.IsBackground=false;Thread.CurrentThread.Priority=System.Threading.ThreadPriority.BelowNormal;try{
     if(state is object[]parameters&&parameters[0]is bool LOG&&parameters[1]is int LOG_LEVEL&&parameters[2]is System.Random random&&parameters[3]is string[]saveSubfolder){
         while(!Stop){foregroundDataSet1.WaitOne();if(Stop)goto _Stop;
             foreach(var syn in load_Syn)Monitor.Enter(syn);try{
-foreach(var cnkIdxEdtsPair in edtVxlsByCnkIdx){
+foreach(var cnkIdxEdtsPair in edtVxlsByCnkIdx){var vxlData=cnkIdxEdtsPair.Value;var edtData=edtDataByCnkIdx[cnkIdxEdtsPair.Key];
 var fileName=string.Format(saveSubfolder[0],cnkIdxEdtsPair.Key);
 if(LOG&&LOG_LEVEL<=1)Debug.Log("save edits at: "+fileName);
+
+
+TerrainChunk.Voxel[]toMerge=new TerrainChunk.Voxel[Chunk.VoxelsPerChunk];bool[]hasMergeData=new bool[Chunk.VoxelsPerChunk];
+if(File.Exists(fileName)){
+int loadTries=30;bool loaded=false;while(!loaded){
+FileStream file=null;
+
+
+try{
+
+
+using(file=new FileStream(fileName,FileMode.Open,FileAccess.Read,FileShare.Read)){
+if(file.Length>0){
+if(LOG&&LOG_LEVEL<=1)Debug.Log("file has data, loading it to merge edits:fileName:"+fileName);
+if(MessagePackSerializer.Deserialize(typeof(Dictionary<Vector3Int,(double density,MaterialId material)>),file)is Dictionary<Vector3Int,(double density,MaterialId material)>fileData){
+                                                        
+foreach(var voxelData in fileData){
+int vxlIdx=Chunk.GetIdx(voxelData.Key.x,voxelData.Key.y,voxelData.Key.z);toMerge[vxlIdx]=new TerrainChunk.Voxel(voxelData.Value.density,Vector3.zero,voxelData.Value.material);hasMergeData[vxlIdx]=true;
+}
+
+}}
+}
+loaded=true;
+if(LOG&&LOG_LEVEL<=1)Debug.Log("successfully loaded edits from:"+fileName);
+
+
+}catch(IOException e){Debug.LogWarning("file access failed:try load again after delay:fileName:"+fileName+"\n"+e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);
+}catch(Exception e1){Debug.LogError("unknown error:ignore the file that may be broken:fileName:"+fileName+"\n"+e1?.Message+"\n"+e1?.StackTrace+"\n"+e1?.Source);
+break;
+}finally{
+dispose();
+}
+void dispose(){
+try{
+if(file!=null)
+   file.Dispose();
+}catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}
+}
+
+
+if(!loaded){if(--loadTries<=0||Main.Stop){if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("failed to load from: "+fileName);break;}else{
+Thread.Yield();Thread.Sleep(random.Next(500,1001));
+}}}
+}
+
+
+TerrainChunk.Voxel tmpVxl=new TerrainChunk.Voxel();double[]noiseCache=null;
+foreach(var edtDataToProcess in edtData){var cnkRgn2=edtDataToProcess.Value.cnkRgn2;var smoothValue=edtDataToProcess.Value.smoothValue;
+var v=vxlData[edtDataToProcess.Key];var vCoord2=edtDataToProcess.Key;int vxlIdx2=Chunk.GetIdx(vCoord2.x,vCoord2.y,vCoord2.z);
+        
+
+if(hasMergeData[vxlIdx2]){var mergeData=toMerge[vxlIdx2];
+tmpVxl.Density=mergeData.Density;tmpVxl.Material=mergeData.Material;tmpVxl.Normal=Vector3.zero;
+}else{
+Vector3 noiseInput=vCoord2;noiseInput.x+=cnkRgn2.x;
+                           noiseInput.z+=cnkRgn2.y;
+biome.v(noiseInput,ref tmpVxl,ref noiseCache,vCoord2.z+vCoord2.x*Chunk.Depth);
+}
+
+
+var densityResult=tmpVxl.Density+(v.density-tmpVxl.Density)*smoothValue;//  Lerp
+MaterialId materialIdToSet=-densityResult>=TerrainChunk.IsoLevel?MaterialId.Air:(v.materialId==MaterialId.Air?(tmpVxl.Material==MaterialId.Air?MaterialId.Dirt:tmpVxl.Material):v.materialId);
+
+
+//Debug.LogWarning("smoothValue:"+smoothValue+"; curDensity:"+tmpVxl.Density+"; tgtDensity:"+v.density+"; densityResult:"+densityResult);
+v.density=densityResult;v.materialId=materialIdToSet;
+
+
+vxlData[edtDataToProcess.Key]=v;
+}
+
+
 int saveTries=60;bool saved=false;while(!saved){
 FileStream file=null;
 try{
@@ -299,6 +616,7 @@ Thread.Yield();Thread.Sleep(random.Next(100,501));
 
 
 edtVxlsByCnkIdx.Clear();
+edtDataByCnkIdx.Clear();
 backgroundDataSet1.Set();}
         _Stop:{
             CallGC();
@@ -307,6 +625,13 @@ if(LOG&&LOG_LEVEL<=2)Debug.Log("end");
     }
 }catch(Exception e){Debug.LogError(e?.Message+"\n"+e?.StackTrace+"\n"+e?.Source);}}
 [NonSerialized]public static readonly Biome biome=new Plains();
+[SerializeField]protected BiomePrefabs[]biomePrefabs;
+[Serializable]public class BiomePrefabs{
+public string Name;
+public Plant[]Plants;
+public int[]FrequencyMin;
+public int[]FrequencyMax;
+}
 public static Vector2Int RgnToCoord(Vector2Int region){return new Vector2Int(region.x/Chunk.Width,region.y/Chunk.Depth);}public static Vector2Int CoordToRgn(Vector2Int coord){return new Vector2Int(coord.x*Chunk.Width,coord.y*Chunk.Depth);}
 public static Vector2Int PosToCoord(Vector3 pos){
 pos.x/=(float)Chunk.Width;

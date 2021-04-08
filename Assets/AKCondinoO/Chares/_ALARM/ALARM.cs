@@ -18,6 +18,10 @@ Attributes.LUK=mathrandom.Next(1,25);
                     Attributes.BaseAspd=GetBaseAspd();
 ValidateAttributesSet(1);
 }
+protected override void Awake(){
+    //Debug.LogWarning("here");
+                   base.Awake();   
+}
 [NonSerialized]public float TryIdleActionInterval=1f;[NonSerialized]float NextIdleActionTimer;[NonSerialized]public float Boredom;public enum CreativeIdleness:int{MOVE_RANDOM=0,RANDOM_SKILL=1,}[NonSerialized]readonly int CreativeIdlenessActionsCount=Enum.GetValues(typeof(CreativeIdleness)).Length;
 protected override void OnIDLE_ST(){
 if(MyEnemy!=null){
@@ -115,7 +119,7 @@ protected override void GetTargets(){
 for(int k=AsAggroEnemies.Keys.Count-1;k>=0;k--){var i=AsAggroEnemies.Keys.ElementAt(k);
 var tuple=AsAggroEnemies[i];
     tuple.timeout-=Time.deltaTime;
-AsAggroEnemies[i]=tuple;if(AsAggroEnemies[i].timeout<=0||AsAggroEnemies[i].actor.OutOfSight){AsAggroEnemies.Remove(i);}
+AsAggroEnemies[i]=tuple;if(AsAggroEnemies[i].timeout<=0||AsAggroEnemies[i].actor.GetMotion==Motions.MOTION_DEAD||AsAggroEnemies[i].actor.OutOfSight){AsAggroEnemies.Remove(i);}
 }
 MyPossibleTargets.Clear();
 foreach(var kvp in MySight.IsInVisionSight){var i=kvp.Key;var v=kvp.Value.actor;bool detected=kvp.Value.directSight;
@@ -123,7 +127,7 @@ if(i!=this.Id&&v.GetMotion!=Motions.MOTION_DEAD&&!v.OutOfSight){
 if(detected){Vector3 pos=kvp.Value.pos;
 if(v.HasPassiveRole()){    
 if(LOG&&LOG_LEVEL<=-20)Debug.Log("me "+this.Id+", my TypeId:"+TypeToTypeId[GetType()]+"; possible target "+i+", TypeId:"+TypeToTypeId[v.GetType()],v);
-var dis=Vector3.Distance(transform.position,pos);
+var dis=Vector3.Distance(collider.bounds.center,pos);
 MyPossibleTargets.Add(i,(v,pos,dis));
 if(!AsAggroEnemies.ContainsKey(i)){
 AsAggroEnemies.Add(i,(v,-1,0));
@@ -156,15 +160,20 @@ protected override bool IsInAttackSight(AI enemy){
 protected override void Attack(AI enemy){
 if(nextAttackTimer>0)return;
                    base.Attack(enemy);
-if(deadStance!=-1||hitStance!=-1)return;if(attackStance==-1){attackStance=0;curAnimTime=0;}
+if(deadStance!=-1||hitStance!=-1)return;if(attackStance==-1){attackStance=0;curAnimTime=0;
+if(sfx!=null){sfx.Play((int)ActorSounds._ATTACK,true);}
+}
 }
 protected override void TakeDamage(AI fromEnemy){
                    base.TakeDamage(fromEnemy);
 if(damage<=0)return;
 if(deadStance!=-1)return;attackStance=-1;hitStance=0;curAnimTime=0;
+if(sfx!=null){sfx.Play((int)ActorSounds._HIT,true);}
 }
 protected override void Die(){
                    base.Die();
-attackStance=-1;hitStance=-1;if(deadStance==-1){deadStance=0;curAnimTime=0;}
+attackStance=-1;hitStance=-1;if(deadStance==-1){deadStance=0;curAnimTime=0;
+if(sfx!=null){sfx.Play((int)ActorSounds._DEAD,true);}
+}
 }
 }

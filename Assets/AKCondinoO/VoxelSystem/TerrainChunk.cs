@@ -556,19 +556,19 @@ var MaterialIdGroupsOrdered=UVsByVertex[verPos[j]=TempVer[idx[j]].pos].ToArray()
 foreach(var MaterialIdgroup in MaterialIdGroupsOrdered){bool add;Vector2 uv=AtlasHelper.GetUV(MaterialIdgroup.First());
     if(uv0==uv){
         total+=weights[0]=MaterialIdgroup.Count();
-    }else if((add=TempVer[idx[j]].texCoord1==_emptyUV)||TempVer[idx[j]].texCoord1==uv){
+    }else if(((add=TempVer[idx[j]].texCoord1==_emptyUV)&&TempVer[idx[j]].texCoord2!=uv&&TempVer[idx[j]].texCoord3!=uv)||TempVer[idx[j]].texCoord1==uv){
         if(add){var v1=TempVer[idx[0]];v1.texCoord1=uv;TempVer[idx[0]]=v1;
                     v1=TempVer[idx[1]];v1.texCoord1=uv;TempVer[idx[1]]=v1;
                     v1=TempVer[idx[2]];v1.texCoord1=uv;TempVer[idx[2]]=v1;
         }
         total+=weights[1]=MaterialIdgroup.Count();
-    }else if((add=TempVer[idx[j]].texCoord2==_emptyUV)||TempVer[idx[j]].texCoord2==uv){
+    }else if(((add=TempVer[idx[j]].texCoord2==_emptyUV)&&TempVer[idx[j]].texCoord3!=uv)||TempVer[idx[j]].texCoord2==uv){
         if(add){var v1=TempVer[idx[0]];v1.texCoord2=uv;TempVer[idx[0]]=v1;
                     v1=TempVer[idx[1]];v1.texCoord2=uv;TempVer[idx[1]]=v1;
                     v1=TempVer[idx[2]];v1.texCoord2=uv;TempVer[idx[2]]=v1;
         }
         total+=weights[2]=MaterialIdgroup.Count();
-    }else if((add=TempVer[idx[j]].texCoord3==_emptyUV)||TempVer[idx[j]].texCoord3==uv){
+    }else if(((add=TempVer[idx[j]].texCoord3==_emptyUV))||TempVer[idx[j]].texCoord3==uv){
         if(add){var v1=TempVer[idx[0]];v1.texCoord3=uv;TempVer[idx[0]]=v1;
                     v1=TempVer[idx[1]];v1.texCoord3=uv;TempVer[idx[1]]=v1;
                     v1=TempVer[idx[2]];v1.texCoord3=uv;TempVer[idx[2]]=v1;
@@ -577,11 +577,12 @@ foreach(var MaterialIdgroup in MaterialIdGroupsOrdered){bool add;Vector2 uv=Atla
     }
 }
 if(weights.Count>1){var v2=TempVer[idx[j]];
- Color col=v2.color;col.r=(weights[0]/(float)total);
-                    col.g=(weights[1]/(float)total);
-if(weights.Count>2){col.b=(weights[2]/(float)total);}
-if(weights.Count>3){col.a=(weights[3]/(float)total);}
+        Color col=v2.color;col.r=(weights[0]/(float)total);
+if(weights.ContainsKey(1)){col.g=(weights[1]/(float)total);}
+if(weights.ContainsKey(2)){col.b=(weights[2]/(float)total);}
+if(weights.ContainsKey(3)){col.a=(weights[3]/(float)total);}
            v2.color=col;TempVer[idx[j]]=v2;
+if(LOG&&LOG_LEVEL<=-110){var s="[weights.Count:"+weights.Count+"]: \n";foreach(var weight in weights)s+=weight.Key+" -> "+weight.Value+" \n";Debug.Log(s);}
 }
 }}
 if(LOG&&LOG_LEVEL<=2)Debug.Log("job done "+watch.ElapsedMilliseconds+" ms ["+cnkRgn1);
