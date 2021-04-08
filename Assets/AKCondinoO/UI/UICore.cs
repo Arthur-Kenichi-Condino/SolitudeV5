@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 public class UICore:MonoBehaviour{
 [NonSerialized]MainCamera gameState;
+private void Awake(){
+MainCamera.ui=this;
+}
 void OnEnable(){
 gameState=Camera.main.GetComponent<MainCamera>();
      SetActiveBottonUIPanel(-1);
@@ -83,6 +86,9 @@ UIReceivedInput=true;
 public void OnSetCurrentToolSizeEndEdit(string size){
 UIReceivedInput=true;
     Debug.LogWarning("OnSetCurrentToolSizeEndEdit:"+size);
+}
+public void SetCurrentToolSize(int size){
+    Debug.LogWarning("SetCurrentToolSize:"+size);
 }
 void SetTool(int tool){
 gameState.CurrentTool=(MainCamera.SelectedGameModeTool)tool;

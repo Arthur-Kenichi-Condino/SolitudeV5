@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 public class MainCamera:SimActor{
+public static UICore ui;//  Available after Awake: OnEnable
 public static Dictionary<string,object[]>AllCommands=new Dictionary<string,object[]>();public static Dictionary<string,object[]>AllStates=new Dictionary<string,object[]>();
 public static readonly LinkedList<iCamFollowable>CamFollowables=new LinkedList<iCamFollowable>();public iCamFollowable CamFollowing=null;public SimActor CamControlled=null;
 protected override void Awake(){
@@ -159,7 +160,7 @@ TerrainCarveCube=1,
 TerrainCarveSphere=2,
 Hand=3,
 Water=4,
-}[NonSerialized]public SelectedGameModeTool CurrentTool=SelectedGameModeTool.SimInteractionWheel;[NonSerialized]SelectedGameModeTool LastTool=SelectedGameModeTool.SimInteractionWheel;[NonSerialized]public int CurrentToolSize=1;
+}[NonSerialized]public SelectedGameModeTool CurrentTool=SelectedGameModeTool.SimInteractionWheel;[NonSerialized]SelectedGameModeTool LastTool=SelectedGameModeTool.SimInteractionWheel;[NonSerialized]public int CurrentToolSize=1;[NonSerialized]public int LastToolSize=1;
 
 
 void ProcessGameCommands(){
@@ -178,6 +179,15 @@ LastTool=CurrentTool;
 switch(CurrentTool){
 case(SelectedGameModeTool.TerrainCarveCube):{
 CurrentToolSize=Mathf.Clamp(CurrentToolSize,2,16);
+if(CurrentToolSize!=LastToolSize){
+
+
+                        Debug.LogWarning("fix tool size");
+ui.SetCurrentToolSize(CurrentToolSize);
+
+
+LastToolSize=CurrentToolSize;
+}
     break;
 }
 }
