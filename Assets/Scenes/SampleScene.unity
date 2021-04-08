@@ -1902,7 +1902,7 @@ PrefabInstance:
     - target: {fileID: 1803007530246161363, guid: cc3c67ef4cdea4f4d801375a258594ff,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4836057272321444418, guid: cc3c67ef4cdea4f4d801375a258594ff,
         type: 3}
@@ -2145,6 +2145,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5058687533769462096, guid: 308505865f108054d8842526f737165c,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 891d0c177fcca6d448380b189ef09721, type: 2}
     - target: {fileID: 6990748707152753096, guid: 308505865f108054d8842526f737165c,
         type: 3}
       propertyPath: TerrainCarveCubeIndicators.Array.size
