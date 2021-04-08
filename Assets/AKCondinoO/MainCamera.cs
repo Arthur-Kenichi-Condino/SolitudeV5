@@ -183,7 +183,7 @@ if(CurrentToolSize!=LastToolSize){
 
 
                         Debug.LogWarning("fix tool size");
-ui.SetCurrentToolSize(CurrentToolSize);
+ui.SetCurrentToolSizeInputField(CurrentToolSize);
 
 
 LastToolSize=CurrentToolSize;
@@ -238,13 +238,13 @@ Vector3 previewPos=vCoord+_coordToSignedCoord;
     //Debug.LogWarning(previewPos);
 
 
-if(TerrainCarveCubeIndicators[0]!=null){TerrainCarveCubeIndicators[0].transform.position=previewPos+Vector3.Scale(_adjToCenter,TerrainCarveCubeIndicators[0].transform.lossyScale);TerrainCarveCubeIndicators[0].transform.rotation=Quaternion.identity;}
+if(TerrainCarveCubeIndicators[0]!=null){TerrainCarveCubeIndicators[0].transform.localScale=Vector3.one*(CurrentToolSize-1);TerrainCarveCubeIndicators[0].transform.position=previewPos+Vector3.Scale(_adjToCenter,TerrainCarveCubeIndicators[0].transform.lossyScale);TerrainCarveCubeIndicators[0].transform.rotation=Quaternion.identity;}
 if(hitTerrain){
 if(!UICore.UIReceivedInput&&!(bool)Enabled.ACTION_1[0]&&(bool)Enabled.ACTION_1[0]!=(bool)Enabled.ACTION_1[1]){
 
     Debug.LogWarning("action Edit at "+previewPos+"; ..."+Enabled.ACTION_1[0]+"!="+Enabled.ACTION_1[1]);
 //ChunkManager.main.Edit(previewPos,new Vector3Int(1,1,1),51,MaterialId.Dirt,ChunkManager.EditMode.Cube);
-if(ChunkManager.main!=null){ChunkManager.main.Edit(previewPos,new Vector3Int(1,1,1),51,MaterialId.Dirt,ChunkManager.EditMode.Cube);}
+if(ChunkManager.main!=null){ChunkManager.main.Edit(previewPos,new Vector3Int(CurrentToolSize,CurrentToolSize,CurrentToolSize),51,MaterialId.Dirt,ChunkManager.EditMode.Cube);}
 
 }
 }

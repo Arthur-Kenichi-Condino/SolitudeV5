@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 public class UICore:MonoBehaviour{
 [NonSerialized]MainCamera gameState;
 private void Awake(){
@@ -66,7 +68,7 @@ UIReceivedInput=true;
     Debug.LogWarning("OnF3BuildGardenClick");
      SetActiveF3BuildPanel(1);
 }
-public GameObject[]F3BuildPanels;
+public GameObject[]F3BuildPanels;public GameObject[]F3BuildInputFields;
 void SetActiveF3BuildPanel(int active){if(F3BuildPanels==null)return;
 for(int i=0;i<F3BuildPanels.Length;i++){
                              var subpanel=F3BuildPanels[i];
@@ -86,9 +88,26 @@ UIReceivedInput=true;
 public void OnSetCurrentToolSizeEndEdit(string size){
 UIReceivedInput=true;
     Debug.LogWarning("OnSetCurrentToolSizeEndEdit:"+size);
+
+
+if(int.TryParse(size,out int value)){
+gameState.CurrentToolSize=value;
 }
-public void SetCurrentToolSize(int size){
-    Debug.LogWarning("SetCurrentToolSize:"+size);
+
+
+}
+public void SetCurrentToolSizeInputField(int size){
+    Debug.LogWarning("SetCurrentToolSizeInputField:"+size);
+
+
+switch(gameState.CurrentTool){
+case(MainCamera.SelectedGameModeTool.TerrainCarveCube):{
+F3BuildInputFields[0].GetComponent<InputField>().text=size.ToString();
+    break;
+}
+}
+
+
 }
 void SetTool(int tool){
 gameState.CurrentTool=(MainCamera.SelectedGameModeTool)tool;
