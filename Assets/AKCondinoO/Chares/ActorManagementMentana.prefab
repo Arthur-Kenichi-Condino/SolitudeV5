@@ -54,9 +54,10 @@ MonoBehaviour:
   - {fileID: 3060762507858223686, guid: 66788a3051bc6d548b32495287c01c2e, type: 3}
   - {fileID: 2008670503701242331, guid: a78a72d1aba87cb45b934bfcac199524, type: 3}
   - {fileID: 0}
-  actorsMaxInstantiations: 05000000050000000500000001000000
+  - {fileID: 0}
+  actorsMaxInstantiations: 0500000005000000050000000100000005000000
   monsterTypeIds: 00000000
-  homunculusTypeIds: 0100000002000000
+  homunculusTypeIds: 010000000200000004000000
   charactersTypeIds: 03000000
   DEBUG_SPAWN_ENEMY: -1
   DEBUG_CREATE_ALLY: -1

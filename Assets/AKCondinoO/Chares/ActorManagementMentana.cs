@@ -233,6 +233,6 @@ HumanAggressive,
 }
 public enum TypeIds:int{
 _ALARM=0,
-_BAYERI=1,_EIRA=2,
+_BAYERI=1,_EIRA=2,_ELEANOR=4,
 _PLAYER=3,
 }static class TypeUtil{public static int Id(this TypeIds type){return(int)type;}public static TypeIds ActorType(this int id){return(TypeIds)id;}}
