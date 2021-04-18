@@ -22,7 +22,7 @@ Shader "Sprites/Beat/Diffuse-Shadow"
             LOD 200
             Cull Off
             Lighting On
-            ZWrite Off
+            ZWrite On
 
             CGPROGRAM
             #pragma surface surf Lambert addshadow alphatest:_Cutoff

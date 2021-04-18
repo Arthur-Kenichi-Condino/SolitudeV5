@@ -95,6 +95,7 @@ MonoBehaviour:
   DEBUG_GETHIT: 0
   DEBUG_DIE: 0
   motionRhythm: 0.0245
+  DEBUG_SNAPSHOT_SHADOWED: 0
 --- !u!65 &341555408834460584
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -281,6 +282,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -74577582058598035, guid: 6f00ff49b62611046ba1c7dcaced9fe8,
         type: 3}
+    - target: {fileID: 4624965802017645441, guid: 34ed58caa0373c248a7a34077c57adbc,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4624965802017645441, guid: 34ed58caa0373c248a7a34077c57adbc,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

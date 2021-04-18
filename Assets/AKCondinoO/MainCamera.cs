@@ -9,6 +9,7 @@ public static UICore ui;//  Available after Awake: OnEnable
 public static Dictionary<string,object[]>AllCommands=new Dictionary<string,object[]>();public static Dictionary<string,object[]>AllStates=new Dictionary<string,object[]>();
 public static readonly LinkedList<iCamFollowable>CamFollowables=new LinkedList<iCamFollowable>();public iCamFollowable CamFollowing=null;public SimActor CamControlled=null;
 protected override void Awake(){
+Camera.main.transparencySortMode=TransparencySortMode.Default;
                    base.Awake();
 foreach(FieldInfo field in typeof(Commands).GetFields(BindingFlags.Public|BindingFlags.Static)){
 if(field.GetValue(null)is object[]command){
