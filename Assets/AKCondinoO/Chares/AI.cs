@@ -123,6 +123,11 @@ var tuple=GetEnemiesAttackingMe[i];
     tuple.timeout-=Time.deltaTime;
 GetEnemiesAttackingMe[i]=tuple;if(GetEnemiesAttackingMe[i].timeout<=0||GetEnemiesAttackingMe[i].actor.GetMotion==Motions.MOTION_DEAD||GetEnemiesAttackingMe[i].actor.OutOfSight){GetEnemiesAttackingMe.Remove(i);}
 }
+for(int k=GetEnemiesAttackingAlly.Keys.Count-1;k>=0;k--){var i=GetEnemiesAttackingAlly.Keys.ElementAt(k);
+var tuple=GetEnemiesAttackingAlly[i];
+    tuple.timeout-=Time.deltaTime;
+GetEnemiesAttackingAlly[i]=tuple;if(GetEnemiesAttackingAlly[i].timeout<=0||GetEnemiesAttackingAlly[i].actor.GetMotion==Motions.MOTION_DEAD||GetEnemiesAttackingAlly[i].actor.OutOfSight){GetEnemiesAttackingAlly.Remove(i);}
+}
 MyPossibleTargets.Clear();
 foreach(var actor in GetActors){var i=actor.Key;var v=actor.Value;
 if(i!=this.Id&&v.GetMotion!=Motions.MOTION_DEAD&&!v.OutOfSight){
@@ -153,17 +158,29 @@ Vector3 pos;float dis;
 if(TypeId.ActorType()==TypeIds._EIRA){pos=v.collider.bounds.center;
 
 
-Debug.LogWarning("ally in danger");
+Debug.LogWarning("ally in danger;[my type:"+TypeId.ActorType());
 addPossibleTarget();attackingAlly();
 
 
-}else if(MySight.IsInVisionSight.ContainsKey(ally.Id)&&MySight.IsInVisionSight[ally.Id].directSight){
-if(MySight.IsInVisionSight.ContainsKey(i)&&MySight.IsInVisionSight[i].directSight){pos=MySight.IsInVisionSight[i].pos;
+}else if(MySight.IsInVisionSight.ContainsKey(ally.Id)&&MySight.IsInVisionSight[ally.Id].directSight&&MySight.IsInVisionSight.ContainsKey(i)&&MySight.IsInVisionSight[i].directSight){pos=MySight.IsInVisionSight[i].pos;
+//if(MySight.IsInVisionSight.ContainsKey(i)&&MySight.IsInVisionSight[i].directSight){pos=MySight.IsInVisionSight[i].pos;
 
-Debug.LogWarning("ally in danger");
+Debug.LogWarning("ally in danger;[my type:"+TypeId.ActorType());
 addPossibleTarget();attackingAlly();
 
-}
+//}else{
+
+
+//Debug.LogWarning("ally in danger;but I can't see their enemy yet;[my type:"+TypeId.ActorType());
+
+
+//}
+}else{
+
+
+Debug.LogWarning("ally in danger;but I can't see them yet;[my type:"+TypeId.ActorType());
+
+
 }
 void addPossibleTarget(){
 dis=Vector3.Distance(collider.bounds.center,pos);
@@ -185,6 +202,15 @@ MyEnemy=null;
 if(MyEnemy==null){    
 float dis=-1;
 foreach(var kvp in GetEnemiesAttackingMe){var i=kvp.Key;var v=kvp.Value.actor;var d=kvp.Value.dis;
+if(dis==-1||dis>d){
+MyEnemy=v;
+    dis=d;
+}
+}
+}
+if(MyEnemy==null){    
+float dis=-1;
+foreach(var kvp in GetEnemiesAttackingAlly){var i=kvp.Key;var v=kvp.Value.actor;var d=kvp.Value.dis;
 if(dis==-1||dis>d){
 MyEnemy=v;
     dis=d;
@@ -324,6 +350,12 @@ break;
 if(!cancel){
 Attack(MyEnemy);
 }else{
+
+
+//  TO DO: fazer aliado, ou eu mesmo, se mover: usar EXCUSE_ST em mim se aliado também está atacando, usar EXCUSE_ST no aliado se ele usar EVADE quando for leva dano "On Will Take Damage"            
+Attack(MyEnemy);
+
+
 }
 
 
@@ -409,6 +441,8 @@ if(skill is _EVADE evade&&fromEnemy!=null){evaded=evade.DoSkill(this,fromEnemy);
 
                 
     Debug.LogWarning("evaded:"+evaded+";evade.Result:"+evade.Result);
+if(evaded){
+STOP();}
 
 
 }
