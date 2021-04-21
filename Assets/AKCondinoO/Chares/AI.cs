@@ -107,8 +107,11 @@ if(MyState==State.FOLLOW_ST){OnFOLLOW_ST();}
 if(MyState==State.IDLE_ST){OnIDLE_ST();}
 if(MyState==State.CHASE_ST){OnCHASE_ST();}
 if(MyState==State.ATTACK_ST){OnATTACK_ST();}
+if(MyState==State.AVOID_ST){OnAVOID_ST();}
+if(MyState==State.DODGE_ST){OnDODGE_ST();}
+if(MyState==State.FLEE_ST){OnFLEE_ST();}
 if(MyState==State.SKILL_OBJECT_ST){OnSKILL_OBJECT_ST();}
-
+evadedFromAlly=false;
 
 }else{
     Autonomous-=Time.deltaTime;
@@ -282,6 +285,20 @@ return;
 }
 
 
+if(evadedFromAlly){
+            Debug.LogWarning("evadedFromAlly:"+evadedFromAlly,this);
+
+if(mathrandom.NextDouble()<=.25f){
+if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":avoid",this);
+STOP();
+MyState=State.AVOID_ST;
+return;
+}
+
+
+}
+
+
 int r;
 if((r=doAttackingMoveAway())!=1){
 doAttack();
@@ -352,7 +369,7 @@ Attack(MyEnemy);
 }else{
 
 
-//  TO DO: fazer aliado, ou eu mesmo, se mover: usar EXCUSE_ST em mim se aliado também está atacando, usar EXCUSE_ST no aliado se ele usar EVADE quando for leva dano "On Will Take Damage"            
+//  TO DO: fazer aliado, ou eu mesmo, se mover: usar AVOID_ST em mim se aliado também está atacando, usar AVOID_ST no aliado se ele usar EVADE quando for leva dano "On Will Take Damage"            
 Attack(MyEnemy);
 
 
@@ -360,6 +377,43 @@ Attack(MyEnemy);
 
 
 attackHitboxColliders=null;
+}
+[SerializeField]protected float avoidanceTimeout=.5f;[NonSerialized]protected float avoidanceTime;
+protected virtual void OnAVOID_ST(){
+if(MyEnemy==null){
+avoidanceTime=0f;
+if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":idle",this);
+STOP();
+MyState=State.IDLE_ST;
+return;
+}
+
+
+if(avoidanceTime>avoidanceTimeout){
+avoidanceTime=0f;
+if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":chase",this);
+STOP();
+MyState=State.CHASE_ST;
+return;
+}
+avoidanceTime+=Time.deltaTime;
+
+
+if(!destSet||CurPathTgt==null){
+    MyDest=MyEnemy.collider.bounds.center;var dir=collider.bounds.center-MyEnemy.collider.bounds.center;dir.y=0;dir=Quaternion.Euler(0,(float)(mathrandom.NextDouble()*2-1)*90,0)*dir.normalized;MyDest+=dir*(float)(mathrandom.NextDouble()+1);
+
+
+Debug.DrawLine(collider.bounds.center,MyDest,Color.blue,1f);
+
+            
+GoTo(new Ray(MyDest,Vector3.down));
+}
+
+
+}
+protected virtual void OnDODGE_ST(){
+}
+protected virtual void OnFLEE_ST(){
 }
 protected virtual void OnSKILL_OBJECT_ST(){}
 [NonSerialized]protected float MyAttackRange=.2f;public float AttackRange{get{return MyAttackRange;}}
@@ -425,7 +479,7 @@ attackHitboxColliders=null;
     didDamage=true;
 }
 }
-[NonSerialized]protected float damage;
+[NonSerialized]protected float damage;[NonSerialized]protected bool evadedFromAlly;
 protected virtual void TakeDamage(AI fromEnemy){
 if(fromEnemy!=null){
 damage=fromEnemy.Attributes.ATK-Attributes.DEF;
@@ -442,6 +496,7 @@ if(skill is _EVADE evade&&fromEnemy!=null){evaded=evade.DoSkill(this,fromEnemy);
                 
     Debug.LogWarning("evaded:"+evaded+";evade.Result:"+evade.Result);
 if(evaded){
+if(IsAllyTo(fromEnemy)){evadedFromAlly=true;}
 STOP();}
 
 
@@ -691,6 +746,9 @@ EXCUSE_ST=2,
 CHASE_ST=3,
 ATTACK_ST=4,
 SKILL_OBJECT_ST=5,
+AVOID_ST=20,
+DODGE_ST=21,
+FLEE_ST=22,
 }
 public enum Motions:int{
 MOTION_STAND  =0,
