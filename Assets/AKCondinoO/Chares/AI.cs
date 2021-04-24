@@ -178,6 +178,16 @@ addPossibleTarget();attackingAlly();
 
 
 //}
+}else if(MySight.IsInHearingSight.ContainsKey(ally.Id)&&(
+    ally.GetMotion==Motions.MOTION_HIT||
+        v.GetMotion==Motions.MOTION_ATTACK||
+        v.GetMotion==Motions.MOTION_ATTACK2)){pos=MySight.IsInHearingSight[ally.Id].pos;
+
+                        
+Debug.LogWarning("ally in danger;[my type:"+TypeId.ActorType());
+addPossibleTarget();attackingAlly();
+
+
 }else{
 
 
