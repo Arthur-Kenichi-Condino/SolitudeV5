@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Scripting;
 using static MemoryManagement;
-namespace AKCondinoO.Voxels{public class ChunkManager:MonoBehaviour{ 
+namespace AKCondinoO.Voxels{public class ChunkManager:MonoBehaviour{//  valores:[teste:(1,1)]:[expropriationDistance=(7,7);instantiationDistance=(5,5);]
 public bool LOG=false;public int LOG_LEVEL=1;
 [NonSerialized]public static readonly string saveFolder=Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).Replace("\\","/").ToString()+"/Solitude/";[NonSerialized]public static string[]saveSubfolder=new string[1];
 public static string CurrWorldName{private set;get;}
@@ -53,6 +53,13 @@ return;
     for(int i=maxChunks-1;i>=0;--i){
         GameObject obj=Instantiate(ChunkPrefab);Chunk scr=obj.GetComponent<Chunk>();ChunksPool.AddLast(scr);scr.ExpropriationNode=ChunksPool.Last;if(scr is TerrainChunk cnk){load_Syn.Add(cnk.load_Syn);}
     }
+
+    
+AtlasHelper.Material.SetVector(AtlasHelper._Shader_Input[1],new Vector3(Chunk.Width/2f+Chunk.Width*instantiationDistance.x-Chunk.Width,
+                                                                        Chunk.Height/2f-8f,
+                                                                        Chunk.Depth/2f+Chunk.Depth*instantiationDistance.y-Chunk.Depth));
+
+
 }
 [NonSerialized]Task task1,task2;[NonSerialized]readonly AutoResetEvent foregroundDataSet1=new AutoResetEvent(false);[NonSerialized]readonly ManualResetEvent foregroundDataSet2=new ManualResetEvent(true);[NonSerialized]readonly ManualResetEvent backgroundDataSet1=new ManualResetEvent(true);
 protected virtual void OnEnable(){
@@ -139,6 +146,11 @@ Vector2Int nCoord1=cnk.Coord;nCoord1.x+=x;nCoord1.y+=z;int ngbIdx1=GetIdx(nCoord
 if(firstLoop||actPos!=Camera.main.transform.position){
 if(LOG&&LOG_LEVEL<=-80)Debug.Log("actPos anterior:"+actPos+";actPos novo:"+Camera.main.transform.position);
     actPos=Camera.main.transform.position;
+
+
+AtlasHelper.Material.SetVector(AtlasHelper._Shader_Input[0],actPos);
+
+
     if(firstLoop|aCoord!=(aCoord=PosToCoord(actPos))){
 if(LOG&&LOG_LEVEL<=1)Debug.Log("aCoord novo:"+aCoord+";aCoord_Pre:"+aCoord_Pre);
 Build();aCoord_Pre=aCoord;

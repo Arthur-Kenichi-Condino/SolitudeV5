@@ -14,6 +14,7 @@ if(manager==null){OutOfSight_v=false;}
                    base.Awake();
 MySight=GetComponentInChildren<Sight>();
     sfx=GetComponent<CharSFX>();
+MyAttackRange=MyAttackRange*BodyRadius;
 }
 protected override void OnEnable(){
                    base.OnEnable();
@@ -28,6 +29,11 @@ protected State MyState=State.IDLE_ST;
 #region OutOfSight result set
 public override bool OutOfSight{get{return OutOfSight_v;}set{
 if(value&&OutOfSight_v!=value){
+
+                
+    Debug.LogWarning("OutOfSight");
+
+
 OutOfSight_disable=true;
 }
 OutOfSight_v=value;
@@ -426,7 +432,7 @@ protected virtual void OnDODGE_ST(){
 protected virtual void OnFLEE_ST(){
 }
 protected virtual void OnSKILL_OBJECT_ST(){}
-[NonSerialized]protected float MyAttackRange=.2f;public float AttackRange{get{return MyAttackRange;}}
+[NonSerialized]protected float MyAttackRange=1.5f;public float AttackRange{get{return MyAttackRange;}}
 protected virtual bool IsInAttackSight(AI enemy){
 if(Vector3.Distance(collider.bounds.center,enemy.collider.bounds.center)-(BodyRadius+enemy.BodyRadius)<=MyAttackRange){
 return true;

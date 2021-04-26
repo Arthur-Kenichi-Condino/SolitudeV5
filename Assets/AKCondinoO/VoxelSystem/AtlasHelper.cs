@@ -1,7 +1,8 @@
 ﻿using System;
 using UnityEngine;
 public static class AtlasHelper{
-public static void GetAtlasData(Material material){
+public static Material Material{get;private set;}
+public static void GetAtlasData(Material material){Material=material;
 float _U,_V;var texture=material.GetTexture("_MainTex");material.SetTexture("_MainTex1",texture);var w=texture.width;var h=texture.height;var tilesResolution=material.GetFloat("_TilesResolution"); 
 var TileWidth=(w/tilesResolution);
 var TileHeight=(h/tilesResolution);
@@ -25,6 +26,10 @@ public static MaterialId GetMaterial(Vector2 uv){
 return(MaterialId)Array.IndexOf(_UVs,uv);
 }
 public static Vector2[]_UVs;
+public static readonly string[]_Shader_Input=new string[]{"_CameraPosition",
+                                                            "_FadeQuadrangularStart",
+                                                            "_FadeQuadrangularEnd"  ,
+};
 }
 /// <summary>
 ///  Lista de tipos de material de terreno.
