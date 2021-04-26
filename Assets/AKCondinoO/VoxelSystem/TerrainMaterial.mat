@@ -89,11 +89,11 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _CameraPosition: {r: 0, g: 0, b: 0, a: 0}
+    - _CameraPosition: {r: 40.072056, g: 10.885119, b: -21.842737, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FadeQuadrangularEnd: {r: 24, g: 128, b: 24, a: 1}
-    - _FadeQuadrangularStart: {r: 16, g: 120, b: 16, a: 1}
+    - _FadeQuadrangularEnd: {r: 16, g: 128, b: 16, a: 0}
+    - _FadeQuadrangularStart: {r: 8, g: 120, b: 8, a: 0}
     - _FogQuadrangularEnd: {r: 40, g: 40, b: 40, a: 1}
     - _FogQuadrangularStart: {r: 32, g: 32, b: 32, a: 1}
   m_BuildTextureStacks: []

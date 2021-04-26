@@ -58,6 +58,9 @@ return;
 AtlasHelper.Material.SetVector(AtlasHelper._Shader_Input[1],new Vector3(Chunk.Width/2f+Chunk.Width*instantiationDistance.x-Chunk.Width,
                                                                         Chunk.Height/2f-8f,
                                                                         Chunk.Depth/2f+Chunk.Depth*instantiationDistance.y-Chunk.Depth));
+AtlasHelper.Material.SetVector(AtlasHelper._Shader_Input[2],new Vector3(Chunk.Width/2f+Chunk.Width*instantiationDistance.x-Chunk.Width/2f,
+                                                                        Chunk.Height/2f,
+                                                                        Chunk.Depth/2f+Chunk.Depth*instantiationDistance.y-Chunk.Depth/2f));
 
 
 }

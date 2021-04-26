@@ -49,6 +49,8 @@ MonoBehaviour:
   LOG: 1
   LOG_LEVEL: 1
   DRAW_LEVEL: 1
+  CanCrouch: 0
+  DEBUG_TELEPORT: 0
   Attributes:
     STR: 0
     VIT: 0
@@ -61,19 +63,26 @@ MonoBehaviour:
     BaseMaxFocus: 0
     CurFocus: 0
     BaseAspd: 0
+    BaseHit: 0
+    BaseFlee: 0
     BaseDEF: 0
     BaseMDEF: 0
     BaseATK: 0
     BaseMATK: 0
+  onWillTakeDamageSkills: 
   Lerp: 1
   MoveLerpSpeed: 0.125
   InputMoveAcceleration: {x: 0.2, y: 0, z: 0.2}
   InputMaxMoveSpeed: {x: 0.2, y: 0, z: 0.2}
+  MaxMoveSpeedBackwardMultiplier: 1
   GetNewTgtPosCdTime: 0.05
   RotationLerpSpeed: 0.125
   HeadRotationLerpSpeed: 0.125
   InputViewRotationIncreaseSpeed: 0.025
   GetNewTgtRotCdTime: 0.05
+  CamControlled: {fileID: 0}
+  TerrainCarveCubeIndicators:
+  - {fileID: 8405799851733501910}
 --- !u!20 &6990748707152753102
 Camera:
   m_ObjectHideFlags: 0
@@ -83,7 +92,7 @@ Camera:
   m_GameObject: {fileID: 6990748707152753100}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -184,7 +193,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 891d0c177fcca6d448380b189ef09721, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
