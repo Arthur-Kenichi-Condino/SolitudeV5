@@ -737,7 +737,7 @@ inputMoveSpeed.y=0;
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
    _axisDist.z>ReachedTgtDisThreshold.z)){
-inputMoveSpeed.z=InputMaxMoveSpeed.z;if(doingAttackMoveAway){inputMoveSpeed.z=-inputMoveSpeed.z;}
+inputMoveSpeed.z+=InputMoveAcceleration.z*Time.deltaTime;if(inputMoveSpeed.z>InputMaxMoveSpeed.z){inputMoveSpeed.z=InputMaxMoveSpeed.z;}/*inputMoveSpeed.z=InputMaxMoveSpeed.z;*/if(doingAttackMoveAway){inputMoveSpeed.z=-inputMoveSpeed.z*MaxMoveSpeedBackwardMultiplier;}
 }else{
 inputMoveSpeed.z=0;
 }
@@ -752,7 +752,7 @@ inputMoveSpeed.y=0;
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
    _axisDist.z>ReachedTgtDisThreshold.z)){
-inputMoveSpeed.z=InputMaxMoveSpeed.z;if(doingAttackMoveAway){inputMoveSpeed.z=-inputMoveSpeed.z;}
+inputMoveSpeed.z+=InputMoveAcceleration.z*Time.deltaTime;if(inputMoveSpeed.z>InputMaxMoveSpeed.z){inputMoveSpeed.z=InputMaxMoveSpeed.z;}/*inputMoveSpeed.z=InputMaxMoveSpeed.z;*/if(doingAttackMoveAway){inputMoveSpeed.z=-inputMoveSpeed.z*MaxMoveSpeedBackwardMultiplier;}
 }else{
 inputMoveSpeed.z=0;
 }
