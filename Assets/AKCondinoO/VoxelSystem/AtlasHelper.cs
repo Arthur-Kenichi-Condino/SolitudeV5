@@ -27,8 +27,12 @@ return(MaterialId)Array.IndexOf(_UVs,uv);
 }
 public static Vector2[]_UVs;
 public static readonly string[]_Shader_Input=new string[]{"_CameraPosition",
-                                                            "_FadeQuadrangularStart",
-                                                            "_FadeQuadrangularEnd"  ,
+                                                            "_FogIntensity"        ,
+                                                            "_FogColor"            ,
+                                                            "_FogQuadrangularStart",
+                                                            "_FogQuadrangularEnd"  ,
+                                                                "_FadeQuadrangularStart",
+                                                                "_FadeQuadrangularEnd"  ,
 };
 }
 /// <summary>

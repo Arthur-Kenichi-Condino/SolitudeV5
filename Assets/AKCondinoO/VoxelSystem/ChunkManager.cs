@@ -55,12 +55,21 @@ return;
     }
 
     
-AtlasHelper.Material.SetVector(AtlasHelper._Shader_Input[1],new Vector3(Chunk.Width/2f+Chunk.Width*instantiationDistance.x-Chunk.Width,
-                                                                        Chunk.Height/2f-8f,
-                                                                        Chunk.Depth/2f+Chunk.Depth*instantiationDistance.y-Chunk.Depth));
-AtlasHelper.Material.SetVector(AtlasHelper._Shader_Input[2],new Vector3(Chunk.Width/2f+Chunk.Width*instantiationDistance.x-Chunk.Width/2f,
-                                                                        Chunk.Height/2f,
-                                                                        Chunk.Depth/2f+Chunk.Depth*instantiationDistance.y-Chunk.Depth/2f));
+Vector3 fadeQStart,fadeQEnd;
+AtlasHelper.Material.SetVector(AtlasHelper._Shader_Input[5],fadeQStart=new Vector3(Chunk.Width/2f+Chunk.Width*instantiationDistance.x-Chunk.Width,
+                                                                                   Chunk.Height/2f-8f,
+                                                                                   Chunk.Depth/2f+Chunk.Depth*instantiationDistance.y-Chunk.Depth));
+AtlasHelper.Material.SetVector(AtlasHelper._Shader_Input[6],fadeQEnd  =new Vector3(Chunk.Width/2f+Chunk.Width*instantiationDistance.x-Chunk.Width/2f,
+                                                                                   Chunk.Height/2f,
+                                                                                   Chunk.Depth/2f+Chunk.Depth*instantiationDistance.y-Chunk.Depth/2f));
+Vector3 fogQStart,fogQEnd;
+AtlasHelper.Material.SetVector(AtlasHelper._Shader_Input[4],fogQEnd   =fadeQStart);
+                                                            fogQStart =new Vector3(fogQEnd.x-8f,
+                                                                                   fogQEnd.y-8f,
+                                                                                   fogQEnd.z-8f);
+AtlasHelper.Material.SetVector(AtlasHelper._Shader_Input[3],new Vector3(fogQStart.x==0f?4f:fogQStart.x,
+                                                                        fogQStart.y,
+                                                                        fogQStart.z==0f?4f:fogQStart.z));
 
 
 }

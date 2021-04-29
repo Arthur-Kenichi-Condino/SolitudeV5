@@ -3,7 +3,7 @@ Properties{
 _Color("Color",Color)=(1,1,1,1) _MainTex("Albedo (RGB)",2D)="white"{} _MainTex1("Albedo (RGB) 1",2D)="white"{} _MainTex2("Albedo (RGB) 1",2D)="white"{} _MainTex3("Albedo (RGB) 1",2D)="white"{} _Glossiness("Smoothness",Range(0,1))=0.5 _Metallic("Metallic",Range(0,1))=0.0
 _TilesResolution("Atlas Tiles Resolution",float)=3 _Scale("Scale",float)=1 _Sharpness("Triplanar Blend Sharpness",float)=1
 _CameraPosition("Camera Position",Vector)=(0,0,0,1)
-_FogQuadrangularStart("Quadrangular Fog Start",Vector)=(32,32,32,1) _FogQuadrangularEnd("Quadrangular Fog End",Vector)=(40,40,40,1) _FadeQuadrangularStart("Quadrangular Fade Start",Vector)=(40,40,40,1) _FadeQuadrangularEnd("Quadrangular Fade End",Vector)=(48,48,48,1)
+_FogIntensity("Fog Intensity",float)=1 _FogColor("Fog Color",Color)=(1,1,1,1) _FogQuadrangularStart("Quadrangular Fog Start",Vector)=(32,32,32,1) _FogQuadrangularEnd("Quadrangular Fog End",Vector)=(40,40,40,1) _FadeQuadrangularStart("Quadrangular Fade Start",Vector)=(40,40,40,1) _FadeQuadrangularEnd("Quadrangular Fade End",Vector)=(48,48,48,1)
 }
 SubShader{Tags{"Queue"="AlphaTest" "RenderType"="Transparent" "IgnoreProjector"="True"}
 LOD 200
@@ -39,7 +39,7 @@ CGPROGRAM
 fixed4 _Color;sampler2D _MainTex;sampler2D _MainTex1;sampler2D _MainTex2;sampler2D _MainTex3;half _Glossiness;half _Metallic;
 float _TilesResolution;float _Scale;float _Sharpness;
 float4 _CameraPosition;
-fixed4 _FogQuadrangularStart;fixed4 _FogQuadrangularEnd;fixed4 _FadeQuadrangularStart;fixed4 _FadeQuadrangularEnd;
+float _FogIntensity;fixed4 _FogColor;fixed4 _FogQuadrangularStart;fixed4 _FogQuadrangularEnd;fixed4 _FadeQuadrangularStart;fixed4 _FadeQuadrangularEnd;
 struct Input{
     float3 worldPos:POSITION;
     float3 worldNormal:NORMAL;

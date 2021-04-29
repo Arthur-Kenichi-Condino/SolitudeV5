@@ -122,6 +122,7 @@
     <Compile Include="Assets\UMA\Examples\Legacy Examples\Scripts\UMARecipeCrowd.cs" />
     <Compile Include="Assets\AKCondinoO\Chares\_THE_PERFECTIONIST\THE_PERFECTIONIST.cs" />
     <Compile Include="Assets\UMA\Examples\Timeline Example\Scripts\UMAPlayOnAwake.cs" />
+    <Compile Include="Assets\AKCondinoO\Chares\_ELEANOR\ELEANOR.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\Timeline\UmaDna\UmaDnaBehaviour.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Actors\FlexSoftActor.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\UMAAssetBundleManager\Utility.cs" />
@@ -471,7 +472,7 @@
     <Compile Include="Assets\UMA\Examples\Legacy Examples\Scripts\LODDisplay.cs" />
     <Compile Include="Assets\UMA\Core\Scripts\DNA\Legacy\UMADnaHumanoid_Generated.cs" />
     <Compile Include="Assets\UMA\Examples\MountingObjects Example\Scripts\UMAMountObject.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\_ELEANOR\ELEANOR.cs" />
+    <Compile Include="Assets\AKCondinoO\Chares\Skills\_CASTLING.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\UMA\Core\StandardAssets\UMA\Atlas\AtlasNormalShader32.shader" />

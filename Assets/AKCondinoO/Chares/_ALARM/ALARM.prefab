@@ -76,8 +76,8 @@ MonoBehaviour:
   onWillTakeDamageSkills: 00000000
   Lerp: 1
   MoveLerpSpeed: 0.125
-  InputMoveAcceleration: {x: 3, y: 3, z: 3}
-  InputMaxMoveSpeed: {x: 3, y: 3, z: 3}
+  InputMoveAcceleration: {x: 1.5, y: 3, z: 1.5}
+  InputMaxMoveSpeed: {x: 1.5, y: 3, z: 1.5}
   MaxMoveSpeedBackwardMultiplier: 1
   GetNewTgtPosCdTime: 0.05
   RotationLerpSpeed: 0.125
@@ -96,6 +96,7 @@ MonoBehaviour:
   DEBUG_GETHIT: 0
   DEBUG_DIE: 0
   motionRhythm: 0.0245
+  DEBUG_SNAPSHOT_SHADOWED: 0
 --- !u!65 &8356489079188606030
 BoxCollider:
   m_ObjectHideFlags: 0

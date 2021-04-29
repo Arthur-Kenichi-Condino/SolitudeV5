@@ -313,6 +313,13 @@ return;
 
 
 }
+if(avoid){
+avoid=false;
+if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":avoid",this);
+STOP();
+MyState=State.AVOID_ST;
+return;
+}
 
 
 int r;
@@ -361,13 +368,13 @@ if(CurPathTgt!=null){
 STOP();
 }
 return 0;}
-void doAttack(){
+[NonSerialized]bool willHitEnemy,willHitAlly;[NonSerialized]bool avoid;void doAttack(){
 if(attackHitboxColliders==null){
 OverlappedCollidersOnAttack();
 }
 
 
-bool cancel=false;
+willHitEnemy=false;willHitAlly=false;bool cancel=false;
 if(attackHitboxColliders!=null){
 for(int i=0;i<attackHitboxColliders.Length;i++){var collider=attackHitboxColliders[i];
 AI actor;
@@ -375,6 +382,12 @@ if(collider.CompareTag("Player")&&(actor=collider.GetComponent<AI>())!=null){
 if(IsAllyTo(actor)){
     Debug.LogWarning("cancel attack and move, or ally may be hit:"+collider.name+"; tag:"+collider.tag,this);
 cancel=true;
+willHitAlly=true;
+}
+if(actor==MyEnemy){
+willHitEnemy=true;
+}
+if(willHitEnemy&&willHitAlly){
 break;
 }
 }
@@ -386,6 +399,9 @@ Attack(MyEnemy);
 
 
 //  TO DO: fazer aliado, ou eu mesmo, se mover: usar AVOID_ST em mim se aliado também está atacando, usar AVOID_ST no aliado se ele usar EVADE quando for leva dano "On Will Take Damage"            
+if(mathrandom.NextDouble()<=.25f){
+avoid=true;
+}
 Attack(MyEnemy);
 
 
@@ -394,10 +410,10 @@ Attack(MyEnemy);
 
 attackHitboxColliders=null;
 }
-[SerializeField]protected float avoidanceTimeout=.5f;[NonSerialized]protected float avoidanceTime;
+[NonSerialized]protected float avoidanceTimeout=.5f;[NonSerialized]protected float avoidanceTime;[NonSerialized]protected bool avoided=false;
 protected virtual void OnAVOID_ST(){
 if(MyEnemy==null){
-avoidanceTime=0f;
+avoidanceTime=0f;avoided=false;
 if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":idle",this);
 STOP();
 MyState=State.IDLE_ST;
@@ -406,7 +422,7 @@ return;
 
 
 if(avoidanceTime>avoidanceTimeout){
-avoidanceTime=0f;
+avoidanceTime=0f;avoided=false;
 if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":chase",this);
 STOP();
 MyState=State.CHASE_ST;
@@ -415,11 +431,24 @@ return;
 avoidanceTime+=Time.deltaTime;
 
 
-if(!destSet||CurPathTgt==null){
+if(tracing||GoToQueue.Count>0){
+}else if(!destSet||CurPathTgt==null){
+
+
+if(avoided){
+avoidanceTime=0f;avoided=false;
+if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":chase",this);
+STOP();
+MyState=State.CHASE_ST;
+return;
+}
+
+
+avoided=true;
     MyDest=MyEnemy.collider.bounds.center;var dir=collider.bounds.center-MyEnemy.collider.bounds.center;dir.y=0;dir=Quaternion.Euler(0,(float)(mathrandom.NextDouble()*2-1)*90,0)*dir.normalized;MyDest+=dir*(float)(mathrandom.NextDouble()+1);
 
 
-Debug.DrawLine(collider.bounds.center,MyDest,Color.blue,1f);
+Debug.DrawLine(collider.bounds.center,MyDest,Color.blue,avoidanceTimeout);
 
             
 GoTo(new Ray(MyDest,Vector3.down));
@@ -442,12 +471,14 @@ return false;}
 [NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}
 protected virtual void Attack(AI enemy){
     Debug.LogWarning("trying attack stance ["+this);
+if(willHitEnemy){
 if(attackStance==-1){
 if(deadStance!=-1||hitStance!=-1){}else{
     Debug.LogWarning("new attack started: set to do damage next animation");
     didDamage=false;
     nextAttackTimer=(attackInterval/Attributes.Aspd)+attackWaitForSoundTime;
     Debug.LogWarning("nextAttackTimer:"+nextAttackTimer+";attackInterval:"+attackInterval+";Attributes.Aspd:"+Attributes.Aspd+";attackWaitForSoundTime:"+attackWaitForSoundTime);
+}
 }
 }
 if(enemy!=null){
@@ -513,7 +544,9 @@ if(skill is _EVADE evade&&fromEnemy!=null){evaded=evade.DoSkill(this,fromEnemy);
     Debug.LogWarning("evaded:"+evaded+";evade.Result:"+evade.Result);
 if(evaded){
 if(IsAllyTo(fromEnemy)){evadedFromAlly=true;}
-STOP();}
+inputViewRotationEuler.y=Quaternion.LookRotation((fromEnemy.collider.bounds.center-collider.bounds.center).normalized).eulerAngles.y-transform.eulerAngles.y;
+STOP();
+}
 
 
 }

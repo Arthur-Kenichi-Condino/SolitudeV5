@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LOG: 1
   LOG_LEVEL: 1
-  DRAW_LEVEL: -100
+  DRAW_LEVEL: 1
   CanCrouch: 1
   DEBUG_TELEPORT: 0
   Attributes:
@@ -73,7 +73,7 @@ MonoBehaviour:
   onWillTakeDamageSkills: 
   Lerp: 1
   MoveLerpSpeed: 0.0625
-  InputMoveAcceleration: {x: 3, y: 3, z: 6}
+  InputMoveAcceleration: {x: 3, y: 3, z: 3}
   InputMaxMoveSpeed: {x: 3, y: 3, z: 6}
   MaxMoveSpeedBackwardMultiplier: 0.5
   GetNewTgtPosCdTime: 0.05
@@ -82,7 +82,7 @@ MonoBehaviour:
   InputViewRotationIncreaseSpeed: 0.025
   GetNewTgtRotCdTime: 0.05
   DEBUG_GOTO: 0
-  Role: 0
+  Role: 5
   AutonomyDelayAfterControl: 30
   attackStanceRhythmMultiplier: 1
   attackStanceDamageTime: 0.5

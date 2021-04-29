@@ -15,7 +15,7 @@ if(target.IsAllyTo(actor)){
 
 
 float evasionChance=1-Mathf.Clamp01(target.Attributes.Hit-actor.Attributes.Flee);if(evasionChance>mathrandom.NextDouble()){
-    float dis=Vector3.Distance(actor.transform.position,target.transform.position)*.5f;
+    float dis=Vector3.Distance(actor.transform.position,target.transform.position)*(target==actor.Target?1f:.5f);
         float reposAngle=((float)(mathrandom.NextDouble())*2f-1f)*15f;if(reposAngle<0){reposAngle-=5f;}else{reposAngle+=5f;}Vector3 forward=(actor.transform.position-target.transform.position).normalized;Vector3 repos=target.transform.position+((Quaternion.AngleAxis(reposAngle,Vector3.up)*forward)*(dis+actor.BodyRadius));
         actor.Teleport(Quaternion.LookRotation((target.transform.position-actor.transform.position).normalized,actor.transform.up),repos,false);
         Debug.LogWarning("evaded!");
