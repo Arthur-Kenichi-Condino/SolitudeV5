@@ -475,10 +475,16 @@ return true;
 }
 return false;}
 [NonSerialized]protected float attackInterval=.25f;[SerializeField]protected float attackWaitForSoundTime=0;[NonSerialized]protected float nextAttackTimer=0;
-[NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}
+[NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}[NonSerialized]bool testBeforeAttacking=false;
 protected virtual void Attack(AI enemy){
     Debug.LogWarning("trying attack stance ["+this);
-if(willHitEnemy||attackHitboxColliders==null){
+
+
+if(attackHitboxColliders==null&&testBeforeAttacking){
+}
+
+
+if(willHitEnemy||!testBeforeAttacking){
 if(attackStance==-1){
 if(deadStance!=-1||hitStance!=-1){
 //Debug.LogWarning("attack stance failed: hit or dying");
@@ -507,8 +513,10 @@ attackHitboxHalfSize.z=collider.bounds.extents.z+MyAttackRange;
 attackHitboxHalfSize.y=collider.bounds.extents.y+MyAttackRange;
 attackHitboxHalfSize*=RangeMultiplier;
 var dest=(MyEnemy==null?transform.forward:(MyEnemy.collider.bounds.center-collider.bounds.center).normalized)*(collider.bounds.extents.z+attackHitboxHalfSize.z);
-//attackHitboxColliders=Physics.OverlapBox(collider.bounds.center+dest,attackHitboxHalfSize,transform.rotation);
 attackHitboxColliders=Physics.BoxCastAll(collider.bounds.center,attackHitboxHalfSize,dest.normalized,transform.rotation,collider.bounds.extents.z+attackHitboxHalfSize.z).Select(v=>v.collider).ToArray();
+if(attackHitboxColliders.Length==0){//  TO DO: se ghost attack, OverlapBox, ou se perto demais, também overlap box ou usar Avoid
+attackHitboxColliders=Physics.OverlapBox(collider.bounds.center+dest,attackHitboxHalfSize,transform.rotation);
+}
 Debug.DrawRay(collider.bounds.center,dest,Color.red,.5f);
 
 
