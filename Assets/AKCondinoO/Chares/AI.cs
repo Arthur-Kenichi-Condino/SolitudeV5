@@ -475,16 +475,16 @@ return true;
 }
 return false;}
 [NonSerialized]protected float attackInterval=.25f;[SerializeField]protected float attackWaitForSoundTime=0;[NonSerialized]protected float nextAttackTimer=0;
-[NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}[NonSerialized]bool testBeforeAttacking=false;
+[NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}[NonSerialized]bool testHitBeforeAttacking=false;
 protected virtual void Attack(AI enemy){
     Debug.LogWarning("trying attack stance ["+this);
 
 
-if(attackHitboxColliders==null&&testBeforeAttacking){
+if(attackHitboxColliders==null&&testHitBeforeAttacking){
 }
 
 
-if(willHitEnemy||!testBeforeAttacking){
+if(willHitEnemy||!testHitBeforeAttacking){
 if(attackStance==-1){
 if(deadStance!=-1||hitStance!=-1){
 //Debug.LogWarning("attack stance failed: hit or dying");
