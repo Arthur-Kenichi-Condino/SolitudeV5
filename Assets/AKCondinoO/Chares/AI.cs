@@ -393,6 +393,11 @@ break;
 }
 }
 }
+
+
+Debug.LogWarning("willHitEnemy:"+willHitEnemy+";willHitAlly:"+willHitAlly+" ["+this,this);
+
+
 if(willHitEnemy){
 if(!cancel){
 Attack(MyEnemy);
@@ -473,17 +478,21 @@ return false;}
 [NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}
 protected virtual void Attack(AI enemy){
     Debug.LogWarning("trying attack stance ["+this);
-if(willHitEnemy){
+if(willHitEnemy||attackHitboxColliders==null){
 if(attackStance==-1){
 if(deadStance!=-1||hitStance!=-1){
-Debug.LogWarning("under attack or dying");
+//Debug.LogWarning("attack stance failed: hit or dying");
 }else{
     Debug.LogWarning("new attack started: set to do damage next animation");
     didDamage=false;
     nextAttackTimer=(attackInterval/Attributes.Aspd)+attackWaitForSoundTime;
     Debug.LogWarning("nextAttackTimer:"+nextAttackTimer+";attackInterval:"+attackInterval+";Attributes.Aspd:"+Attributes.Aspd+";attackWaitForSoundTime:"+attackWaitForSoundTime);
 }
+}else{
+//Debug.LogWarning("attack stance failed: already attacking["+this);
 }
+}else{
+Debug.LogWarning("attack stance failed: will not hit enemy["+this);
 }
 if(enemy!=null){
 inputViewRotationEuler.y=Quaternion.LookRotation((enemy.collider.bounds.center-collider.bounds.center).normalized).eulerAngles.y-transform.eulerAngles.y;
@@ -498,7 +507,8 @@ attackHitboxHalfSize.z=collider.bounds.extents.z+MyAttackRange;
 attackHitboxHalfSize.y=collider.bounds.extents.y+MyAttackRange;
 attackHitboxHalfSize*=RangeMultiplier;
 var dest=(MyEnemy==null?transform.forward:(MyEnemy.collider.bounds.center-collider.bounds.center).normalized)*(collider.bounds.extents.z+attackHitboxHalfSize.z);
-attackHitboxColliders=Physics.OverlapBox(collider.bounds.center+dest,attackHitboxHalfSize,transform.rotation);
+//attackHitboxColliders=Physics.OverlapBox(collider.bounds.center+dest,attackHitboxHalfSize,transform.rotation);
+attackHitboxColliders=Physics.BoxCastAll(collider.bounds.center,attackHitboxHalfSize,dest.normalized,transform.rotation,collider.bounds.extents.z+attackHitboxHalfSize.z).Select(v=>v.collider).ToArray();
 Debug.DrawRay(collider.bounds.center,dest,Color.red,.5f);
 
 
