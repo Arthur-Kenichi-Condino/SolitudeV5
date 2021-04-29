@@ -194,7 +194,9 @@ protected void setOutOfSight(){
         pos=transform.position=pos_Pre;
 OutOfSight=true;
 }
-public virtual void Teleport(Quaternion rotation,Vector3 position,bool goThroughWalls=false){
+[NonSerialized]protected float slowLerpTimeout=0;[NonSerialized]protected float slowLerpTime;[NonSerialized]protected float MoveLerpSpeedReduction=.5f;
+public virtual void Teleport(Quaternion rotation,Vector3 position,bool goThroughWalls=false,float slowLerpTimeout=1f){
+this.slowLerpTimeout=slowLerpTimeout;slowLerpTime=0;
 if(rigidbody!=null){
         rigidbody.velocity=Vector3.zero;
         rigidbody.angularVelocity=Vector3.zero;

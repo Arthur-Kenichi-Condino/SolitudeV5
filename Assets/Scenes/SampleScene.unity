@@ -1555,7 +1555,7 @@ PrefabInstance:
     - target: {fileID: 1084756828422216613, guid: a78a72d1aba87cb45b934bfcac199524,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a78a72d1aba87cb45b934bfcac199524, type: 3}
@@ -1794,11 +1794,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PLAYER_PREFAB
-      objectReference: {fileID: 0}
-    - target: {fileID: 6179044444179792751, guid: e55fd222ce86ba84db8c3db9c6747227,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7899130204184459693, guid: e55fd222ce86ba84db8c3db9c6747227,
         type: 3}
@@ -2264,7 +2259,7 @@ PrefabInstance:
     - target: {fileID: 768593955736630023, guid: c7134457e0ea8c04483d20f1fbe0c4e9,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7134457e0ea8c04483d20f1fbe0c4e9, type: 3}

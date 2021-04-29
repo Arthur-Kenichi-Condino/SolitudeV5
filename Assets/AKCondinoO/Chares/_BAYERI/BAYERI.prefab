@@ -72,13 +72,13 @@ MonoBehaviour:
     BaseMATK: 0
   onWillTakeDamageSkills: 00000000
   Lerp: 1
-  MoveLerpSpeed: 0.125
+  MoveLerpSpeed: 12.5
   InputMoveAcceleration: {x: 1.5, y: 3, z: 3}
   InputMaxMoveSpeed: {x: 1.5, y: 3, z: 3}
   MaxMoveSpeedBackwardMultiplier: 1
   GetNewTgtPosCdTime: 0.05
-  RotationLerpSpeed: 0.125
-  HeadRotationLerpSpeed: 0.125
+  RotationLerpSpeed: 12.5
+  HeadRotationLerpSpeed: 12.5
   InputViewRotationIncreaseSpeed: 0.025
   GetNewTgtRotCdTime: 0.05
   DEBUG_GOTO: 0

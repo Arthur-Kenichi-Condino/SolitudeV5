@@ -393,6 +393,7 @@ break;
 }
 }
 }
+if(willHitEnemy){
 if(!cancel){
 Attack(MyEnemy);
 }else{
@@ -405,6 +406,7 @@ avoid=true;
 Attack(MyEnemy);
 
 
+}
 }
 
 
@@ -473,7 +475,9 @@ protected virtual void Attack(AI enemy){
     Debug.LogWarning("trying attack stance ["+this);
 if(willHitEnemy){
 if(attackStance==-1){
-if(deadStance!=-1||hitStance!=-1){}else{
+if(deadStance!=-1||hitStance!=-1){
+Debug.LogWarning("under attack or dying");
+}else{
     Debug.LogWarning("new attack started: set to do damage next animation");
     didDamage=false;
     nextAttackTimer=(attackInterval/Attributes.Aspd)+attackWaitForSoundTime;
@@ -493,9 +497,9 @@ attackHitboxHalfSize.x=collider.bounds.extents.x+MyAttackRange;
 attackHitboxHalfSize.z=collider.bounds.extents.z+MyAttackRange;
 attackHitboxHalfSize.y=collider.bounds.extents.y+MyAttackRange;
 attackHitboxHalfSize*=RangeMultiplier;
-var dest=transform.forward*(collider.bounds.extents.z+attackHitboxHalfSize.z);
+var dest=(MyEnemy==null?transform.forward:(MyEnemy.collider.bounds.center-collider.bounds.center).normalized)*(collider.bounds.extents.z+attackHitboxHalfSize.z);
 attackHitboxColliders=Physics.OverlapBox(collider.bounds.center+dest,attackHitboxHalfSize,transform.rotation);
-Debug.DrawRay(collider.bounds.center,dest,Color.white,.1f);
+Debug.DrawRay(collider.bounds.center,dest,Color.red,.5f);
 
 
 }

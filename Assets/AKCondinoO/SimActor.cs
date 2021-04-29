@@ -167,7 +167,7 @@ setOutOfSight();
 }
 #region Movement
 public bool Lerp=true;
-public float MoveLerpSpeed=.125f;
+public float MoveLerpSpeed=12.5f;
 protected float moveLerpVal;
 protected Vector3 moveLerpA;
 protected Vector3 moveLerpB;
@@ -182,7 +182,7 @@ protected Vector3Int tgtCoord;protected Vector3Int tgtRgn;protected int tgtIdx;p
 protected float goToTgtPosTimer;
 protected Vector3 drawPos;
 #endregion
-public float RotationLerpSpeed=.125f,HeadRotationLerpSpeed=.125f;
+public float RotationLerpSpeed=12.5f,HeadRotationLerpSpeed=12.5f;
 protected float rotationLerpVal,headRotationLerpVal;
 protected Quaternion rotationLerpA,headRotationLerpA;
 protected Quaternion rotationLerpB,headRotationLerpB;
@@ -216,7 +216,7 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("input rotation detected:start rotating to tgtR
             goToTgtRotTimer+=Time.deltaTime;
         }
         if(goToTgtRotTimer!=0){
-            rotationLerpVal+=RotationLerpSpeed;
+            rotationLerpVal+=RotationLerpSpeed*Time.deltaTime;
             if(rotationLerpVal>=1){
                 rotationLerpVal=1;
                 goToTgtRotTimer=0;
@@ -253,7 +253,7 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("input movement detected:start going to tgtPos:
             goToTgtPosTimer+=Time.deltaTime;
         }
         if(goToTgtPosTimer!=0){
-            moveLerpVal+=MoveLerpSpeed;
+            moveLerpVal+=MoveLerpSpeed*Time.deltaTime*(slowLerpTimeout==0?1f:MoveLerpSpeedReduction);
             if(moveLerpVal>=1){
                 moveLerpVal=1;
                 goToTgtPosTimer=0;
@@ -286,7 +286,7 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
         headGoToTgtRotTimer+=Time.deltaTime;
     }
     if(headGoToTgtRotTimer!=0){
-        headRotationLerpVal+=HeadRotationLerpSpeed;
+        headRotationLerpVal+=HeadRotationLerpSpeed*Time.deltaTime;
         if(headRotationLerpVal>=1){
             headRotationLerpVal=1;
             headGoToTgtRotTimer=0;
@@ -311,7 +311,7 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
         goToTgtRotTimer+=Time.deltaTime;
     }
     if(goToTgtRotTimer!=0){
-        rotationLerpVal+=RotationLerpSpeed;
+        rotationLerpVal+=RotationLerpSpeed*Time.deltaTime;
         if(rotationLerpVal>=1){
             rotationLerpVal=1;
             goToTgtRotTimer=0;
@@ -341,7 +341,7 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
         goToTgtPosTimer+=Time.deltaTime;
     }
     if(goToTgtPosTimer!=0){
-        moveLerpVal+=MoveLerpSpeed;
+        moveLerpVal+=MoveLerpSpeed*Time.deltaTime*(slowLerpTimeout==0?1f:MoveLerpSpeedReduction);
         if(moveLerpVal>=1){
             moveLerpVal=1;
             goToTgtPosTimer=0;
@@ -354,11 +354,22 @@ if(LOG&&LOG_LEVEL<=-20)Debug.Log("get new tgtPos:"+tgtPos+";don't need to lerp a
         }
     }
 }
+if(slowLerpTimeout!=0f){
+slowLerpTime+=Time.deltaTime;
+if(slowLerpTime>=slowLerpTimeout){
+slowLerpTimeout=0f;slowLerpTime=0;
+
+
+                Debug.LogWarning("slowLerpTimeout");
+
+
+}
+}
 }
 #endregion
-public override void Teleport(Quaternion rotation,Vector3 position,bool goThroughWalls=false){
+public override void Teleport(Quaternion rotation,Vector3 position,bool goThroughWalls=false,float slowLerpTimeout=1f){
         //Debug.LogWarning(rotation*transform.forward);
-                base.Teleport(rotation,position,goThroughWalls);
+                base.Teleport(rotation,position,goThroughWalls,slowLerpTimeout);
         headEulerAngles=rotation.eulerAngles;
         //tgtRot=tgtRot_Pre=rotation.eulerAngles;
 }

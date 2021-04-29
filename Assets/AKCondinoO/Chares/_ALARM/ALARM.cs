@@ -11,7 +11,7 @@ Attributes.STR=mathrandom.Next(12,73);
 Attributes.VIT=mathrandom.Next(12,25);
 Attributes.INT=mathrandom.Next(1,25);
 Attributes.AGI=mathrandom.Next(1,49);
-Attributes.DEX=mathrandom.Next(1,49);
+Attributes.DEX=mathrandom.Next(66,100);
 Attributes.LUK=mathrandom.Next(1,25);
     Attributes.BaseMaxStamina=Attributes.CurStamina=GetBaseMaxStamina();
        Attributes.BaseMaxFocus=Attributes.CurFocus=GetBaseMaxFocus();
