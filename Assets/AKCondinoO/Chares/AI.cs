@@ -44,6 +44,7 @@ OutOfSight_v=value;
 [NonSerialized]protected bool enemyTouchingMe;
 [NonSerialized]bool firstLoop=true;protected override void Update(){
                                                       base.Update();
+attackHitboxColliders=null;
 if(!OutOfSight_v&&
    deadStance!=-1){
     Debug.LogWarning("I'm dead! :(");
@@ -395,7 +396,7 @@ Attack(MyEnemy);
 }
 
 
-attackHitboxColliders=null;
+//attackHitboxColliders=null;
 }
 void TestHit(out bool cancel){
 willHitEnemy=false;willHitAlly=false;cancel=false;
@@ -508,7 +509,7 @@ if(enemy!=null){
 inputViewRotationEuler.y=Quaternion.LookRotation((enemy.collider.bounds.center-collider.bounds.center).normalized).eulerAngles.y-transform.eulerAngles.y;
 }
 if(testHitBeforeAttacking&&attackHitboxColliders!=null){
-attackHitboxColliders=null;
+//attackHitboxColliders=null;
 }
 return result;}
 [NonSerialized]Vector3 attackHitboxHalfSize;[NonSerialized]protected Collider[]attackHitboxColliders=null;
@@ -553,7 +554,7 @@ if(collider.CompareTag("Player")&&(enemy=collider.GetComponent<AI>())!=this&&ene
 }
 }
 }
-attackHitboxColliders=null;
+//attackHitboxColliders=null;
 
 
     didDamage=true;
