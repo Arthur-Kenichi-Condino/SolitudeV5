@@ -374,7 +374,31 @@ OverlappedCollidersOnAttack();
 }
 
 
-willHitEnemy=false;willHitAlly=false;bool cancel=false;
+bool cancel;TestHit(out cancel);
+
+
+Debug.LogWarning("willHitEnemy:"+willHitEnemy+";willHitAlly:"+willHitAlly+" ["+this,this);
+
+
+if(!cancel){
+Attack(MyEnemy);
+}else{
+
+
+//  TO DO: fazer aliado, ou eu mesmo, se mover: usar AVOID_ST em mim se aliado também está atacando, usar AVOID_ST no aliado se ele usar EVADE quando for leva dano "On Will Take Damage"            
+if(mathrandom.NextDouble()<=.25f){
+avoid=true;
+}
+Attack(MyEnemy);
+
+
+}
+
+
+attackHitboxColliders=null;
+}
+void TestHit(out bool cancel){
+willHitEnemy=false;willHitAlly=false;cancel=false;
 if(attackHitboxColliders!=null){
 for(int i=0;i<attackHitboxColliders.Length;i++){var collider=attackHitboxColliders[i];
 AI actor;
@@ -393,29 +417,6 @@ break;
 }
 }
 }
-
-
-Debug.LogWarning("willHitEnemy:"+willHitEnemy+";willHitAlly:"+willHitAlly+" ["+this,this);
-
-
-if(willHitEnemy){
-if(!cancel){
-Attack(MyEnemy);
-}else{
-
-
-//  TO DO: fazer aliado, ou eu mesmo, se mover: usar AVOID_ST em mim se aliado também está atacando, usar AVOID_ST no aliado se ele usar EVADE quando for leva dano "On Will Take Damage"            
-if(mathrandom.NextDouble()<=.25f){
-avoid=true;
-}
-Attack(MyEnemy);
-
-
-}
-}
-
-
-attackHitboxColliders=null;
 }
 [NonSerialized]protected float avoidanceTimeout=.5f;[NonSerialized]protected float avoidanceTime;[NonSerialized]protected bool avoided=false;
 protected virtual void OnAVOID_ST(){
@@ -475,20 +476,23 @@ return true;
 }
 return false;}
 [NonSerialized]protected float attackInterval=.25f;[SerializeField]protected float attackWaitForSoundTime=0;[NonSerialized]protected float nextAttackTimer=0;
-[NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}[NonSerialized]bool testHitBeforeAttacking=false;
-protected virtual void Attack(AI enemy){
+[NonSerialized]protected AttackModes MyAttackMode=AttackModes.Ghost;public enum AttackModes{Ghost,Physical}[NonSerialized]bool testHitBeforeAttacking=true;
+protected virtual bool Attack(AI enemy){bool result=false;
     Debug.LogWarning("trying attack stance ["+this);
 
 
 if(attackHitboxColliders==null&&testHitBeforeAttacking){
+OverlappedCollidersOnAttack();
+TestHit(out _);
 }
 
 
-if(willHitEnemy||!testHitBeforeAttacking){
+if(willHitEnemy||(!testHitBeforeAttacking&&attackHitboxColliders==null)){
 if(attackStance==-1){
 if(deadStance!=-1||hitStance!=-1){
 //Debug.LogWarning("attack stance failed: hit or dying");
 }else{
+result=true;
     Debug.LogWarning("new attack started: set to do damage next animation");
     didDamage=false;
     nextAttackTimer=(attackInterval/Attributes.Aspd)+attackWaitForSoundTime;
@@ -503,16 +507,23 @@ Debug.LogWarning("attack stance failed: will not hit enemy["+this);
 if(enemy!=null){
 inputViewRotationEuler.y=Quaternion.LookRotation((enemy.collider.bounds.center-collider.bounds.center).normalized).eulerAngles.y-transform.eulerAngles.y;
 }
+if(testHitBeforeAttacking&&attackHitboxColliders!=null){
+attackHitboxColliders=null;
 }
+return result;}
 [NonSerialized]Vector3 attackHitboxHalfSize;[NonSerialized]protected Collider[]attackHitboxColliders=null;
 protected virtual void OverlappedCollidersOnAttack(){
 
     
+if(Vector3.Angle((MyEnemy.collider.bounds.center-collider.bounds.center).normalized,transform.forward)>15f){
+attackHitboxColliders=new Collider[0];
+return;
+}
 attackHitboxHalfSize.x=collider.bounds.extents.x+MyAttackRange;
 attackHitboxHalfSize.z=collider.bounds.extents.z+MyAttackRange;
 attackHitboxHalfSize.y=collider.bounds.extents.y+MyAttackRange;
 attackHitboxHalfSize*=RangeMultiplier;
-var dest=(MyEnemy==null?transform.forward:(MyEnemy.collider.bounds.center-collider.bounds.center).normalized)*(collider.bounds.extents.z+attackHitboxHalfSize.z);
+var dest=transform.forward*(collider.bounds.extents.z+attackHitboxHalfSize.z);
 attackHitboxColliders=Physics.BoxCastAll(collider.bounds.center,attackHitboxHalfSize,dest.normalized,transform.rotation,collider.bounds.extents.z+attackHitboxHalfSize.z).Select(v=>v.collider).ToArray();
 if(attackHitboxColliders.Length==0){//  TO DO: se ghost attack, OverlapBox, ou se perto demais, também overlap box ou usar Avoid
 attackHitboxColliders=Physics.OverlapBox(collider.bounds.center+dest,attackHitboxHalfSize,transform.rotation);

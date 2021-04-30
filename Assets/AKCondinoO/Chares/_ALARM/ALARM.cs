@@ -157,13 +157,13 @@ if(LOG&&LOG_LEVEL<=-10)Debug.Log("Me:"+this+"; MyEnemy:"+MyEnemy,MyEnemy);
 protected override bool IsInAttackSight(AI enemy){
             return base.IsInAttackSight(enemy);
 }
-protected override void Attack(AI enemy){
-if(nextAttackTimer>0)return;
-                   base.Attack(enemy);
-if(deadStance!=-1||hitStance!=-1)return;if(attackStance==-1){attackStance=0;curAnimTime=0;
+protected override bool Attack(AI enemy){
+if(nextAttackTimer>0)return false;
+               if(!base.Attack(enemy))return false;
+if(deadStance!=-1||hitStance!=-1)return false;if(attackStance==-1){attackStance=0;curAnimTime=0;
 if(sfx!=null){sfx.Play((int)ActorSounds._ATTACK,true);}
 }
-}
+return true;}
 protected override void TakeDamage(AI fromEnemy){
                    base.TakeDamage(fromEnemy);
 if(damage<=0)return;

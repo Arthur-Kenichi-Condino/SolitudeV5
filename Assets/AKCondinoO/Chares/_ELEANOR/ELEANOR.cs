@@ -21,13 +21,13 @@ ValidateAttributesSet(1);
 protected override void Awake(){
                    base.Awake();
 }
-protected override void Attack(AI enemy){
-if(nextAttackTimer>0)return;
-                   base.Attack(enemy);
-if(deadStance!=-1||hitStance!=-1)return;if(attackStance==-1){attackStance=mathrandom.Next(0,2);curAnimTime=0;
+protected override bool Attack(AI enemy){
+if(nextAttackTimer>0)return false;
+               if(!base.Attack(enemy))return false;
+if(deadStance!=-1||hitStance!=-1)return false;if(attackStance==-1){attackStance=mathrandom.Next(0,2);curAnimTime=0;
 if(sfx!=null){sfx.Play((int)ActorSounds._ATTACK,true);}
 }
-}
+return true;}
 protected override void TakeDamage(AI fromEnemy){
                    base.TakeDamage(fromEnemy);
 if(damage<=0)return;
