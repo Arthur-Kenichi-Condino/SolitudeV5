@@ -72,7 +72,7 @@ renderer.receiveShadows=true;
 protected virtual void OnEnable(){}
 protected virtual void OnDisable(){}
 protected virtual void OnDestroy(){}
-[NonSerialized]protected bool IsGrounded;public bool OnGround{get{return IsGrounded;}}[NonSerialized]protected bool HittingWall;public bool CanCrouch=false;[NonSerialized]protected bool IsHalf=false;[NonSerialized]protected float ToggleIsHalfTimer=0;[NonSerialized]protected float ToggleIsHalfDelay=.5f;[NonSerialized]protected Vector3 CrouchingScale=new Vector3(1,.5f,1);[NonSerialized]protected Vector3 CrouchingCenterOffset=new Vector3(0,.5f,0);
+[NonSerialized]protected bool IsGrounded;public bool OnGround{get{return IsGrounded;}}[NonSerialized]protected bool HittingWall;public bool CanCrouch=false;public bool Crouching{get;protected set;}[NonSerialized]protected bool IsHalf=false;[NonSerialized]protected float ToggleIsHalfTimer=0;[NonSerialized]protected float ToggleIsHalfDelay=.5f;[NonSerialized]protected Vector3 CrouchingScale=new Vector3(1,.5f,1);[NonSerialized]protected Vector3 CrouchingCenterOffset=new Vector3(0,.5f,0);
 protected virtual void FixedUpdate(){
 if(rigidbody!=null){
 IsGrounded=false;HittingWall=false;

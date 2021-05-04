@@ -25,6 +25,7 @@ animator.SetBool("OnGround",actor.OnGround);
 if(LOG&&LOG_LEVEL<=-110)Debug.Log("actor.OnGround:"+actor.OnGround);
 
 animator.SetFloat("Jump",actor.rigidbody.velocity.y);
+animator.SetBool("Crouch",actor.CanCrouch&&actor.Crouching);
 }
 }
 public void FootR(string s){

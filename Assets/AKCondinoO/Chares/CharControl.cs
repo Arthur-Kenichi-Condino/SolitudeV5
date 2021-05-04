@@ -183,6 +183,11 @@ inputMoveSpeed.y=0;
 }
 
 
+if((bool)Enabled.CROUCH[0]&&(bool)Enabled.CROUCH[0]!=(bool)Enabled.CROUCH[1]){
+Crouching=!Crouching;
+}
+
+
 #region ROTATE
 inputViewRotationEuler.x+=-Enabled.MOUSE_ROTATION_DELTA_Y[0]*InputViewRotationIncreaseSpeed;
 inputViewRotationEuler.y+= Enabled.MOUSE_ROTATION_DELTA_X[0]*InputViewRotationIncreaseSpeed;
