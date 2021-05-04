@@ -19,7 +19,7 @@ animator=actor.GetComponentInChildren<Animator>();
 if(animator!=null){
 _horizontalMoveSpeed=actor.rigidbody.velocity;
 _horizontalMoveSpeed.y=0;
-animator.SetFloat("Forward",_horizontalMoveSpeed.magnitude*(backwardAvailable&&Vector3.Angle(actor.rigidbody.transform.forward,actor.rigidbody.velocity.normalized)>90?-1:1)*horizontalMoveSensibility,0.1f,Time.deltaTime);
+animator.SetFloat("Forward",(_horizontalMoveSpeed.magnitude*(backwardAvailable&&Vector3.Angle(actor.rigidbody.transform.forward,actor.rigidbody.velocity.normalized)>90?-1:1)*horizontalMoveSensibility)*(actor.Crouching?4f:1f),0.1f,Time.deltaTime);
 animator.SetBool("OnGround",actor.OnGround);
             
 if(LOG&&LOG_LEVEL<=-110)Debug.Log("actor.OnGround:"+actor.OnGround);

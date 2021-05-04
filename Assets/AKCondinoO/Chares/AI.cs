@@ -664,7 +664,7 @@ inputMoveSpeed.x=0;
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
    _axisDist.z>ReachedTgtDisThreshold.z)){
-inputMoveSpeed.z=-InputMaxMoveSpeed.z*MaxMoveSpeedBackwardMultiplier;
+inputMoveSpeed.z=-MaxMoveSpeed.z*MaxMoveSpeedBackwardMultiplier;
 }else{
 inputMoveSpeed.z=0;
 }
@@ -680,7 +680,7 @@ inputViewRotationEuler.y=Quaternion.LookRotation(_dir).eulerAngles.y-transform.e
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
    _axisDist.z>ReachedTgtDisThreshold.z)){
-inputMoveSpeed.x=InputMaxMoveSpeed.x*moveCircularlyAroundTgt_dir;
+inputMoveSpeed.x=MaxMoveSpeed.x*moveCircularlyAroundTgt_dir;
 }else{
 inputMoveSpeed.x=0;
 }
@@ -693,7 +693,7 @@ case(GetUnstuckActions.moveSidewaysRandomDir):{
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
    _axisDist.z>ReachedTgtDisThreshold.z)){
-inputMoveSpeed.x=InputMaxMoveSpeed.x*moveSidewaysRandomDir_dir;
+inputMoveSpeed.x=MaxMoveSpeed.x*moveSidewaysRandomDir_dir;
 }else{
 inputMoveSpeed.x=0;
 }
@@ -713,7 +713,7 @@ if(!IsGrounded&&!HittingWall){
 if(rigidbody.velocity.y<=float.Epsilon&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
    _axisDist.z>ReachedTgtDisThreshold.z)){
-inputMoveSpeed.z=InputMaxMoveSpeed.z;
+inputMoveSpeed.z=MaxMoveSpeed.z;
 }else{
 inputMoveSpeed.z=0;
 }
@@ -724,7 +724,7 @@ inputMoveSpeed.y=0;
 inputMoveSpeed.z=0;
 if(IsGrounded){
 Jump=true;
-inputMoveSpeed.y=InputMaxMoveSpeed.y;
+inputMoveSpeed.y=MaxMoveSpeed.y;
 }else{
 inputMoveSpeed.y=0;
 }
@@ -761,7 +761,7 @@ if(CurPathTgt.Value.mode==Node.PreferredReachableMode.jump&&collider.bounds.cent
 inputMoveSpeed.z=0;
 if(IsGrounded){
 Jump=true;
-inputMoveSpeed.y=InputMaxMoveSpeed.y;
+inputMoveSpeed.y=MaxMoveSpeed.y;
 }else{
 inputMoveSpeed.y=0;
 }
@@ -771,7 +771,7 @@ inputMoveSpeed.y=0;
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
    _axisDist.z>ReachedTgtDisThreshold.z)){
-inputMoveSpeed.z+=InputMoveAcceleration.z*Time.deltaTime;if(inputMoveSpeed.z>InputMaxMoveSpeed.z){inputMoveSpeed.z=InputMaxMoveSpeed.z;}/*inputMoveSpeed.z=InputMaxMoveSpeed.z;*/if(doingAttackMoveAway){inputMoveSpeed.z=-inputMoveSpeed.z*MaxMoveSpeedBackwardMultiplier;}
+inputMoveSpeed.z+=InputMoveAcceleration.z*Time.deltaTime;if(inputMoveSpeed.z>MaxMoveSpeed.z){inputMoveSpeed.z=MaxMoveSpeed.z;}/*inputMoveSpeed.z=MaxMoveSpeed.z;*/if(doingAttackMoveAway){inputMoveSpeed.z=-inputMoveSpeed.z*MaxMoveSpeedBackwardMultiplier;}
 }else{
 inputMoveSpeed.z=0;
 }
@@ -786,17 +786,17 @@ inputMoveSpeed.y=0;
 if((IsGrounded||!HittingWall)&&
   (_axisDist.x>ReachedTgtDisThreshold.x||
    _axisDist.z>ReachedTgtDisThreshold.z)){
-inputMoveSpeed.z+=InputMoveAcceleration.z*Time.deltaTime;if(inputMoveSpeed.z>InputMaxMoveSpeed.z){inputMoveSpeed.z=InputMaxMoveSpeed.z;}/*inputMoveSpeed.z=InputMaxMoveSpeed.z;*/if(doingAttackMoveAway){inputMoveSpeed.z=-inputMoveSpeed.z*MaxMoveSpeedBackwardMultiplier;}
+inputMoveSpeed.z+=InputMoveAcceleration.z*Time.deltaTime;if(inputMoveSpeed.z>MaxMoveSpeed.z){inputMoveSpeed.z=MaxMoveSpeed.z;}/*inputMoveSpeed.z=MaxMoveSpeed.z;*/if(doingAttackMoveAway){inputMoveSpeed.z=-inputMoveSpeed.z*MaxMoveSpeedBackwardMultiplier;}
 }else{
 inputMoveSpeed.z=0;
 }
 if(_axisDist.y>ReachedTgtDisThreshold.y){
 if(_axisDiff.y<0){
     Debug.LogWarning("down");
-inputMoveSpeed.y=-InputMaxMoveSpeed.y;
+inputMoveSpeed.y=-MaxMoveSpeed.y;
 }else{
     Debug.LogWarning("up");
-inputMoveSpeed.y=InputMaxMoveSpeed.y;
+inputMoveSpeed.y=MaxMoveSpeed.y;
 }
 }else{
 inputMoveSpeed.y=0;

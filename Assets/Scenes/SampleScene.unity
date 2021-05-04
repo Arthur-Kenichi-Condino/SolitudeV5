@@ -1795,11 +1795,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: PLAYER_PREFAB
       objectReference: {fileID: 0}
-    - target: {fileID: 6179044444179792751, guid: e55fd222ce86ba84db8c3db9c6747227,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7899130204184459693, guid: e55fd222ce86ba84db8c3db9c6747227,
         type: 3}
       propertyPath: context

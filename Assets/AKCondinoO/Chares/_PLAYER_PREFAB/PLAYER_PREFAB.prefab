@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2215729660180957788
 Transform:
   m_ObjectHideFlags: 0
@@ -73,7 +73,7 @@ MonoBehaviour:
   onWillTakeDamageSkills: 
   Lerp: 1
   MoveLerpSpeed: 6.25
-  InputMoveAcceleration: {x: 3, y: 3, z: 3}
+  InputMoveAcceleration: {x: 3, y: 3, z: 6}
   InputMaxMoveSpeed: {x: 3, y: 3, z: 6}
   MaxMoveSpeedBackwardMultiplier: 0.5
   GetNewTgtPosCdTime: 0.05

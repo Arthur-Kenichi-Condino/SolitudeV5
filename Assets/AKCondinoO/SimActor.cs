@@ -172,7 +172,7 @@ protected float moveLerpVal;
 protected Vector3 moveLerpA;
 protected Vector3 moveLerpB;
 public Vector3 InputMoveAcceleration;
-public Vector3 InputMaxMoveSpeed;public float MaxMoveSpeedBackwardMultiplier=1f;
+public Vector3 InputMaxMoveSpeed;public float MaxMoveSpeedBackwardMultiplier=1f;public Vector3 MaxMoveSpeed{get{return Crouching?InputMaxMoveSpeed/4f:InputMaxMoveSpeed;}}
 protected Vector3 inputMoveSpeed;
 #region Position
 public float GetNewTgtPosCdTime=.05f;

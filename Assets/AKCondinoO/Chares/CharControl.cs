@@ -154,15 +154,15 @@ if(IsGrounded||!HittingWall){
     if((bool)Enabled.FORWARD [0]){inputMoveSpeed.z+=InputMoveAcceleration.z*Time.deltaTime;Autonomous=AutonomyDelayAfterControl;} 
     if((bool)Enabled.BACKWARD[0]){inputMoveSpeed.z-=InputMoveAcceleration.z*Time.deltaTime;Autonomous=AutonomyDelayAfterControl;}
         if(!(bool)Enabled.FORWARD[0]&&!(bool)Enabled.BACKWARD[0]){inputMoveSpeed.z=0;}
-            if( inputMoveSpeed.z>InputMaxMoveSpeed.z                               ){inputMoveSpeed.z= InputMaxMoveSpeed.z                               ;}
-            if(-inputMoveSpeed.z>InputMaxMoveSpeed.z*MaxMoveSpeedBackwardMultiplier){inputMoveSpeed.z=-InputMaxMoveSpeed.z*MaxMoveSpeedBackwardMultiplier;}
+            if( inputMoveSpeed.z>MaxMoveSpeed.z                               ){inputMoveSpeed.z= MaxMoveSpeed.z                               ;}
+            if(-inputMoveSpeed.z>MaxMoveSpeed.z*MaxMoveSpeedBackwardMultiplier){inputMoveSpeed.z=-MaxMoveSpeed.z*MaxMoveSpeedBackwardMultiplier;}
 #endregion
 #region RIGHT LEFT
     if((bool)Enabled.RIGHT   [0]){inputMoveSpeed.x+=InputMoveAcceleration.x*Time.deltaTime;Autonomous=AutonomyDelayAfterControl;} 
     if((bool)Enabled.LEFT    [0]){inputMoveSpeed.x-=InputMoveAcceleration.x*Time.deltaTime;Autonomous=AutonomyDelayAfterControl;}
         if(!(bool)Enabled.RIGHT[0]&&!(bool)Enabled.LEFT[0]){inputMoveSpeed.x=0;}
-            if( inputMoveSpeed.x>InputMaxMoveSpeed.x){inputMoveSpeed.x= InputMaxMoveSpeed.x;}
-            if(-inputMoveSpeed.x>InputMaxMoveSpeed.x){inputMoveSpeed.x=-InputMaxMoveSpeed.x;}
+            if( inputMoveSpeed.x>MaxMoveSpeed.x){inputMoveSpeed.x= MaxMoveSpeed.x;}
+            if(-inputMoveSpeed.x>MaxMoveSpeed.x){inputMoveSpeed.x=-MaxMoveSpeed.x;}
 #endregion
 }else{
 inputMoveSpeed.x=0;
@@ -172,7 +172,7 @@ inputMoveSpeed.z=0;
 
 Debug.LogWarning((bool)Enabled.JUMP[0]+" "+IsGrounded);
 if(IsGrounded&&(Jump||(Jump=(bool)Enabled.JUMP[0]!=(bool)Enabled.JUMP[1]))){
-inputMoveSpeed.y=InputMaxMoveSpeed.y;Autonomous=AutonomyDelayAfterControl;
+inputMoveSpeed.y=MaxMoveSpeed.y;Autonomous=AutonomyDelayAfterControl;
 
 
 //Debug.LogWarning(inputMoveSpeed.y);
