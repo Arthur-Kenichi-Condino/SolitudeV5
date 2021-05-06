@@ -65,7 +65,7 @@
     <Compile Include="Assets\NVIDIA\Flex\Helpers\FlexParticleController.cs" />
     <Compile Include="Assets\UMA\Examples\Physics Examples\UMA_JiggleMaster\JiggleBreasts\UMA_JiggleBreasts.cs" />
     <Compile Include="Assets\SampleScenes\Scripts\ParticleSceneControls.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\Sight.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\System\Sight\Sight.cs" />
     <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\Scripts\Gravity.cs" />
     <Compile Include="Assets\ExplosiveLLC\RPG Character Animation Pack FREE\Code\AnimatorParentMoveFREE.cs" />
     <Compile Include="Assets\AKCondinoO\Biomes\Plant.cs" />
@@ -94,7 +94,7 @@
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\UMAMeshData.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Internal\Emit\MetaMember.cs" />
     <Compile Include="Assets\UMA\Core\Scripts\BaseCharacterModifier.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\_3DSprite.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\System\_3DSprite\_3DSprite.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\UMAGeneratorCoroutine.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\DNAConverterList.cs" />
     <Compile Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Scripts\Scene2and3\MyListPool.cs" />
@@ -118,11 +118,11 @@
     <Compile Include="Assets\NVIDIA\Flex\Actors\FlexClothActor.cs" />
     <Compile Include="Assets\UMA\Core\Scripts\DNASetter.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Internal\ReflectionExtensions.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\AI.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\System\Control\AI.cs" />
     <Compile Include="Assets\UMA\Examples\Legacy Examples\Scripts\UMARecipeCrowd.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\_THE_PERFECTIONIST\THE_PERFECTIONIST.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\_THE_PERFECTIONIST\THE_PERFECTIONIST.cs" />
     <Compile Include="Assets\UMA\Examples\Timeline Example\Scripts\UMAPlayOnAwake.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\_ELEANOR\ELEANOR.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\_ELEANOR\ELEANOR.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\Timeline\UmaDna\UmaDnaBehaviour.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Actors\FlexSoftActor.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\UMAAssetBundleManager\Utility.cs" />
@@ -162,12 +162,12 @@
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\UMAPostProcess.cs" />
     <Compile Include="Assets\UMA\Core\Scripts\SlotLibrary.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Resolvers\StandardResolver.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\_BAYERI\BAYERI.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\_BAYERI\BAYERI.cs" />
     <Compile Include="Assets\UMA\Core\Scripts\DNAPlugins\OverallScaleDNAConverterPlugin.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Resolvers\BuiltinResolver.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Auxiliary\_auxFlexDrawParticles.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\UMAResourceNotFoundException.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\Pathfinder.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\System\Control\Pathfinder.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\UMAContext.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Internal\DoubleConversion\PowersOfTenCache.cs" />
     <Compile Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Scripts\Preloader.cs" />
@@ -178,7 +178,7 @@
     <Compile Include="Assets\AKCondinoO\VoxelSystem\TerrainChunkManager.cs" />
     <Compile Include="Assets\UMA\Examples\Physics Examples\Scripts\SmoothMouseLook.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Internal\StringEncoding.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\Skills\_EVADE.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\Skills\_EVADE.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Attributes.cs" />
     <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\Scripts\PlayerMachine.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Assets\FlexSoftAsset.cs" />
@@ -193,7 +193,7 @@
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\UMAGeneratorBuiltin.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\DynamicDNAConverterBehaviourBase.cs" />
     <Compile Include="Assets\UMA\Examples\Legacy Examples\Scripts\EnvPresetSwitch.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\Skills\Skill.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\Skills\Skill.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Internal\ArrayBuffer.cs" />
     <Compile Include="Assets\AKCondinoO\UI\Buttons.cs" />
     <Compile Include="Assets\AKCondinoO\SimObject.cs" />
@@ -229,7 +229,7 @@
     <Compile Include="Assets\UMA\Core\StandardAssets\Extensions\DynamicCharacterSystem\Scripts\UMAExtendedAvatar.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\Scripts\AvatarDefinition.cs" />
     <Compile Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Scripts\Scene2and3\TestCustomizerDD.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\CharSFX.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\System\Sight\CharSFX.cs" />
     <Compile Include="Assets\UMA\Examples\ExampleScripts\CameraTrack.cs" />
     <Compile Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Scripts\Scene2and3\WardrobeCollectionDemoUI.cs" />
     <Compile Include="Assets\AKCondinoO\VoxelSystem\TerrainChunk.cs" />
@@ -252,7 +252,7 @@
     <Compile Include="Assets\UMA\Core\Extensions\Timeline\UmaDna\UmaDnaMixerBehaviour.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\Timeline\UmaRace\UmaRaceBehaviour.cs" />
     <Compile Include="Assets\UMA\Examples\Blendshape Examples\Scripts\BlendShapeDnaSlider.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\BoxCollider\BoxColliderSlotScript.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\System\BoxCollider\BoxColliderSlotScript.cs" />
     <Compile Include="Assets\UMA\Examples\Physics Examples\Scripts\UMABoneCleaner.cs" />
     <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Core\SuperMath.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\UMAClothProperties.cs" />
@@ -268,7 +268,7 @@
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\MeshHideAsset.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Internal\Emit\MetaType.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\TwistBones.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\_ALARM\ALARM.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\_ALARM\ALARM.cs" />
     <Compile Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Assets\Resources\Scene1\ColorHandler.cs" />
     <Compile Include="Assets\UMA\Core\Scripts\SkeletonModifier.cs" />
     <Compile Include="Assets\UMA\Core\Scripts\OverlayViewer.cs" />
@@ -289,7 +289,7 @@
     <Compile Include="Assets\SampleScenes\Scripts\CameraSwitch.cs" />
     <Compile Include="Assets\UMA\Examples\Expressions Examples\Scripts\SliderExpressionTest.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\UMABonePose.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\Animators\AnimatorParamChanger.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\System\Animators\AnimatorParamChanger.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Formatters\DynamicObjectTypeFallbackFormatter.cs" />
     <Compile Include="Assets\UMA\Examples\Legacy Examples\Scripts\UMACrowdRandomSet.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Internal\DoubleConversion\DiyFp.cs" />
@@ -318,7 +318,7 @@
     <Compile Include="Assets\UMA\Core\Extensions\Timeline\UmaWardrobe\UmaWardrobeTrack.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\Extensions\UMAPhysics\UMAPhysicsElement.cs" />
     <Compile Include="Assets\AKCondinoO\UI\F1Sim.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\_EIRA\EIRA.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\_EIRA\EIRA.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Resolvers\AttributeFormatterResolver.cs" />
     <Compile Include="Assets\UMA\Examples\Physics Examples\Scripts\SwayBone\SwayRootBone.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\UMAAssetBundleManager\AssetBundleIndex.cs" />
@@ -358,7 +358,7 @@
     <Compile Include="Assets\Scripts\Utf8Json\IJsonFormatter.cs" />
     <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\SuperCharacterController\DebugDraw.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Shims\Reflection.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\CharDataUI.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\System\Control\UI\CharDataUI.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Internal\GuidBits.cs" />
     <Compile Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Assets\SkyCar\Scripts\DnaGUI.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\Scripts\DynamicDNAConverterCustomizer.cs" />
@@ -390,7 +390,7 @@
     <Compile Include="Assets\UMA\Core\Scripts\DNAEvaluator.cs" />
     <Compile Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Assets\SkyCar\Scripts\OptionsGUI.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\UMAAssetBundleManager\BuildScript.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\CharControl.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\System\Control\CharControl.cs" />
     <Compile Include="Assets\UMA\Core\Scripts\DNA\Legacy\HumanoidDNAConverterBehaviour.cs" />
     <Compile Include="Assets\UMA\Content\Example\AdditionalSlots\ForearmTwist\ForearmTwistSlotScript.cs" />
     <Compile Include="Assets\UMA\Core\Scripts\DNA\Legacy\UMADna_Generated.cs" />
@@ -437,11 +437,11 @@
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\BinaryAssetWrapper.cs" />
     <Compile Include="Assets\AKCondinoO\UI\F3Build.cs" />
     <Compile Include="Assets\UMA\Core\Extensions\DynamicCharacterSystem\UMAAssetBundleManager\GUI\ReadOnlyAttribute.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\ActorManagementMentana.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\System\ActorManagementMentana.cs" />
     <Compile Include="Assets\UMA\Content\Example\AdditionalSlots\Locomotion\Locomotion.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\Extensions\UMAPhysics\UMAPhysicsSlotDefinition.cs" />
     <Compile Include="Assets\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Core\SuperCharacterController.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\_LIBRARIAN\LIBRARIAN.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\_LIBRARIAN\LIBRARIAN.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\MorphSetDnaAsset.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Formatters\TupleFormatter.cs" />
     <Compile Include="Assets\NVIDIA\Flex\Actors\FlexActor.cs" />
@@ -472,14 +472,14 @@
     <Compile Include="Assets\UMA\Examples\Legacy Examples\Scripts\LODDisplay.cs" />
     <Compile Include="Assets\UMA\Core\Scripts\DNA\Legacy\UMADnaHumanoid_Generated.cs" />
     <Compile Include="Assets\UMA\Examples\MountingObjects Example\Scripts\UMAMountObject.cs" />
-    <Compile Include="Assets\AKCondinoO\Chares\Skills\_CASTLING.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\Skills\_CASTLING.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\UMA\Core\StandardAssets\UMA\Atlas\AtlasNormalShader32.shader" />
      <None Include="Assets\UMA\Examples\DynamicCharacterSystem Examples\Assets\Resources\CharacterRecipes\HumanMaleChallenger.txt" />
      <None Include="Assets\UMA\Core\StandardAssets\UMA\Atlas\AtlasShader.shader" />
      <None Include="Assets\NVIDIA\Flex\Resources\Shaders\FlexDrawFluid.shader" />
-     <None Include="Assets\AKCondinoO\Chares\_3DSpriteShader.shader" />
+     <None Include="Assets\AKCondinoO\Characters\System\_3DSprite\_3DSpriteShader.shader" />
      <None Include="Assets\NVIDIA\Flex\Native\Plugins\Win64\nvToolsExt64_1.dll" />
      <None Include="Assets\NVIDIA\Flex\Native\Plugins\Win64\NvFlexReleaseCUDA_x64.dll" />
      <None Include="Assets\AKCondinoO\VoxelSystem\TerrainAtlasShader.shader" />

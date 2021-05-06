@@ -27,7 +27,7 @@ _turn=Mathf.LerpUnclamped(_turn,Vector3.SignedAngle(_forward,actor.transform.for
 _forward=actor.transform.forward;
 
             
-_move=_horizontalMoveSpeed;
+_move=_horizontalMoveSpeed;_angle=0;
 			// convert the world relative moveInput vector into a local-relative
 			// turn amount and forward amount required to head in the desired
 			// direction.
@@ -35,9 +35,9 @@ _move=_horizontalMoveSpeed;
 			_move = actor.transform.InverseTransformDirection(_move);
 			_move = Vector3.ProjectOnPlane(_move, Vector3.up);
 			_angle = Mathf.Atan2(_move.x, _move.z);
-if(_angle>0&&_turn>0&&_angle>_turn){_turn=_angle;
+if(_angle>0&&_turn>=0&&_angle>_turn){_turn=_angle;
 }else 
-if(_angle<0&&_turn<0&&_angle<_turn){_turn=_angle;
+if(_angle<0&&_turn<=0&&_angle<_turn){_turn=_angle;
 }
 			}
 
