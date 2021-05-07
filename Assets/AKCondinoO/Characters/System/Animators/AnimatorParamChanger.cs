@@ -59,4 +59,7 @@ public void FootR(string s){
 public void FootL(string s){
     Debug.LogWarning("FootL");
 }
+public void Hit(string s){
+    Debug.LogWarning("Hit");
+}
 }
