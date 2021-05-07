@@ -18,6 +18,7 @@ animator=actor.GetComponentInChildren<Animator>();
 }
 if(animator!=null){
 _horizontalMoveSpeed=actor.rigidbody.velocity;
+_horizontalMoveSpeed.x=0;
 _horizontalMoveSpeed.y=0;
 animator.SetFloat("Forward",(_horizontalMoveSpeed.magnitude*(backwardAvailable&&Vector3.Angle(actor.rigidbody.transform.forward,actor.rigidbody.velocity.normalized)>90?-1:1)*horizontalMoveSensibility)*(actor.Crouching?4f:1f),0.1f,Time.deltaTime);
 animator.SetBool("OnGround",actor.OnGround);
@@ -27,19 +28,20 @@ _turn=Mathf.LerpUnclamped(_turn,Vector3.SignedAngle(_forward,actor.transform.for
 _forward=actor.transform.forward;
 
             
-_move=_horizontalMoveSpeed;_angle=0;
-			// convert the world relative moveInput vector into a local-relative
-			// turn amount and forward amount required to head in the desired
-			// direction.
-			if (_move.magnitude > 1f){ _move.Normalize();
-			_move = actor.transform.InverseTransformDirection(_move);
-			_move = Vector3.ProjectOnPlane(_move, Vector3.up);
-			_angle = Mathf.Atan2(_move.x, _move.z);
-if(_angle>0&&_turn>=0&&_angle>_turn){_turn=_angle;
-}else 
-if(_angle<0&&_turn<=0&&_angle<_turn){_turn=_angle;
-}
-			}
+//_move=_horizontalMoveSpeed;_angle=0;
+//			// convert the world relative moveInput vector into a local-relative
+//			// turn amount and forward amount required to head in the desired
+//			// direction.
+//			if (_move.magnitude > 1f){ _move.Normalize();
+//			_move = actor.transform.InverseTransformDirection(_move);
+//			_move = Vector3.ProjectOnPlane(_move, Vector3.up);
+//			_angle = Mathf.Atan2(_move.x, _move.z);
+//if(_angle>0&&_turn>=0&&_angle>_turn){_turn=_angle;
+//}else 
+//if(_angle<0&&_turn<=0&&_angle<_turn){_turn=_angle;
+//}
+//			}
+
 
 Debug.LogWarning("_angle:"+_angle+";_turn:"+_turn);
 animator.SetFloat("Turn",_turn,0.1f,Time.deltaTime);
