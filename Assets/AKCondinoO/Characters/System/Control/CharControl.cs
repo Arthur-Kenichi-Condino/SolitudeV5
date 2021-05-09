@@ -212,6 +212,13 @@ _camPos+=headDrawRotation*Vector3.Scale(_camRotatedOffset,CamOffset);
     CamLookAtUp=Vector3.Cross(CamLookAtForward,headDrawRotation*Vector3.right).normalized;
 }
 }
+protected override bool Attack(AI enemy){
+if(nextAttackTimer>0)return false;
+               //if(!base.Attack(enemy))return false;
+    Debug.LogWarning("Attack(AI enemy)");
+return true;}
+protected override void OverlappedCollidersOnAttack(){
+}
 #if UNITY_EDITOR
 protected override void OnDrawGizmos(){
                    base.OnDrawGizmos();
