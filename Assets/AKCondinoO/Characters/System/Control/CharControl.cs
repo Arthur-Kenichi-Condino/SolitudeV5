@@ -17,14 +17,14 @@ public Vector3 CamLookAtForward{get;set;}
 public Vector3 CamPosition{get;set;}
 public Vector3 CamOffset;
 [NonSerialized]public string prefabName;[NonSerialized]public int idForPrefabName=-1;
-[NonSerialized]public DynamicCharacterAvatar avatar;[NonSerialized]public Dictionary<string,DnaSetter>dna;
+[NonSerialized]public DynamicCharacterAvatar avatar;[NonSerialized]AnimatorParamChanger animatorParams;[NonSerialized]public Dictionary<string,DnaSetter>dna;
 protected override void Awake(){
                    base.Awake();
 CamFollowableNode=MainCamera.CamFollowables.AddLast(this);
 
 
 if(avatar==null){
-avatar=GetComponentInChildren<DynamicCharacterAvatar>();
+avatar=GetComponentInChildren<DynamicCharacterAvatar>();animatorParams=GetComponentInChildren<AnimatorParamChanger>();
 if(avatar!=null){
 //dna=avatar.GetDNA();
 }}
@@ -72,6 +72,7 @@ avatar.DoSave();
 }
 }
 }
+[NonSerialized]protected float curAnimTime=-1;
 protected override void Update(){
 
 
@@ -214,8 +215,16 @@ _camPos+=headDrawRotation*Vector3.Scale(_camRotatedOffset,CamOffset);
 }
 protected override bool Attack(AI enemy){
 if(nextAttackTimer>0)return false;
-               //if(!base.Attack(enemy))return false;
-    Debug.LogWarning("Attack(AI enemy)");
+               //if(!base.Attack(enemy))return false;// temp commented, uncomment asap
+if(deadStance!=-1||hitStance!=-1)return false;if(attackStance==-1){attackStance=mathrandom.Next(0,6);curAnimTime=0;
+if(sfx!=null){sfx.Play((int)ActorSounds._ATTACK,true);}
+}
+
+
+    Debug.LogWarning("Attack(AI enemy):"+attackStance);
+animatorParams.OnAttack(attackStance);
+
+
 return true;}
 protected override void OverlappedCollidersOnAttack(){
 }
