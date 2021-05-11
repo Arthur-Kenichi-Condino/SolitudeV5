@@ -512,6 +512,8 @@ if(testHitBeforeAttacking&&attackHitboxColliders!=null){
 //attackHitboxColliders=null;
 }
 return result;}
+public virtual void OnAttackEnd(){
+}
 [NonSerialized]Vector3 attackHitboxHalfSize;[NonSerialized]protected Collider[]attackHitboxColliders=null;
 protected virtual void OverlappedCollidersOnAttack(){
 

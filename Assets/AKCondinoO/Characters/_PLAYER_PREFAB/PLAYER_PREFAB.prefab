@@ -264,6 +264,11 @@ PrefabInstance:
       propertyPath: raceAnimationControllers.defaultAnimationController
       value: 
       objectReference: {fileID: 9100000, guid: 57cf0c4ab016c6b4ba5d2b8292c0d601, type: 2}
+    - target: {fileID: 2017191414919377246, guid: 5c80fc4442f8349969abea6c1a0f1faa,
+        type: 3}
+      propertyPath: motionRhythm
+      value: 0.01225
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c80fc4442f8349969abea6c1a0f1faa, type: 3}
 --- !u!4 &7899130204173405683 stripped

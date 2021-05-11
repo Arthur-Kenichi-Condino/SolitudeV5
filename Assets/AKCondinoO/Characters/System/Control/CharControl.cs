@@ -212,20 +212,29 @@ _camPos+=headDrawRotation*Vector3.Scale(_camRotatedOffset,CamOffset);
     //CamLookAtUp=transform.up;
     CamLookAtUp=Vector3.Cross(CamLookAtForward,headDrawRotation*Vector3.right).normalized;
 }
+if(attackStance!=-1){
+BlockMovement=true;
+}
+if(deadStance==-1&&hitStance==-1&&attackStance==-1){
+BlockMovement=false;
+}
 }
 protected override bool Attack(AI enemy){
 if(nextAttackTimer>0)return false;
                //if(!base.Attack(enemy))return false;// temp commented, uncomment asap
 if(deadStance!=-1||hitStance!=-1)return false;if(attackStance==-1){attackStance=mathrandom.Next(0,6);curAnimTime=0;
-if(sfx!=null){sfx.Play((int)ActorSounds._ATTACK,true);}
-}
 
 
     Debug.LogWarning("Attack(AI enemy):"+attackStance);
 animatorParams.OnAttack(attackStance);
 
 
+if(sfx!=null){sfx.Play((int)ActorSounds._ATTACK,true);}
+}
 return true;}
+public override void OnAttackEnd(){
+attackStance=-1;
+}
 protected override void OverlappedCollidersOnAttack(){
 }
 #if UNITY_EDITOR

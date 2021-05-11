@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 public class AnimatorParamChanger:MonoBehaviour{
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
-[NonSerialized]public AI actor;[NonSerialized]public Animator animator;
+[NonSerialized]public AI actor;[NonSerialized]public CharControl character;[NonSerialized]public Animator animator;
 void OnEnable(){
-actor=transform.root.GetComponent<AI>();
+actor=transform.root.GetComponent<AI>();character=actor as CharControl;
+attackStance=-1;hitStance=-1;deadStance=-1;
 }
+[NonSerialized]int attackStance;[SerializeField]protected float attackStanceRhythmMultiplier=1f;[SerializeField]protected float attackStanceDamageTime=.5f;[NonSerialized]protected int hitStance=-1;[SerializeField]protected float hitStanceRhythmMultiplier=1f;[NonSerialized]protected int deadStance=-1;[SerializeField]protected float deadStanceRhythmMultiplier=1f;
+public float motionRhythm=0.0245f;[NonSerialized]protected float curAnimTime=-1;[NonSerialized]float curAnimTime_normalized;
 [NonSerialized]Vector3 _horizontalMoveSpeed;[NonSerialized]Vector3 _forward;[NonSerialized]Vector3 _move;[NonSerialized]float _angle;[NonSerialized]float _turn;[NonSerialized]public float horizontalMoveSensibility=1f/3f;[NonSerialized]public bool backwardAvailable=true;
 void Update(){
 if(actor.IsUMA&&animator==null){
@@ -17,6 +20,32 @@ animator=actor.GetComponentInChildren<Animator>();
 
 }
 if(animator!=null){
+}
+}
+[NonSerialized]bool animationChanged;[NonSerialized]int animationHash;[NonSerialized]int animationHashPreceding;[NonSerialized]bool ignoreNextAnimationChange;
+void LateUpdate(){
+if(animator!=null){
+animationHashPreceding=animationHash;animationChanged=(animationHash=animator.GetCurrentAnimatorStateInfo(0).fullPathHash)!=animationHashPreceding;
+if(attackStance!=-1){
+if(animationChanged){
+if(ignoreNextAnimationChange){
+    ignoreNextAnimationChange=false;
+}else{
+curAnimTime=0;
+}
+}
+curAnimTime_normalized=Mathf.Clamp01(curAnimTime/animator.GetCurrentAnimatorStateInfo(0).length);if(curAnimTime_normalized>=1){
+                Debug.LogWarning("attackStance end");
+    attackStance=-1;curAnimTime=-1;ignoreNextAnimationChange=true;actor.OnAttackEnd();}
+}
+animator.SetBool("MOTION_ATTACK_L1",attackStance==0);
+animator.SetBool("MOTION_ATTACK_L2",attackStance==1);
+animator.SetBool("MOTION_ATTACK_L3",attackStance==2);
+animator.SetBool("MOTION_ATTACK_R1",attackStance==3);
+animator.SetBool("MOTION_ATTACK_R2",attackStance==4);
+animator.SetBool("MOTION_ATTACK_R3",attackStance==5);
+
+
 _horizontalMoveSpeed=actor.rigidbody.velocity;
 _horizontalMoveSpeed.x=0;
 _horizontalMoveSpeed.y=0;
@@ -51,10 +80,22 @@ if(LOG&&LOG_LEVEL<=-110)Debug.Log("actor.OnGround:"+actor.OnGround);
 
 animator.SetFloat("Jump",actor.rigidbody.velocity.y);
 animator.SetBool("Crouch",actor.CanCrouch&&actor.Crouching);
+
+
+Debug.LogWarning(animationHash);
+
+
+if(curAnimTime!=-1){curAnimTime+=(motionRhythm*(attackStance!=-1?((actor.Attributes.Aspd+1f)*attackStanceRhythmMultiplier):hitStance!=-1?hitStanceRhythmMultiplier:deadStanceRhythmMultiplier)*animator.GetCurrentAnimatorStateInfo(0).speed*animator.GetCurrentAnimatorStateInfo(0).length)*(Time.deltaTime/MainCamera._60FPSdeltaTime);
+if(actor.Attributes.Aspd==0){
+if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("Attributes.Aspd==0;some animations may bug");
+}
+animator.SetFloat("time",curAnimTime_normalized);
+}
 }
 }
 public void OnAttack(int attackStance){
     Debug.LogWarning("OnAttack(int attackStance):"+attackStance);
+this.attackStance=attackStance;
 }
 public void FootR(string s){
     Debug.LogWarning("FootR");
