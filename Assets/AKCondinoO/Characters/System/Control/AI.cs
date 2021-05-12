@@ -488,7 +488,7 @@ TestHit(out _);
 }
 
 
-if(willHitEnemy||(!testHitBeforeAttacking&&attackHitboxColliders==null)){
+if(DEBUG_ATTACK||willHitEnemy||(!testHitBeforeAttacking&&attackHitboxColliders==null)){
 if(attackStance==-1){
 if(deadStance!=-1||hitStance!=-1){
 //Debug.LogWarning("attack stance failed: hit or dying");
@@ -512,13 +512,13 @@ if(testHitBeforeAttacking&&attackHitboxColliders!=null){
 //attackHitboxColliders=null;
 }
 return result;}
-public virtual void OnAttackEnd(){
+public virtual void OnAttackAnimationEnd(){
 }
 [NonSerialized]Vector3 attackHitboxHalfSize;[NonSerialized]protected Collider[]attackHitboxColliders=null;
 protected virtual void OverlappedCollidersOnAttack(){
 
     
-if(Vector3.Angle((MyEnemy.collider.bounds.center-collider.bounds.center).normalized,transform.forward)>15f){
+if(MyEnemy==null||Vector3.Angle((MyEnemy.collider.bounds.center-collider.bounds.center).normalized,transform.forward)>15f){
 attackHitboxColliders=new Collider[0];
 return;
 }
@@ -561,6 +561,8 @@ if(collider.CompareTag("Player")&&(enemy=collider.GetComponent<AI>())!=this&&ene
 
     didDamage=true;
 }
+}
+public virtual void OnAttackAnimationStartDoDamage(){
 }
 [NonSerialized]protected float damage;[NonSerialized]protected bool evadedFromAlly;
 protected virtual void TakeDamage(AI fromEnemy){

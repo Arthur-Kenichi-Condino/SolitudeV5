@@ -221,7 +221,7 @@ BlockMovement=false;
 }
 protected override bool Attack(AI enemy){
 if(nextAttackTimer>0)return false;
-               //if(!base.Attack(enemy))return false;// temp commented, uncomment asap
+               if(!base.Attack(enemy))return false;// temp commented, uncomment asap
 if(deadStance!=-1||hitStance!=-1)return false;if(attackStance==-1){attackStance=mathrandom.Next(0,6);curAnimTime=0;
 
 
@@ -232,7 +232,7 @@ animatorParams.OnAttack(attackStance);
 if(sfx!=null){sfx.Play((int)ActorSounds._ATTACK,true);}
 }
 return true;}
-public override void OnAttackEnd(){
+public override void OnAttackAnimationEnd(){
 attackStance=-1;
 }
 protected override void OverlappedCollidersOnAttack(){
