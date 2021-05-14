@@ -236,6 +236,10 @@ public override void OnAttackAnimationEnd(){
 attackStance=-1;
 }
 protected override void OverlappedCollidersOnAttack(){
+    Debug.LogWarning("OverlappedCollidersOnAttack");
+}
+public override void OnAttackAnimationStartDoDamage(){
+    Debug.LogWarning("OnAttackAnimationStartDoDamage");
 }
 #if UNITY_EDITOR
 protected override void OnDrawGizmos(){
