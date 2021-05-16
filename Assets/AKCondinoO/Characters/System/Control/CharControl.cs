@@ -73,6 +73,7 @@ avatar.DoSave();
 }
 }
 [NonSerialized]protected float curAnimTime=-1;
+[NonSerialized]protected GameObject leftHand;[NonSerialized]protected GameObject rightHand;
 protected override void Update(){
 
 
@@ -86,6 +87,17 @@ if(avatar==null){
 loaded=true;
 }else if(IsUMA){
 dna=avatar.GetDNA();
+
+
+RecursiveFinder(transform);void RecursiveFinder(Transform transform){
+foreach(Transform child in transform){
+if(child.name=="LeftHand")leftHand=child.gameObject;if(child.name=="RightHand")rightHand=child.gameObject;
+if(leftHand!=null&&rightHand!=null)break;else RecursiveFinder(child);
+}
+}
+if(leftHand!=null)Debug.LogWarning("leftHand:"+leftHand,leftHand);if(rightHand!=null)Debug.LogWarning("rightHand:"+rightHand,rightHand);
+
+
 if(dna!=null&&dna.Count>0){
 
 
@@ -240,6 +252,9 @@ protected override void OverlappedCollidersOnAttack(){
 }
 public override void OnAttackAnimationStartDoDamage(){
     Debug.LogWarning("OnAttackAnimationStartDoDamage");
+}
+public override void OnAttackAnimationStopDoDamage(){
+    Debug.LogWarning("OnAttackAnimationStopDoDamage");
 }
 #if UNITY_EDITOR
 protected override void OnDrawGizmos(){

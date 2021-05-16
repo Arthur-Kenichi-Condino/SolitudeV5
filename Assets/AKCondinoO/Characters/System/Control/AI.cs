@@ -564,6 +564,8 @@ if(collider.CompareTag("Player")&&(enemy=collider.GetComponent<AI>())!=this&&ene
 }
 public virtual void OnAttackAnimationStartDoDamage(){
 }
+public virtual void OnAttackAnimationStopDoDamage(){
+}
 [NonSerialized]protected float damage;[NonSerialized]protected bool evadedFromAlly;
 protected virtual void TakeDamage(AI fromEnemy){
 if(fromEnemy!=null){
