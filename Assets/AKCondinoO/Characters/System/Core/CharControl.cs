@@ -231,10 +231,12 @@ if(deadStance==-1&&hitStance==-1&&attackStance==-1){
 BlockMovement=false;
 }
 }
+void InterruptCurrentStance(){
+}
 protected override bool Attack(AI enemy){
 if(nextAttackTimer>0)return false;
                if(!base.Attack(enemy))return false;// temp commented, uncomment asap
-if(deadStance!=-1||hitStance!=-1)return false;if(attackStance==-1){attackStance=mathrandom.Next(0,6);curAnimTime=0;
+if(deadStance!=-1||hitStance!=-1)return false;if(attackStance==-1){InterruptCurrentStance();attackStance=mathrandom.Next(0,6);curAnimTime=0;
 
 
     Debug.LogWarning("Attack(AI enemy):"+attackStance);
@@ -250,10 +252,15 @@ attackStance=-1;
 protected override void OverlappedCollidersOnAttack(){
     Debug.LogWarning("OverlappedCollidersOnAttack");
 }
+protected override void DoDamageHitbox(){
+}
+[NonSerialized]protected bool doDamage;
 public override void OnAttackAnimationStartDoDamage(){
+doDamage=true;
     Debug.LogWarning("OnAttackAnimationStartDoDamage");
 }
 public override void OnAttackAnimationStopDoDamage(){
+doDamage=false;
     Debug.LogWarning("OnAttackAnimationStopDoDamage");
 }
 #if UNITY_EDITOR

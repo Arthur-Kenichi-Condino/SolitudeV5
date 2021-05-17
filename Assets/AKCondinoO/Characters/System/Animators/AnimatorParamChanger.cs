@@ -9,7 +9,7 @@ void OnEnable(){
 actor=transform.root.GetComponent<AI>();character=actor as CharControl;
 attackStance=-1;hitStance=-1;deadStance=-1;
 }
-[NonSerialized]int attackStance;[SerializeField]protected float attackStanceRhythmMultiplier=1f;[SerializeField]protected float attackStanceDamageTime=.15f;[SerializeField]protected float attackStanceDamageTimeEnd=.85f;[NonSerialized]bool attackStanceDamageStarted;[NonSerialized]protected int hitStance=-1;[SerializeField]protected float hitStanceRhythmMultiplier=1f;[NonSerialized]protected int deadStance=-1;[SerializeField]protected float deadStanceRhythmMultiplier=1f;
+[NonSerialized]int attackStance;[SerializeField]protected float attackStanceRhythmMultiplier=1f;[SerializeField]protected float attackStanceDamageTime=.15f;[SerializeField]protected float attackStanceDamageTimeEnd=.85f;[NonSerialized]protected bool attackStanceDamageStarted;[NonSerialized]protected bool attackStanceDamageStopped;[NonSerialized]protected int hitStance=-1;[SerializeField]protected float hitStanceRhythmMultiplier=1f;[NonSerialized]protected int deadStance=-1;[SerializeField]protected float deadStanceRhythmMultiplier=1f;
 public float motionRhythm=0.0245f;[NonSerialized]protected float curAnimTime=-1;[NonSerialized]float curAnimTime_normalized;
 [NonSerialized]Vector3 _horizontalMoveSpeed;[NonSerialized]Vector3 _forward;[NonSerialized]Vector3 _move;[NonSerialized]float _angle;[NonSerialized]float _turn;[NonSerialized]public float horizontalMoveSensibility=1f/3f;[NonSerialized]public bool backwardAvailable=true;
 void Update(){
@@ -35,9 +35,9 @@ curAnimTime=0;
 }
 }
 curAnimTime_normalized=Mathf.Clamp01(curAnimTime/animator.GetCurrentAnimatorStateInfo(0).length);if(curAnimTime_normalized>=attackStanceDamageTime&&!attackStanceDamageStarted){
-    actor.OnAttackAnimationStartDoDamage();attackStanceDamageStarted=true;}if(curAnimTime_normalized>=attackStanceDamageTimeEnd&&attackStanceDamageStarted){actor.OnAttackAnimationStopDoDamage();}if(curAnimTime_normalized>=1){
+    actor.OnAttackAnimationStartDoDamage();attackStanceDamageStarted=true;}if(curAnimTime_normalized>=attackStanceDamageTimeEnd&&!attackStanceDamageStopped){actor.OnAttackAnimationStopDoDamage();attackStanceDamageStopped=true;}if(curAnimTime_normalized>=1){
                 Debug.LogWarning("attackStance end");
-    attackStance=-1;curAnimTime=-1;ignoreNextAnimationChange=true;actor.OnAttackAnimationEnd();attackStanceDamageStarted=false;}
+    attackStance=-1;curAnimTime=-1;ignoreNextAnimationChange=true;actor.OnAttackAnimationEnd();attackStanceDamageStarted=false;attackStanceDamageStopped=false;}
 }
 animator.SetBool("MOTION_ATTACK_L1",attackStance==0);
 animator.SetBool("MOTION_ATTACK_L2",attackStance==1);
@@ -94,9 +94,11 @@ animator.SetFloat("time",curAnimTime_normalized);
 }
 }
 }
+void InterruptCurrentAnimation(){
+}
 public void OnAttack(int attackStance){
     Debug.LogWarning("OnAttack(int attackStance):"+attackStance);
-this.attackStance=attackStance;
+     InterruptCurrentAnimation();this.attackStance=attackStance;
 }
 public void FootR(string s){
     Debug.LogWarning("FootR");
