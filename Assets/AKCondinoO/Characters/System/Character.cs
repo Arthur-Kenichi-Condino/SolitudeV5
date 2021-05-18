@@ -18,14 +18,14 @@ public Vector3 CamLookAtForward{get;set;}
 public Vector3 CamPosition{get;set;}
 public Vector3 CamOffset;
 [NonSerialized]public string prefabName;[NonSerialized]public int idForPrefabName=-1;
-[NonSerialized]public DynamicCharacterAvatar avatar;[NonSerialized]AnimatorParamChanger animatorParams;[NonSerialized]public Dictionary<string,DnaSetter>dna;
+[NonSerialized]public DynamicCharacterAvatar avatar;[NonSerialized]ThirdPersonAnimatorParamChanger animatorParams;[NonSerialized]public Dictionary<string,DnaSetter>dna;
 protected override void Awake(){
                    base.Awake();
 CamFollowableNode=MainCamera.CamFollowables.AddLast(this);
 
 
 if(avatar==null){
-avatar=GetComponentInChildren<DynamicCharacterAvatar>();animatorParams=GetComponentInChildren<AnimatorParamChanger>();
+avatar=GetComponentInChildren<DynamicCharacterAvatar>();animatorParams=GetComponentInChildren<ThirdPersonAnimatorParamChanger>();
 if(avatar!=null){
 //dna=avatar.GetDNA();
 }}

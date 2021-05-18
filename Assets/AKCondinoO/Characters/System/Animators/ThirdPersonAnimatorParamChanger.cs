@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class AnimatorParamChanger:MonoBehaviour{
+public class ThirdPersonAnimatorParamChanger:MonoBehaviour{
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
 [NonSerialized]public AI actor;[NonSerialized]public Character character;[NonSerialized]public Animator animator;
 void OnEnable(){

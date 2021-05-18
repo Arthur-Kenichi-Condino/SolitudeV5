@@ -289,7 +289,7 @@
     <Compile Include="Assets\SampleScenes\Scripts\CameraSwitch.cs" />
     <Compile Include="Assets\UMA\Examples\Expressions Examples\Scripts\SliderExpressionTest.cs" />
     <Compile Include="Assets\UMA\Core\StandardAssets\UMA\Scripts\UMABonePose.cs" />
-    <Compile Include="Assets\AKCondinoO\Characters\System\Animators\AnimatorParamChanger.cs" />
+    <Compile Include="Assets\AKCondinoO\Characters\System\Animators\ThirdPersonAnimatorParamChanger.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Formatters\DynamicObjectTypeFallbackFormatter.cs" />
     <Compile Include="Assets\UMA\Examples\Legacy Examples\Scripts\UMACrowdRandomSet.cs" />
     <Compile Include="Assets\Scripts\Utf8Json\Internal\DoubleConversion\DiyFp.cs" />
