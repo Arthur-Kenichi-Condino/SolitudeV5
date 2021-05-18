@@ -3,11 +3,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UMA;
 using UMA.CharacterSystem;
 using UnityEngine;
 using static ActorManagementMentana;
-public class CharControl:AI,iCamFollowable{[NonSerialized]public System.Random dnaRandom=null;//  Não usar DoSave em momento algum se não for um NPC aleatório; a não ser que seja um jogador customizando o personagem
+public class Character:AI,iCamFollowable{[NonSerialized]public System.Random dnaRandom=null;//  Não usar DoSave em momento algum se não for um NPC aleatório; a não ser que seja um jogador customizando o personagem
 [NonSerialized]public static string[]saveSubfolder=new string[1];
 public string ObjName{get{return gameObject.name;}}
 public LinkedListNode<iCamFollowable>CamFollowableNode{get;set;}
@@ -73,7 +74,7 @@ avatar.DoSave();
 }
 }
 [NonSerialized]protected float curAnimTime=-1;
-[NonSerialized]protected GameObject leftHand;[NonSerialized]protected GameObject rightHand;
+[NonSerialized]protected GameObject leftHand;[NonSerialized]protected Vector3 leftHandHitboxHalfSize=new Vector3(0.125f,0.125f,0.125f);[NonSerialized]protected GameObject rightHand;[NonSerialized]protected Vector3 rightHandHitboxHalfSize=new Vector3(0.125f,0.125f,0.125f);
 protected override void Update(){
 
 
@@ -147,6 +148,10 @@ if(dna!=null){
 
 
 }
+}
+if(doDamage){
+            Debug.LogWarning("do damage");
+DoDamageHitbox();    
 }
 
 
@@ -252,7 +257,35 @@ attackStance=-1;
 protected override void OverlappedCollidersOnAttack(){
     Debug.LogWarning("OverlappedCollidersOnAttack");
 }
+[NonSerialized]protected readonly new List<Collider>attackHitboxColliders=new List<Collider>();
 protected override void DoDamageHitbox(){
+attackHitboxColliders.Clear();
+Collider[]leftHandColliders;if(leftHand!=null&&(leftHandColliders=Physics.OverlapBox(leftHand.transform.position,leftHandHitboxHalfSize,transform.rotation))!=null){
+attackHitboxColliders.AddRange(leftHandColliders);}
+Collider[]rightHandColliders;if(rightHand!=null&&(rightHandColliders=Physics.OverlapBox(rightHand.transform.position,rightHandHitboxHalfSize,transform.rotation))!=null){
+attackHitboxColliders.AddRange(rightHandColliders);}
+            Debug.LogWarning("attackHitboxColliders.Count:"+attackHitboxColliders.Count);
+
+
+for(int i=0;i<attackHitboxColliders.Count;i++){Collider collider=attackHitboxColliders[i];
+
+
+    Debug.LogWarning(collider.name);
+
+            
+if(collider.isTrigger)continue;
+AI enemy;
+if(collider.CompareTag("Player")&&(enemy=collider.GetComponent<AI>())!=this&&enemy!=null){
+    Debug.LogWarning("collider hit:"+collider.name+"; tag:"+collider.tag,this);
+
+                
+    //enemy.TakeDamage(this);
+
+
+}
+}
+
+
 }
 [NonSerialized]protected bool doDamage;
 public override void OnAttackAnimationStartDoDamage(){

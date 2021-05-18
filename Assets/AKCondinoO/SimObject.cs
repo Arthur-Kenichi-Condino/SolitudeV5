@@ -53,8 +53,8 @@ if(LOG&&LOG_LEVEL<=-1)Debug.Log("simObject.renderer not null:"+simObject.rendere
 [NonSerialized]protected float BodyRange_v;public float BodyRange{get{return BodyRange_v*RangeMultiplier;}set{BodyRange_v=value;}}
 [NonSerialized]protected float RangeMultiplier=2f;
 protected void GetColliderData(){
-if(!(this is _3DSprite)){RangeMultiplier=1f;}else{
-if(LOG&&LOG_LEVEL<=1)Debug.Log("this is _3DSprite:"+(this is _3DSprite),this);
+if(!(this is _3DSpriteCharacter)){RangeMultiplier=1f;}else{
+if(LOG&&LOG_LEVEL<=1)Debug.Log("this is _3DSprite:"+(this is _3DSpriteCharacter),this);
 }
 colliderHalfExtents=collider.bounds.extents/2;
 colliderShortestExtent=Mathf.Min(collider.bounds.extents.x,collider.bounds.extents.y,collider.bounds.extents.z);
@@ -63,8 +63,8 @@ BodyRange=BodyRadius=Mathf.Max(Mathf.Sqrt(Mathf.Pow(collider.bounds.extents.x,2)
 if(LOG&&LOG_LEVEL<=1)Debug.Log("BodyRadius:"+BodyRange+", name:"+name);
 }
 protected void GetRendererData(){
-if(this is _3DSprite){
-if(LOG&&LOG_LEVEL<=1)Debug.Log("this is _3DSprite:"+(this is _3DSprite),this);
+if(this is _3DSpriteCharacter){
+if(LOG&&LOG_LEVEL<=1)Debug.Log("this is _3DSprite:"+(this is _3DSpriteCharacter),this);
 renderer.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.On;
 renderer.receiveShadows=true;
 }

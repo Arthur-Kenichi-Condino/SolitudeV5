@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static ActorManagementMentana;
-public class EIRA:_3DSprite{
+public class EIRA:_3DSpriteCharacter{
 public override void InitAttributes(bool random=true){
 if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":init attributes");
 Attributes.STR=mathrandom.Next(22,52);
@@ -29,8 +29,8 @@ if(deadStance!=-1||hitStance!=-1)return false;if(attackStance==-1){attackStance=
 if(sfx!=null){sfx.Play((int)ActorSounds._ATTACK,true);}
 }
 return true;}
-protected override void TakeDamage(AI fromEnemy){
-                   base.TakeDamage(fromEnemy);
+public override void TakeDamage(AI fromEnemy){
+                base.TakeDamage(fromEnemy);
 if(damage<=0)return;
 if(deadStance!=-1)return;attackStance=-1;hitStance=0;curAnimTime=0;
 }

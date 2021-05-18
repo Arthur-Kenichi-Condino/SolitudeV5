@@ -49,7 +49,7 @@ Actors.Add(id,aI);ActorsByTypeId[typeId].Add(aI);InactiveActorsByTypeId[typeId].
 
 
 void setPrefabNameAndId(AI aI,AI prefab){
-if(aI is CharControl npc){
+if(aI is Character npc){
 npc.prefabName=prefab.name;npc.idForPrefabName=UMAnpcUniqueIds++;npc.dnaRandom=new System.Random(UMAseed+npc.idForPrefabName);
 }
 }

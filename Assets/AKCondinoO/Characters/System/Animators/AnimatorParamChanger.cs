@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 public class AnimatorParamChanger:MonoBehaviour{
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
-[NonSerialized]public AI actor;[NonSerialized]public CharControl character;[NonSerialized]public Animator animator;
+[NonSerialized]public AI actor;[NonSerialized]public Character character;[NonSerialized]public Animator animator;
 void OnEnable(){
-actor=transform.root.GetComponent<AI>();character=actor as CharControl;
+actor=transform.root.GetComponent<AI>();character=actor as Character;
 attackStance=-1;hitStance=-1;deadStance=-1;
 }
 [NonSerialized]int attackStance;[SerializeField]protected float attackStanceRhythmMultiplier=1f;[SerializeField]protected float attackStanceDamageTime=.15f;[SerializeField]protected float attackStanceDamageTimeEnd=.85f;[NonSerialized]protected bool attackStanceDamageStarted;[NonSerialized]protected bool attackStanceDamageStopped;[NonSerialized]protected int hitStance=-1;[SerializeField]protected float hitStanceRhythmMultiplier=1f;[NonSerialized]protected int deadStance=-1;[SerializeField]protected float deadStanceRhythmMultiplier=1f;

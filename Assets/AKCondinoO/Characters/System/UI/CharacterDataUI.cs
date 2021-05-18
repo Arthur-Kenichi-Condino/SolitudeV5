@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class CharDataUI:MonoBehaviour{
+public class CharacterDataUI:MonoBehaviour{
 [NonSerialized]AI actor;
 [NonSerialized]RectTransform SPBar;[NonSerialized]Vector3 SPBarScale;
 [NonSerialized]RectTransform FPBar;

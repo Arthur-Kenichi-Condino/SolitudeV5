@@ -7,13 +7,13 @@ using static ActorManagementMentana;
 public class AI:Pathfinder{
 public int Id{get;internal set;}public int TypeId{get;internal set;}[SerializeField]public Roles Role;
 [NonSerialized]protected Sight MySight;
-[NonSerialized]protected CharSFX sfx;
+[NonSerialized]protected CharacterSFX sfx;
 protected override void Awake(){
 if(manager==null){OutOfSight_v=false;}
     //Debug.LogWarning("here");
                    base.Awake();
 MySight=GetComponentInChildren<Sight>();
-    sfx=GetComponent<CharSFX>();
+    sfx=GetComponent<CharacterSFX>();
 MyAttackRange=MyAttackRange*BodyRadius;
 }
 protected override void OnEnable(){
@@ -76,7 +76,7 @@ return;
 #endregion
 
 
-if(this is _3DSprite){
+if(this is _3DSpriteCharacter){
 if(sfx!=null){if(MyMotion==Motions.MOTION_STAND){sfx.Play((int)ActorSounds._IDLE);}else if(MyMotion==Motions.MOTION_MOVE){sfx.Play((int)ActorSounds._MOVE);}}
 }
 
@@ -549,6 +549,7 @@ OverlappedCollidersOnAttack();
 if(attackHitboxColliders!=null){
     Debug.LogWarning("attackHitboxColliders.Length:"+attackHitboxColliders.Length);
 for(int i=0;i<attackHitboxColliders.Length;i++){var collider=attackHitboxColliders[i];
+if(collider.isTrigger)continue;
 AI enemy;
 if(collider.CompareTag("Player")&&(enemy=collider.GetComponent<AI>())!=this&&enemy!=null){
     Debug.LogWarning("collider hit:"+collider.name+"; tag:"+collider.tag,this);
@@ -567,7 +568,7 @@ public virtual void OnAttackAnimationStartDoDamage(){
 public virtual void OnAttackAnimationStopDoDamage(){
 }
 [NonSerialized]protected float damage;[NonSerialized]protected bool evadedFromAlly;
-protected virtual void TakeDamage(AI fromEnemy){
+public virtual void TakeDamage(AI fromEnemy){
 if(fromEnemy!=null){
 damage=fromEnemy.Attributes.ATK-Attributes.DEF;
 }

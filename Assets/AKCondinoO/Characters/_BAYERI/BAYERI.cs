@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static ActorManagementMentana;
-public class BAYERI:_3DSprite{
+public class BAYERI:_3DSpriteCharacter{
 public override void InitAttributes(bool random=true){
 if(LOG&&LOG_LEVEL<=1)Debug.Log(GetType()+":init attributes");
 Attributes.STR=mathrandom.Next(52,73);
@@ -26,8 +26,8 @@ if(nextAttackTimer>0)return false;
                if(!base.Attack(enemy))return false;
 if(deadStance!=-1||hitStance!=-1)return false;if(attackStance==-1){attackStance=mathrandom.Next(0,2);curAnimTime=0;}
 return true;}
-protected override void TakeDamage(AI fromEnemy){
-                   base.TakeDamage(fromEnemy);
+public override void TakeDamage(AI fromEnemy){
+                base.TakeDamage(fromEnemy);
 if(damage<=0)return;
 if(deadStance!=-1)return;attackStance=-1;hitStance=0;curAnimTime=0;
 }

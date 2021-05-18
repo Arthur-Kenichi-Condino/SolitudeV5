@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-public class CharSFX:MonoBehaviour{
+public class CharacterSFX:MonoBehaviour{
 public bool LOG=false;public int LOG_LEVEL=1;
 [NonSerialized]public AI actor;[NonSerialized]public AudioSource audioSource;
 void Awake(){
