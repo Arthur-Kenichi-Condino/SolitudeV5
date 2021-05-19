@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class ThirdPersonAnimatorParamChanger:MonoBehaviour{
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
-[NonSerialized]public AI actor;[NonSerialized]public Character character;[NonSerialized]public Animator animator;
+[NonSerialized]public AI actor;[NonSerialized]public Character character;[NonSerialized]public Animator animator;[NonSerialized]protected bool animatorReachedIdle;
 void OnEnable(){
 actor=transform.root.GetComponent<AI>();character=actor as Character;
 attackStance=-1;hitStance=-1;deadStance=-1;
@@ -27,10 +27,11 @@ void LateUpdate(){
 if(animator!=null){
 animationHashPreceding=animationHash;animationChanged=(animationHash=animator.GetCurrentAnimatorStateInfo(0).fullPathHash)!=animationHashPreceding;
 if(attackStance!=-1){
-if(animationChanged){
+if(animationChanged||animatorReachedIdle){
 if(ignoreNextAnimationChange){
     ignoreNextAnimationChange=false;
 }else{
+animatorReachedIdle=false;
 curAnimTime=0;
 }
 }
@@ -38,9 +39,17 @@ curAnimTime_normalized=Mathf.Clamp01(curAnimTime/animator.GetCurrentAnimatorStat
     actor.OnAttackAnimationStartDoDamage();attackStanceDamageStarted=true;}if(curAnimTime_normalized>=attackStanceDamageTimeEnd&&!attackStanceDamageStopped){actor.OnAttackAnimationStopDoDamage();attackStanceDamageStopped=true;}if(curAnimTime_normalized>=1){
                 Debug.LogWarning("attackStance end");
     attackStance=-1;curAnimTime=-1;ignoreNextAnimationChange=true;actor.OnAttackAnimationEnd();attackStanceDamageStarted=false;attackStanceDamageStopped=false;}
-}else{
-    ignoreNextAnimationChange=false;
 }
+if(animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Movement")){
+    //ignoreNextAnimationChange=false;
+animatorReachedIdle=true;
+}
+
+
+//if(animator.GetCurrentAnimatorStateInfo(0).IsName("Base.Movement"));
+Debug.LogWarning(animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Movement"));//Layer.Movement.Standing.HumanoidIdle
+
+
 animator.SetBool("MOTION_ATTACK_L1",attackStance==0);
 animator.SetBool("MOTION_ATTACK_L2",attackStance==1);
 animator.SetBool("MOTION_ATTACK_L3",attackStance==2);
