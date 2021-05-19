@@ -38,6 +38,8 @@ curAnimTime_normalized=Mathf.Clamp01(curAnimTime/animator.GetCurrentAnimatorStat
     actor.OnAttackAnimationStartDoDamage();attackStanceDamageStarted=true;}if(curAnimTime_normalized>=attackStanceDamageTimeEnd&&!attackStanceDamageStopped){actor.OnAttackAnimationStopDoDamage();attackStanceDamageStopped=true;}if(curAnimTime_normalized>=1){
                 Debug.LogWarning("attackStance end");
     attackStance=-1;curAnimTime=-1;ignoreNextAnimationChange=true;actor.OnAttackAnimationEnd();attackStanceDamageStarted=false;attackStanceDamageStopped=false;}
+}else{
+    ignoreNextAnimationChange=false;
 }
 animator.SetBool("MOTION_ATTACK_L1",attackStance==0);
 animator.SetBool("MOTION_ATTACK_L2",attackStance==1);

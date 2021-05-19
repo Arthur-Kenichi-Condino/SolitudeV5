@@ -257,7 +257,7 @@ attackStance=-1;
 protected override void OverlappedCollidersOnAttack(){
     Debug.LogWarning("OverlappedCollidersOnAttack");
 }
-[NonSerialized]protected readonly new List<Collider>attackHitboxColliders=new List<Collider>();
+[NonSerialized]protected readonly new List<Collider>attackHitboxColliders=new List<Collider>();[NonSerialized]protected readonly new List<AI>didDamage=new List<AI>();
 protected override void DoDamageHitbox(){
 attackHitboxColliders.Clear();
 Collider[]leftHandColliders;if(leftHand!=null&&(leftHandColliders=Physics.OverlapBox(leftHand.transform.position,leftHandHitboxHalfSize,transform.rotation))!=null){
@@ -278,8 +278,10 @@ AI enemy;
 if(collider.CompareTag("Player")&&(enemy=collider.GetComponent<AI>())!=this&&enemy!=null){
     Debug.LogWarning("collider hit:"+collider.name+"; tag:"+collider.tag,this);
 
-                
-    //enemy.TakeDamage(this);
+
+if(!didDamage.Contains(enemy)){didDamage.Add(enemy);                
+    enemy.TakeDamage(this);
+}
 
 
 }
@@ -289,12 +291,18 @@ if(collider.CompareTag("Player")&&(enemy=collider.GetComponent<AI>())!=this&&ene
 }
 [NonSerialized]protected bool doDamage;
 public override void OnAttackAnimationStartDoDamage(){
+didDamage.Clear();
 doDamage=true;
     Debug.LogWarning("OnAttackAnimationStartDoDamage");
 }
 public override void OnAttackAnimationStopDoDamage(){
 doDamage=false;
     Debug.LogWarning("OnAttackAnimationStopDoDamage");
+
+
+        Debug.LogWarning("didDamage.Count:"+didDamage.Count);
+
+
 }
 #if UNITY_EDITOR
 protected override void OnDrawGizmos(){

@@ -500,7 +500,7 @@ result=true;
     Debug.LogWarning("nextAttackTimer:"+nextAttackTimer+";attackInterval:"+attackInterval+";Attributes.Aspd:"+Attributes.Aspd+";attackWaitForSoundTime:"+attackWaitForSoundTime);
 }
 }else{
-//Debug.LogWarning("attack stance failed: already attacking["+this);
+Debug.LogWarning("attack stance failed: already attacking["+this);
 }
 }else{
 Debug.LogWarning("attack stance failed: will not hit enemy["+this);
