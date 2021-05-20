@@ -106,6 +106,8 @@ animator.SetFloat("time",curAnimTime_normalized);
 }
 }
 void InterruptCurrentAnimation(){
+if(attackStance!=-1){
+}
 }
 public void OnAttack(int attackStance){
     Debug.LogWarning("OnAttack(int attackStance):"+attackStance);

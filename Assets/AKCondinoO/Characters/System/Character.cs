@@ -237,6 +237,12 @@ BlockMovement=false;
 }
 }
 void InterruptCurrentStance(){
+if(attackStance!=-1){
+doDamage=false;
+
+
+            Debug.LogWarning("attackStance interrupted");
+}
 }
 protected override bool Attack(AI enemy){
 if(nextAttackTimer>0)return false;
@@ -303,6 +309,18 @@ doDamage=false;
         Debug.LogWarning("didDamage.Count:"+didDamage.Count);
 
 
+}
+public override void TakeDamage(AI fromEnemy){
+                base.TakeDamage(fromEnemy);
+
+        
+    Debug.LogWarning("TakeDamage");
+if(damage<=0)return;
+if(deadStance!=-1)return;InterruptCurrentStance();attackStance=-1;hitStance=0;curAnimTime=0;
+if(sfx!=null){sfx.Play((int)ActorSounds._HIT,true);}
+
+
+//InterruptCurrentStance()
 }
 #if UNITY_EDITOR
 protected override void OnDrawGizmos(){
