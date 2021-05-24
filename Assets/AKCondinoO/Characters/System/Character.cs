@@ -317,6 +317,12 @@ public override void TakeDamage(AI fromEnemy){
     Debug.LogWarning("TakeDamage");
 if(damage<=0)return;
 if(deadStance!=-1)return;InterruptCurrentStance();attackStance=-1;hitStance=0;curAnimTime=0;
+
+        
+    Debug.LogWarning("TakeDamage(AI fromEnemy):"+hitStance);
+animatorParams.OnGetHit(hitStance);
+
+
 if(sfx!=null){sfx.Play((int)ActorSounds._HIT,true);}
 
 
