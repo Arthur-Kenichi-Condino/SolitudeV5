@@ -26,8 +26,7 @@ if(animator!=null){
 void LateUpdate(){
 if(animator!=null){
 animationHashPreceding=animationHash;animationChanged=(animationHash=animator.GetCurrentAnimatorStateInfo(0).fullPathHash)!=animationHashPreceding;
-#region [attackStance]
-if(attackStance!=-1){
+void StartAnimTimer(){
 if(animationChanged||animatorReachedIdle){
 if(ignoreNextAnimationChange){
     ignoreNextAnimationChange=false;
@@ -36,14 +35,21 @@ animatorReachedIdle=false;
 curAnimTime=0;
 }
 }
+}
+#region [hitStance]
+if(hitStance!=-1){
+StartAnimTimer();
+curAnimTime_normalized=Mathf.Clamp01(curAnimTime/animator.GetCurrentAnimatorStateInfo(0).length);if(curAnimTime_normalized>=1){
+    hitStance=-1;curAnimTime=-1;ignoreNextAnimationChange=true;actor.OnGetHitAnimationEnd();}
+}
+#endregion 
+#region [attackStance]
+if(attackStance!=-1){
+StartAnimTimer();
 curAnimTime_normalized=Mathf.Clamp01(curAnimTime/animator.GetCurrentAnimatorStateInfo(0).length);if(curAnimTime_normalized>=attackStanceDamageTime&&!attackStanceDamageStarted){
     actor.OnAttackAnimationStartDoDamage();attackStanceDamageStarted=true;}if(curAnimTime_normalized>=attackStanceDamageTimeEnd&&!attackStanceDamageStopped){actor.OnAttackAnimationStopDoDamage();attackStanceDamageStopped=true;}if(curAnimTime_normalized>=1){
                 Debug.LogWarning("attackStance end");
     attackStance=-1;curAnimTime=-1;ignoreNextAnimationChange=true;actor.OnAttackAnimationEnd();attackStanceDamageStarted=false;attackStanceDamageStopped=false;}
-}
-#endregion 
-#region [hitStance]
-if(hitStance!=-1){
 }
 #endregion 
 if(animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Movement")){
@@ -66,7 +72,7 @@ animator.SetBool("MOTION_ATTACK_R3",attackStance==5);
 #endregion 
 #region [apply hitStance]
 animator.SetBool("MOTION_HIT_1",hitStance==0);
-//animator.SetBool("MOTION_HIT_2",hitStance==1);
+animator.SetBool("MOTION_HIT_2",hitStance==1);
 #endregion 
 
 

@@ -328,6 +328,9 @@ if(sfx!=null){sfx.Play((int)ActorSounds._HIT,true);}
 
 //InterruptCurrentStance()
 }
+public override void OnGetHitAnimationEnd(){
+hitStance=-1;
+}
 #if UNITY_EDITOR
 protected override void OnDrawGizmos(){
                    base.OnDrawGizmos();

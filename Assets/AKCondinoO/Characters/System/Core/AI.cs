@@ -601,6 +601,8 @@ if(evaded)damage=0;else if(damage<=1)damage=1;Attributes.CurStamina-=damage;if(A
     nextAttackTimer=0;
 }
 }
+public virtual void OnGetHitAnimationEnd(){
+}
 protected virtual void Die(){
 if(deadStance==-1){Dying=DeadForGoodDelay;}
 }

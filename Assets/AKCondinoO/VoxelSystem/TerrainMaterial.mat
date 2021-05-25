@@ -91,7 +91,7 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _CameraPosition: {r: -92.72906, g: 8.21119, b: 114.72809, a: 0}
+    - _CameraPosition: {r: 7.482458, g: -5.5444784, b: 5.6621027, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FadeQuadrangularEnd: {r: 16, g: 128, b: 16, a: 0}
