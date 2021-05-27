@@ -185,6 +185,13 @@ pos.y+=actor.collider.bounds.extents.y+tan*actor.BodyRange+.1f;actor.transform.p
     Debug.DrawLine(pos,hitInfo.point,Color.blue,5);
 }    
 public void RemoveFromStage(AI actor){
+actor.gameObject.transform.root.gameObject.SetActive(false);
+if(GetActors.ContainsKey(actor.Id)){GetActors.Remove(actor.Id);
+if(LOG&&LOG_LEVEL<=0)Debug.Log("disable OutOfSight actor and add to inactive queue");
+InactiveActorsByTypeId[actor.TypeId].AddLast(actor);
+}else{
+if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("OutOfSight actor wasn't marked to be active so it should already be in its InactiveActorsByTypeId queue");
+}
 }
 bool FindValidRandomPos(AI actor,out RaycastHit hitInfo,out Vector3 pos){
 var c=center+new Vector3((float)(mathrandom.NextDouble()*2f-1)*(size.x*.5f),size.y*.5f,
