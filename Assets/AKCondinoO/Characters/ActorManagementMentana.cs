@@ -184,6 +184,8 @@ var angle=Vector3.Angle(Vector3.up,hitInfo.normal);var tan=Mathf.Tan(Mathf.Deg2R
 pos.y+=actor.collider.bounds.extents.y+tan*actor.BodyRange+.1f;actor.transform.position=pos;actor.OutOfSight=false;GetActors.Add(actor.Id,actor);actor.InitAttributes();actor.gameObject.transform.root.gameObject.SetActive(true);
     Debug.DrawLine(pos,hitInfo.point,Color.blue,5);
 }    
+public void RemoveFromStage(AI actor){
+}
 bool FindValidRandomPos(AI actor,out RaycastHit hitInfo,out Vector3 pos){
 var c=center+new Vector3((float)(mathrandom.NextDouble()*2f-1)*(size.x*.5f),size.y*.5f,
                          (float)(mathrandom.NextDouble()*2f-1)*(size.z*.5f));
