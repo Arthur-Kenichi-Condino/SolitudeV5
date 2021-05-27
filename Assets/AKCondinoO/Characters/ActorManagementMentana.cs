@@ -177,11 +177,12 @@ DEBUG_SPAWN_ENEMY=-1;
 
 
 firstLoop=false;}    
-void StageActor(AI actor,RaycastHit hitInfo,Vector3 pos){
-    Debug.DrawRay(hitInfo.point,hitInfo.normal,Color.white,5);
+public void StageActor(AI actor,RaycastHit hitInfo,Vector3 pos){
+    Debug.DrawRay(hitInfo.point,hitInfo.normal,Color.blue,5);
 var angle=Vector3.Angle(Vector3.up,hitInfo.normal);var tan=Mathf.Tan(Mathf.Deg2Rad*angle);
     Debug.LogWarning("staging actor "+actor.Id+" of type:"+actor.GetType()+"[angle:"+angle+";tan:"+tan);
 pos.y+=actor.collider.bounds.extents.y+tan*actor.BodyRange+.1f;actor.transform.position=pos;actor.OutOfSight=false;GetActors.Add(actor.Id,actor);actor.InitAttributes();actor.gameObject.transform.root.gameObject.SetActive(true);
+    Debug.DrawLine(pos,hitInfo.point,Color.blue,5);
 }    
 bool FindValidRandomPos(AI actor,out RaycastHit hitInfo,out Vector3 pos){
 var c=center+new Vector3((float)(mathrandom.NextDouble()*2f-1)*(size.x*.5f),size.y*.5f,
@@ -195,14 +196,14 @@ var c=center+new Vector3((float)(mathrandom.NextDouble()*2f-1)*(size.x*.5f),size
 bool result=Physics.BoxCast(c,actor.collider.bounds.extents,Vector3.down,out hitInfo,Quaternion.identity,size.y);
 pos=hitInfo.point+hitInfo.normal*actor.BodyRange;
 return result;}
-bool FindValidPos(AI actor,out RaycastHit hitInfo,out Vector3 pos){
-var c=actor.transform.position;
-
-    Debug.DrawRay(c,Vector3.down*Chunk.Height,Color.white,1f);
-    
+public bool FindValidPos(AI actor,out RaycastHit hitInfo,out Vector3 pos){
 if(actor.collider==null){
     Debug.LogWarning(actor.collider);
 hitInfo=default(RaycastHit);pos=actor.transform.position;return false;}
+var c=actor.collider.bounds.center+(Vector3.up*.1f);
+
+    Debug.DrawRay(c,Vector3.down*Chunk.Height,Color.yellow,5f);
+    
 bool result=Physics.BoxCast(c,actor.collider.bounds.extents,Vector3.down,out hitInfo,Quaternion.identity,size.y);
 pos=hitInfo.point+hitInfo.normal*actor.BodyRange;
 return result;}

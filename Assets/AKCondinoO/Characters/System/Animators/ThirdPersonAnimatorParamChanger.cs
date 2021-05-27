@@ -9,7 +9,7 @@ void OnEnable(){
 actor=transform.root.GetComponent<AI>();character=actor as Character;
 attackStance=-1;hitStance=-1;deadStance=-1;
 }
-[NonSerialized]int attackStance;[SerializeField]protected float attackStanceRhythmMultiplier=1f;[SerializeField]protected float attackStanceDamageTime=.15f;[SerializeField]protected float attackStanceDamageTimeEnd=.85f;[NonSerialized]protected bool attackStanceDamageStarted;[NonSerialized]protected bool attackStanceDamageStopped;[NonSerialized]protected int hitStance=-1;[SerializeField]protected float hitStanceRhythmMultiplier=1f;[NonSerialized]protected int deadStance=-1;[SerializeField]protected float deadStanceRhythmMultiplier=1f;
+[NonSerialized]int attackStance;[SerializeField]protected float attackStanceRhythmMultiplier=1f;[SerializeField]protected float attackStanceDamageTime=.15f;[SerializeField]protected float attackStanceDamageTimeEnd=.85f;[NonSerialized]protected bool attackStanceDamageStarted;[NonSerialized]protected bool attackStanceDamageStopped;[NonSerialized]protected int hitStance=-1;[SerializeField]protected float hitStanceRhythmMultiplier=2f;[NonSerialized]protected int deadStance=-1;[SerializeField]protected float deadStanceRhythmMultiplier=1f;
 public float motionRhythm=0.0245f;[NonSerialized]protected float curAnimTime=-1;[NonSerialized]float curAnimTime_normalized;
 [NonSerialized]Vector3 _horizontalMoveSpeed;[NonSerialized]Vector3 _forward;[NonSerialized]Vector3 _move;[NonSerialized]float _angle;[NonSerialized]float _turn;[NonSerialized]public float horizontalMoveSensibility=1f/3f;[NonSerialized]public bool backwardAvailable=true;
 void Update(){
@@ -36,6 +36,13 @@ curAnimTime=0;
 }
 }
 }
+#region [deadStance]
+if(deadStance!=-1){
+StartAnimTimer();
+curAnimTime_normalized=Mathf.Clamp01(curAnimTime/animator.GetCurrentAnimatorStateInfo(0).length);if(curAnimTime_normalized>=1){
+    curAnimTime=-1;animator.SetFloat("time",curAnimTime_normalized);ignoreNextAnimationChange=true;actor.OnFallDeadAnimationEnd();}//  animator.SetFloat("time",curAnimTime_normalized); é necessário aqui
+}
+#endregion 
 #region [hitStance]
 if(hitStance!=-1){
 StartAnimTimer();
@@ -73,6 +80,9 @@ animator.SetBool("MOTION_ATTACK_R3",attackStance==5);
 #region [apply hitStance]
 animator.SetBool("MOTION_HIT_1",hitStance==0);
 animator.SetBool("MOTION_HIT_2",hitStance==1);
+#endregion 
+#region [apply deadStance]
+animator.SetBool("MOTION_DEAD_1",deadStance==0);
 #endregion 
 
 
@@ -124,6 +134,12 @@ animator.SetFloat("time",curAnimTime_normalized);
 }
 }
 void InterruptCurrentAnimation(){
+if(deadStance!=-1){
+    deadStance=-1;
+}
+if(hitStance!=-1){
+    hitStance=-1;
+}
 if(attackStance!=-1){
     attackStance=-1;
 }
@@ -135,6 +151,10 @@ public void OnAttack(int attackStance){
 public void OnGetHit(int hitStance){
     Debug.LogWarning("OnGetHit(int hitStance):"+hitStance);
      InterruptCurrentAnimation();this.hitStance=hitStance;
+}
+public void OnFallDead(int deadStance){
+    Debug.LogWarning("OnFallDead(int deadStance):"+deadStance);
+     InterruptCurrentAnimation();this.deadStance=deadStance;
 }
 public void FootR(string s){
     Debug.LogWarning("FootR");

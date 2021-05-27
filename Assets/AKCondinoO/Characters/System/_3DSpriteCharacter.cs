@@ -42,7 +42,7 @@ if(deadStance!=-1){
 BlockMovement=true;
     MyMotion=Motions.MOTION_DEAD;
 curAnimTime_normalized=Mathf.Clamp01(curAnimTime/animator.GetCurrentAnimatorStateInfo(0).length);if(curAnimTime_normalized>=1){
-    curAnimTime=-1;animator.SetFloat("time",curAnimTime_normalized);}
+    curAnimTime=-1;animator.SetFloat("time",curAnimTime_normalized);}//  animator.SetFloat("time",curAnimTime_normalized); é necessário aqui
 }
 if(hitStance!=-1){
 BlockMovement=true;

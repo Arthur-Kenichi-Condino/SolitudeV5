@@ -72,6 +72,12 @@ if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("OutOfSight actor wasn't marked to be ac
 }
     OutOfSight_disable=false;
 return;
+}else{
+if(OutOfSight_v){
+if(manager.FindValidPos(this,out RaycastHit hitInfo,out Vector3 pos)){
+    manager.StageActor(this,hitInfo,pos);
+}
+}
 }
 #endregion
 
@@ -605,6 +611,8 @@ public virtual void OnGetHitAnimationEnd(){
 }
 protected virtual void Die(){
 if(deadStance==-1){Dying=DeadForGoodDelay;}
+}
+public virtual void OnFallDeadAnimationEnd(){
 }
 protected Vector3 MyDest{get{return dest;}set{dest=value;destSet=true;}}[NonSerialized]Vector3 dest;protected bool destSet{get;private set;}public Vector3 Dest{get{return dest;}}
 [NonSerialized]public Vector3 ReachedTgtDisThreshold;

@@ -229,6 +229,12 @@ _camPos+=headDrawRotation*Vector3.Scale(_camRotatedOffset,CamOffset);
     //CamLookAtUp=transform.up;
     CamLookAtUp=Vector3.Cross(CamLookAtForward,headDrawRotation*Vector3.right).normalized;
 }
+if(deadStance!=-1){
+BlockMovement=true;
+}
+if(hitStance!=-1){
+BlockMovement=true;
+}
 if(attackStance!=-1){
 BlockMovement=true;
 }
@@ -237,6 +243,16 @@ BlockMovement=false;
 }
 }
 void InterruptCurrentStance(){
+if(deadStance!=-1){
+
+
+            Debug.LogWarning("deadStance interrupted");
+}
+if(hitStance!=-1){
+
+
+            Debug.LogWarning("hitStance interrupted");
+}
 if(attackStance!=-1){
 doDamage=false;
 
@@ -316,7 +332,7 @@ public override void TakeDamage(AI fromEnemy){
         
     Debug.LogWarning("TakeDamage");
 if(damage<=0)return;
-if(deadStance!=-1)return;InterruptCurrentStance();attackStance=-1;hitStance=0;curAnimTime=0;
+if(deadStance!=-1)return;InterruptCurrentStance();attackStance=-1;hitStance=mathrandom.Next(0,2);curAnimTime=0;
 
         
     Debug.LogWarning("TakeDamage(AI fromEnemy):"+hitStance);
@@ -330,6 +346,23 @@ if(sfx!=null){sfx.Play((int)ActorSounds._HIT,true);}
 }
 public override void OnGetHitAnimationEnd(){
 hitStance=-1;
+}
+protected override void Die(){
+                   base.Die();
+
+        
+    Debug.LogWarning("Die");
+InterruptCurrentStance();attackStance=-1;hitStance=-1;if(deadStance==-1){deadStance=0;curAnimTime=0;
+
+            
+    Debug.LogWarning("Die():"+deadStance);
+animatorParams.OnFallDead(deadStance);
+
+
+if(sfx!=null){sfx.Play((int)ActorSounds._DEAD,true);}
+}
+}
+public override void OnFallDeadAnimationEnd(){
 }
 #if UNITY_EDITOR
 protected override void OnDrawGizmos(){
