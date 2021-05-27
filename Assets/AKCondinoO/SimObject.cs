@@ -162,7 +162,7 @@ collisions.Remove(collision.collider);dirtyCollisions.Remove(collision.collider)
 }
 [NonSerialized]Vector3 pos;
 [NonSerialized]Vector3 pos_Pre;
-[NonSerialized]Vector2Int coord;[NonSerialized]int idx;[NonSerialized]Chunk chunk;[NonSerialized]protected bool OutOfSight_v=true;public virtual bool OutOfSight{get{return OutOfSight_v;}set{OutOfSight_v=value;}}[NonSerialized]protected bool OutOfSight_disable;//  Objects need to be disabled and enabled by managers
+[NonSerialized]Vector2Int coord;[NonSerialized]int idx;[NonSerialized]Chunk chunk;[NonSerialized]protected bool OutOfSight_v=true;public virtual bool OutOfSight{get{return OutOfSight_v;}set{OutOfSight_v=value;}}[NonSerialized]protected bool OutOfSight_disable;[NonSerialized]protected bool OutOfSight_enable;//  Objects need to be disabled and enabled by managers
 protected virtual void Update(){
 
 

@@ -178,6 +178,7 @@ DEBUG_SPAWN_ENEMY=-1;
 
 firstLoop=false;}    
 public void StageActor(AI actor,RaycastHit hitInfo,Vector3 pos){
+if(GetActors.ContainsKey(actor.Id)){return;}
     Debug.DrawRay(hitInfo.point,hitInfo.normal,Color.blue,5);
 var angle=Vector3.Angle(Vector3.up,hitInfo.normal);var tan=Mathf.Tan(Mathf.Deg2Rad*angle);
     Debug.LogWarning("staging actor "+actor.Id+" of type:"+actor.GetType()+"[angle:"+angle+";tan:"+tan);
@@ -202,7 +203,7 @@ var c=center+new Vector3((float)(mathrandom.NextDouble()*2f-1)*(size.x*.5f),size
 
 
     Debug.DrawRay(c,Vector3.down*Chunk.Height,Color.white,1f);
-bool result=Physics.BoxCast(c,actor.collider.bounds.extents,Vector3.down,out hitInfo,Quaternion.identity,size.y);
+bool result=Physics.BoxCast(c,actor.collider.bounds.extents,Vector3.down,out hitInfo,Quaternion.identity,size.y)&&!hitInfo.collider.CompareTag("Player");
 pos=hitInfo.point+hitInfo.normal*actor.BodyRange;
 return result;}
 public bool FindValidPos(AI actor,out RaycastHit hitInfo,out Vector3 pos){
@@ -213,7 +214,7 @@ var c=actor.collider.bounds.center+(Vector3.up*.1f);
 
     Debug.DrawRay(c,Vector3.down*Chunk.Height,Color.yellow,5f);
     
-bool result=Physics.BoxCast(c,actor.collider.bounds.extents,Vector3.down,out hitInfo,Quaternion.identity,size.y);
+bool result=Physics.BoxCast(c,actor.collider.bounds.extents,Vector3.down,out hitInfo,Quaternion.identity,size.y)&&!hitInfo.collider.CompareTag("Player");
 pos=hitInfo.point+hitInfo.normal*actor.BodyRange;
 return result;}
 [NonSerialized]public float TryActorStagingInterval=1f;[NonSerialized]float NextActorStagingTimer;[NonSerialized]public float ChanceToStage;public enum CreativeIdleness:int{CreateAlly,SpawnEnemy,}[NonSerialized]readonly int CreativeIdlenessActionsCount=Enum.GetValues(typeof(CreativeIdleness)).Length;

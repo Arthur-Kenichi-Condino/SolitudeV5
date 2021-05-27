@@ -28,6 +28,14 @@ protected float Autonomous=0;public float AutonomyDelayAfterControl=30;protected
 protected State MyState=State.IDLE_ST;
 #region OutOfSight result set
 public override bool OutOfSight{get{return OutOfSight_v;}set{
+if(!value&&OutOfSight_v!=value){
+
+                
+    Debug.LogWarning("!OutOfSight");
+
+
+OutOfSight_enable=true;
+}
 if(value&&OutOfSight_v!=value){
 
                 
@@ -62,22 +70,37 @@ if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("unregistered actor id detected processe
 }
 #endregion
 #region OutOfSight response
+OutOfSight_response:{}
 if(OutOfSight_disable){
-gameObject.transform.root.gameObject.SetActive(false);
-if(GetActors.ContainsKey(Id)){GetActors.Remove(Id);
-if(LOG&&LOG_LEVEL<=0)Debug.Log("disable OutOfSight actor and add to inactive queue");
-InactiveActorsByTypeId[TypeId].AddLast(this);
-}else{
-if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("OutOfSight actor wasn't marked to be active so it should already be in its InactiveActorsByTypeId queue");
-}
+    Debug.LogWarning("OutOfSight_disable");
+    manager.RemoveFromStage(this);
+    Debug.LogWarning("RemoveFromStage");
+//gameObject.transform.root.gameObject.SetActive(false);
+//if(GetActors.ContainsKey(Id)){GetActors.Remove(Id);
+//if(LOG&&LOG_LEVEL<=0)Debug.Log("disable OutOfSight actor and add to inactive queue");
+//InactiveActorsByTypeId[TypeId].AddLast(this);
+//}else{
+//if(LOG&&LOG_LEVEL<=100)Debug.LogWarning("OutOfSight actor wasn't marked to be active so it should already be in its InactiveActorsByTypeId queue");
+//}
     OutOfSight_disable=false;
 return;
-}else{
-if(OutOfSight_v){
+}else
+if(OutOfSight_enable){
+    Debug.LogWarning("OutOfSight_enable");
 if(manager.FindValidPos(this,out RaycastHit hitInfo,out Vector3 pos)){
     manager.StageActor(this,hitInfo,pos);
+    Debug.LogWarning("StageActor: FindValidPos success");
+    OutOfSight_enable=false;
+}else{
+    manager.RemoveFromStage(this);
+    Debug.LogWarning("RemoveFromStage: FindValidPos failed");
+return;
 }
-}
+}else
+if(OutOfSight_v){
+    Debug.LogWarning("OutOfSight_v");
+    OutOfSight_enable=true;
+goto OutOfSight_response;
 }
 #endregion
 
