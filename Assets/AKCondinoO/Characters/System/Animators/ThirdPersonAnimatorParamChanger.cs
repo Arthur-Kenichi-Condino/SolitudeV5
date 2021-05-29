@@ -7,7 +7,7 @@ public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
 [NonSerialized]public AI actor;[NonSerialized]public Character character;[NonSerialized]public Animator animator;[NonSerialized]protected bool animatorReachedIdle;
 void OnEnable(){
 actor=transform.root.GetComponent<AI>();character=actor as Character;
-attackStance=-1;hitStance=-1;deadStance=-1;
+attackStance=-1;hitStance=-1;deadStance=-1;curAnimTime=-1;ignoreNextAnimationChange=true;
 }
 [NonSerialized]int attackStance;[SerializeField]protected float attackStanceRhythmMultiplier=1f;[SerializeField]protected float attackStanceDamageTime=.15f;[SerializeField]protected float attackStanceDamageTimeEnd=.85f;[NonSerialized]protected bool attackStanceDamageStarted;[NonSerialized]protected bool attackStanceDamageStopped;[NonSerialized]protected int hitStance=-1;[SerializeField]protected float hitStanceRhythmMultiplier=2f;[NonSerialized]protected int deadStance=-1;[SerializeField]protected float deadStanceRhythmMultiplier=1f;
 public float motionRhythm=0.0245f;[NonSerialized]protected float curAnimTime=-1;[NonSerialized]float curAnimTime_normalized;

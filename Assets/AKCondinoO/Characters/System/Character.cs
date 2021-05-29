@@ -119,8 +119,13 @@ if(dnaRandom!=null){
 
                         Debug.LogWarning("dnaRandom:"+dnaRandom);
 foreach(var dnaSetter in dna){
-                        Debug.LogWarning("dnaSetter.Key:"+dnaSetter.Key+"=>dnaSetter.Value:"+dnaSetter.Value);
 //dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble());
+if(dnaSetter.Key=="noseSize" ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.256,0.574));}//  0.256 - 0.574
+if(dnaSetter.Key=="noseCurve"){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0    ,0.938));}//  0     - 0.938
+
+                        Debug.LogWarning("dnaSetter.Key:"+dnaSetter.Key+"=>dnaSetter.Value:"+dnaSetter.Value.Get());
+
+
 }
 avatar.BuildCharacter();
 

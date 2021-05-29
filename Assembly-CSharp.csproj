@@ -473,6 +473,7 @@
     <Compile Include="Assets\UMA\Examples\Legacy Examples\Scripts\LODDisplay.cs" />
     <Compile Include="Assets\UMA\Core\Scripts\DNA\Legacy\UMADnaHumanoid_Generated.cs" />
     <Compile Include="Assets\UMA\Examples\MountingObjects Example\Scripts\UMAMountObject.cs" />
+    <Compile Include="Assets\AKCondinoO\Util.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\UMA\Core\StandardAssets\UMA\Atlas\AtlasNormalShader32.shader" />
