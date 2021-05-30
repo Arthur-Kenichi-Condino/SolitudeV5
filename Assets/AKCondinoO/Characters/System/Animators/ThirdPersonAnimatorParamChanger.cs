@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class ThirdPersonAnimatorParamChanger:MonoBehaviour{
 public bool LOG=false;public int LOG_LEVEL=1;public int DRAW_LEVEL=1;
-[NonSerialized]public AI actor;[NonSerialized]public Character character;[NonSerialized]public Animator animator;[NonSerialized]protected bool animatorReachedIdle;
+[NonSerialized]public AI actor;[NonSerialized]public Character character;[NonSerialized]public Animator animator;[NonSerialized]protected float animatorSpeed=1;[NonSerialized]protected bool animatorReachedIdle;
 void OnEnable(){
 actor=transform.root.GetComponent<AI>();character=actor as Character;
 attackStance=-1;hitStance=-1;deadStance=-1;curAnimTime=-1;ignoreNextAnimationChange=true;
@@ -17,14 +17,21 @@ if(actor.IsUMA&&animator==null){
 animator=actor.GetComponentInChildren<Animator>();
 
     Debug.LogWarning(actor+";animator:"+animator);
-
-}
+            
 if(animator!=null){
+animatorSpeed=animator.speed;
+    Debug.LogWarning(actor+";animator.speed:"+animator.speed);
+}
 }
 }
 [NonSerialized]bool animationChanged;[NonSerialized]int animationHash;[NonSerialized]int animationHashPreceding;[NonSerialized]bool ignoreNextAnimationChange;
 void LateUpdate(){
 if(animator!=null){
+
+
+if(DEBUG_PAUSE){animator.speed=0;return;}else if(animator.speed!=animatorSpeed){animator.speed=animatorSpeed;}
+
+
 animationHashPreceding=animationHash;animationChanged=(animationHash=animator.GetCurrentAnimatorStateInfo(0).fullPathHash)!=animationHashPreceding;
 void StartAnimTimer(){
 if(animationChanged||animatorReachedIdle){
@@ -165,4 +172,7 @@ public void FootL(string s){
 public void Hit(string s){
     Debug.LogWarning("Hit");
 }
+
+
+[SerializeField]internal bool DEBUG_PAUSE;
 }

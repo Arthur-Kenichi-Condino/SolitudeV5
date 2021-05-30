@@ -126,6 +126,7 @@ foreach(var dnaSetter in dna){
 #region nose
      if(dnaSetter.Key=="noseSize" ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.256,0.574));}//  0.256 - 0.574
 else if(dnaSetter.Key=="noseCurve"){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0    ,0.938));}//  0     - 0.938
+else if(dnaSetter.Key=="noseWidth"){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.205,0.7  ));}//  0.205 - 0.7
 #endregion
 else                               {}
 
