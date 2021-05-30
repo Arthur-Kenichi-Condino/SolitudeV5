@@ -117,16 +117,23 @@ avatar.DoLoad();
 if(dnaRandom!=null){
 
 
-                        Debug.LogWarning("dnaRandom:"+dnaRandom);
+                        Debug.LogWarning("avatar.activeRace.name:"+avatar.activeRace.name+";dnaRandom:"+dnaRandom);
+if(avatar.activeRace.name=="HumanMale"){
 foreach(var dnaSetter in dna){
 //dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble());
-if(dnaSetter.Key=="noseSize" ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.256,0.574));}//  0.256 - 0.574
-if(dnaSetter.Key=="noseCurve"){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0    ,0.938));}//  0     - 0.938
+
+
+#region nose
+     if(dnaSetter.Key=="noseSize" ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.256,0.574));}//  0.256 - 0.574
+else if(dnaSetter.Key=="noseCurve"){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0    ,0.938));}//  0     - 0.938
+#endregion
+else                               {}
+
 
                         Debug.LogWarning("dnaSetter.Key:"+dnaSetter.Key+"=>dnaSetter.Value:"+dnaSetter.Value.Get());
 
 
-}
+}}
 avatar.BuildCharacter();
 
 
