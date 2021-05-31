@@ -123,12 +123,30 @@ foreach(var dnaSetter in dna){
 //dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble());
 
 
-#region nose
-     if(dnaSetter.Key=="noseSize" ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.256,0.574));}//  0.256 - 0.574
-else if(dnaSetter.Key=="noseCurve"){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0    ,0.938));}//  0     - 0.938
-else if(dnaSetter.Key=="noseWidth"){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.205,0.7  ));}//  0.205 - 0.7
+     if(dnaSetter.Key=="height"         ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.3  ,0.737));}//  0.3   - 0.737
+#region head
+else if(dnaSetter.Key=="headSize"       ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.424,0.502));}//  0.424 - 0.502
+else if(dnaSetter.Key=="headWidth"      ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.415,0.685));}//  0.415 - 0.685
 #endregion
-else                               {}
+#region neck 
+else if(dnaSetter.Key=="neckThickness"  ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.296,0.639));}//  0.296 - 0.639
+#endregion
+#region arm 
+else if(dnaSetter.Key=="armLength"      ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.486,0.572));}//  0.486 - 0.572
+#endregion
+#region forearm 
+else if(dnaSetter.Key=="forearmLength"  ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.485,0.559));}//  0.485 - 0.559
+#endregion
+#region nose
+else if(dnaSetter.Key=="noseSize"       ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.256,0.574));}//  0.256 - 0.574
+else if(dnaSetter.Key=="noseCurve"      ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0    ,0.938));}//  0     - 0.938
+else if(dnaSetter.Key=="noseWidth"      ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.205,0.7  ));}//  0.205 - 0.7
+else if(dnaSetter.Key=="noseInclination"){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.4  ,0.724));}//  0.4   - 0.724
+else if(dnaSetter.Key=="nosePosition"   ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.158,0.766));}//  0.158 - 0.766
+else if(dnaSetter.Key=="nosePronounced" ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.48 ,0.834));}//  0.48  - 0.834
+else if(dnaSetter.Key=="noseFlatten"    ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0    ,0.626));}//  0     - 0.626
+#endregion
+else                                     {}
 
 
                         Debug.LogWarning("dnaSetter.Key:"+dnaSetter.Key+"=>dnaSetter.Value:"+dnaSetter.Value.Get());

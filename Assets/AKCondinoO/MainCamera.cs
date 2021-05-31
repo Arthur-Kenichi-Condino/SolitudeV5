@@ -8,7 +8,15 @@ public class MainCamera:SimActor{
 public static UICore ui;//  Available after Awake: OnEnable
 public static Dictionary<string,object[]>AllCommands=new Dictionary<string,object[]>();public static Dictionary<string,object[]>AllStates=new Dictionary<string,object[]>();
 public static readonly LinkedList<iCamFollowable>CamFollowables=new LinkedList<iCamFollowable>();public iCamFollowable CamFollowing=null;public SimActor CamControlled=null;
+[SerializeField]public int targetFrameRate=60;
 protected override void Awake(){
+
+
+#region important graphical settings
+QualitySettings.vSyncCount=0;Application.targetFrameRate=targetFrameRate;
+#endregion
+
+
 Camera.main.transparencySortMode=TransparencySortMode.Default;
                    base.Awake();
 foreach(FieldInfo field in typeof(Commands).GetFields(BindingFlags.Public|BindingFlags.Static)){
@@ -30,6 +38,9 @@ private void OnApplicationFocus(bool focus){Focus=focus;}
 public const float _30FPSdeltaTime=1f/30f;
 public const float _60FPSdeltaTime=1f/60f;
 protected override void Update(){
+
+        
+if(Application.targetFrameRate!=targetFrameRate)Application.targetFrameRate=targetFrameRate;
 
 
 //Debug.LogWarning("Time.deltaTime:"+Time.deltaTime+";_30FPSdeltaTime:"+_30FPSdeltaTime);
