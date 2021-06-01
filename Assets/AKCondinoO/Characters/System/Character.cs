@@ -131,12 +131,17 @@ else if(dnaSetter.Key=="headWidth"      ){dna[dnaSetter.Key].Set((float)dnaRando
 #region neck 
 else if(dnaSetter.Key=="neckThickness"  ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.296,0.639));}//  0.296 - 0.639
 #endregion
-#region arm 
+#region arm and forearm
 else if(dnaSetter.Key=="armLength"      ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.486,0.572));}//  0.486 - 0.572
-#endregion
-#region forearm 
 else if(dnaSetter.Key=="forearmLength"  ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.485,0.559));}//  0.485 - 0.559
+else if(dnaSetter.Key=="armWidth"       ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.489,1    ));}//  0.489 - 1
+else if(dnaSetter.Key=="forearmWidth"   ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.288,0.701));}//  0.288 - 0.701
 #endregion
+else if(dnaSetter.Key=="handsSize"      ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.455,0.555));}//  0.455 - 0.555
+else if(dnaSetter.Key=="feetSize"       ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.471,0.623));}//  0.471 - 0.623
+else if(dnaSetter.Key=="legSeparation"  ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.501,0.728));}//  0.501 - 0.728
+else if(dnaSetter.Key=="upperMuscle"    ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.458,0.684));}//  0.458 - 0.684
+else if(dnaSetter.Key=="lowerMuscle"    ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.415,1    ));}//  0.415 - 1
 #region nose
 else if(dnaSetter.Key=="noseSize"       ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.256,0.574));}//  0.256 - 0.574
 else if(dnaSetter.Key=="noseCurve"      ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0    ,0.938));}//  0     - 0.938
