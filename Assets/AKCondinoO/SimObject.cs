@@ -28,23 +28,35 @@ if(LOG&&LOG_LEVEL<=-1)Debug.Log("renderer not null:"+renderer,this);
 }
 pos=pos_Pre=transform.position;
 }
-[NonSerialized]public bool IsUMA=false;[NonSerialized]protected UMAData umaData;
+[NonSerialized]public bool IsUMA=false;[NonSerialized]protected UMAData umaData;[NonSerialized]protected bool UMADataChanged;[NonSerialized]protected bool UMADataChanged_reload;
 public void OnCharacterCompleted(UMAData umaData){
-if(LOG&&LOG_LEVEL<=1)Debug.LogWarning("[UMAData] the following is an event-called function:do not use 'this' keyword:'this' will refer to the Prefab asset:use the 'simObject' refered from 'UMAData umaData'",umaData);
+SimObject simObject=umaData.transform.root.gameObject.GetComponent<SimObject>();
+       if(simObject!=null){
+if(simObject.LOG&&simObject.LOG_LEVEL<=1)Debug.LogWarning("[UMAData] the following is an event-called function:do not use 'this' keyword:'this' will refer to the Prefab asset:use the 'simObject' refered from 'UMAData umaData'",umaData);
+       if(simObject.UMADataChanged_reload){
+
+
+Debug.LogWarning("UMADataChanged_reload");
+                
+
+          simObject.UMADataChanged_reload=false;
+       return;}
+simObject.IsUMA=true;simObject.umaData=umaData;simObject.OnUMADataChanged();simObject.UMADataChanged=true;simObject.UMADataChanged_reload=true;
+       }
+}
+protected void OnUMADataChanged(){
 CapsuleCollider capsule=umaData.transform.root.gameObject.GetComponent<CapsuleCollider>();BoxCollider box=umaData.transform.root.gameObject.GetComponent<BoxCollider>();
 if(capsule!=null||box!=null){
-SimObject simObject=umaData.transform.root.gameObject.GetComponent<SimObject>();
-if(simObject!=null){simObject.IsUMA=true;simObject.umaData=umaData;
-if(LOG&&LOG_LEVEL<=-1)Debug.Log(simObject.gameObject+" has the simObject.collider:"+simObject.collider,simObject);
-simObject.collider=box!=null?box as Collider:capsule as Collider;simObject.rigidbody=umaData.transform.root.gameObject.GetComponent<Rigidbody>();
-simObject.colliderDefaultSize=simObject.collider.bounds.size;simObject.colliderDefaultCenter=simObject.transform.InverseTransformPoint(simObject.collider.bounds.center);
-simObject.GetColliderData();
-if(LOG&&LOG_LEVEL<=-1)Debug.Log("simObject.collider not null, so:simObject.colliderDefaultSize:"+simObject.colliderDefaultSize+";simObject.colliderDefaultCenter:"+simObject.colliderDefaultCenter,simObject);
-simObject.renderer=simObject.GetComponentInChildren<Renderer>();
-simObject.GetRendererData();
-if(LOG&&LOG_LEVEL<=-1)Debug.Log("simObject.renderer not null:"+simObject.renderer,simObject);
+if(LOG&&LOG_LEVEL<=-1)Debug.Log(gameObject+" has the collider:"+collider,this);
+collider=box!=null?box as Collider:capsule as Collider;rigidbody=umaData.transform.root.gameObject.GetComponent<Rigidbody>();
+colliderDefaultSize=collider.bounds.size;colliderDefaultCenter=transform.InverseTransformPoint(collider.bounds.center);
+GetColliderData();
+if(LOG&&LOG_LEVEL<=-1)Debug.Log("collider not null, so:colliderDefaultSize:"+colliderDefaultSize+";colliderDefaultCenter:"+colliderDefaultCenter,this);
+renderer=GetComponentInChildren<Renderer>();
+GetRendererData();
+if(LOG&&LOG_LEVEL<=-1)Debug.Log("renderer not null:"+renderer,this);
 }
-}
+                 UMADataChanged=false;
 }
 [NonSerialized]protected Vector3 colliderDefaultSize;[NonSerialized]protected Vector3 colliderDefaultCenter;
 [NonSerialized]protected Vector3 colliderHalfExtents_v;protected Vector3 colliderHalfExtents{get{return colliderHalfExtents_v*RangeMultiplier;}set{colliderHalfExtents_v=value;}}

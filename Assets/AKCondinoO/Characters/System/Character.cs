@@ -78,6 +78,81 @@ avatar.DoSave();
 protected override void Update(){
 
 
+
+
+#region random NPC
+void buildRandom(){
+if(dnaRandom!=null){
+
+
+
+
+
+                        Debug.LogWarning("avatar.activeRace.name:"+avatar.activeRace.name+";dnaRandom:"+dnaRandom);
+if(avatar.activeRace.name=="HumanMale"){
+foreach(var dnaSetter in dna){
+//dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble());
+
+
+     if(dnaSetter.Key=="height"         ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.3  ,0.737));}//  0.3   - 0.737
+#region head
+else if(dnaSetter.Key=="headSize"       ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.424,0.502));}//  0.424 - 0.502
+else if(dnaSetter.Key=="headWidth"      ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.415,0.685));}//  0.415 - 0.685
+#endregion
+#region neck 
+else if(dnaSetter.Key=="neckThickness"  ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.296,0.639));}//  0.296 - 0.639
+#endregion
+#region arm and forearm
+else if(dnaSetter.Key=="armLength"      ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.486,0.572));}//  0.486 - 0.572
+else if(dnaSetter.Key=="forearmLength"  ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.485,0.559));}//  0.485 - 0.559
+else if(dnaSetter.Key=="armWidth"       ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.489,1    ));}//  0.489 - 1
+else if(dnaSetter.Key=="forearmWidth"   ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.288,0.701));}//  0.288 - 0.701
+#endregion
+else if(dnaSetter.Key=="handsSize"      ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.455,0.555));}//  0.455 - 0.555
+else if(dnaSetter.Key=="feetSize"       ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.471,0.623));}//  0.471 - 0.623
+else if(dnaSetter.Key=="legSeparation"  ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.501,0.728));}//  0.501 - 0.728
+else if(dnaSetter.Key=="upperMuscle"    ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.458,0.684));}//  0.458 - 0.684
+else if(dnaSetter.Key=="lowerMuscle"    ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.415,1    ));}//  0.415 - 1
+else if(dnaSetter.Key=="upperWeight"    ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0    ,1    ));}//  0     - 1
+else if(dnaSetter.Key=="lowerWeight"    ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.393,1    ));}//  0.393 - 1
+else if(dnaSetter.Key=="legsSize"       ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.493,0.629));}//  0.493 - 0.629
+else if(dnaSetter.Key=="belly"          ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.296,1    ));}//  0.296 - 1
+else if(dnaSetter.Key=="waist"          ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.14 ,1    ));}//  0.14  - 1
+else if(dnaSetter.Key=="gluteusSize"    ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0    ,1    ));}//  0     - 1
+#region ears
+else if(dnaSetter.Key=="earsSize"       ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.591,0.817));}//  0.591 - 0.817
+else if(dnaSetter.Key=="earsPosition"   ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0    ,0.836));}//  0     - 0.836
+else if(dnaSetter.Key=="earsRotation"   ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.563,0.668));}//  0.563 - 0.668
+#endregion
+#region chin
+else if(dnaSetter.Key=="chinSize"       ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0    ,1    ));}//  0     - 1
+#endregion
+#region nose
+else if(dnaSetter.Key=="noseSize"       ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.256,0.574));}//  0.256 - 0.574
+else if(dnaSetter.Key=="noseCurve"      ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0    ,0.938));}//  0     - 0.938
+else if(dnaSetter.Key=="noseWidth"      ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.205,0.7  ));}//  0.205 - 0.7
+else if(dnaSetter.Key=="noseInclination"){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.4  ,0.724));}//  0.4   - 0.724
+else if(dnaSetter.Key=="nosePosition"   ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.158,0.766));}//  0.158 - 0.766
+else if(dnaSetter.Key=="nosePronounced" ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.48 ,0.834));}//  0.48  - 0.834
+else if(dnaSetter.Key=="noseFlatten"    ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0    ,0.626));}//  0     - 0.626
+#endregion
+else                                     {}
+
+
+                        Debug.LogWarning("dnaSetter.Key:"+dnaSetter.Key+"=>dnaSetter.Value:"+dnaSetter.Value.Get());
+
+
+}}
+
+
+avatar.BuildCharacter();
+
+
+}
+}
+#endregion
+
+
         //Debug.LogWarning("string.IsNullOrEmpty(prefabName):"+string.IsNullOrEmpty(prefabName));
 
 
@@ -113,56 +188,7 @@ avatar.DoLoad();
 }else{
 
 
-#region random NPC
-if(dnaRandom!=null){
-
-
-                        Debug.LogWarning("avatar.activeRace.name:"+avatar.activeRace.name+";dnaRandom:"+dnaRandom);
-if(avatar.activeRace.name=="HumanMale"){
-foreach(var dnaSetter in dna){
-//dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble());
-
-
-     if(dnaSetter.Key=="height"         ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.3  ,0.737));}//  0.3   - 0.737
-#region head
-else if(dnaSetter.Key=="headSize"       ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.424,0.502));}//  0.424 - 0.502
-else if(dnaSetter.Key=="headWidth"      ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.415,0.685));}//  0.415 - 0.685
-#endregion
-#region neck 
-else if(dnaSetter.Key=="neckThickness"  ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.296,0.639));}//  0.296 - 0.639
-#endregion
-#region arm and forearm
-else if(dnaSetter.Key=="armLength"      ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.486,0.572));}//  0.486 - 0.572
-else if(dnaSetter.Key=="forearmLength"  ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.485,0.559));}//  0.485 - 0.559
-else if(dnaSetter.Key=="armWidth"       ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.489,1    ));}//  0.489 - 1
-else if(dnaSetter.Key=="forearmWidth"   ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.288,0.701));}//  0.288 - 0.701
-#endregion
-else if(dnaSetter.Key=="handsSize"      ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.455,0.555));}//  0.455 - 0.555
-else if(dnaSetter.Key=="feetSize"       ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.471,0.623));}//  0.471 - 0.623
-else if(dnaSetter.Key=="legSeparation"  ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.501,0.728));}//  0.501 - 0.728
-else if(dnaSetter.Key=="upperMuscle"    ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.458,0.684));}//  0.458 - 0.684
-else if(dnaSetter.Key=="lowerMuscle"    ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.415,1    ));}//  0.415 - 1
-#region nose
-else if(dnaSetter.Key=="noseSize"       ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.256,0.574));}//  0.256 - 0.574
-else if(dnaSetter.Key=="noseCurve"      ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0    ,0.938));}//  0     - 0.938
-else if(dnaSetter.Key=="noseWidth"      ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.205,0.7  ));}//  0.205 - 0.7
-else if(dnaSetter.Key=="noseInclination"){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.4  ,0.724));}//  0.4   - 0.724
-else if(dnaSetter.Key=="nosePosition"   ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.158,0.766));}//  0.158 - 0.766
-else if(dnaSetter.Key=="nosePronounced" ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0.48 ,0.834));}//  0.48  - 0.834
-else if(dnaSetter.Key=="noseFlatten"    ){dna[dnaSetter.Key].Set((float)dnaRandom.NextDouble(0    ,0.626));}//  0     - 0.626
-#endregion
-else                                     {}
-
-
-                        Debug.LogWarning("dnaSetter.Key:"+dnaSetter.Key+"=>dnaSetter.Value:"+dnaSetter.Value.Get());
-
-
-}}
-avatar.BuildCharacter();
-
-
-}
-#endregion
+buildRandom();
 
 
 avatar.DoSave();
@@ -170,6 +196,23 @@ avatar.DoSave();
 
 
 loaded=true;}
+}
+
+
+}else if(dirty){dirty=false;
+
+
+avatar.BuildCharacter();
+
+
+}else{
+
+
+if(UMADataChanged){
+if(UMADataChanged_reload){
+avatar.BuildCharacter();
+}else{
+OnUMADataChanged();}
 }
 
 
@@ -197,8 +240,9 @@ DoDamageHitbox();
 //avatar.SetLoadFilename(saveSubfolder[0],DynamicCharacterAvatar.loadPathTypes.FileSystem);
 //}
 //}
+if(DEBUG_RANDOM_DNA){buildRandom();DEBUG_RANDOM_DNA=false;}
                    base.Update();
-}[NonSerialized]protected bool loaded=false;//[NonSerialized]bool initialized=false;
+}[NonSerialized]protected bool loaded=false;[NonSerialized]bool dirty=true;
 [NonSerialized]Vector3 _camPos=new Vector3();[NonSerialized]Vector3 _camRotatedOffset=new Vector3(1,0,1);
 protected override void ProcessMovementInput(){
 if(!(bool)Enabled.PAUSE[0]){
@@ -405,4 +449,7 @@ protected override void OnDrawGizmos(){
                    base.OnDrawGizmos();
 }
 #endif
+
+
+[SerializeField]internal bool DEBUG_RANDOM_DNA;
 }
