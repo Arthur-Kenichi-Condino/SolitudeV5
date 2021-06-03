@@ -246,6 +246,10 @@ namespace UMA
 					return false;
 				}
 			}
+			
+
+				Debug.LogWarning("umaData.isMeshDirty:"+umaData.isMeshDirty);
+
 
 			if (umaData.isMeshDirty)
 			{
@@ -258,6 +262,10 @@ namespace UMA
 				if (!fastGeneration)
 					return false;
 			}
+			
+
+				Debug.LogWarning("umaData.isShapeDirty:"+umaData.isShapeDirty);
+
 
 			if (umaData.isShapeDirty) 
 			{
@@ -294,6 +302,11 @@ namespace UMA
 					umaData.MoveToList(cleanUmas);
 					umaData = null;
 				}
+
+
+				Debug.LogWarning("OnDirtyUpdate()");
+
+
 			}
 			catch (Exception ex)
 			{
@@ -403,6 +416,11 @@ namespace UMA
 		{
 			if (umaData)
 			{
+
+
+				Debug.LogWarning("UpdateUMABody(UMAData umaData)");
+
+
 				umaData.skeleton.ResetAll();
 				// Put the skeleton into TPose so rotations will be valid for generating avatar
 				umaData.GotoTPose();

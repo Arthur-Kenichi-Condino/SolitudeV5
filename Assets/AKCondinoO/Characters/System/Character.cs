@@ -17,7 +17,7 @@ public Vector3 CamLookAtUp{get;set;}
 public Vector3 CamLookAtForward{get;set;}
 public Vector3 CamPosition{get;set;}
 public Vector3 CamOffset;
-[NonSerialized]public string prefabName;[NonSerialized]public int idForPrefabName=-1;
+[NonSerialized]public string prefabName=null;[NonSerialized]public int idForPrefabName=-1;
 [NonSerialized]public DynamicCharacterAvatar avatar;[NonSerialized]ThirdPersonAnimatorParamChanger animatorParams;[NonSerialized]public Dictionary<string,DnaSetter>dna;
 protected override void Awake(){
                    base.Awake();
@@ -145,10 +145,16 @@ else                                     {}
 }}
 
 
+
+
+
+Debug.LogWarning("noseFlatten:"+dna["noseFlatten"].Get());
 avatar.BuildCharacter();
+Debug.LogWarning("noseFlatten:"+dna["noseFlatten"].Get());
 
 
 }
+avatar.DoSave();
 }
 #endregion
 
@@ -175,23 +181,28 @@ if(leftHand!=null)Debug.LogWarning("leftHand:"+leftHand,leftHand);if(rightHand!=
 
 
 if(dna!=null&&dna.Count>0){
-
+                    
 
 avatar.savePathType=DynamicCharacterAvatar.savePathTypes.FileSystem;
 Directory.CreateDirectory(avatar.savePath=saveSubfolder[0]=saveFolder+prefabName+"_"+idForPrefabName.ToString()+"/");saveSubfolder[0]+=(avatar.saveFilename="recipe")+".txt";
 avatar.loadPathType=DynamicCharacterAvatar.loadPathTypes.FileSystem;
 avatar.loadFilename=saveSubfolder[0];
-
+     
+Debug.LogWarning("avatar.loadFilename:"+avatar.loadFilename);               
 
 if(File.Exists(saveSubfolder[0])){
 avatar.DoLoad();
+
+
+//avatar.BuildCharacter();
+
+
 }else{
 
 
 buildRandom();
 
 
-avatar.DoSave();
 }
 
 
@@ -199,21 +210,21 @@ loaded=true;}
 }
 
 
-}else if(dirty){dirty=false;
+}else if(firstLoadedUpdate){firstLoadedUpdate=false;
 
 
-avatar.BuildCharacter();
+//avatar.BuildCharacter();
 
 
 }else{
 
 
-if(UMADataChanged){
-if(UMADataChanged_reload){
-avatar.BuildCharacter();
-}else{
-OnUMADataChanged();}
-}
+//if(UMADataChanged){
+//if(UMADataChanged_reload){
+//avatar.BuildCharacter();
+//}else{
+//OnUMADataChanged();}
+//}
 
 
 }
@@ -223,6 +234,7 @@ if(avatar!=null){
                 
 if(dna!=null){
                 //Debug.LogWarning("IsUMA:"+IsUMA+";dna.Count:"+dna.Count);
+Debug.LogWarning("noseFlatten:"+dna["noseFlatten"].Get());
 }
 
 
@@ -242,7 +254,7 @@ DoDamageHitbox();
 //}
 if(DEBUG_RANDOM_DNA){buildRandom();DEBUG_RANDOM_DNA=false;}
                    base.Update();
-}[NonSerialized]protected bool loaded=false;[NonSerialized]bool dirty=true;
+}[NonSerialized]protected bool loaded=false;[NonSerialized]bool firstLoadedUpdate=true;
 [NonSerialized]Vector3 _camPos=new Vector3();[NonSerialized]Vector3 _camRotatedOffset=new Vector3(1,0,1);
 protected override void ProcessMovementInput(){
 if(!(bool)Enabled.PAUSE[0]){

@@ -37,6 +37,7 @@ if(simObject.LOG&&simObject.LOG_LEVEL<=1)Debug.LogWarning("[UMAData] the followi
 
 
 Debug.LogWarning("UMADataChanged_reload");
+(simObject as Character).avatar.BuildCharacter();//  This function sucks...  ...it's full of bugs...!
                 
 
           simObject.UMADataChanged_reload=false;
@@ -56,7 +57,7 @@ renderer=GetComponentInChildren<Renderer>();
 GetRendererData();
 if(LOG&&LOG_LEVEL<=-1)Debug.Log("renderer not null:"+renderer,this);
 }
-                 UMADataChanged=false;
+//                 UMADataChanged=false;
 }
 [NonSerialized]protected Vector3 colliderDefaultSize;[NonSerialized]protected Vector3 colliderDefaultCenter;
 [NonSerialized]protected Vector3 colliderHalfExtents_v;protected Vector3 colliderHalfExtents{get{return colliderHalfExtents_v*RangeMultiplier;}set{colliderHalfExtents_v=value;}}
