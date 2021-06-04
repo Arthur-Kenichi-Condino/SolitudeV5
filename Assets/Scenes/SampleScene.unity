@@ -1025,6 +1025,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a54fde34eec40964b94d71ee0aba9889, type: 3}
+--- !u!114 &661947582 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6782112333398131215, guid: a54fde34eec40964b94d71ee0aba9889,
+    type: 3}
+  m_PrefabInstance: {fileID: 661947581}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fd2661724b5ab24ea2d5da16a31cb27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!108 &705507994 stripped
 Light:
   m_CorrespondingSourceObject: {fileID: 4424775631298339553, guid: 61b5248367ab1db4fa69e44c8dc6c84b,
@@ -1098,18 +1110,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b41d019fd27682f4fa2cadfe47b38e0a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &747635973 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4081856601081741352, guid: fe29e3c90ef88194184c6f3656db5ec5,
-    type: 3}
-  m_PrefabInstance: {fileID: 747635971}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fd2661724b5ab24ea2d5da16a31cb27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1054467229
@@ -3640,7 +3640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcffb0a198605474c8a4d1c67c1515fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  context: {fileID: 747635973}
+  context: {fileID: 661947582}
   umaData: {fileID: 0}
   defaultRendererAsset: {fileID: 0}
   umaRecipe: {fileID: 11400000, guid: 1d97eb041589729479af9716fd5b42b3, type: 2}
@@ -4235,7 +4235,7 @@ PrefabInstance:
     - target: {fileID: 3434281322423047683, guid: 489b38d902172bb47b04f84fe05cc5b0,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3434281322423047694, guid: 489b38d902172bb47b04f84fe05cc5b0,
         type: 3}

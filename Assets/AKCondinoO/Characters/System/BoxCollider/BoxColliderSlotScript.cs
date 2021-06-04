@@ -6,7 +6,7 @@ namespace UMA
 {
 	public class BoxColliderSlotScript : MonoBehaviour
 	{
-		public void OnDnaApplied(UMAData umaData)
+		public void OnCharacterCompleted(UMAData umaData)
 		{
 //Destroy(umaData.transform.parent.GetComponent<Collider>());Destroy(umaData.transform.parent.GetComponent<Rigidbody>());
 			var rigid = umaData.transform.root.gameObject.GetComponent<Rigidbody>();

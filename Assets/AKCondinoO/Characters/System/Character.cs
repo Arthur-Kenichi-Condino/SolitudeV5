@@ -22,58 +22,10 @@ public Vector3 CamOffset;
 protected override void Awake(){
                    base.Awake();
 CamFollowableNode=MainCamera.CamFollowables.AddLast(this);
-
-
 animatorParams=GetComponentInChildren<ThirdPersonAnimatorParamChanger>();
-
-
-            Debug.LogWarning("animatorParams:"+animatorParams);
-
-
 avatar=GetComponentInChildren<DynamicCharacterAvatar>();
-
-
-            Debug.LogWarning("DynamicCharacterAvatar:"+avatar);
-
-
 if(avatar!=null){
-////dna=avatar.GetDNA();
 }
-
-
-//Debug.LogWarning(saveFolder+this.name.Replace("(Clone)","").ToString());
-
-
-//if(avatar==null){
-//avatar=GetComponentInChildren<DynamicCharacterAvatar>();
-//if(avatar!=null){
-//Debug.LogWarning("avatar:"+avatar);
-//avatar.savePathType=DynamicCharacterAvatar.savePathTypes.FileSystem;
-//Directory.CreateDirectory(avatar.savePath=saveSubfolder[0]=saveFolder+this.name.Replace("(Clone)","").ToString()+"/");saveSubfolder[0]+=(avatar.saveFilename="recipe")+".txt";
-//Debug.LogWarning("saveSubfolder[0]:"+saveSubfolder[0]);
-
-
-////file exists
-
-
-//if(File.Exists(saveSubfolder[0])){avatar.SetLoadFilename(saveSubfolder[0],DynamicCharacterAvatar.loadPathTypes.FileSystem);}
-
-    
-
-////DoSave on disable
-////;
-            
-
-
-
-////avatar.SetLoadFilename(saveSubfolder[0],DynamicCharacterAvatar.loadPathTypes.FileSystem);
-
-
-////SetLoadFilename string replace (Clone)
-////avatar.loadPathType=DynamicCharacterAvatar.loadPathTypes.FileSystem;
-//}}
-
-
 }
 protected override void OnDisable(){
                    base.OnDisable();
