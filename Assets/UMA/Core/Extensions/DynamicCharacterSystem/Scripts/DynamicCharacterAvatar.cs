@@ -2837,6 +2837,11 @@ Debug.LogWarning("load UMA avatar");
             }
             if (recipeString != "")
             {
+
+                            
+            Debug.LogWarning("GetRecipeStringToLoad recipeString:"+recipeString);
+
+
                 LoadFromRecipeString(recipeString);
             }
             else
