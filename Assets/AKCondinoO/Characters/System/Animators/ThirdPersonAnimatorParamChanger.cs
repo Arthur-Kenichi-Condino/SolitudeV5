@@ -13,6 +13,9 @@ attackStance=-1;hitStance=-1;deadStance=-1;curAnimTime=-1;ignoreNextAnimationCha
 public float motionRhythm=0.0245f;[NonSerialized]protected float curAnimTime=-1;[NonSerialized]float curAnimTime_normalized;
 [NonSerialized]Vector3 _horizontalMoveSpeed;[NonSerialized]Vector3 _forward;[NonSerialized]Vector3 _move;[NonSerialized]float _angle;[NonSerialized]float _turn;[NonSerialized]public float horizontalMoveSensibility=1f/3f;[NonSerialized]public bool backwardAvailable=true;
 void Update(){
+
+    Debug.LogWarning("actor.IsUMA:"+actor.IsUMA);
+
 if(actor.IsUMA&&animator==null){
 animator=actor.GetComponentInChildren<Animator>();
 
