@@ -8,6 +8,7 @@ public class UMADynamicBoneJiggle : MonoBehaviour
 {
 	[Header("General Settings")]
 	public string jiggleBoneName;
+	public string[] AdditionalBones;
 	public List<string> exceptions;
 	[Range(0,1)]
 	public float reduceEffect;
@@ -16,14 +17,29 @@ public class UMADynamicBoneJiggle : MonoBehaviour
 	public bool deleteBoneWithSlot;
 	public string slotToWatch;
 	private string linkedRecipe;
-
-
 	public void AddJiggle(UMAData umaData)
-	{
-		Transform rootBone = umaData.gameObject.transform.FindDeepChild(jiggleBoneName);
+    {
 		UMABoneCleaner cleaner = umaData.gameObject.GetComponent<UMABoneCleaner>();
-		
-		if(rootBone != null)
+		Transform rootBone = SkeletonTools.RecursiveFindBone(umaData.umaRoot.transform, jiggleBoneName);
+		AddBoneJiggle(umaData, rootBone, cleaner);
+		if (AdditionalBones != null)
+        {
+			foreach(string s in AdditionalBones)
+            {
+				if (!string.IsNullOrEmpty(s))
+				{
+					rootBone = SkeletonTools.RecursiveFindBone(umaData.umaRoot.transform, s);
+					AddBoneJiggle(umaData, rootBone, cleaner);
+				}
+			}
+		}
+	}
+
+	public void AddBoneJiggle(UMAData umaData, Transform rootBone, UMABoneCleaner cleaner)
+	{
+		List<Transform> exclusionList = new List<Transform>();
+
+		if (rootBone != null)
 		{
 #if DYNAMIC_BONE
 			DynamicBone jiggleBone = rootBone.GetComponent<DynamicBone>();
@@ -34,7 +50,7 @@ public class UMADynamicBoneJiggle : MonoBehaviour
 			
 			jiggleBone.m_Root = rootBone;
 			
-			List<Transform> exclusionList = new List<Transform>();
+
 			
 			foreach(string exception in exceptions)
 			{
@@ -51,11 +67,9 @@ public class UMADynamicBoneJiggle : MonoBehaviour
 				jiggleBone = rootBone.gameObject.AddComponent<SwayRootBone>();
 			}
 
-			List<Transform> exclusionList = new List<Transform>();
-
 			foreach (string exception in exceptions)
 			{
-				exclusionList.Add(umaData.gameObject.transform.FindDeepChild(exception));
+				exclusionList.Add(SkeletonTools.RecursiveFindBone(umaData.gameObject.transform,exception));
 			}
 
 			jiggleBone.Exclusions = exclusionList;
@@ -76,6 +90,8 @@ public class UMADynamicBoneJiggle : MonoBehaviour
 			linkedRecipe = umaData.gameObject.GetComponent<DynamicCharacterAvatar>().GetWardrobeItemName(slotToWatch);
 			
 			listing.recipe = linkedRecipe;
+
+			listing.exceptions.AddRange(exclusionList);
 			cleaner.RegisterJiggleBone(listing);
 		}
 	}

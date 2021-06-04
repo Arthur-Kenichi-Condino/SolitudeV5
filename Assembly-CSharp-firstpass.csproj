@@ -913,6 +913,30 @@
       <Project>{3A1A18BB-6096-CA7C-D764-8CA37A2DC6AF}</Project>
       <Name>Unity.Collections</Name>
     </ProjectReference>
+    <ProjectReference Include="UMA_Content.csproj">
+      <Project>{AC2CB61D-AF47-00DF-EDCE-6F320CB36E47}</Project>
+      <Name>UMA_Content</Name>
+    </ProjectReference>
+    <ProjectReference Include="UMA_Core.csproj">
+      <Project>{93309512-1C10-1362-FEC4-0C40EA598F49}</Project>
+      <Name>UMA_Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="Addressable_Editor.csproj">
+      <Project>{0E3F4646-5F9F-C8EF-7E88-CB659F8886C1}</Project>
+      <Name>Addressable_Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="UMA_Examples_Editor.csproj">
+      <Project>{AC17B7CE-0C4F-5AC5-CD98-7A396237493D}</Project>
+      <Name>UMA_Examples_Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="UMA_Core_Editor.csproj">
+      <Project>{E9A8B690-3569-F1A7-B009-673513A1D3D0}</Project>
+      <Name>UMA_Core_Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="UMA_Examples.csproj">
+      <Project>{CC8E9E4A-2C07-09F0-3311-B907E7710759}</Project>
+      <Name>UMA_Examples</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

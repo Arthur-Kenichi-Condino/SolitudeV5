@@ -1,30 +1,45 @@
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace UMA
 {
-	public class UMAGeneratorGLib : UMAGeneratorBuiltin
-	{
-		[Tooltip("Turn this on to auto cleanup items that are not currently used. WARNING. This will cause behavior changes, and may cause issues if you are not careful.")]
-		public bool EnableCacheCleanup;
+    /// <summary>
+    /// This is a dummy class and should not be used
+    /// It's here solely to solve issues when someone forgets to delete the UMA folder.
+    /// </summary>
+    public class UMAGeneratorGLIB : UMAGeneratorBase
+    {
+        public override void addDirtyUMA(UMAData umaToAdd)
+        {
+        }
 
-		[Tooltip("Number of seconds to keep cached items")]
-		public float CachedItemsLife = 3.0f;
-		
-		public override void Awake()
-		{
-			base.Awake();
-		}
+        public override bool IsIdle()
+        {
+            return false;
+        }
 
-		public override void Update()
-		{
-			base.Update();
-#if UMA_ADDRESSABLES
-			if (EnableCacheCleanup)
-			{
-				UMAAssetIndexer.DefaultLife = CachedItemsLife;
-				UMAAssetIndexer.Instance.CheckCache();
-			}
-#endif
-		}
-	}
+        public override int QueueSize()
+        {
+            return 0;
+        }
+
+        public override void removeUMA(UMAData umaToRemove)
+        {
+        }
+
+        public override bool updatePending(UMAData umaToCheck)
+        {
+            return false;
+        }
+
+        public override bool updateProcessing(UMAData umaToCheck)
+        {
+            return false;
+        }
+
+        public override void Work()
+        {
+        }
+    }
 }

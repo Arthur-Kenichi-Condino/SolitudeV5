@@ -19,6 +19,7 @@ namespace UMA.Examples
 		public bool stressTest;
 		public Vector2 umaCrowdSize;
 		public bool randomDna;
+		public bool allAtOnce;
 		public UMARecipeBase[] additionalRecipes;
 
 		public float space = 1;
@@ -40,6 +41,22 @@ namespace UMA.Examples
 		void Awake()
 		{
 			if (space <= 0) space = 1;
+			if (UMAContextBase == null)
+            {
+				UMAContextBase = UMAContext.Instance;
+            }
+			if (generator == null)
+            {
+				GameObject go = GameObject.Find("UMAGenerator");
+				if (go != null)
+                {
+					generator = go.GetComponent<UMAGenerator>();
+                }
+				else
+                {
+					generator = UMAContextBase.GetComponent<UMAGenerator>();
+                }
+            }
 		}
 
 		void Update()
@@ -49,6 +66,7 @@ namespace UMA.Examples
 				umaCrowdSize = Vector2.one;
 				int randomResult = Random.Range(0, 2);
 				GenerateOneUMA(randomResult);
+
 				generateUMA = false;
 				generateLotsUMA = false;
 			}
@@ -57,8 +75,21 @@ namespace UMA.Examples
 			{
 				if (generator.IsIdle())
 				{
-					int randomResult = Random.Range(0, 2);
-					GenerateOneUMA(randomResult);
+					if (allAtOnce)
+                    {
+						for (int i = 0; i < umaCrowdSize.x * umaCrowdSize.y; i++)
+						{
+							int randomResult = Random.Range(0, 2);
+							GenerateOneUMA(randomResult);
+							generateUMA = false;
+							generateLotsUMA = false;
+						}
+					}
+					else
+                    {
+						int randomResult = Random.Range(0, 2);
+						GenerateOneUMA(randomResult);
+					}
 				}
 			}
 
@@ -96,7 +127,7 @@ namespace UMA.Examples
 			}
 
 			var keywordsLookup = new HashSet<string>(keywords);
-			UMACrowdRandomSet.Apply(umaData, race, skinColor, HairColor, Shine, keywordsLookup, UMAContextBase as UMAContext);
+			UMACrowdRandomSet.Apply(umaData, race, skinColor, HairColor, Shine, keywordsLookup, UMAContextBase);
 		}
 
 		void DefineSlots()

@@ -71,11 +71,27 @@ namespace UMA.Editors
             Tools.current = Tool.None;
             Tools.hidden = true;
             EditorApplication.LockReloadAssemblies();
+#if UNITY_2019_1_OR_NEWER
+            SceneView.duringSceneGui += this.OnSceneGUI;
+#else
+            SceneView.onSceneGUIDelegate += this.OnSceneGUI;
+#endif
+        }
+
+        private void OnDisable()
+        {
+#if UNITY_2019_1_OR_NEWER
+            SceneView.duringSceneGui -= this.OnSceneGUI;
+#else
+            SceneView.onSceneGUIDelegate -= this.OnSceneGUI;
+#endif
+            Cleanup();
         }
 
         private void OnDestroy()
         {
             Cleanup();
+
         }
 
         private void Cleanup()
@@ -91,7 +107,7 @@ namespace UMA.Editors
             Tools.hidden = false;
             DestroySceneEditObject();
             EditorApplication.UnlockReloadAssemblies();
-            
+
             if (restoreScenes != null)
             {
                 foreach (GeometrySelector.SceneInfo s in restoreScenes)
@@ -425,6 +441,10 @@ namespace UMA.Editors
             if (GUILayout.Button("Save & Return"))
             {
                 doneEditing = true;
+                /* save location and orientation of camera */
+                string CamKey = _Source.meshAsset.name + "_MHA_Cam";
+                CamSaver cs = new CamSaver(_Source.currentSceneView.camera.transform);
+                EditorPrefs.SetString(CamKey, cs.ToString());
             }
             if (GUILayout.Button("Cancel Edits"))
             {
@@ -439,7 +459,7 @@ namespace UMA.Editors
                 SceneView.FrameLastActiveSceneView();            
         }
 
-        void OnSceneGUI()
+        void OnSceneGUI(SceneView scene)
         {
             const float WindowHeight = 140;
             const float WindowWidth = 380;

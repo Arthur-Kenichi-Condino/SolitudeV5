@@ -9,22 +9,33 @@ namespace UMA.Editors
 	[CanEditMultipleObjects]
 	public class SlotDataAssetInspector : Editor
 	{
+		static string[] RegularSlotFields = new string[] { "slotName", "CharacterBegun", "SlotAtlassed", "DNAApplied", "CharacterCompleted", "_slotDNALegacy","tags","isWildCardSlot","Races"};
+		static string[] WildcardSlotFields = new string[] { "slotName", "CharacterBegun", "SlotAtlassed", "DNAApplied", "CharacterCompleted", "_slotDNALegacy", "tags", "isWildCardSlot", "Races", "_rendererAsset", "maxLOD", "useAtlasOverlay", "overlayScale", "animatedBoneNames", "_slotDNA", "meshData", "subMeshIndex", };
 		SerializedProperty slotName;
 		SerializedProperty CharacterBegun;
 		SerializedProperty SlotAtlassed;
 		SerializedProperty DNAApplied;
 		SerializedProperty CharacterCompleted;
 		SerializedProperty MaxLOD;
-		private ReorderableList tagList;
-		private bool tagListInitialized = false;
+		SlotDataAsset slot;
 
-		private bool eventsFoldout = false;
 
         [MenuItem("Assets/Create/UMA/Core/Custom Slot Asset")]
         public static void CreateCustomSlotAssetMenuItem()
         {
         	CustomAssetUtility.CreateAsset<SlotDataAsset>("", true, "Custom");
         }
+
+		[MenuItem("Assets/Create/UMA/Core/Wildcard Slot Asset")]
+		public static void CreateWildcardSlotAssetMenuItem()
+		{
+			SlotDataAsset wildcard = CustomAssetUtility.CreateAsset<SlotDataAsset>("", true, "Wildcard",true);
+			wildcard.isWildCardSlot = true;
+			wildcard.slotName = "WildCard";
+			EditorUtility.SetDirty(wildcard);
+			AssetDatabase.SaveAssets();
+			EditorUtility.DisplayDialog("UMA", "Wildcard slot created. You should first change the SlotName in the inspector, and then add it to the global library or to a scene library", "OK");
+		}
 
 		private void OnDestroy()
 		{
@@ -39,42 +50,62 @@ namespace UMA.Editors
 			DNAApplied = serializedObject.FindProperty("DNAApplied");
 			CharacterCompleted = serializedObject.FindProperty("CharacterCompleted");
 			MaxLOD = serializedObject.FindProperty("maxLOD");
+			slot = (target as SlotDataAsset);
+			InitTagList(slot);
 		}
-		private void InitTagList()
+
+		private void InitTagList(SlotDataAsset _slotDataAsset)
 		{
+			
 			var HideTagsProperty = serializedObject.FindProperty("tags");
-			tagList = new ReorderableList(serializedObject, HideTagsProperty, true, true, true, true);
-			tagList.drawHeaderCallback = (Rect rect) => 
+			slot.tagList = new ReorderableList(serializedObject, HideTagsProperty, true, true, true, true);
+			slot.tagList.drawHeaderCallback = (Rect rect) => 
 			{
-				EditorGUI.LabelField(rect, "Tags");
+				if (_slotDataAsset.isWildCardSlot)
+				{
+					EditorGUI.LabelField(rect, "Match the following tags:");
+				}
+				else
+				{
+					EditorGUI.LabelField(rect, "Tags");
+				}
 			};
-			tagList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => 
+			slot.tagList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => 
 			{
-				var element = tagList.serializedProperty.GetArrayElementAtIndex(index);
+				var element = (target as SlotDataAsset).tagList.serializedProperty.GetArrayElementAtIndex(index);
 				rect.y += 2;
 				element.stringValue = EditorGUI.TextField(new Rect(rect.x + 10, rect.y, rect.width - 10, EditorGUIUtility.singleLineHeight), element.stringValue);
 			};
-			tagListInitialized = true;
 		}
+
 		public override void OnInspectorGUI()
         {
-			if (!tagListInitialized)
-			{
-				InitTagList();
-			}
 			serializedObject.Update();
 
 			EditorGUI.BeginChangeCheck();
 			EditorGUILayout.DelayedTextField(slotName);
-			Editor.DrawPropertiesExcluding(serializedObject, new string[] { "slotName", "CharacterBegun", "SlotAtlassed", "DNAApplied", "CharacterCompleted", "_slotDNALegacy","tags" });
-			tagList.DoLayoutList();
-			
-			eventsFoldout = EditorGUILayout.Foldout(eventsFoldout, "Slot Events");
-			if (eventsFoldout)
+			if ((target as SlotDataAsset).isWildCardSlot)
 			{
-				EditorGUILayout.PropertyField(CharacterBegun);
-				EditorGUILayout.PropertyField(SlotAtlassed);
-				EditorGUILayout.PropertyField(DNAApplied);
+				EditorGUILayout.HelpBox("This is a wildcard slot", MessageType.Info);
+			}
+			 
+			if (slot.isWildCardSlot)
+				Editor.DrawPropertiesExcluding(serializedObject, WildcardSlotFields);
+			else
+				Editor.DrawPropertiesExcluding(serializedObject, RegularSlotFields);
+			GUILayout.Space(10);
+			slot.tagList.DoLayoutList();
+
+
+			(target as SlotDataAsset).eventsFoldout = EditorGUILayout.Foldout((target as SlotDataAsset).eventsFoldout, "Slot Events");
+			if ((target as SlotDataAsset).eventsFoldout)
+			{
+				EditorGUILayout.PropertyField(CharacterBegun);   
+				if (!slot.isWildCardSlot)
+				{
+					EditorGUILayout.PropertyField(SlotAtlassed);
+					EditorGUILayout.PropertyField(DNAApplied); 
+				}
 				EditorGUILayout.PropertyField(CharacterCompleted);
 			}
 
@@ -97,23 +128,26 @@ namespace UMA.Editors
 				}
 			}
 
-            GUILayout.Space(20);
-            Rect updateDropArea = GUILayoutUtility.GetRect(0.0f, 50.0f, GUILayout.ExpandWidth(true));
-            GUI.Box(updateDropArea, "Drag SkinnedMeshRenderers here to update the slot meshData.");
-            GUILayout.Space(10);
-            UpdateSlotDropAreaGUI(updateDropArea);
+			if (!(target as SlotDataAsset).isWildCardSlot)
+			{
+				GUILayout.Space(20);
+				Rect updateDropArea = GUILayoutUtility.GetRect(0.0f, 50.0f, GUILayout.ExpandWidth(true));
+				GUI.Box(updateDropArea, "Drag SkinnedMeshRenderers here to update the slot meshData.");
+				GUILayout.Space(10);
+				UpdateSlotDropAreaGUI(updateDropArea);
 
-			GUILayout.Space(10);
-			Rect boneDropArea = GUILayoutUtility.GetRect(0.0f, 50.0f, GUILayout.ExpandWidth(true));
-			GUI.Box(boneDropArea, "Drag Bone Transforms here to add their names to the Animated Bone Names.\nSo the power tools will preserve them!");
-			GUILayout.Space(10);
-			AnimatedBoneDropAreaGUI(boneDropArea);
-
+				GUILayout.Space(10);
+				Rect boneDropArea = GUILayoutUtility.GetRect(0.0f, 50.0f, GUILayout.ExpandWidth(true));
+				GUI.Box(boneDropArea, "Drag Bone Transforms here to add their names to the Animated Bone Names.\nSo the power tools will preserve them!");
+				GUILayout.Space(10);
+				AnimatedBoneDropAreaGUI(boneDropArea);
+			}
 			serializedObject.ApplyModifiedProperties();
 			if (EditorGUI.EndChangeCheck())
 			{
 				EditorUtility.SetDirty(target);
 				AssetDatabase.SaveAssets();
+				UMAUpdateProcessor.UpdateSlot(target as SlotDataAsset);
 			}
         }
 
@@ -172,7 +206,6 @@ namespace UMA.Editors
 							}
 						}
 					}
-					AssetDatabase.SaveAssets();
 				}
 			}
             return null;
@@ -199,7 +232,9 @@ namespace UMA.Editors
 
             string existingRootBone = slot.meshData.RootBoneName;
 
-            UMASlotProcessingUtil.UpdateSlotData(slot, skinnedMesh, slot.material, null, existingRootBone);
+            UMASlotProcessingUtil.UpdateSlotData(slot, skinnedMesh, slot.material, null, existingRootBone,true);
+			AssetDatabase.SaveAssets();
+			UMAUpdateProcessor.UpdateSlot(slot);
         }
     }
 }

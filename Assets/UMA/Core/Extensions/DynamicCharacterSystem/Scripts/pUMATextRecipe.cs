@@ -37,8 +37,8 @@ namespace UMA
         [SerializeField]
         public List<MeshHideAsset> MeshHideAssets = new List<MeshHideAsset>();
 
-       // [SerializeField]
-		//public string AddressableLabel;
+		[SerializeField]
+		public UMAPredefinedDNA OverrideDNA = new UMAPredefinedDNA();
 
 
 #if UNITY_EDITOR
@@ -166,11 +166,6 @@ namespace UMA
 		/// <param name="context">Context.</param>
 		public override void Load(UMA.UMAData.UMARecipe umaRecipe, UMAContextBase context = null)
 		{
-
-			
-            Debug.LogWarning("Load recipeString:"+recipeString);
-
-
 			//This check can be removed in future- If we set the recipeType properly from now on we should not need to do this check
 			var typeInRecipe = GetRecipesType(recipeString);
 			recipeType = typeInRecipe != "Standard" ? typeInRecipe : recipeType;
@@ -193,11 +188,6 @@ namespace UMA
 			{
 				base.Load(umaRecipe, context);
 			}
-
-			
-            Debug.LogWarning("Load recipeString:"+recipeString);
-
-
 		}
 
 		/// <summary>

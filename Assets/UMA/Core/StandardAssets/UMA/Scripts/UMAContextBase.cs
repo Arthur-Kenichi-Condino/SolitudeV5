@@ -9,6 +9,8 @@ namespace UMA
 	/// </summary>
 	public abstract class UMAContextBase : MonoBehaviour
 	{
+		public static string IgnoreTag;
+
 		private static UMAContextBase _instance;
 		public static UMAContextBase Instance
 		{
@@ -253,12 +255,12 @@ namespace UMA
 			if (Application.isPlaying)
 			{
 				if (Debug.isDebugBuild)
-					Debug.LogWarning("There was no UMAContext in this scene. Please add the UMA_DCS prefab to this scene before you try to generate an UMA.");
+					Debug.LogWarning("There was no UMAContext in this scene. Please add the UMA context prefab  to this scene before you try to generate an UMA.");
 				return null;
 			}
 
 			if (Debug.isDebugBuild)
-				Debug.Log("UMA Recipe Editor created an UMAEditorContext to enable editing. This will auto delete once you have finished editing your recipe or you add the UMA_DCS prefab to this scene.");
+				Debug.Log("UMA Recipe Editor created an UMAEditorContext to enable editing. This will auto delete once you have finished editing your recipe or you add a UMA prefab with a context to this scene.");
 
 			//if there is already an EditorUMAContextBase use it
 			if (UMAContextBase.FindInstance() != null)
@@ -291,14 +293,28 @@ namespace UMA
 			//Make this GameObject not show up in the scene or save
 			EditorUMAContextBase.hideFlags = HideFlags.DontSave | HideFlags.NotEditable;
 			//if this gameobject does not contain an UMAContextBase add it - we have to call it UMAContextBase because UMAContextBase.FindInstance searches for that game object
-			var thisUMAContextBase = UMAContextBase.Instance = EditorUMAContextBase.GetComponentInChildren<UMAContextBase>();
+			var context = UMAContextBase.Instance = EditorUMAContextBase.GetComponentInChildren<UMAContextBase>();
 			if (UMAContextBase.Instance == null)
 			{
-				var thisUMAContextBaseGO = new GameObject();
-				thisUMAContextBaseGO.name = "UMAContext";
-				thisUMAContextBaseGO.transform.parent = EditorUMAContextBase.transform;
-				thisUMAContextBase = thisUMAContextBaseGO.AddComponent<UMAGlobalContext>();
-				UMAContextBase.Instance = thisUMAContextBase;
+				var GO = new GameObject();
+				GO.name = "UMAContext";
+				GO.transform.parent = EditorUMAContextBase.transform;
+				context = GO.AddComponent<UMAGlobalContext>();
+				GO.AddComponent<UMADefaultMeshCombiner>();
+
+				var gen = GO.AddComponent<UMAGenerator>();
+				gen.fitAtlas = true;
+				gen.SharperFitTextures = true;
+				gen.AtlasOverflowFitMethod = UMAGeneratorBase.FitMethod.BestFitSquare;
+				gen.convertRenderTexture = false;
+				gen.editorAtlasResolution = 1024;
+				gen.InitialScaleFactor = 2;
+				gen.collectGarbage = false;
+				gen.IterationCount = 1;
+				gen.fastGeneration = true;
+				gen.processAllPending = false;
+				gen.NoCoroutines = true;
+				UMAContextBase.Instance = context;
 			}
 			return EditorUMAContextBase;
 		}

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UMA.Examples;
+using System.Runtime;
 #if UMA_ADDRESSABLES
 using UnityEngine.AddressableAssets;
 #endif
@@ -26,7 +27,7 @@ namespace UMA.CharacterSystem.Examples
         public GameObject DnaHelpText;
         public GameObject AvatarPrefab;
 		public GameObject NoBuildPrefab;
-		public MouseOrbitImproved Orbiter;
+		public UMAMouseOrbitImproved Orbiter;
         public SharedColorTable HairColor;
         public SharedColorTable SkinColor;
         public SharedColorTable EyesColor;
@@ -36,6 +37,8 @@ namespace UMA.CharacterSystem.Examples
         public bool PreloadAndUnload;
         public Slider TestSlider;
         public UMAWardrobeCollection CollectionToAdd;
+        public bool UseHighresModels;
+
 
 		private List<RaceData> races;
 
@@ -85,14 +88,27 @@ namespace UMA.CharacterSystem.Examples
             Avatar.gameObject.SetActive(true);
             if (RaceDropdown != null)
             {
-
+                int i = 0;
+                int found = 0;
                 RaceDropdown.options.Clear();
                 foreach (RaceData race in races)
                 {
+                    if (race.raceName == Avatar.activeRace.name)
+                        found = i;
                     RaceDropdown.options.Add(new Dropdown.OptionData(race.raceName));
+                    i++;
                 }
+                RaceDropdown.value = found;
             }
 #endif
+        }
+
+        private void Update()
+        {
+            if (Input.GetKey(KeyCode.C))
+            {
+                ChangeSex();
+            }
         }
 
 #if UMA_ADDRESSABLES
@@ -156,7 +172,9 @@ namespace UMA.CharacterSystem.Examples
 			UMAAssetIndexer.Instance.UnloadAll(force);
 #endif
             Resources.UnloadUnusedAssets();
-		}
+            GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+            System.GC.Collect();
+        }
 
 		/// <summary>
 		/// Remove any controls from the panels
@@ -394,13 +412,14 @@ namespace UMA.CharacterSystem.Examples
 
         public void ChangeSex()
         {
-            if (Avatar.activeRace.name == "HumanMale")
+            if (Avatar.activeRace.name == "HumanMale") 
             {
-                Avatar.ChangeRace("HumanFemale");
+                // if you do not pass true, then it might not change if you had never had a race set on this before. 
+                Avatar.ChangeRace("HumanFemale", true);
             }
             else
             {
-                Avatar.ChangeRace("HumanMale");
+                Avatar.ChangeRace("HumanMale", true);
             }
         }
 

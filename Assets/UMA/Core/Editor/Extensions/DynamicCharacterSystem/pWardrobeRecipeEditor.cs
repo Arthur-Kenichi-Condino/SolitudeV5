@@ -13,6 +13,7 @@ namespace UMA.Editors
 	{
 		private Dictionary<string,RaceData> _compatibleRaceDatas = new Dictionary<string,RaceData>();
 
+		int currentRace = 0;
 		bool showIncompatible;
 		List<UMAWardrobeRecipe> DeletedRecipes = new List<UMAWardrobeRecipe>();
 		int meshHideAssetPickerID = -1;
@@ -186,6 +187,35 @@ namespace UMA.Editors
 			return selectedIndex;
 		}
 
+
+		private List<string> GetSlotNames(UMAPackedRecipeBase recipe)
+        {
+			List<string> theSlots = new List<string>();
+			UMAPackedRecipeBase.UMAPackRecipe PackRecipe =recipe.PackedLoad(UMAContextBase.Instance);
+
+			if (PackRecipe.slotsV2 != null)
+			{
+				foreach (var s2 in PackRecipe.slotsV2)
+				{
+					if (!string.IsNullOrEmpty(s2.id))
+					{
+						theSlots.Add(s2.id);
+					}
+				}
+			}
+			if (PackRecipe.slotsV3 != null)
+            {
+				foreach (var s3 in PackRecipe.slotsV3)
+				{
+					if (!string.IsNullOrEmpty(s3.id))
+					{
+						theSlots.Add(s3.id);
+					}
+				}
+			}
+
+			return theSlots;
+        }
 		//generate an option list for the BaseSlots that are available to hide for each race so we can make this a mask field too
 		private void GenerateBaseSlotsEnum(List<string> compatibleRaces, bool forceUpdate = false, List<string> hides = null)
 		{
@@ -212,6 +242,22 @@ namespace UMA.Editors
 				{
 					if (thisBaseRecipes[i] != null)
 					{
+						List<string> slots = GetSlotNames((thisBaseRecipes[i] as UMAPackedRecipeBase));
+						foreach(string slotName in slots)
+                        {
+							if (!generatedBaseSlotOptions.Contains(slotName))
+							{
+								generatedBaseSlotOptions.Add(slotName);
+								Unfound.Remove(slotName);
+							}
+							if (!slotsRacesDict.ContainsKey(slotName))
+							{
+								slotsRacesDict.Add(slotName, new List<string>());
+							}
+							slotsRacesDict[slotName].Add(compatibleRaces[i]);
+						}
+
+						/*
 						UMAData.UMARecipe thisBaseRecipe = thisBaseRecipes[i].GetCachedRecipe(UMAContextBase.Instance);
 						SlotData[] thisSlots = thisBaseRecipe.GetAllSlots();
 						foreach (SlotData slot in thisSlots)
@@ -230,6 +276,7 @@ namespace UMA.Editors
 								slotsRacesDict[slot.asset.slotName].Add(compatibleRaces[i]);
 							}
 						}
+						*/
 					}
 				}
 
@@ -284,19 +331,6 @@ namespace UMA.Editors
 		{
 			/* RaceData foundRace = null; */
 			return UMAAssetIndexer.Instance.GetAsset<RaceData>(raceName);
-
-			/* 
-			string[] foundRacesStrings = AssetDatabase.FindAssets("t:RaceData");
-			for (int i = 0; i < foundRacesStrings.Length; i++)
-			{
-				RaceData thisFoundRace = AssetDatabase.LoadAssetAtPath<RaceData>(AssetDatabase.GUIDToAssetPath(foundRacesStrings[i]));
-				if (thisFoundRace.raceName == raceName)
-				{
-					foundRace = thisFoundRace;
-					break;
-				}
-			}
-			return foundRace; */
 		}
 
 		protected virtual bool DrawCompatibleRacesUI(Type TargetType, bool ShowHelp = false)
@@ -544,8 +578,16 @@ namespace UMA.Editors
 
 		private bool ShowHidetags;
 		private bool ShowSuppressSlots;
+		private bool ShowOverrideDNA;
 		private ReorderableList hideTagsList;
 		private bool hideTagsListInitialized = false;
+
+		private RaceData lastRace;
+		public int currentDNA = 0;
+		private string cachedRace = "";
+		private string[] cachedRaceDNA = { };
+		private string[] rawcachedRaceDNA = { };
+
 		private void InitHideTagsList()
 		{
 			var HideTagsProperty = serializedObject.FindProperty("HideTags");
@@ -651,7 +693,7 @@ namespace UMA.Editors
 			{
 				EditorGUILayout.HelpBox("Wardrobe Slot: This assigns the recipe to a Wardrobe Slot. The wardrobe slots are defined on the race. Characters can have only one recipe per Wardrobe Slot at a time, so for example, adding a 'beard' recipe to a character will replace the existing 'beard' if there is one", MessageType.Info);
 			}
-			#endregion
+            #endregion
 
 			#region Suppress UI
 			/*
@@ -752,10 +794,11 @@ namespace UMA.Editors
 				ReplacesSlots.Insert(0, "Nothing");
 				int selectedIndex = ReplacesSlots.IndexOf(replaces);
 				if (selectedIndex < 0) selectedIndex = 0; // not found, point at "nothing"
-
 				selectedIndex = EditorGUILayout.Popup("Replaces", selectedIndex, ReplacesSlots.ToArray());
 
 				ReplacesField.SetValue(target, ReplacesSlots[selectedIndex]);
+				if (ReplacesSlots[selectedIndex] != replaces)
+					doUpdate = true;
 			}
 
 			if (ShowHelp)
@@ -917,6 +960,93 @@ namespace UMA.Editors
 			}
 			#endregion
 
+			#region Override UI
+
+			GUILayout.BeginHorizontal(EditorStyles.toolbarButton);
+			GUILayout.Space(10);
+			ShowOverrideDNA = EditorGUILayout.Foldout(ShowOverrideDNA, "Override DNA");
+			GUILayout.EndHorizontal();
+			if (ShowOverrideDNA)
+			{
+				if (_compatibleRaceDatas.Count == 0)
+				{
+					EditorGUILayout.HelpBox("No races set. Please set races before adding override DNA", MessageType.Warning);
+				}
+				else
+				{
+					EditorGUILayout.HelpBox("You can add Override DNA that is applied during the build process. It will only be applied while this wardrobe recipe is equipped.", MessageType.Info);
+
+					if (currentRace >= _compatibleRaceDatas.Count)
+						currentRace = 0;
+
+					EditorGUILayout.BeginHorizontal();
+					currentRace = EditorGUILayout.Popup(currentRace, compatibleRaces.ToArray());
+					string raceName = compatibleRaces[currentRace];
+
+					if (cachedRace != raceName)
+					{
+						cachedRace = raceName;
+						RaceData currentRaceData = _compatibleRaceDatas[raceName];
+						rawcachedRaceDNA = currentRaceData.GetDNANames().ToArray();
+						List<string> MenuDNA = new List<string>();
+						foreach (string s in rawcachedRaceDNA)
+						{
+							MenuDNA.Add(s.MenuCamelCase());
+						}
+						cachedRaceDNA = MenuDNA.ToArray();
+					}
+
+					currentDNA = EditorGUILayout.Popup(currentDNA, cachedRaceDNA);
+					if (recipe.OverrideDNA == null)
+					{
+						recipe.OverrideDNA = new UMAPredefinedDNA();
+					}
+					if (GUILayout.Button("Add DNA"))
+					{
+						string theDna = rawcachedRaceDNA[currentDNA];
+
+
+						if (recipe.OverrideDNA.ContainsName(theDna))
+						{
+							EditorUtility.DisplayDialog("Error", "Override DNA Already contains DNA: " + theDna, "OK");
+						}
+						else
+						{
+							recipe.OverrideDNA.AddDNA(theDna, 0.5f);
+							doUpdate = true;
+						}
+					}
+					EditorGUILayout.EndHorizontal();
+					string delme = "";
+					EditorGUI.BeginChangeCheck();
+					foreach (var pd in recipe.OverrideDNA.PreloadValues)
+					{
+						GUILayout.BeginHorizontal();
+						GUILayout.Label(ObjectNames.NicifyVariableName(pd.Name), GUILayout.Width(100));
+						//pd.Value = GUILayout.HorizontalSlider(pd.Value, 0.0f, 1.0f);
+						pd.Value = EditorGUILayout.Slider(pd.Value, 0.0f, 1.0f);
+
+						bool delete = GUILayout.Button("\u0078", EditorStyles.miniButton, GUILayout.ExpandWidth(false));
+						if (delete)
+						{
+							delme = pd.Name;
+						}
+						GUILayout.EndHorizontal();
+					}
+					if (!string.IsNullOrEmpty(delme))
+					{
+						recipe.OverrideDNA.RemoveDNA(delme);
+						doUpdate = true;
+						Repaint();
+					}
+					if (EditorGUI.EndChangeCheck())
+					{
+						doUpdate = true;
+					}
+				}
+			}
+			#endregion
+
 			#region HideTags UI
 			if (!hideTagsListInitialized)
 			{
@@ -1040,11 +1170,14 @@ namespace UMA.Editors
                 GUILayout.BeginHorizontal();
                 if (GUILayout.Button("Clear Recipe"))
                 {
-                    _recipe.slotDataList = new SlotData[0];
-                    changed |= true;
-                    _dnaDirty |= true;
-                    _textureDirty |= true;
-                    _meshDirty |= true;
+					if (EditorUtility.DisplayDialog("Clear recipe", "Are you sure?", "OK", "Cancel") == true)
+					{
+						_recipe.slotDataList = new SlotData[0];
+						changed |= true;
+						_dnaDirty |= true;
+						_textureDirty |= true;
+						_meshDirty |= true;
+					}
                 }
                 if (GUILayout.Button("Remove Nulls"))
 				{

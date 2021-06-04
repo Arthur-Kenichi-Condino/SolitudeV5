@@ -53,8 +53,8 @@ MonoBehaviour:
   - {fileID: 1481341642692946145, guid: 26af6aa4ce237114d81c539a3b07373c, type: 3}
   - {fileID: 3060762507858223686, guid: 66788a3051bc6d548b32495287c01c2e, type: 3}
   - {fileID: 2008670503701242331, guid: a78a72d1aba87cb45b934bfcac199524, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 7637713979492175057, guid: e8584cb5dacee7142a675efc96f61a74, type: 3}
+  - {fileID: 768593955736630024, guid: c7134457e0ea8c04483d20f1fbe0c4e9, type: 3}
   actorsMaxInstantiations: 0500000005000000050000000100000005000000
   monsterTypeIds: 00000000
   homunculusTypeIds: 010000000200000004000000

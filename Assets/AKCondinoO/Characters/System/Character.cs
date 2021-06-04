@@ -26,6 +26,11 @@ CamFollowableNode=MainCamera.CamFollowables.AddLast(this);
 
 if(avatar==null){
 avatar=GetComponentInChildren<DynamicCharacterAvatar>();animatorParams=GetComponentInChildren<ThirdPersonAnimatorParamChanger>();
+
+
+            Debug.LogWarning("DynamicCharacterAvatar:"+avatar);
+
+
 if(avatar!=null){
 //dna=avatar.GetDNA();
 }}
@@ -160,6 +165,13 @@ avatar.DoSave();
 
 
         //Debug.LogWarning("string.IsNullOrEmpty(prefabName):"+string.IsNullOrEmpty(prefabName));
+if(IsUMA){
+
+
+                Debug.LogWarning("umaData:"+umaData);
+
+
+}
 
 
 if(!loaded&&!string.IsNullOrEmpty(prefabName)){

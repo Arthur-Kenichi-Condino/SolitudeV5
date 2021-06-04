@@ -13,6 +13,11 @@ namespace UMA.Editors
 		SerializedProperty fastGeneration;
 		SerializedProperty garbageCollectionRate;
 		SerializedProperty processAllPending;
+		SerializedProperty NoCoroutines;
+		SerializedProperty EditorInitialScaleFactor;
+		SerializedProperty editorAtlasResolution;
+		SerializedProperty collectGarbage;
+
 
 #pragma warning disable 0108
 		public override void OnEnable()
@@ -25,6 +30,10 @@ namespace UMA.Editors
 			processAllPending = serializedObject.FindProperty("processAllPending");
 			fastGeneration = serializedObject.FindProperty("fastGeneration");
 			garbageCollectionRate = serializedObject.FindProperty("garbageCollectionRate");
+			NoCoroutines = serializedObject.FindProperty("NoCoroutines");
+			EditorInitialScaleFactor = serializedObject.FindProperty("editorInitialScaleFactor");
+			editorAtlasResolution = serializedObject.FindProperty("editorAtlasResolution");
+			collectGarbage = serializedObject.FindProperty("collectGarbage");
 		}
 #pragma warning restore 0108
 
@@ -37,10 +46,18 @@ namespace UMA.Editors
 			EditorGUILayout.PropertyField(InitialScaleFactor);
 			EditorGUILayout.PropertyField(fastGeneration);
 			EditorGUILayout.PropertyField(IterationCount);
+			EditorGUILayout.PropertyField(collectGarbage);
 			EditorGUILayout.PropertyField(garbageCollectionRate);
 			EditorGUILayout.PropertyField(processAllPending);
 			GUILayout.Space(20);
-			EditorGUILayout.LabelField("Advanced Configuation", centeredLabel);
+			EditorGUILayout.HelpBox("Edit time generation options. Keep the atlas size down and the scale factor high to address possible problems loading large scene files.",MessageType.None);
+			EditorGUILayout.PropertyField(editorAtlasResolution);
+			EditorGUILayout.PropertyField(EditorInitialScaleFactor);
+
+
+			GUILayout.Space(20);
+			EditorGUILayout.LabelField("Advanced Configuration", centeredLabel);
+			EditorGUILayout.PropertyField(NoCoroutines);
 			EditorGUILayout.PropertyField(textureMerge);
 			EditorGUILayout.PropertyField(meshCombiner);
 

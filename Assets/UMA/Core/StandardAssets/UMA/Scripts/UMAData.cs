@@ -18,22 +18,61 @@ namespace UMA
 		public Dictionary<string, BlendShapeData> blendShapes = new Dictionary<string, BlendShapeData>();
 	}
 
+	public class UMASavedItem
+    {
+		public int ParentBoneNameHash;
+		public Transform Object;
+		public Quaternion rotation;
+		public Vector3 position;
+		public Vector3 scale;
+		public UMASavedItem(int hash, Transform obj)
+        {
+			ParentBoneNameHash = hash;
+			Object = obj;
+			rotation = obj.localRotation;
+			position = obj.localPosition;
+			scale = obj.localScale;
+        }
+	}
+
 	/// <summary>
 	/// UMA data holds the recipe for creating a character and skeleton and Unity references for a built character.
 	/// </summary>
 	public class UMAData : MonoBehaviour
 	{
 		//TODO improve/cleanup the relationship between renderers and rendererAssets
+		[SerializeField]
 		private SkinnedMeshRenderer[] renderers;
-		private UMARendererAsset[] rendererAssets;
+		private UMARendererAsset[] rendererAssets = new UMARendererAsset[0];
 		public UMARendererAsset defaultRendererAsset { get; set; }
-
 		public int rendererCount { get { return renderers == null ? 0 : renderers.Length; } }
+
+		private List<UMASavedItem> savedItems = new List<UMASavedItem>();
+
+		public void AddSavedItem(Transform transform)
+        {
+			savedItems.Add(new UMASavedItem(UMAUtils.StringToHash(transform.parent.name),transform));
+		}
+
+		public void RestoreSavedItems()
+        {
+			foreach(UMASavedItem usi in savedItems)
+            {
+				Transform parent = skeleton.GetBoneTransform(usi.ParentBoneNameHash);
+				if (parent != null)
+                {
+					usi.Object.SetParent(parent,false);
+                }
+            }
+			savedItems.Clear();
+        }
 
 		//TODO Change these get functions to getter properties?
 		public SkinnedMeshRenderer GetRenderer(int idx)
 		{
-			return renderers[idx];
+			if (renderers != null && idx < renderers.Length)
+				return renderers[idx];
+			return null;
 		}
 
 		public int GetRendererIndex(SkinnedMeshRenderer renderer)
@@ -77,6 +116,10 @@ namespace UMA
 			if (renderers.Length != rendererList.Count)
 				return false;
 
+			if (rendererAssets == null)
+            {
+				return false;
+            }
 			for(int i = 0; i < rendererAssets.Length; i++)
 			{
 				if (rendererAssets[i] != rendererList[i])
@@ -94,7 +137,13 @@ namespace UMA
 		}
 
 		[NonSerialized]
+		public bool staticCharacter = false;
+
+		[NonSerialized]
 		public bool firstBake;
+
+		[NonSerialized]
+		public bool RebuildSkeleton;
 
 		public UMAGeneratorBase umaGenerator;
 
@@ -137,6 +186,52 @@ namespace UMA
 
 		private Dictionary<int, int> animatedBonesTable;
 
+
+		public void SetupSkeleton()
+		{
+			Transform rootTransform = gameObject.transform.Find("Root");
+			if (rootTransform)
+			{
+				umaRoot = rootTransform.gameObject;
+			}
+			else
+			{
+				GameObject newRoot = new GameObject("Root");
+				//make root of the UMAAvatar respect the layer setting of the UMAAvatar so cameras can just target this layer
+				newRoot.layer = gameObject.layer;
+				newRoot.transform.parent = transform;
+				newRoot.transform.localPosition = Vector3.zero;
+				if (umaRecipe.raceData.FixupRotations)
+				{
+					newRoot.transform.localRotation = Quaternion.Euler(270f, 0, 0f);
+				}
+				else
+				{
+					newRoot.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+				}
+				newRoot.transform.localScale = Vector3.one;
+				umaRoot = newRoot;
+			}
+
+			Transform globalTransform = umaRoot.transform.Find("Global");
+			if (!globalTransform)
+			{
+				GameObject newGlobal = new GameObject("Global");
+				newGlobal.transform.parent = umaRoot.transform;
+				newGlobal.transform.localPosition = Vector3.zero;
+				if (umaRecipe.raceData.FixupRotations)
+				{
+					newGlobal.transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
+				}
+				else
+				{
+					newGlobal.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+				}
+				globalTransform = newGlobal.transform;
+			}
+			skeleton = new UMASkeleton(globalTransform);
+		}
+
 		public void ResetAnimatedBones()
 		{
 			if (animatedBonesTable == null)
@@ -178,6 +273,10 @@ namespace UMA
 		/// <summary>
 		/// Callback event when character has been updated.
 		/// </summary>
+		public event Action<UMAData> OnCharacterBegun { add { if (CharacterBegun == null) CharacterBegun = new UMADataEvent(); CharacterBegun.AddAction(value); } remove { CharacterBegun.RemoveAction(value); } }
+		/// <summary>
+		/// Callback event when character has been updated.
+		/// </summary>
 		public event Action<UMAData> OnCharacterUpdated { add { if (CharacterUpdated == null) CharacterUpdated = new UMADataEvent(); CharacterUpdated.AddAction(value); } remove { CharacterUpdated.RemoveAction(value); } }
 		/// <summary>
 		/// Callback event when character has been completely created.
@@ -203,6 +302,7 @@ namespace UMA
 
 		public event Action<UMAData> OnAnimatorStateSaved { add { if (AnimatorStateSaved == null) AnimatorStateSaved = new UMADataEvent(); AnimatorStateSaved.AddAction(value); } remove { AnimatorStateSaved.RemoveAction(value); } }
 		public event Action<UMAData> OnAnimatorStateRestored { add { if (AnimatorStateRestored == null) AnimatorStateRestored = new UMADataEvent(); AnimatorStateRestored.AddAction(value); } remove { AnimatorStateRestored.RemoveAction(value); } }
+		public event Action<UMAData> OnPreUpdateUMABody { add { if(PreUpdateUMABody == null) PreUpdateUMABody = new UMADataEvent(); PreUpdateUMABody.AddAction(value); } remove { PreUpdateUMABody.RemoveAction(value); } } //VES added
 
 		public UMADataEvent CharacterCreated;
 		public UMADataEvent CharacterDestroyed;
@@ -213,12 +313,14 @@ namespace UMA
 		public UMADataEvent CharacterBegun;
 		public UMADataEvent AnimatorStateSaved;
 		public UMADataEvent AnimatorStateRestored;
+		public UMADataEvent PreUpdateUMABody;
 
 		public GameObject umaRoot;
 
 		
 			[UnityEngine.Serialization.FormerlySerializedAs("umaRecipe")]
 			public UMARecipe _umaRecipe;
+
 			public UMARecipe umaRecipe
 			{
 				get
@@ -265,6 +367,11 @@ namespace UMA
 
 		void Awake()
 		{
+			if (!umaGenerator)
+            {
+				if (UMAContextBase.Instance != null)
+				umaGenerator = UMAContextBase.Instance.gameObject.GetComponent<UMAGeneratorBase>();
+            }
 			if (!umaGenerator)
 			{
 				var generatorGO = GameObject.Find("UMAGenerator");
@@ -434,9 +541,11 @@ namespace UMA
 			public List<MaterialFragment> materialFragments = new List<MaterialFragment>();
 			public Texture[] resultingAtlasList;
 			public Vector2 cropResolution;
-			public float resolutionScale;
+			public Vector2 resolutionScale;
 			public string[] textureNameList;
 			public UMARendererAsset rendererAsset;
+			public SkinnedMeshRenderer skinnedMeshRenderer;
+			public int materialIndex;
 		}
 
 		[System.Serializable]
@@ -454,6 +563,7 @@ namespace UMA
 			public OverlayData[] overlayData;
 			public Rect atlasRegion;
 			public bool isRectShared;
+			public bool isNoTextures;
 			public List<OverlayData> overlayList;
 			public MaterialFragment rectFragment;
 			public textureData baseOverlay;
@@ -461,14 +571,19 @@ namespace UMA
 			public Color GetMultiplier(int overlay, int textureType)
 			{
 				var c = Color.white;
+				if (overlay >= overlayData.Length) 
+					return c;
 
 				if (channelMask[overlay] != null && channelMask[overlay].Length > 0)
 				{
-					c = channelMask[overlay][textureType];
-					c.r = Mathf.Clamp((c.r + overlayData[overlay].GetComponentAdjustmentsForChannel(c.r, textureType, 0)), 0, 1);
-					c.g = Mathf.Clamp((c.g + overlayData[overlay].GetComponentAdjustmentsForChannel(c.g, textureType, 1)), 0, 1);
-					c.b = Mathf.Clamp((c.b + overlayData[overlay].GetComponentAdjustmentsForChannel(c.b, textureType, 2)), 0, 1);
-					c.a = Mathf.Clamp((c.a + overlayData[overlay].GetComponentAdjustmentsForChannel(c.a, textureType, 3)), 0, 1);
+					if (textureType < channelMask[overlay].Length)
+					{
+						c = channelMask[overlay][textureType];
+						c.r = Mathf.Clamp((c.r + overlayData[overlay].GetComponentAdjustmentsForChannel(c.r, textureType, 0)), 0, 1);
+						c.g = Mathf.Clamp((c.g + overlayData[overlay].GetComponentAdjustmentsForChannel(c.g, textureType, 1)), 0, 1);
+						c.b = Mathf.Clamp((c.b + overlayData[overlay].GetComponentAdjustmentsForChannel(c.b, textureType, 2)), 0, 1);
+						c.a = Mathf.Clamp((c.a + overlayData[overlay].GetComponentAdjustmentsForChannel(c.a, textureType, 3)), 0, 1);
+					}
 					return c;
 				}
 				else
@@ -503,20 +618,19 @@ namespace UMA
 			}
 			public Color32 GetAdditive(int overlay, int textureType)
 			{
-				if (channelAdditiveMask[overlay] != null && channelAdditiveMask[overlay].Length > 0)
+				if (channelAdditiveMask[overlay] != null && channelAdditiveMask[overlay].Length > 0 && channelAdditiveMask.Length >= overlay)
 				{
-					var c = channelAdditiveMask[overlay][textureType];
-					c.r = Mathf.Clamp((c.r + overlayData[overlay].GetComponentAdjustmentsForChannel(c.r, textureType, 0, true)), 0, 1);
-					c.g = Mathf.Clamp((c.g + overlayData[overlay].GetComponentAdjustmentsForChannel(c.g, textureType, 1, true)), 0, 1);
-					c.b = Mathf.Clamp((c.b + overlayData[overlay].GetComponentAdjustmentsForChannel(c.b, textureType, 2, true)), 0, 1);
-					c.a = Mathf.Clamp((c.a + overlayData[overlay].GetComponentAdjustmentsForChannel(c.a, textureType, 3, true)), 0, 1);
-					//return channelAdditiveMask[overlay][textureType];
-					return c;
+					if (textureType < channelAdditiveMask[overlay].Length)
+					{
+						var c = channelAdditiveMask[overlay][textureType];
+						c.r = Mathf.Clamp((c.r + overlayData[overlay].GetComponentAdjustmentsForChannel(c.r, textureType, 0, true)), 0, 1);
+						c.g = Mathf.Clamp((c.g + overlayData[overlay].GetComponentAdjustmentsForChannel(c.g, textureType, 1, true)), 0, 1);
+						c.b = Mathf.Clamp((c.b + overlayData[overlay].GetComponentAdjustmentsForChannel(c.b, textureType, 2, true)), 0, 1);
+						c.a = Mathf.Clamp((c.a + overlayData[overlay].GetComponentAdjustmentsForChannel(c.a, textureType, 3, true)), 0, 1);
+						return c;
+					}
 				}
-				else
-				{
-					return new Color32(0, 0, 0, 0);
-				}
+				return new Color32(0, 0, 0, 0);
 			}
 		}
 
@@ -576,6 +690,7 @@ namespace UMA
 			protected Dictionary<int, List<DNAConvertDelegate>> umaDNAConverters = new Dictionary<int, List<DNAConvertDelegate>>();
 			protected Dictionary<int, List<DNAConvertDelegate>> umaDNAPreApplyConverters = new Dictionary<int, List<DNAConvertDelegate>>();
 			protected Dictionary<string, int> mergedSharedColors = new Dictionary<string, int>();
+			[SerializeField]
 			public List<UMADnaBase> dnaValues = new List<UMADnaBase>();
 			public SlotData[] slotDataList;
 			public OverlayColorData[] sharedColors;
@@ -590,6 +705,11 @@ namespace UMA
 					if (MeshHideDictionary.ContainsKey(sd.slotName))
 					{   //If this slotDataAsset is found in the MeshHideDictionary then we need to supply the SlotData with the bitArray.
 						sd.meshHideMask = MeshHideAsset.GenerateMask(MeshHideDictionary[sd.slotName]);
+
+						if (sd.meshHideMask.Length != sd.asset.meshData.submeshes[sd.asset.subMeshIndex].triangles.Length)
+                        {
+							var mha = MeshHideDictionary[sd.slotName];
+                        }
 					}
 				}
 			}
@@ -1077,6 +1197,7 @@ namespace UMA
 				}
 			}
 
+
 			/// <summary>
 			/// Applies each DNA converter to the UMA data and skeleton.
 			/// </summary>
@@ -1268,21 +1389,18 @@ namespace UMA
 			/// </summary>
 			/// <param name="recipe">Recipe.</param>
 			/// <param name="dontSerialize">If set to <c>true</c> recipe will not be serialized.</param>
-			public void Merge(UMARecipe recipe, bool dontSerialize, bool mergeMatchingOverlays = true)
+			public void Merge(UMARecipe recipe, bool dontSerialize, bool mergeMatchingOverlays = true, bool mergeDNA = true, string raceName = null)
 			{
 				if (recipe == null)
 					return;
 
-				if ((recipe.raceData != null) && (recipe.raceData != raceData))
+				if (mergeDNA)
 				{
-					if (Debug.isDebugBuild)
-						Debug.LogWarning("Merging recipe with conflicting race data: " + recipe.raceData.name);
-				}
-
-				foreach (var dnaEntry in recipe.umaDna)
-				{
-					var destDNA = GetOrCreateDna(dnaEntry.Value.GetType(), dnaEntry.Key);
-					destDNA.Values = dnaEntry.Value.Values;
+					foreach (var dnaEntry in recipe.umaDna)
+					{
+						var destDNA = GetOrCreateDna(dnaEntry.Value.GetType(), dnaEntry.Key);
+						destDNA.Values = dnaEntry.Value.Values;
+					}
 				}
 
 				mergedSharedColors.Clear();
@@ -1321,11 +1439,31 @@ namespace UMA
 
 				if (slotDataList == null)
 					slotDataList = new SlotData[0];
-				if (recipe.slotDataList != null)
+				if (raceName != null)
 				{
-					for (int i = 0; i < recipe.slotDataList.Length; i++)
+					if (recipe.slotDataList != null)
 					{
-						MergeSlot(recipe.slotDataList[i], dontSerialize, mergeMatchingOverlays);
+						for (int i = 0; i < recipe.slotDataList.Length; i++)
+						{
+							SlotData sd = recipe.slotDataList[i];
+
+							if (sd == null) continue;
+
+							if (sd.HasRace(raceName))
+							{
+								MergeSlot(sd, dontSerialize, mergeMatchingOverlays);
+							}
+						}
+					}
+				}
+				else
+				{
+					if (recipe.slotDataList != null)
+					{
+						for (int i = 0; i < recipe.slotDataList.Length; i++)
+						{
+							MergeSlot(recipe.slotDataList[i], dontSerialize, mergeMatchingOverlays);
+						}
 					}
 				}
 			}
@@ -1340,6 +1478,19 @@ namespace UMA
 			public Vector3 originalBonePosition;
 			public Quaternion originalBoneRotation;
 		}
+
+		/// <summary>
+		/// Fire the Pre Update event.
+		/// This happens before the Animator State is saved.
+		/// </summary>
+		public void FirePreUpdateUMABody()
+		{
+			if (PreUpdateUMABody != null)
+			{
+				PreUpdateUMABody.Invoke(this);
+			}
+		}
+
 
 		/// <summary>
 		/// Fire the Animator State Saved event.
@@ -1417,6 +1568,9 @@ namespace UMA
 
 		void OnDestroy()
 		{
+			if (staticCharacter)
+				return;
+
 			if (isOfficiallyCreated)
 			{
 				if (CharacterDestroyed != null)
@@ -1425,12 +1579,16 @@ namespace UMA
 				}
 				isOfficiallyCreated = false;
 			}
+			CleanTextures();
+			CleanMesh(true);
+			CleanAvatar();
 			if (umaRoot != null)
 			{
-				CleanTextures();
-				CleanMesh(true);
-				CleanAvatar();
-				UMAUtils.DestroySceneObject(umaRoot);
+				// Edit time UMAs
+				if (Application.isPlaying)
+				{
+					UMAUtils.DestroySceneObject(umaRoot);
+				}
 			}
 		}
 
@@ -1444,7 +1602,11 @@ namespace UMA
 			{
 				if (!KeepAvatar)
 				{
-					if (animator.avatar) UMAUtils.DestroyAvatar(animator.avatar);
+					if (animator.avatar)
+					{
+						UMAUtils.DestroyAvatar(animator.avatar);
+						animator.avatar = null;
+					}
 				}
 			}
 		}
@@ -1489,6 +1651,8 @@ namespace UMA
 			for(int j = 0; j < rendererCount; j++)
 			{
 				var renderer = GetRenderer(j);
+				if (renderer == null)
+					continue;
 				var mats = renderer.sharedMaterials;
 				for (int i = 0; i < mats.Length; i++)
 				{
@@ -1499,6 +1663,12 @@ namespace UMA
 				}
 				if (destroyRenderer)
 				{
+					// need to kill cloth first if it exists.
+					var cloth = renderer.gameObject.GetComponent<Cloth>();
+					if (cloth != null)
+                    {
+						UMAUtils.DestroySceneObject(cloth);
+					}
 					UMAUtils.DestroySceneObject(renderer.sharedMesh);
 					UMAUtils.DestroySceneObject(renderer);
 				}
@@ -1767,8 +1937,11 @@ namespace UMA
 			{
 				foreach (var umaAdditionalRecipe in umaAdditionalRecipes)
 				{
-					UMARecipe cachedRecipe = umaAdditionalRecipe.GetCachedRecipe(context);
-					umaRecipe.Merge(cachedRecipe, true, mergeMatchingOverlays);
+					if (umaAdditionalRecipe != null)
+					{
+						UMARecipe cachedRecipe = umaAdditionalRecipe.GetCachedRecipe(context);
+						umaRecipe.Merge(cachedRecipe, true, mergeMatchingOverlays);
+					}
 				}
 			}
 		}
@@ -1835,14 +2008,6 @@ namespace UMA
 		/// <param name="allowRebuild">Triggers a rebuild of the uma character if the blendshape is baked</param>
 		public void SetBlendShape(string name, float weight, bool allowRebuild = false)
 		{
-#if !UNITY_2018_3_OR_NEWER
-			if (weight < 0.0f || weight > 1.0f)
-			{
-				if (Debug.isDebugBuild)
-					Debug.LogWarning("SetBlendShape: Weight is out of range, clamping...");
-			}
-			weight = Mathf.Clamp01(weight);
-#endif
 			BlendShapeData data;
 			if (blendShapeSettings.blendShapes.TryGetValue(name, out data))
 			{

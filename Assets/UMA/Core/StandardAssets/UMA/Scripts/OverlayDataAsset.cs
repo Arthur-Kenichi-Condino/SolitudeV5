@@ -16,6 +16,12 @@ namespace UMA
 		[System.NonSerialized]
 		public int nameHash;
 
+#if UNITY_EDITOR
+		public float lastActionTime { get; set; } = 0;
+		public bool doSave { get; set; } = false;
+		public bool additionalFoldout { get; set; } = false;
+		public bool textureFoldout { get; set; } = false;
+#endif
 		public enum OverlayType
 		{
 			Normal = 0,
@@ -41,7 +47,7 @@ namespace UMA
 		/// Array of textures required for the overlay material.
 		/// </summary>
 		[Tooltip("Array of textures required for the overlay material.")]
-		public Texture[] textureList;
+		public Texture[] textureList = new Texture[0];
 		/// <summary>
 		/// Use this to identify what kind of overlay this is and what it fits
 		/// Eg. BaseMeshSkin, BaseMeshOverlays, GenericPlateArmor01
@@ -62,6 +68,12 @@ namespace UMA
 		public UMAMaterial material;
 
 		/// <summary>
+		/// materialName is used to save the name of the material, but ONLY if we have cleared the material when building bundles.
+		/// You can't count on this field to contain a value unless it was set during the cleanup phase by the indexer!
+		/// </summary>
+		public string materialName;
+
+		/// <summary>
 		/// This overlay was auto generated as a LOD overlay based on another overlay.
 		/// </summary>
 		[SerializeField]
@@ -75,20 +87,8 @@ namespace UMA
 		{
 			get
 			{
-				if (material.IsProcedural())
-				{
-					int count = 0;
-					for (int i = 0; i < material.channels.Length; i++)
-					{
-						if (material.channels[i].channelType != UMAMaterial.ChannelType.MaterialColor)
-							count++;
-					}
-
-					return count;
-				}
-				else if (textureList == null)
-					return 0;
-				
+				if (textureList == null)
+					return 0;	
 				return textureList.Length;
 			}
 		}
@@ -158,8 +158,10 @@ namespace UMA
 		{
 			nameHash = UMAUtils.StringToHash(overlayName);
 		}
-		public void OnBeforeSerialize()	{ }
 
+		public void OnBeforeSerialize()
+		{
+		}
 		public Texture GetAlphaMask()
 		{
 			return alphaMask != null ? alphaMask : textureList[0];
